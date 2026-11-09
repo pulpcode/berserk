@@ -1,0 +1,36 @@
+{
+  "id": "chat-rendering-refresh",
+  "name": "chat-rendering-refresh",
+  "title": "聊天页面渲染统一与 DSH 对齐方案",
+  "description": "整理聊天页面的消息、过程、工具、文件及交互卡片改造方案与阶段计划，供用户审阅；本轮不实施。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": "harness",
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-11-09",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "仅规划落盘，待用户审阅 D1–D4；未批准实施。入口 review.md，当前不得 task.py start。",
+  "meta": {
+    "implementationApproved": false,
+    "desktopOnly": true,
+    "reviewStatus": "awaiting_user_review",
+    "planningConverged": false,
+    "sourceBaseCommit": "c3e02287bf2e1474cdba534531700fc46cf0f501",
+    "reviewEntry": "review.md",
+    "relatedTasks": [
+      "09-20-w01-10-chat-presentation"
+    ]
+  }
+}
