@@ -122,6 +122,7 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .tool-label { font-size: 10px; color: var(--muted); }
 .tool-body pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: inherit; font-size: 12px; line-height: 1.85; max-height: 340px; overflow-y: auto; }
 .thinking { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); padding-bottom: 15px; }
+.message-list > .thinking { margin-left: var(--reply-inset); }
 .loading-conversation { margin: 60px auto; max-width: 760px; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
 .loading-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #688675; animation: breathe 1.4s ease-in-out infinite; }
 @keyframes breathe { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
