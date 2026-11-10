@@ -49,8 +49,8 @@ export function InteractionCard({ interaction: item, canRespond, submission, res
   const pending = item.status === 'pending';
   if (item.kind === 'confirmation') return <ConfirmationCard interaction={item} canRespond={canRespond} submission={submission} respond={respond} query={query} result={result} />;
   const status = questionLabels[item.status];
-  return <section className="interaction-card" data-interaction-id={item.interactionId} aria-label="Agent 提问">
-    <header><CircleHelp size={18} aria-hidden="true" /><strong>需要你的回答</strong><span className="interaction-status">{status}</span></header>
+  return <section className="interaction-card question-card" data-interaction-id={item.interactionId} data-state={item.status} aria-label="Agent 提问">
+    <header><CircleHelp size={18} aria-hidden="true" /><strong>{pending ? '需要你的回答' : '回答记录'}</strong><span className="interaction-status">{status}</span></header>
     <div className="interaction-questions">{item.questions.map((question, index) => {
       const value = draftAnswer(draft, question.id) || { optionIds: [], text: '', custom: false };
       const answer = item.answers?.find(answer => answer.questionId === question.id);
@@ -58,7 +58,7 @@ export function InteractionCard({ interaction: item, canRespond, submission, res
         {pending ? <>{question.options?.map(option => <label className="interaction-option" key={option.id}><input type={question.multiSelect ? 'checkbox' : 'radio'} name={`${item.interactionId}:${question.id}`} checked={!value.custom && value.optionIds.includes(option.id)} onChange={event => change(question.id, { ...value, custom: false, optionIds: question.multiSelect ? event.target.checked ? [...value.optionIds, option.id] : value.optionIds.filter(id => id !== option.id) : [option.id] })} /><span>{option.label}{option.description && <small>{option.description}</small>}</span></label>)}
           {Boolean(question.options?.length) && <label className="interaction-option"><input type="radio" name={`${item.interactionId}:${question.id}`} checked={value.custom} onChange={() => change(question.id, { ...value, custom: true, optionIds: [] })} /><span>自定义回答</span></label>}
           {(!question.options?.length || value.custom) && <div className="interaction-text"><label htmlFor={`${item.interactionId}:${question.id}:text`}>{question.options?.length ? '填写自定义回答' : '填写回答'}</label><textarea id={`${item.interactionId}:${question.id}:text`} rows={3} value={value.text} onChange={event => change(question.id, { ...value, custom: true, optionIds: [], text: event.target.value })} /></div>}
-        </> : <><ul className="interaction-history-options">{question.options?.map(option => <li key={option.id}>{option.label}{option.description ? ` — ${option.description}` : ''}</li>)}</ul>{answer && <p className="interaction-answer">你的回答：{'text' in answer ? answer.text : answer.optionIds.map(id => question.options?.find(option => option.id === id)?.label || id).join('、')}</p>}</>}
+        </> : <>{answer && <p className="interaction-answer">你的回答：{'text' in answer ? answer.text : answer.optionIds.map(id => question.options?.find(option => option.id === id)?.label || id).join('、')}</p>}{question.options?.length ? <details className="interaction-history-options"><summary>查看全部选项</summary><ul>{question.options.map(option => <li key={option.id}>{option.label}{option.description ? ` — ${option.description}` : ''}</li>)}</ul></details> : null}</>}
       </fieldset>;
     })}</div>
     {item.reason && <p className="interaction-reason">{item.reason}</p>}

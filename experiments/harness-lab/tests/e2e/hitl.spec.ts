@@ -216,6 +216,14 @@ test('question drafts survive switch and refresh, submit exact answers once with
   await expect(page.getByRole('button', { name: '提交中…' })).toBeDisabled();
   await expect.poll(() => state.posts.length).toBe(1); state.hold!();
   await expect(page.getByText('已回答', { exact: true })).toBeVisible();
+  const answered = page.getByRole('region', { name: 'Agent 提问', exact: true });
+  await expect(answered.getByText('你的回答：PDF', { exact: true })).toBeVisible();
+  await expect(answered.getByText('你的回答：正文、附录', { exact: true })).toBeVisible();
+  await expect(answered.getByText('你的回答：中文输入内容', { exact: true })).toBeVisible();
+  await expect(answered.getByText('Word', { exact: true })).toBeHidden();
+  await page.screenshot({ path: test.info().outputPath('question-answered.png'), fullPage: true });
+  await answered.getByText('查看全部选项', { exact: true }).first().click();
+  await expect(answered.getByText('Word', { exact: true })).toBeVisible();
   expect(state.posts[0]).toEqual({ requestId: 'r1', kind: 'question', action: 'answer', answers: [{ questionId: 'format', optionIds: ['pdf'] }, { questionId: 'parts', optionIds: ['body', 'appendix'] }, { questionId: 'note', text: '中文输入内容' }] });
   expect(await page.evaluate(() => sessionStorage.getItem('berserk.answer:A:r1:i1'))).toBeNull();
   expect(state.sends).toBe(0);
@@ -232,6 +240,7 @@ test('custom text is exclusive with choices and skip never sends draft answers',
   await page.getByRole('button', { name: '跳过提问' }).click();
   expect(state.posts[1]).toEqual({ requestId: 'r1', kind: 'question', action: 'skip' });
   await expect(page.getByText('已跳过', { exact: true })).toBeVisible();
+  await expect(page.getByText(/^你的回答：/)).toHaveCount(0);
 });
 
 test('uncertain response requires GET before manual retry and keeps answers on read failure', async ({ page }) => {
