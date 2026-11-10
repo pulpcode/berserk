@@ -1,0 +1,3 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "检查不得引入手机端专项工作或越出 Harness Lab 范围。"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "核验固定副本、消息顺序、异常可见性、完整长名和测试要求。"}
+{"file": ".trellis/tasks/11-10-chat-file-card-visual-refresh/research/dsh-reference.md", "reason": "区分可借鉴的视觉规则与不随本轮引入的 DSH 能力。"}
