@@ -3,13 +3,22 @@ import { ChevronDown, ListChecks } from 'lucide-react';
 import type { RequestState, SessionSnapshot } from '../contracts/index';
 import type { ChatFocusTransfer } from './useChatItemFocus';
 import { Message } from './ChatMessage';
-import { SubagentCard } from './SubagentCard';
+import { SubagentCard, subagentStatus } from './SubagentCard';
 import { FileOutputCard } from './Files';
 import { InteractionCard } from './InteractionCard';
-import { chatBlocks, processLabel, type DisplayItem, type ProcessGroup } from './processGroups';
+import { chatBlocks, processLabel, toolActionLabel, type DisplayItem, type ProcessGroup } from './processGroups';
 
 export type ProcessChoices = Map<string, { open: boolean; manual: boolean; settled: boolean }>;
-function Process({ group, choiceKey, choices, canAutoCollapse, children }: { group: ProcessGroup; choiceKey: string; choices: ProcessChoices; canAutoCollapse: () => boolean; children: ReactNode }) {
+/** Running groups show only evidenced activity: stopping wins, then compaction, then the current tool. */
+function activityLabel(group: ProcessGroup, active: RequestState): string {
+  if (active.status === 'stopping') return '正在停止';
+  if (active.phase === 'compacting') return '正在压缩上下文';
+  if (active.phase === 'tool' && active.toolName) return `正在${toolActionLabel(active.toolName)}`;
+  const last = group.items.at(-1);
+  if (last?.kind === 'subagent' && (last.child.status === 'running' || last.child.status === 'stopping')) return subagentStatus(last.child);
+  return '处理中';
+}
+function Process({ group, choiceKey, choices, canAutoCollapse, active, children }: { group: ProcessGroup; choiceKey: string; choices: ProcessChoices; canAutoCollapse: () => boolean; active?: RequestState | null; children: ReactNode }) {
   const element = useRef<HTMLDetailsElement>(null);
   useLayoutEffect(() => {
     const node = element.current;
@@ -24,7 +33,9 @@ function Process({ group, choiceKey, choices, canAutoCollapse, children }: { gro
     choices.set(choiceKey, saved);
     node.open = saved.open;
   }, [choices, choiceKey, group.collapsible, canAutoCollapse]);
-  return <details ref={element} className="process-group" data-process-id={group.key}>
+  const current = active && active.requestId === group.requestId ? active : undefined;
+  const running = Boolean(current);
+  return <details ref={element} className={`process-group${running ? ' running' : ''}`} data-process-id={group.key}>
     <summary onClick={event => {
       event.preventDefault();
       const node = element.current;
@@ -33,7 +44,7 @@ function Process({ group, choiceKey, choices, canAutoCollapse, children }: { gro
       choices.set(choiceKey, { open, manual: true, settled: group.collapsible });
       node.open = open;
       event.currentTarget.focus();
-    }}><ListChecks size={15} aria-hidden="true" /><span>{processLabel(group)}</span><ChevronDown size={14} aria-hidden="true" /></summary>
+    }}><ListChecks size={15} aria-hidden="true" />{current && <span className="status-dot" aria-hidden="true" />}<span>{current ? activityLabel(group, current) : processLabel(group)}</span><ChevronDown size={14} aria-hidden="true" /></summary>
     <div className="process-content">{children}</div>
   </details>;
 }
@@ -50,5 +61,5 @@ export function ChatPresentation({ snapshot, active, busy, choices, canAutoColla
     if (item.kind === 'subagent') return <SubagentCard key={item.key} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} />;
     return <Message key={item.key} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} message={item.message} finalAnswer={snapshot.turns?.some(turn=>turn.requestId===item.message.requestId && turn.finalMessageId===item.message.id)} evidence={snapshot.messages.slice(0,snapshot.messages.findIndex(message=>message.id===item.message.id))} workspaceId={snapshot.workspaceId} active={busy && item.message.requestId === active?.requestId} />;
   };
-  return <>{blocks.map(block => block.kind === 'process' ? <Process key={block.key} group={block} choiceKey={`${snapshot.id}:${block.key}`} choices={choices} canAutoCollapse={canAutoCollapse}>{block.items.map(render)}</Process> : render(block))}</>;
+  return <>{blocks.map(block => block.kind === 'process' ? <Process key={block.key} group={block} choiceKey={`${snapshot.id}:${block.key}`} choices={choices} canAutoCollapse={canAutoCollapse} active={active}>{block.items.map(render)}</Process> : render(block))}</>;
 }

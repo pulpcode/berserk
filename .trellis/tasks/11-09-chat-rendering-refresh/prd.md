@@ -1,6 +1,6 @@
 # 聊天页面渲染统一与 DSH 对齐：需求草案
 
-版本：v0.2，2026-11-09。状态：待审阅；需求范围尚未批准实施。审阅入口为 [review.md](review.md)。
+版本：v1.0，2026-11-09。状态：A 阶段首轮实现已通过质量检查并提交，整体尚未完全完成；后续可能继续调整部分样式，待合并到其他分支后进行线上验收。B/C 不在本轮范围。审阅入口为 [review.md](review.md)。
 
 参考 GitHub 仓库：[https://github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)。Web 应用入口：[apps/web](https://github.com/deepseek-ai/deepseek-harness/tree/master/apps/web)；聊天核心源码：[packages/client/ui-chat](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/client/ui-chat)。
 
@@ -87,4 +87,4 @@ B 中每一项先形成“已有原生字段 → 授权投影 → 公共类型 �
 
 ## 待审阅决策
 
-D2 与 D3 的分阶段方向已确认；D1/D4 的选项、推荐和取舍以 [review.md](review.md) 为唯一待审阅决策表。C 的交互细节仍待独立设计审阅。未确认项保持草案，当前不能声明需求收敛完成，也不能启动实施。
+D1–D4 的首轮实施决策均已确认：先实施 A；进度说明与最终答复保持可见；交互卡首轮暂留原位；只做基础排版，不新增复制、预览或高亮能力。C 的交互细节仍待独立设计审阅，B/C 不在本轮实施范围。

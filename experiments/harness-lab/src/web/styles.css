@@ -89,16 +89,21 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .suggestions button > span { font-size: 11px; color: var(--muted); margin-top: 7px; }
 .suggestions button > svg:last-child { position: absolute; right: 17px; top: 18px; color: #8a928e; }
 .message-list { --reply-inset: 36px; max-width: 760px; margin: 0 auto; padding: 35px 0; }
-.message { font-size: 14px; line-height: 1.9; margin-bottom: 30px; overflow-wrap: anywhere; }
+.message { font-size: 14px; line-height: 1.8; margin-bottom: 30px; overflow-wrap: anywhere; }
 .message.user { display: flex; justify-content: flex-end; }
 .message.user .message-content { max-width: 87%; border-radius: 14px 14px 4px 14px; padding: 12px 18px; background: #f0f2f3; }
 .message.user p { margin: 0; white-space: pre-wrap; }
 .assistant .message-content { padding-left: var(--reply-inset, 36px); }
 .message-content p { margin: 0 0 16px; }
 .message-content p:last-child { margin-bottom: 0; }
-.message-content h1, .message-content h2, .message-content h3 { font-size: 18px; margin: 24px 0 12px; line-height: 1.5; letter-spacing: 0; }
-.message-content ul, .message-content ol { padding-left: 24px; }
-.message-content pre { background: #f6f7f8; padding: 16px; border-radius: 8px; overflow: auto; font-size: 12px; line-height: 1.7; }
+.message-content h1, .message-content h2, .message-content h3, .message-content h4, .message-content h5, .message-content h6 { margin: 22px 0 10px; line-height: 1.5; letter-spacing: 0; }
+.message-content h1 { font-size: 18px; }
+.message-content h2 { font-size: 16px; }
+.message-content h3 { font-size: 15px; }
+.message-content h4, .message-content h5, .message-content h6 { font-size: 14px; }
+.message-content ul, .message-content ol { padding-left: 24px; margin: 0 0 16px; }
+.message-content li { margin: 3px 0; }
+.message-content pre { background: #f6f7f8; padding: 16px; border-radius: 8px; overflow: auto; font-size: 13px; line-height: 1.7; }
 .message-content code { font-size: .9em; background: #f0f2f2; border-radius: 3px; padding: 2px 4px; }
 .message-content pre code { padding: 0; background: transparent; }
 .message-content a { color: #38674e; text-underline-offset: 3px; }
@@ -108,9 +113,10 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .markdown-table th, .markdown-table td { min-width: 8rem; padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
 .markdown-table th { background: #f5f7f5; color: #385342; font-weight: 600; }
 .markdown-table tbody tr:last-child td { border-bottom: 0; }
-.tool-result { margin: 10px 0 24px 36px; border: 1px solid var(--line); border-radius: 9px; background: #fafbfa; font-size: 12px; }
+.tool-result { margin: 10px 0 24px 36px; border: 1px solid var(--line); border-radius: 9px; background: #fafbfa; font-size: 13px; }
 .tool-result > summary { list-style: none; display: flex; gap: 8px; align-items: center; padding: 12px 14px; cursor: pointer; color: #516657; }
-.tool-result > summary > svg:last-child { margin-left: auto; }
+.tool-result > summary > svg:last-child { margin-left: 2px; }
+.tool-result > summary > span { min-width: 0; overflow-wrap: anywhere; }
 .tool-result.failed > summary { color: var(--danger); }
 .tool-body { padding: 0 14px 14px; }
 .tool-label { font-size: 10px; color: var(--muted); }
@@ -501,10 +507,12 @@ input, select { font: inherit; }
 .interaction-card { border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin: 18px 0; background: var(--surface); font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; min-width: 0; }
 .message-list > .interaction-card { margin-left: var(--reply-inset); }
 .interaction-card > header { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--accent); }
+.question-card:not([data-state="pending"]) { padding: 12px 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; }
+.question-card:not([data-state="pending"]) > header { color: var(--muted); }
 .interaction-status { margin-left: auto; font-size: 12px; color: var(--text); }
-.interaction-questions fieldset { min-width: 0; border: 0; padding: 0; margin: 18px 0; }
+.interaction-questions fieldset { min-width: 0; border: 0; padding: 0; margin: 14px 0; }
 .interaction-questions legend { font-weight: 600; margin-bottom: 8px; white-space: pre-wrap; }
-.interaction-option { display: flex; gap: 10px; align-items: flex-start; padding: 10px; margin: 6px 0; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+.interaction-option { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; margin: 6px 0; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
 .interaction-option input { margin: 5px 0 0; flex-shrink: 0; width: 16px; height: 16px; accent-color: var(--accent); }
 .interaction-option small { display: block; color: var(--muted); }
 .interaction-text { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
@@ -514,12 +522,14 @@ input, select { font: inherit; }
 .interaction-card pre { max-width: 100%; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; background: var(--faint); border-radius: 6px; font-size: 12px; }
 .interaction-card summary { cursor: pointer; min-height: 32px; }
 .interaction-rule, .interaction-reason { color: var(--muted); }
-.interaction-history-options { padding-left: 20px; color: var(--muted); }
+.interaction-history-options { color: var(--muted); font-size: 13px; }
+.interaction-history-options ul { padding-left: 20px; margin: 4px 0 0; }
 .interaction-result { margin-top: 14px; }
 @media (max-width: 767px) { .interaction-card { padding: 14px; } .interaction-text textarea { font-size: 16px; } }
 
 /* Confirmations share chat surfaces and ordinary action controls. */
 .interaction-card.confirmation-card { padding: 0; border-radius: 16px; line-height: 1.65; }
+.interaction-card.confirmation-card:not([data-state="pending"]) { border-color: transparent; background: transparent; }
 .confirmation-card > .confirmation-strip { padding: 10px 16px; gap: 8px; border-radius: 15px 15px 0 0; border-bottom: 1px solid var(--line); background: var(--faint); color: var(--muted); font-size: 13px; line-height: 20px; }
 .confirmation-card[data-command="true"] > .confirmation-strip { color: var(--warning); background: var(--warning-soft); }
 .confirmation-kind { margin-left: auto; font-size: 12px; }
@@ -702,14 +712,14 @@ input, select { font: inherit; }
 
 /* Conversation process: plain evidence rows, separate final reply and protected actions. */
 .process-group { margin: 4px 0 20px 36px; min-width: 0; }
-.process-group > summary { display: flex; align-items: center; gap: 8px; padding: 7px 0; min-height: 32px; list-style: none; cursor: pointer; color: var(--muted); font-size: 12px; }
+.process-group > summary { display: flex; align-items: center; gap: 8px; padding: 7px 0; min-height: 32px; list-style: none; cursor: pointer; color: var(--muted); font-size: 13px; }
 .process-group > summary::-webkit-details-marker { display: none; }
 .process-group > summary > svg { flex-shrink: 0; }
-.process-group > summary > svg:last-child { margin-left: auto; }
+.process-group > summary > svg:last-child { margin-left: 2px; }
+.process-group > summary > span { min-width: 0; overflow-wrap: anywhere; }
+.process-group.running > summary { color: var(--text); }
 .process-group:not([open]) > summary > svg:last-child { transform: rotate(-90deg); }
 .process-content { border-left: 1px solid var(--line); margin: 5px 0 0 7px; padding-left: 16px; }
-.process-content .message { margin: 12px 0; font-size: 13px; }
-.process-content .assistant .message-content { padding-left: 0; }
 .message-list .tool-result { border: 0; border-radius: 0; background: transparent; margin-top: 4px; margin-bottom: 12px; }
 .message-list .tool-result > summary { min-height: 32px; padding: 6px 0; gap: 8px; }
 .message-list .tool-body { padding: 6px 12px; border-left: 1px solid var(--line); }

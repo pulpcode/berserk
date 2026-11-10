@@ -2,8 +2,8 @@
   "id": "chat-rendering-refresh",
   "name": "chat-rendering-refresh",
   "title": "聊天页面渲染统一与 DSH 对齐方案",
-  "description": "整理聊天页面的消息、过程、工具、文件及交互卡片改造方案与阶段计划，供用户审阅；本轮不实施。",
-  "status": "planning",
+  "description": "实施聊天页面 A 阶段展示改造：正文排版、过程分组与摘要、文件及交互卡片统一；B/C 另行审阅。",
+  "status": "in_progress",
   "dev_type": null,
   "scope": "harness",
   "package": null,
@@ -21,25 +21,32 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "D2 已确认沿用 DSH Web 默认保留进度说明；D3 已确认分阶段方向：A 暂留交互卡原位，C 最终在输入区附近处理当前待办、聊天保留回执。D1/D4 及 C 详细交互仍待审阅，整体未批准实施。入口 review.md，当前不得 task.py start。",
+  "notes": "A 阶段实现与质量检查已于 2026-11-10 完成，待用户审阅及提交；B/C 未启动。D1 先完成 A；D2 保留进度说明；D3 首轮交互卡原位、C 后续独立设计；D4 仅基础排版，不新增复制、预览或高亮依赖。",
   "meta": {
-    "implementationApproved": false,
+    "implementationApproved": true,
+    "approvedScope": "A",
     "desktopOnly": true,
-    "reviewStatus": "awaiting_user_review",
-    "planningConverged": false,
-    "sourceBaseCommit": "c3e02287bf2e1474cdba534531700fc46cf0f501",
+    "reviewStatus": "A_approved",
+    "planningConverged": true,
+    "sourceBaseCommit": "28423d8db4911d3c1fe99e59e5362379f2c6525a",
     "reviewEntry": "review.md",
     "relatedTasks": [
       "09-20-w01-10-chat-presentation"
     ],
     "decisions": {
+      "D1": {
+        "status": "confirmed",
+        "confirmedAt": "2026-11-09",
+        "behavior": "stage_A_only",
+        "userComment": "开始实施A部分"
+      },
       "D2": {
         "status": "confirmed",
         "confirmedAt": "2026-11-09",
         "behavior": "all_replies_visible",
         "reference": "DSH Web 默认 All replies",
         "userComment": "可以，仿照dsh web的行为来",
-        "scope": "仅确认进度说明和最终答复保持可见；不批准整体实施、其他决策或新增显示模式设置。"
+        "scope": "进度说明和最终答复保持可见，不新增显示模式设置。"
       },
       "D3": {
         "status": "direction_confirmed",
@@ -48,13 +55,16 @@
         "stageA": "确认/提问卡暂留原消息位置，先精简密度与历史摘要。",
         "targetC": "当前待办靠近输入区，服务端确认已处理后在聊天原位置保留可展开结果回执，并恢复原草稿。",
         "detailsStatus": "awaiting_separate_review",
-        "scope": "仅确认分阶段方案方向；具体承载、多待办及草稿/队列共存仍待设计，不构成整体实施批准。"
+        "scope": "C 的详细交互仍需独立设计审阅。"
+      },
+      "D4": {
+        "status": "confirmed",
+        "confirmedAt": "2026-11-09",
+        "behavior": "baseline_typography_only",
+        "scope": "统一已有正文与代码块样式；不新增复制、预览或高亮依赖。"
       }
     },
-    "pendingDecisions": [
-      "D1",
-      "D4"
-    ],
+    "pendingDecisions": [],
     "pendingDesignReviews": [
       "C-interaction-details"
     ]

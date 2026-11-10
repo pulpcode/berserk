@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { FileOutput, Interaction, PublicMessage, SessionSnapshot, SubagentSummary } from '../../src/contracts/index';
-import { chatBlocks, processLabel } from '../../src/web/processGroups';
+import { chatBlocks, processLabel, toolActionLabel, type ProcessGroup } from '../../src/web/processGroups';
 const msg = (id: string, role: PublicMessage['role'], extra: Partial<PublicMessage> = {}): PublicMessage => ({ id, role, text: id, requestId: 'r1', ...extra });
 const base = (messages: PublicMessage[]): SessionSnapshot => ({ id: 's1', workspaceId: 'w1', title: 'Test', updatedAt: '', active: null, lastResult: null, messages, turns: [{ requestId: 'r1', status: 'succeeded', finalMessageId: 'final' }] });
 const child: SubagentSummary = { subagentId: 'child', parentRequestId: 'r1', toolCallId: 'child-call', role: 'reviewer', description: 'Review', task: 'Check', status: 'succeeded', startedAt: '', result: 'Done' };
@@ -14,15 +14,28 @@ describe('conversation presentation boundaries', () => {
     snapshot.active = { requestId: 'r1', status: 'responding' };
     expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message', 'message', 'message', 'message']);
   });
-  it('keeps final reply separate and counts only mapped evidence', () => {
+  it('keeps progress notes visible and folds only tool and Agent records', () => {
     const snapshot = base([msg('user', 'user'), msg('note', 'assistant'), msg('read', 'tool', { toolName: 'read' }), msg('child-result', 'tool', { toolName: 'subagent', toolCallId: 'child-call' }), msg('final', 'assistant')]);
     snapshot.subagents = [child, child];
     const blocks = chatBlocks(snapshot);
-    expect(blocks.map(item => item.kind)).toEqual(['message', 'process', 'message']);
-    const group = blocks[1];
+    expect(blocks.map(item => item.kind)).toEqual(['message', 'message', 'process', 'message']);
+    const group = blocks[2];
     expect(group.kind === 'process' && group.collapsible).toBe(true);
     if (group.kind !== 'process') throw new Error('Expected process');
-    expect(processLabel(group)).toBe('处理过程 · 1 次工具调用 · 1 个 Agent 任务 · 1 条说明');
+    expect(group.items).toHaveLength(2);
+    expect(processLabel(group)).toBe('处理过程 · 1 次工具调用（读取文件） · 1 个 Agent 任务');
+  });
+  it('keeps every assistant note visible in order between adjacent tool segments', () => {
+    const snapshot = base([msg('u', 'user'), msg('note1', 'assistant'), msg('read', 'tool', { toolName: 'read' }), msg('note2', 'assistant'), msg('run', 'tool', { toolName: 'bash' }), msg('probe', 'tool', { toolName: 'custom_probe' }), msg('final', 'assistant')]);
+    const blocks = chatBlocks(snapshot);
+    expect(blocks.map(item => item.kind)).toEqual(['message', 'message', 'process', 'message', 'process', 'message']);
+    const groups = blocks.filter((block): block is ProcessGroup => block.kind === 'process');
+    expect(groups).toHaveLength(2);
+    expect(groups.every(group => group.collapsible)).toBe(true);
+    expect(processLabel(groups[0])).toBe('处理过程 · 1 次工具调用（读取文件）');
+    expect(processLabel(groups[1])).toBe('处理过程 · 2 次工具调用（执行命令、其他工具）');
+    expect(toolActionLabel('custom_probe')).toBe('调用工具');
+    expect(toolActionLabel('constructor')).toBe('调用工具');
   });
   it.each(['missing-turns', 'failed', 'interrupted', 'no-final', 'wrong-request', 'active'] as const)('never collapses without trusted final evidence: %s', variant => {
     const snapshot = base([msg('user', 'user'), msg('read', 'tool', { toolName: 'read' }), msg('final', 'assistant')]);
