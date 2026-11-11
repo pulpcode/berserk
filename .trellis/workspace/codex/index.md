@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 23
-- **Last Active**: 2026-11-09
+- **Total Sessions**: 24
+- **Last Active**: 2026-11-11
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~706 | Active |
+| `journal-1.md` | ~727 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 24 | 2026-11-11 | P5任务首页提交与独立测试版发布 | `5804b3e` | `codex/scenario-demo` |
 | 23 | 2026-11-09 | 以已有标绘替换态势圆点并完成服务器复验 | - | `codex/scenario-demo` |
 | 22 | 2026-11-09 | 实现车辆沿路径走时展示并完成服务器复验 | - | `codex/scenario-demo` |
 | 21 | 2026-11-09 | 提交走时方案并合并main原位发布 | `3ea9272`, `11ed5dd`, `13d397b`, `dfaf46e`, `0acb29b` | `codex/scenario-demo` |

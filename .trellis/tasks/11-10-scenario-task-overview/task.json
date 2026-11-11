@@ -2,7 +2,7 @@
   "id": "scenario-task-overview",
   "name": "scenario-task-overview",
   "title": "P5：任务首页进展整合",
-  "description": "P5任务首页与只读执行摘要已完成服务器验证；用户授权提交并另起独立测试版，保留当前线上版。",
+  "description": "P5实现已提交，并于服务器独立发布4316测试版；原4315版保留，待用户审阅。",
   "status": "review",
   "dev_type": "fullstack",
   "scope": null,
@@ -15,7 +15,7 @@
   "branch": "codex/scenario-demo",
   "base_branch": "codex/scenario-demo",
   "worktree_path": null,
-  "commit": null,
+  "commit": "5804b3e",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -23,8 +23,10 @@
   "relatedFiles": [
     ".trellis/tasks/11-10-scenario-task-overview/design.md",
     ".trellis/tasks/11-10-scenario-task-overview/research/current-state.md",
-    ".trellis/tasks/11-10-scenario-task-overview/research/verification.md"
+    ".trellis/tasks/11-10-scenario-task-overview/research/verification.md",
+    ".trellis/tasks/11-10-scenario-task-overview/research/preview-release.md",
+    ".trellis/tasks/11-10-scenario-task-overview/research/preview-verification.json"
   ],
-  "notes": "144文件1653个唯一单元/集成用例、47个唯一桌面用例完成分批与修正后复验；首次失败和环境问题全部保留。最终类型/lint/build通过，572文件指纹一致。见research/verification.md。",
+  "notes": "144文件1653个唯一单元/集成用例、47个唯一桌面用例完成分批与修正后复验；首次失败和环境问题全部保留。最终类型/lint/build通过，572文件指纹一致。见research/verification.md。 独立测试版4316/38372发布完成，数据、通知与认证令牌独立；原4315进程保持。只读API与实际浏览器登录/任务首页验证通过。",
   "meta": {}
 }

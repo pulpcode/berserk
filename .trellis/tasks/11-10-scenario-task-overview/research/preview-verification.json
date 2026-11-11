@@ -1,0 +1,26 @@
+{
+  "commit": "5804b3e",
+  "port": 4316,
+  "sourcePort": 38372,
+  "pid": 1172590,
+  "sourcePid": 1172627,
+  "originalPort": 4315,
+  "originalPid": 1138762,
+  "originalSourcePid": 1138806,
+  "originalUnchanged": true,
+  "health": true,
+  "businessDataPreservedOnRead": true,
+  "readOnlySummaryVerified": true,
+  "workAndInformationReadVerified": true,
+  "modelCalls": 0,
+  "eventsSent": 0,
+  "commandsSent": 0,
+  "taskId": "58a2037c-d173-429b-aeb1-84f5fe54a020",
+  "assets": [
+    "/login",
+    "/scenario-director",
+    "/assets/index-BD2oDg4F.js",
+    "/assets/index-En0fH0DY.css"
+  ],
+  "deployedBrowserLoginAndHomeVerified": true
+}
