@@ -1,0 +1,30 @@
+{
+  "id": "source-task-map-focus",
+  "name": "source-task-map-focus",
+  "title": "从来报创建公共任务时预填地图关注范围",
+  "description": "已按用户要求搁置；来报预填地图关注范围及后续新增资源的地图关联问题转入SIM-MAP-001，暂不实施。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-09",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "用户要求先形成简洁方案待审阅，不编码。已核对来源报告引用、TaskContext创建接口及地图读取；建议宿主从成功来源证据预填、人员确认后提交，不扩展Agent建议。\n2026-11-09用户明确搁置方案，先修改其它问题；后续新增车辆可能不在原来报中，需一并明确任务关注对象的补充机制，人工/自动路径尚未定夺。恢复时重新审阅，当前不授权编码。",
+  "meta": {
+    "deferred": true,
+    "deferredAt": "2026-11-09",
+    "issueId": "SIM-MAP-001"
+  }
+}
