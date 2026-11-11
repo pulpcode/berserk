@@ -322,7 +322,7 @@ test('task and personal-space plus controls appear on hover or keyboard focus wi
     env.lab.access!.create(env.actor, { title: '个人验证空间', goal: '', visibility: 'private', clientActionId: randomUUID() });
     await login(page, 'a');
     await page.mouse.move(1200, 850);
-    const publicPlus = page.getByRole('button', { name: '新建工作任务', exact: true });
+    const publicPlus = page.getByRole('button', { name: '新建任务空间', exact: true });
     const privatePlus = page.getByRole('button', { name: '新建个人空间', exact: true });
     const rowPlus = page.getByRole('button', { name: '在项目 联合分析任务 中新建对话', exact: true });
     await expect(publicPlus).toHaveCSS('opacity', '0'); await expect(privatePlus).toHaveCSS('opacity', '0'); await expect(rowPlus).toHaveCSS('opacity', '0');

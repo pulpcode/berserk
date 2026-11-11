@@ -73,9 +73,9 @@ async function logout(page: Page) {
   await expect(page.getByRole('button', { name: '登录', exact: true })).toBeVisible();
 }
 async function createTask(page:Page,title:string,visibility:'public'|'private') {
-  const create = page.getByRole('button',{name:visibility==='public'?'新建工作任务':'新建个人空间',exact:true});
+  const create = page.getByRole('button',{name:visibility==='public'?'新建任务空间':'新建个人空间',exact:true});
   await page.locator('.catalog-heading').filter({has:create}).hover();
-  await create.click();await page.getByLabel(visibility==='public'?'任务名称':'空间名称',{exact:true}).fill(title);await page.getByLabel('目标与说明',{exact:true}).fill('综合资料编制计划');await page.getByRole('button',{name:visibility==='public'?'创建工作任务':'创建个人空间',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();
+  await create.click();await page.getByLabel(visibility==='public'?'任务名称':'空间名称',{exact:true}).fill(title);await page.getByLabel('目标与说明',{exact:true}).fill('综合资料编制计划');await page.getByRole('button',{name:visibility==='public'?'创建任务空间':'创建个人空间',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();
 }
 test('login, public/private task navigation, lazy workspace, archive and two independent seats',async({page,browser})=>{
   const env=await setup();const second=await browser.newContext();const b=await second.newPage();await env.attach(page);await env.attach(b);
@@ -125,7 +125,7 @@ test('catalog managers maintain all work tasks while every seat owns its persona
     await page.keyboard.press('Escape');
 
     await expect(page.getByRole('button', { name: '新建项目', exact: true })).toHaveCount(0);
-    for (const [label, action] of [['工作任务', '新建工作任务'], ['个人空间', '新建个人空间']]) {
+    for (const [label, action] of [['任务空间', '新建任务空间'], ['个人空间', '新建个人空间']]) {
       const header = page.locator('.workspace-groups .section-label').filter({ hasText: label });
       const create = header.getByRole('button', { name: action, exact: true });
       await expect(create).toBeVisible();
@@ -159,7 +159,7 @@ test('catalog managers maintain all work tasks while every seat owns its persona
     await member.keyboard.press('Escape');
     await expect(member.getByRole('button', { name: '设置', exact: true })).toBeFocused();
     await expect(member.getByRole('button', { name: '新建项目', exact: true })).toHaveCount(0);
-    await expect(member.getByRole('button', { name: '新建工作任务', exact: true })).toHaveCount(0);
+    await expect(member.getByRole('button', { name: '新建任务空间', exact: true })).toHaveCount(0);
     await expect(member.getByRole('button', { name: '新建个人空间', exact: true })).toBeVisible();
     await expect(member.getByRole('button', { name: /[AC] 的个人资料/ })).toHaveCount(0);
     await member.getByRole('button', { name: '进入项目：跨席位管理任务', exact: true }).click();await member.getByRole('button', { name: '任务说明', exact: true }).click();
@@ -219,15 +219,15 @@ test('task catalog groups fold independently and creation stays accessible acros
   });
   try {
     await login(page, 'a');
-    await createTask(page, '分组中的工作任务', 'public');
+    await createTask(page, '分组中的任务空间', 'public');
     await createTask(page, '分组中的个人空间', 'private');
     await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 分组中的个人空间 中新建对话', exact: true }) }).hover(); await page.getByRole('button', { name: '在项目 分组中的个人空间 中新建对话', exact: true }).click();
     const draft = page.getByRole('textbox', { name: '发送消息', exact: true });
     await draft.fill('折叠分组时保留当前草稿');
     const writesBeforeFolding = writes;
-    const publicEntry = page.getByRole('button', { name: '进入项目：分组中的工作任务', exact: true });
+    const publicEntry = page.getByRole('button', { name: '进入项目：分组中的任务空间', exact: true });
     const privateEntry = page.getByRole('button', { name: '进入项目：分组中的个人空间', exact: true });
-    for (const label of ['工作任务', '个人空间']) {
+    for (const label of ['任务空间', '个人空间']) {
       const header = page.locator('.catalog-heading').filter({ hasText: label });
       const create = header.getByRole('button', { name: `新建${label}`, exact: true });
       await draft.focus();
@@ -243,13 +243,13 @@ test('task catalog groups fold independently and creation stays accessible acros
       await expect(create).toHaveCSS('opacity', '1');
     }
 
-    await page.getByRole('button', { name: '折叠工作任务', exact: true }).click();
-    await expect(page.getByRole('button', { name: '展开工作任务', exact: true })).toHaveAttribute('aria-expanded', 'false');
+    await page.getByRole('button', { name: '折叠任务空间', exact: true }).click();
+    await expect(page.getByRole('button', { name: '展开任务空间', exact: true })).toHaveAttribute('aria-expanded', 'false');
     await expect(publicEntry).toBeHidden();
     await expect(privateEntry).toBeVisible();
     await page.getByRole('button', { name: '折叠个人空间', exact: true }).click();
     await expect(privateEntry).toBeHidden();
-    await page.getByRole('button', { name: '展开工作任务', exact: true }).click();
+    await page.getByRole('button', { name: '展开任务空间', exact: true }).click();
     await expect(publicEntry).toBeVisible();
     await expect(privateEntry).toBeHidden();
     await page.locator('.catalog-heading').filter({ hasText: '个人空间' }).hover();
@@ -265,7 +265,7 @@ test('task catalog groups fold independently and creation stays accessible acros
     await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
     await expect(publicEntry).toBeVisible();
     await expect(privateEntry).toBeVisible();
-    for (const action of ['新建工作任务', '新建个人空间']) {
+    for (const action of ['新建任务空间', '新建个人空间']) {
       const create = page.getByRole('button', { name: action, exact: true });
       await expect(create).toBeVisible();
       await expect(create.locator('.catalog-rail-icon')).toBeVisible();

@@ -246,7 +246,7 @@ export class TaskLinkService {
   createFromSuggestion(actor: Identity, eventId: string, input: TaskSuggestionCreateInput): TaskSuggestionCreateResult {
     return this.store.transaction(() => {
       const {actor: current, job} = this.authorize(actor, eventId, input.jobId); actor = current;
-      if (!actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
+      if (!actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建任务空间。', 403);
       if (!job.taskAssessment?.newTaskSuggestion) throw conflict('该分析没有新建任务建议。');
       if (!UUID.test(input.clientActionId) || !reasonText(input.reason) || typeof input.title !== 'string' || !input.title.trim() || input.title.length > 60
         || typeof input.goal !== 'string' || !input.goal.trim() || input.goal.length > 8000) throw invalid('请填写有效的任务名称、目标和关联理由。');

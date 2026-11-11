@@ -281,7 +281,7 @@ macOS 优先使用已安装的 Chrome；其他环境需先准备 Playwright Chro
 
 ## 业务任务与账号入口
 
-正式启动默认要求登录。一个启用账号固定绑定一个席位；工作任务的说明对启用席位可见，文件／会话仍按任务 × 席位分别保存。个人空间仅所属席位可访问和管理，每个启用席位均可创建自己的空间。工作任务内的工作分派、成果提交与验收继续使用原有确认流程。
+正式启动默认要求登录。一个启用账号固定绑定一个席位；任务空间的说明对启用席位可见，文件／会话仍按任务 × 席位分别保存。个人空间仅所属席位可访问和管理，每个启用席位均可创建自己的空间。任务空间内的工作分派、成果提交与验收继续使用原有确认流程。
 
 本期不迁移难以对应的旧实验项目。需要重新初始化时，先停止服务，再备份完整数据根：
 
@@ -298,7 +298,7 @@ npm run access:admin -- account --data-dir /绝对路径/数据目录 --username
 npm run access:admin -- account --data-dir /绝对路径/数据目录 --username operator-b --name 席位B用户 --seat seat-b --seat-name 席位B --service-stopped
 ```
 
-`--manage-tasks` 授权该席位创建、编辑、归档和重新开启所有工作任务的说明，不受创建席位限制；未获授权的席位即使曾创建任务，也不能管理这些说明。该权限不允许读取其他席位的文件／会话或个人空间，不改变工作分派与验收的参与者权限。旧参数 `--create-public` 仍可使用，含义与 `--manage-tasks` 相同；内部沿用 `createPublicTask`／`create_public` 字段，无需迁移数据。`--manage-model` 仍独立控制共享模型设置。
+`--manage-tasks` 授权该席位创建、编辑、归档和重新开启所有任务空间的说明，不受创建席位限制；未获授权的席位即使曾创建任务，也不能管理这些说明。该权限不允许读取其他席位的文件／会话或个人空间，不改变工作分派与验收的参与者权限。旧参数 `--create-public` 仍可使用，含义与 `--manage-tasks` 相同；内部沿用 `createPublicTask`／`create_public` 字段，无需迁移数据。`--manage-model` 仍独立控制共享模型设置。
 
 首次开通生成被 Git 忽略的 `.env.auth.local`，包含数据目录和随机签名密钥；`npm start`／`npm run dev:api` 会加载它。密码只以加盐 scrypt 摘要存储。同用户名再次运行是重置密码和能力，会使旧登录失效；账号不可在此命令中换席位。停用使用 `disable --username operator-b --data-dir ... --service-stopped`。正式配置请移除原 `LAB_TEST_SEATS`，不得与登录模式同时启用。
 
