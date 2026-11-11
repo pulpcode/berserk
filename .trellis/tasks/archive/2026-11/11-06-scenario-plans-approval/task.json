@@ -1,0 +1,37 @@
+{
+  "id": "scenario-plans-approval",
+  "name": "scenario-plans-approval",
+  "title": "备选设计归档：方案版本、比较与人员批准",
+  "description": "2026-11-11归档为待决备选设计，暂不实施。当前继续普通文档与现有工作审核软流程。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-06",
+  "completedAt": null,
+  "branch": "codex/scenario-plans-design",
+  "base_branch": "codex/scenario-demo",
+  "worktree_path": "/Users/lau/.codex/worktrees/scenario-plans-design/berserk",
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-03-scenario-demo",
+  "relatedFiles": [
+    ".trellis/tasks/archive/2026-11/11-06-scenario-plans-approval/review.md",
+    ".trellis/tasks/archive/2026-11/11-06-scenario-plans-approval/prd.md",
+    ".trellis/tasks/archive/2026-11/11-06-scenario-plans-approval/design.md",
+    ".trellis/tasks/archive/2026-11/11-06-scenario-plans-approval/implement.md",
+    ".trellis/tasks/archive/2026-11/11-06-scenario-plans-approval/research/basis.md"
+  ],
+  "notes": "用户要求独立worktree并行设计第二轮供审阅；保持planning。D01持续结果人工建任务、D02派工审核与最终方案采用的权限映射待决；席位工作区为公共任务下本席位工作区。未运行task.py start，未实施。 2026-11-11用户同意单独归档，方案与普通文档是否区分仍待决；不得据此实施或合入main/场景分支。",
+  "meta": {
+    "disposition": "archived_pending_decision",
+    "archivedAt": "2026-11-11",
+    "implementationApproved": false,
+    "decisionIssue": "SIM-PLAN-001"
+  }
+}
