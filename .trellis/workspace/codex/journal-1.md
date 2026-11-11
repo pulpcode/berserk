@@ -725,3 +725,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 25: 修复任务首页底部空白并更新测试版
+
+**Date**: 2026-11-11
+**Task**: 修复任务首页底部空白并更新测试版
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+为隐藏输入标签补齐定位容器。服务器旧样式回归按预期失败，修复后首页5项通过，类型/lint/build通过。静态更新4316，不重启或修改数据；发布后3种桌面尺寸文档高度与视口一致、侧栏固定、内部滚动可达输入框。原4315保持。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0e164a7` | (see git log) |
+
+### Status
+
+[OK] **Completed**

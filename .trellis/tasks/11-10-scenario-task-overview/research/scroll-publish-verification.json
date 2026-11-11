@@ -1,0 +1,72 @@
+{
+  "commit": "0e164a7",
+  "port": 4316,
+  "sourcePort": 38372,
+  "staticUpdateWithoutRestart": true,
+  "pidsUnchanged": true,
+  "pids": {
+    "4315": 1138762,
+    "4316": 1172590,
+    "38371": 1138806,
+    "38372": 1172627
+  },
+  "dataWrittenByDeployment": false,
+  "businessFingerprintUnchanged": true,
+  "assets": [
+    "/assets/index-BejON1zm.js",
+    "/assets/index-B9wWRNd4.css"
+  ],
+  "backup": "/home/ubuntu/axon-p5-preview-5804b3e/backup/scroll-0e164a7",
+  "browserTestsPassed": 5,
+  "oldStyleRegressionFailedAsExpected": true,
+  "checks": [
+    {
+      "check": "typecheck",
+      "exitCode": 0,
+      "seconds": 32.5
+    },
+    {
+      "check": "lint",
+      "exitCode": 0,
+      "seconds": 32.9
+    },
+    {
+      "check": "build",
+      "exitCode": 0,
+      "seconds": 9
+    }
+  ],
+  "deployedBrowserLayouts": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "documentHeight": 1000,
+      "documentWidth": 1440,
+      "rootScroll": 0,
+      "sidebarTop": 0,
+      "paneScroll": 640,
+      "composerVisible": true
+    },
+    {
+      "width": 1440,
+      "height": 600,
+      "documentHeight": 600,
+      "documentWidth": 1440,
+      "rootScroll": 0,
+      "sidebarTop": 0,
+      "paneScroll": 1040,
+      "composerVisible": true
+    },
+    {
+      "width": 960,
+      "height": 600,
+      "documentHeight": 600,
+      "documentWidth": 960,
+      "rootScroll": 0,
+      "sidebarTop": 0,
+      "paneScroll": 1112,
+      "composerVisible": true
+    }
+  ],
+  "pageErrors": 0
+}

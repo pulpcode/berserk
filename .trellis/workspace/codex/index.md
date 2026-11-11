@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 24
+- **Total Sessions**: 25
 - **Last Active**: 2026-11-11
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~727 | Active |
+| `journal-1.md` | ~748 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 25 | 2026-11-11 | 修复任务首页底部空白并更新测试版 | `0e164a7` | `codex/scenario-demo` |
 | 24 | 2026-11-11 | P5任务首页提交与独立测试版发布 | `5804b3e` | `codex/scenario-demo` |
 | 23 | 2026-11-09 | 以已有标绘替换态势圆点并完成服务器复验 | - | `codex/scenario-demo` |
 | 22 | 2026-11-09 | 实现车辆沿路径走时展示并完成服务器复验 | - | `codex/scenario-demo` |
