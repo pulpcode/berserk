@@ -750,7 +750,6 @@ input, select { font: inherit; }
 .login-password { position:relative; }
 .login-password input { display:block; width:100%; padding-right:48px; }
 .login-password .icon-button { position:absolute; right:4px; top:50%; transform:translateY(-50%); width:36px; height:36px; min-height:36px; padding:0; color:var(--muted); }
-.task-detail-link { align-self:flex-start; margin:4px 24px; border:0; color:#557063; background:transparent; font-size:12px; }
 .task-comparison { background:#f2f5f2; border-radius:8px; padding:12px; white-space:pre-wrap; }
 .workspace-form textarea { padding:10px; border:1px solid #bac8bf; border-radius:8px; resize:vertical; font:inherit; }
 .workspace-groups .section-label { align-items:center; padding-bottom:4px; }
@@ -911,7 +910,7 @@ button.danger-action, .stop-button { color: var(--danger); border-color: var(--d
 button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { color: var(--danger); border-color: var(--danger-border); background: var(--danger-soft); }
 .stop-button { gap: var(--control-gap); min-height: var(--control-height); padding: 8px 12px; font-size: var(--control-font-size); }
 :is(.files-toolbar button, .file-pagination button, .interaction-actions button, .work-inbox-header > button, .work-empty > button, .information-actions button) > svg { width: 18px; height: 18px; }
-.notice button, .restore-draft, .request-resources, .task-detail-link, .historical-file button, .information-center .information-row-link { min-height: var(--control-height-compact); border-radius: var(--control-radius); }
+.notice button, .restore-draft, .request-resources, .historical-file button, .information-center .information-row-link { min-height: var(--control-height-compact); border-radius: var(--control-radius); }
 .selection-chip button { min-height: 24px; }
 .suggestions button, .skill-list button, .information-center .information-job-card { border-radius: 12px; font-weight: 400; box-shadow: none; }
 .suggestions button:hover:not(:disabled), .skill-list button:hover:not(:disabled), .information-center .information-job-card:hover:not(:disabled) { background: var(--control-hover); border-color: var(--control-border-hover); }
