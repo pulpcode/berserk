@@ -1,4 +1,4 @@
-import { RiFolder5Line } from '@remixicon/react';
+import { RiFolderCloudLine } from '@remixicon/react';
 import { useApi } from './api';
 import { useState } from 'react';
 import { Activity, ArrowUpRight, ChevronDown, Folder, FolderPlus, LoaderCircle, MessageSquare, Plus } from 'lucide-react';
@@ -75,14 +75,14 @@ export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspa
       {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=>{
         const label=group==='public'?'任务空间':group==='private'?'个人空间':'项目';
         const folded=!!catalogCollapsed[group];
-        const WorkspaceIcon=group==='public'?RiFolder5Line:Folder;
+        const WorkspaceIcon=group==='public'?RiFolderCloudLine:Folder;
         return <div key={group}>
         <div className="section-label catalog-heading">
           <button className="catalog-toggle" aria-label={`${folded?'展开':'折叠'}${label}`} aria-expanded={!folded} aria-controls={domId(`catalog-${group}`)} onClick={()=>setCatalogCollapsed(previous=>({...previous,[group]:!previous[group]}))}>
             <span>{label}</span><ChevronDown size={14} aria-hidden="true"/>
           </button>
           {(group!=='public' || publicAllowed) && <button className="icon-button catalog-create" aria-label={group==='public'?'新建任务空间':group==='private'?'新建个人空间':'新建项目'} title={group==='public'?'新建任务空间':group==='private'?'新建个人空间':'新建项目'} onClick={()=>group==='legacy'?createWorkspace?.():createTask?.(group)}>
-            <Plus className="catalog-plus" size={16} aria-hidden="true"/>{group==='public'?<RiFolder5Line className="catalog-rail-icon" size={20} aria-hidden="true"/>:<FolderPlus className="catalog-rail-icon" size={20} aria-hidden="true"/>}
+            <Plus className="catalog-plus" size={16} aria-hidden="true"/>{group==='public'?<RiFolderCloudLine className="catalog-rail-icon" size={20} aria-hidden="true"/>:<FolderPlus className="catalog-rail-icon" size={20} aria-hidden="true"/>}
           </button>}
         </div>
         <div id={domId(`catalog-${group}`)} className={`catalog-items${folded?' is-collapsed':''}`}>
