@@ -4,7 +4,7 @@ import type { RequestState, SessionSnapshot } from '../contracts/index';
 import type { ChatFocusTransfer } from './useChatItemFocus';
 import { Message } from './ChatMessage';
 import { SubagentCard, subagentStatus } from './SubagentCard';
-import { FileOutputCard } from './Files';
+import { FileOutputCard, FileOutputGroup } from './Files';
 import { InteractionCard } from './InteractionCard';
 import { chatBlocks, processLabel, toolActionLabel, type DisplayItem, type ProcessGroup } from './processGroups';
 
@@ -61,5 +61,5 @@ export function ChatPresentation({ snapshot, active, busy, choices, canAutoColla
     if (item.kind === 'subagent') return <SubagentCard key={item.key} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} />;
     return <Message key={item.key} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} message={item.message} finalAnswer={snapshot.turns?.some(turn=>turn.requestId===item.message.requestId && turn.finalMessageId===item.message.id)} evidence={snapshot.messages.slice(0,snapshot.messages.findIndex(message=>message.id===item.message.id))} workspaceId={snapshot.workspaceId} active={busy && item.message.requestId === active?.requestId} />;
   };
-  return <>{blocks.map(block => block.kind === 'process' ? <Process key={block.key} group={block} choiceKey={`${snapshot.id}:${block.key}`} choices={choices} canAutoCollapse={canAutoCollapse} active={active}>{block.items.map(render)}</Process> : render(block))}</>;
+  return <>{blocks.map(block => block.kind === 'process' ? <Process key={block.key} group={block} choiceKey={`${snapshot.id}:${block.key}`} choices={choices} canAutoCollapse={canAutoCollapse} active={active}>{block.items.map(render)}</Process> : block.kind === 'files' ? <FileOutputGroup key={block.key} files={block.files} /> : render(block))}</>;
 }

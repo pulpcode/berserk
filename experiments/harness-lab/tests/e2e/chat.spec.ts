@@ -1504,6 +1504,83 @@ test('桌面侧边栏可用键盘折叠展开，保留草稿且不影响手机�
 });
 
 
+test('交付文件卡分组有序、默认折叠四项、固定下载且各宽度无溢出', async ({ page }, testInfo) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!;
+    const names = ['季度报告.md', '数据汇总.csv', '2026 年第三季度城市内涝风险综合分析报告（最终审定稿）.md', 'quarterly-urban-flood-risk-assessment-final-reviewed-2026Q3.csv', '现场照片.png'];
+    session.messages = [
+      { id: 'u1', requestId: 'r1', role: 'user', text: '整理本轮成果文件。' },
+      ...names.map((name, index) => ({ id: `file-${index}`, requestId: 'r1', role: 'tool' as const, toolName: 'file_output', toolCallId: `call-${index}`, text: '已生成文件' })),
+      { id: 'note', requestId: 'r1', role: 'assistant', text: '以上为本轮全部交付文件。' },
+      { id: 'u2', requestId: 'r2', role: 'user', text: '再补一份说明。' },
+      { id: 'file-single', requestId: 'r2', role: 'tool', toolName: 'file_output', toolCallId: 'call-single', text: '已生成文件' },
+      { id: 'final', requestId: 'r2', role: 'assistant', text: '说明已单独附上。' },
+    ];
+    session.fileOutputs = [...names.map((name, index) => ({ downloadId: `fixed-${index}`, workspaceId: 'w1', sessionId: 'A', requestId: 'r1', toolCallId: `call-${index}`, path: name, name, size: 1024 * (index + 1), hash: 'hash', createdAt: '' })), { downloadId: 'fixed-single', workspaceId: 'w1', sessionId: 'A', requestId: 'r2', toolCallId: 'call-single', path: '说明.txt', name: '说明.txt', size: 128, hash: 'hash', createdAt: '' }];
+    session.lastResult = { requestId: 'r2', status: 'succeeded' };
+    await page.goto('/');
+    const groups = page.locator('.file-output-group');
+    await expect(groups).toHaveCount(2);
+    const multi = groups.first();
+    const single = groups.nth(1);
+    await expect(multi.locator('.file-output')).toHaveCount(4);
+    await expect(page.getByText('现场照片.png', { exact: true })).toHaveCount(0);
+    const toggle = page.getByRole('button', { name: '展开其余 1 个文件' });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('link', { name: '下载 数据汇总.csv', exact: true })).toHaveAttribute('href', '/api/workspaces/w1/downloads/fixed-1');
+    await expect(page.getByRole('link', { name: '下载 说明.txt', exact: true })).toHaveAttribute('href', '/api/workspaces/w1/downloads/fixed-single');
+    // Clicking the card body never downloads, navigates or sends.
+    const before = page.url();
+    await multi.locator('.file-output').first().locator('strong').click();
+    expect(mock.counts.sends).toBe(0);
+    expect(page.url()).toBe(before);
+    // Two columns in the wide window; the long names wrap fully inside their cards.
+    const cards = multi.locator('.file-output');
+    const firstBox = (await cards.nth(0).boundingBox())!;
+    const secondBox = (await cards.nth(1).boundingBox())!;
+    expect(Math.abs(firstBox.y - secondBox.y)).toBeLessThan(2);
+    expect(firstBox.width).toBeGreaterThanOrEqual(300);
+    const longName = page.getByText('2026 年第三季度城市内涝风险综合分析报告（最终审定稿）.md', { exact: true });
+    const longBox = (await longName.boundingBox())!;
+    const longCard = (await cards.nth(2).boundingBox())!;
+    expect(longBox.x).toBeGreaterThanOrEqual(longCard.x);
+    expect(longBox.x + longBox.width).toBeLessThanOrEqual(longCard.x + longCard.width + 1);
+    expect(longBox.height).toBeGreaterThan(24);
+    // The single-file group keeps content width within 320–480px and aligns with the reply text.
+    const singleBox = (await single.boundingBox())!;
+    expect(singleBox.width).toBeGreaterThanOrEqual(319);
+    expect(singleBox.width).toBeLessThanOrEqual(481);
+    const replyBox = (await page.getByText('说明已单独附上。', { exact: true }).boundingBox())!;
+    expect(Math.abs(singleBox.x - replyBox.x)).toBeLessThan(2);
+    await page.screenshot({ path: testInfo.outputPath('file-cards-1440.png'), fullPage: true });
+    // Keyboard expansion keeps the choice across subsequent viewport updates.
+    await toggle.focus();
+    await page.keyboard.press('Enter');
+    const collapse = page.getByRole('button', { name: '收起文件列表' });
+    await expect(collapse).toHaveAttribute('aria-expanded', 'true');
+    await expect(collapse).toBeFocused();
+    await expect(multi.locator('.file-output')).toHaveCount(5);
+    await expect(page.getByText('现场照片.png', { exact: true })).toBeVisible();
+    await page.setViewportSize({ width: 960, height: 960 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath('file-cards-960.png'), fullPage: true });
+    // A narrow desktop window keeps one readable column without page overflow.
+    await page.setViewportSize({ width: 800, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    const narrowFirst = (await cards.nth(0).boundingBox())!;
+    const narrowSecond = (await cards.nth(1).boundingBox())!;
+    expect(narrowSecond.y).toBeGreaterThan(narrowFirst.y + 20);
+    const narrowSingle = (await single.boundingBox())!;
+    expect(narrowSingle.width).toBeLessThanOrEqual(narrowFirst.width + 1);
+    await page.screenshot({ path: testInfo.outputPath('file-cards-800.png'), fullPage: true });
+    await page.setViewportSize({ width: 1440, height: 960 });
+    await page.getByRole('button', { name: '收起文件列表' }).click();
+    await expect(multi.locator('.file-output')).toHaveCount(4);
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
 test('折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦点', async ({ page }) => {
   const mock = await mockApi(page);
   try {

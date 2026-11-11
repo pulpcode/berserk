@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Download, FileText, Folder, Paperclip, RefreshCw, Upload, X } from 'lucide-react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { ArrowLeft, ChevronDown, Download, File, FileArchive, FileCode, FileImage, FileSpreadsheet, FileText, Folder, Paperclip, RefreshCw, Upload, X } from 'lucide-react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { FileEntry, FileList, FileOutput, FileRef, FileStatus } from '../contracts/files';
@@ -27,9 +27,31 @@ export function HistoricalFile({ file, workspaceId }: { file: FileRef; workspace
   }
   return <li className="historical-file"><button onClick={() => void inspect()} disabled={loading} aria-label={`查看引用文件 ${file.name}`}><Paperclip size={14} aria-hidden="true" />{file.name}</button><small>引用路径：{file.path}</small>{loading && <small role="status">正在核对文件…</small>}{error && <small className="resource-error" role="alert">{error}</small>}{status && <><small role="status">{status.state === 'missing' ? '此路径的文件已不可用，请重新选择文件。' : status.state === 'changed' ? '文件已修改，下面链接为当前文件。' : '核对时文件与发送时一致。'}</small>{status.state !== 'missing' && <a href={url(currentFileUrl(workspaceId, file.path))} download={file.name}>下载当前文件</a>}</>}</li>;
 }
+type FileKind = { label: string; Icon: typeof FileText };
+const fileKinds: Record<string, FileKind> = {
+  md: { label: 'Markdown', Icon: FileText }, txt: { label: '文本', Icon: FileText }, pdf: { label: 'PDF', Icon: FileText },
+  csv: { label: 'CSV 表格', Icon: FileSpreadsheet }, xls: { label: 'Excel 表格', Icon: FileSpreadsheet }, xlsx: { label: 'Excel 表格', Icon: FileSpreadsheet },
+  png: { label: 'PNG 图像', Icon: FileImage }, jpg: { label: 'JPEG 图像', Icon: FileImage }, jpeg: { label: 'JPEG 图像', Icon: FileImage }, gif: { label: 'GIF 图像', Icon: FileImage }, webp: { label: 'WebP 图像', Icon: FileImage },
+  json: { label: 'JSON', Icon: FileCode }, html: { label: 'HTML', Icon: FileCode }, css: { label: 'CSS', Icon: FileCode }, js: { label: 'JavaScript', Icon: FileCode }, ts: { label: 'TypeScript', Icon: FileCode }, py: { label: 'Python', Icon: FileCode },
+  zip: { label: 'ZIP 压缩包', Icon: FileArchive }, tar: { label: 'TAR 压缩包', Icon: FileArchive }, gz: { label: 'Gzip 压缩包', Icon: FileArchive },
+};
+/** Local presentation metadata only: known extensions get a label and icon, everything else stays generic. */
+function fileKind(name: string): FileKind {
+  const extension = name.includes('.') ? name.split('.').pop()!.toLowerCase() : '';
+  return fileKinds[extension] || { label: extension ? extension.toUpperCase() : '文件', Icon: File };
+}
 export function FileOutputCard({ file }: { file: FileOutput }) {
   const { url } = useApi();
-  return <div className="file-output" aria-label={`可下载文件：${file.name}`}><FileText size={22} aria-hidden="true" /><div><strong>{file.name}</strong><small>{fileSize(file.size)}</small></div><a href={url(`/api/workspaces/${encodeURIComponent(file.workspaceId)}/downloads/${encodeURIComponent(file.downloadId)}`)} download={file.name} aria-label={`下载 ${file.name}`}><Download size={18} aria-hidden="true" />下载</a></div>;
+  const kind = fileKind(file.name);
+  return <div className="file-output" aria-label={`可下载文件：${file.name}`}><span className="file-output-icon" aria-hidden="true"><kind.Icon size={20} /></span><div className="file-output-text"><strong>{file.name}</strong><small>{kind.label} · {fileSize(file.size)}</small></div><a className="file-output-download" href={url(`/api/workspaces/${encodeURIComponent(file.workspaceId)}/downloads/${encodeURIComponent(file.downloadId)}`)} download={file.name} aria-label={`下载 ${file.name}`} title={`下载 ${file.name}`}><Download size={17} aria-hidden="true" /></a></div>;
+}
+/** Adjacent same-request deliveries; the collapse choice is local and survives later streamed files. */
+export function FileOutputGroup({ files }: { files: FileOutput[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const gridId = useId();
+  const collapsible = files.length > 4;
+  const visible = collapsible && !expanded ? files.slice(0, 4) : files;
+  return <div className={`file-output-group${files.length === 1 ? ' single' : ''}`}><div className="file-output-grid" id={gridId}>{visible.map(file => <FileOutputCard key={file.downloadId} file={file} />)}</div>{collapsible && <button type="button" className="file-output-toggle" aria-expanded={expanded} aria-controls={gridId} onClick={() => setExpanded(value => !value)}>{expanded ? '收起文件列表' : `展开其余 ${files.length - 4} 个文件`}<ChevronDown size={14} aria-hidden="true" /></button>}</div>;
 }
 export function Attachments({ items, remove, retry, notice }: { items: DraftAttachment[]; remove: (item: DraftAttachment) => void; retry: (item: DraftAttachment) => void; notice?: string }) {
   return <div className="attachments"><ul aria-label="消息附件">{items.map(item => <li key={item.id} className={`attachment ${item.status}`} aria-label={`${item.status === 'ready' ? item.uploadId ? '已保存到工作区' : '工作区文件' : item.status === 'failed' ? '上传未完成' : '正在上传'}：${item.name}`} title={[item.path || item.name, fileSize(item.size), item.originalName && item.originalName !== item.name ? `原文件名：${item.originalName}` : ''].filter(Boolean).join(' · ')}><Paperclip size={16} aria-hidden="true" /><div className="attachment-detail"><strong>{item.name}</strong>{item.originalName && item.originalName !== item.name && <small>原文件名：{item.originalName}</small>}<small className="attachment-meta">{fileSize(item.size)} · {item.status === 'ready' ? item.uploadId ? '已保存到工作区' : '工作区文件' : item.status === 'failed' ? '未完成' : item.progress === 100 ? '正在保存…' : `上传中 ${item.progress}%`}</small>{item.path && item.path !== item.name && <small>{item.path}</small>}{item.status === 'uploading' && <progress aria-label={`${item.name} 上传进度`} value={item.progress} max={100} />}{item.error && <p className="resource-error" role="alert">{item.error}</p>}</div>{item.status === 'failed' && <button type="button" onClick={() => retry(item)} aria-label={`核对并重试 ${item.name}`}>核对并重试</button>}<button type="button" className="icon-button" onClick={() => remove(item)} aria-label={`${item.status === 'uploading' ? '取消上传' : '移除引用'} ${item.name}`} title={item.status === 'uploading' ? '取消未完成的上传' : '仅移除引用，文件仍保留在工作区'}><X size={16} /></button></li>)}</ul>{notice && <p className="attachment-notice" role="status">{notice}</p>}</div>;

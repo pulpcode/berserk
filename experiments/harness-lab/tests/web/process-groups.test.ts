@@ -50,13 +50,13 @@ describe('conversation presentation boundaries', () => {
     const snapshot = base([msg('read', 'tool', { toolName: 'read' }), msg('ask', 'tool', { toolName: 'ask_user', toolCallId: 'question' }), msg('edit', 'tool', { toolName: 'edit' }), msg('error', 'tool', { toolName: 'bash', isError: true }), msg('unknown', 'tool', { toolName: 'write', resultMissing: true }), msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output' }), msg('final', 'assistant')]);
     snapshot.interactions = [interaction]; snapshot.fileOutputs = [file, file];
     const blocks = chatBlocks(snapshot);
-    expect(blocks.map(item => item.kind)).toEqual(['process', 'interaction', 'process', 'message', 'message', 'file', 'message']);
-    expect(blocks.filter(item => item.kind === 'file')).toHaveLength(1);
+    expect(blocks.map(item => item.kind)).toEqual(['process', 'interaction', 'process', 'message', 'message', 'files', 'message']);
+    expect(blocks.filter(item => item.kind === 'files')).toHaveLength(1);
   });
   it('does not fold failed Agents or match another request with a reused tool call ID', () => {
     const snapshot = base([msg('old-output', 'tool', { requestId: 'old', toolName: 'file_output', toolCallId: 'output', resultMissing: true }), msg('child-result', 'tool', { toolName: 'subagent', toolCallId: 'child-call', isError: true }), msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output' }), msg('final', 'assistant')]);
     snapshot.subagents = [{ ...child, status: 'failed' }]; snapshot.fileOutputs = [file];
-    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message', 'subagent', 'file', 'message']);
+    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message', 'subagent', 'files', 'message']);
   });
   it('does not add empty controls to a plain conversation and keeps stable process IDs while streaming', () => {
     expect(chatBlocks(base([msg('user', 'user'), msg('final', 'assistant')])).map(item => item.kind)).toEqual(['message', 'message']);
@@ -73,11 +73,54 @@ describe('conversation presentation boundaries', () => {
   it('uses matching fixed output as file evidence but retains actual errors beside the download', () => {
     const snapshot = base([msg('unknown', 'tool', { toolName: 'file_output', toolCallId: 'output', resultMissing: true })]);
     snapshot.fileOutputs = [file];
-    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['file']);
+    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['files']);
     snapshot.messages[0].isError = true;
-    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message', 'file']);
+    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message', 'files']);
     snapshot.fileOutputs = [];
     expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message']);
+  });
+  it('merges only adjacent same-request files and keeps their original order', () => {
+    const second = { ...file, downloadId: 'download-2', name: '数据.csv', toolCallId: 'output-2' };
+    const snapshot = base([msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output' }), msg('output-2', 'tool', { toolName: 'file_output', toolCallId: 'output-2' }), msg('final', 'assistant')]);
+    snapshot.fileOutputs = [file, second];
+    const blocks = chatBlocks(snapshot);
+    expect(blocks.map(item => item.kind)).toEqual(['files', 'message']);
+    const group = blocks[0];
+    if (group.kind !== 'files') throw new Error('Expected file group');
+    expect(group.requestId).toBe('r1');
+    expect(group.files.map(item => item.name)).toEqual(['report.md', '数据.csv']);
+  });
+  it('starts a new group across messages, other requests and error cards', () => {
+    const other = { ...file, downloadId: 'download-2', name: 'b.md', requestId: 'r2', toolCallId: 'output-2' };
+    const crossRequest = base([msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output' }), msg('output-2', 'tool', { requestId: 'r2', toolName: 'file_output', toolCallId: 'output-2' }), msg('final', 'assistant')]);
+    crossRequest.fileOutputs = [file, other];
+    expect(chatBlocks(crossRequest).map(item => item.kind)).toEqual(['files', 'files', 'message']);
+    const split = base([msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output' }), msg('note', 'assistant'), msg('output-2', 'tool', { toolName: 'file_output', toolCallId: 'output-2' }), msg('final', 'assistant')]);
+    split.fileOutputs = [file, { ...other, requestId: 'r1' }];
+    expect(chatBlocks(split).map(item => item.kind)).toEqual(['files', 'message', 'files', 'message']);
+    const splitByInteraction = base([msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output' }), msg('ask', 'tool', { toolName: 'ask_user', toolCallId: 'question' }), msg('output-2', 'tool', { toolName: 'file_output', toolCallId: 'output-2' }), msg('final', 'assistant')]);
+    splitByInteraction.interactions = [interaction]; splitByInteraction.fileOutputs = [file, { ...other, requestId: 'r1' }];
+    expect(chatBlocks(splitByInteraction).map(item => item.kind)).toEqual(['files', 'interaction', 'files', 'message']);
+    const afterError = base([msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output', isError: true }), msg('output-2', 'tool', { toolName: 'file_output', toolCallId: 'output-2' }), msg('final', 'assistant')]);
+    afterError.fileOutputs = [file, { ...other, requestId: 'r1' }];
+    expect(chatBlocks(afterError).map(item => item.kind)).toEqual(['message', 'files', 'message']);
+  });
+  it('keeps legacy files without request ownership aligned and does not merge unknown owners', () => {
+    const snapshot = base([]);
+    snapshot.fileOutputs = [{ ...file, requestId: '' }, { ...file, downloadId: 'download-2', requestId: '' }];
+    const blocks = chatBlocks(snapshot);
+    expect(blocks.map(item => item.kind)).toEqual(['files', 'files']);
+    expect(blocks.every(item => item.kind === 'files' && item.files.length === 1)).toBe(true);
+  });
+  it('keeps a stable group key while more same-request files stream in', () => {
+    const snapshot = base([msg('output', 'tool', { toolName: 'file_output', toolCallId: 'output' })]);
+    snapshot.fileOutputs = [file];
+    const key = chatBlocks(snapshot)[0]!.key;
+    snapshot.messages.push(msg('output-2', 'tool', { toolName: 'file_output', toolCallId: 'output-2' }), msg('final', 'assistant'));
+    snapshot.fileOutputs.push({ ...file, downloadId: 'download-2', name: 'b.md', toolCallId: 'output-2' });
+    const blocks = chatBlocks(snapshot);
+    expect(blocks[0]!.key).toBe(key);
+    expect(blocks[0]!.kind === 'files' && blocks[0]!.files).toHaveLength(2);
   });
 
 });

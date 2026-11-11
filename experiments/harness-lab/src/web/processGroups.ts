@@ -3,7 +3,9 @@ import { conversationItems, type ConversationItem } from './SubagentCard';
 
 export type DisplayItem = ConversationItem | { kind: 'file'; key: string; file: FileOutput };
 export type ProcessGroup = { kind: 'process'; key: string; requestId: string; items: DisplayItem[]; collapsible: boolean; tools: number; agents: number; categories: string[] };
-export type ChatBlock = DisplayItem | ProcessGroup;
+/** Presentation-only group of adjacent same-request downloads; order and ownership stay untouched. */
+export type FileGroup = { kind: 'files'; key: string; requestId: string; files: FileOutput[] };
+export type ChatBlock = DisplayItem | ProcessGroup | FileGroup;
 const requestOf = (item: DisplayItem) => item.kind === 'message' ? item.message.requestId : item.kind === 'subagent' ? item.child.parentRequestId : item.kind === 'interaction' ? item.interaction.requestId : item.file.requestId;
 const matchesOutput = (message: PublicMessage, file: FileOutput) => message.role === 'tool' && message.toolName === 'file_output' && message.requestId === file.requestId && message.toolCallId === file.toolCallId;
 
@@ -43,7 +45,19 @@ export function chatBlocks(snapshot: SessionSnapshot): ChatBlock[] {
     const requestId = requestOf(item);
     // Every ordinary assistant reply stays visible; only tool results and eligible Agent records fold.
     const process = requestId && (item.kind === 'subagent' ? ['running', 'stopping', 'succeeded'].includes(item.child.status) : item.kind === 'message' && item.message.role === 'tool' && !item.message.isError && !item.message.resultMissing && item.message.toolName !== 'file_output' && item.message.toolName !== 'subagent');
-    if (!process || !requestId) { blocks.push(item); continue; }
+    if (!process || !requestId) {
+      if (item.kind === 'file') {
+        // Only adjacent files with the same known request merge; legacy files keep a single-file wrapper.
+        const previous = blocks.at(-1);
+        const fileRequest = item.file.requestId || '';
+        const group: FileGroup = fileRequest && previous?.kind === 'files' && previous.requestId === fileRequest ? previous : { kind: 'files', key: `files:${fileRequest}:${item.key}`, requestId: fileRequest, files: [] };
+        if (group !== previous) blocks.push(group);
+        group.files.push(item.file);
+        continue;
+      }
+      blocks.push(item);
+      continue;
+    }
     const previous = blocks.at(-1);
     const group: ProcessGroup = previous?.kind === 'process' && previous.requestId === requestId ? previous : { kind: 'process', key: `process:${requestId}:${item.key}`, requestId, items: [], collapsible: finals.has(requestId), tools: 0, agents: 0, categories: [] };
     if (group !== previous) blocks.push(group);
