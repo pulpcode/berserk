@@ -302,7 +302,7 @@ export class TaskLinkService {
       const {actor: current, job, event} = this.authorize(actor, eventId, input.jobId); actor = current;
       this.dependencies.assertWrite?.(event,job);
       if(job.scenarioInstanceId)this.access.assertScenarioWritable(job.scenarioInstanceId);
-      if (!actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
+      if (!actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建任务空间。', 403);
       if (!UUID.test(input.clientActionId) || !reasonText(input.reason) || typeof input.title !== 'string' || !input.title.trim() || input.title.length > 60
         || typeof input.goal !== 'string' || !input.goal.trim() || input.goal.length > 8000) throw invalid('请填写有效的任务名称、目标和关联理由。');
       const creationInput = {title: input.title, goal: input.goal, visibility: 'public' as const, clientActionId: input.clientActionId, context: input.context};

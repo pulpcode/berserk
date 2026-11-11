@@ -117,7 +117,7 @@ test('workbench assignment selects a project, retains separate drafts and opens 
   const env = await setup(true); await env.attach(page);
   try {
     const first = await env.lab.workspaces.ensureWorkspace(env.task.id, 'a', env.task.title);
-    const otherTask = env.lab.access!.create(env.actor, { title: '另一项工作任务', goal: '独立工作', visibility: 'public', clientActionId: randomUUID() });
+    const otherTask = env.lab.access!.create(env.actor, { title: '另一项任务空间', goal: '独立工作', visibility: 'public', clientActionId: randomUUID() });
     const second = await env.lab.workspaces.ensureWorkspace(otherTask.id, 'a', otherTask.title);
     await env.app.inject({ method: 'POST', url: '/api/integrations/incoming/events', headers: { host: '127.0.0.1', authorization: `Bearer ${env.token}` }, payload: { sourceMessageId: randomUUID(), title: '待核实的道路信息', text: '核实道路情况。' } });
     await expect.poll(() => env.store!.listDeliveries().filter(item => item.status === 'delivered').length).toBe(1);

@@ -157,8 +157,8 @@ export class AccessStore {
   }
   /** Caller owns the transaction, so information linkage and creation share one commit. */
   createInTransaction(actor: Identity, input: TaskInput, origin?: {eventId: string; jobId: string; reason: string; scenarioInstanceId?: string}, preparedInstanceId?: string): TaskSpace {
-    if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写名称，工作任务还需要目标说明。');
-    if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
+    if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写名称，任务空间还需要目标说明。');
+    if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建任务空间。', 403);
     const scenarioInstanceId = origin?.scenarioInstanceId ?? preparedInstanceId;
     if (scenarioInstanceId !== undefined) {
       if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(scenarioInstanceId)) throw conflict();

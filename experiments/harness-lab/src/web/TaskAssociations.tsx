@@ -49,7 +49,7 @@ export function TaskAssociations({ eventId, jobId, visible, identity, tasks, sav
         {link.canManage && link.task.state === 'active' && !link.task.readOnly && <button disabled={busy} onClick={() => begin(link.task.id)}>调整关联</button>}
       </li>)}</ul>
       {suggestion && <aside className="task-suggestion"><h4>建议新建公共任务</h4><strong>{suggestion.title}</strong><p>{suggestion.goal}</p><p>建议理由：{suggestion.reason}</p></aside>}
-      <div className="task-source-creation">{value.creation ? <p className="resource-success">已创建：<button className="information-row-link" onClick={() => openTask(value.creation!.taskSpaceId)}>{tasks.find(task => task.id === value.creation?.taskSpaceId)?.title || '查看任务'}</button></p> : value.canCreateTask ? <button disabled={busy || create} onClick={() => setCreate(true)}>创建公共任务并关联</button> : suggestion && <p className="resource-help">有工作任务管理权限的人员可审阅并创建。</p>}</div>
+      <div className="task-source-creation">{value.creation ? <p className="resource-success">已创建：<button className="information-row-link" onClick={() => openTask(value.creation!.taskSpaceId)}>{tasks.find(task => task.id === value.creation?.taskSpaceId)?.title || '查看任务'}</button></p> : value.canCreateTask ? <button disabled={busy || create} onClick={() => setCreate(true)}>创建公共任务并关联</button> : suggestion && <p className="resource-help">有任务空间管理权限的人员可审阅并创建。</p>}</div>
       {manageable.length > 0 && !edit && <button disabled={busy} onClick={() => begin()}>关联已有任务或个人空间</button>}
     </>}
     {edit && <form className="information-form task-link-editor" onSubmit={event => { event.preventDefault(); void save(); }}><fieldset disabled={busy}>

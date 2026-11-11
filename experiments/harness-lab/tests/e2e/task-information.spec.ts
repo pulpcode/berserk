@@ -385,7 +385,7 @@ test('task and personal-space plus controls appear on hover or keyboard focus wi
     env.lab.access!.create(env.actor, { title: '个人验证空间', goal: '', visibility: 'private', clientActionId: randomUUID() });
     await login(page, 'a');
     await page.mouse.move(1200, 850);
-    const publicPlus = page.getByRole('button', { name: '新建工作任务', exact: true });
+    const publicPlus = page.getByRole('button', { name: '新建任务空间', exact: true });
     const privatePlus = page.getByRole('button', { name: '新建个人空间', exact: true });
     const rowPlus = page.getByRole('button', { name: '在项目 联合分析任务 中新建对话', exact: true });
     await expect(publicPlus).toHaveCSS('opacity', '0'); await expect(privatePlus).toHaveCSS('opacity', '0'); await expect(rowPlus).toHaveCSS('opacity', '0');
@@ -420,8 +420,9 @@ test('task home describes before provisioning, remembers disclosure, sends a rea
     await expect(page).toHaveURL(/\?session=/);
     await expect.poll(() => env.fake.calls.length).toBe(1);
     const firstUrl = page.url();
+    await expect(page.getByRole('button', { name: '查看任务说明', exact: true })).toHaveCount(0);
     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('原对话下一条草稿');
-    await page.getByRole('button', { name: '查看任务说明', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
     await expect(home.getByLabel('问题或工作要求')).toHaveValue('');
     await home.getByLabel('问题或工作要求').fill('开启另一条独立讨论');
     await home.getByRole('button', { name: '发送并开始对话' }).click();
@@ -429,7 +430,7 @@ test('task home describes before provisioning, remembers disclosure, sends a rea
     expect(page.url()).not.toBe(firstUrl);
     await page.goto(firstUrl);
     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('原对话下一条草稿');
-    await page.getByRole('button', { name: '查看任务说明', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
     await page.setViewportSize({ width: 375, height: 812 });
     await expect(home.getByLabel('问题或工作要求')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -518,7 +519,7 @@ test('repeated task home model choices belong to new sessions and cannot alter t
       const id = new URL(page.url()).searchParams.get('session')!; ids.push(id);
       await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue(`使用 ${profile.model} 开始讨论`);
       expect(env.lab.get(id, 'a').modelId).toBe(profile.id);
-      await page.getByRole('button', { name: '查看任务说明', exact: true }).click();
+      await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
     }
     expect(new Set(ids).size).toBe(2);
     expect(env.lab.get(ids[0]!, 'a').modelId).toBe(profiles[0]!.id);

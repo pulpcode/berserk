@@ -40,9 +40,9 @@ export function TaskPanel({identity,task,visibility,source,showInformation,close
       if(created){saved(created);close();}else{setNeedsQuery(false);setError(`已核对：尚未创建${kind}，可继续编辑并重试。`);}
     }catch(reason){if(alive.current)setError(reason instanceof Error?reason.message:'查询未完成，请重试。');}
   }
-  return <Panel title={source?'创建公共任务并关联':base?`${kind}说明`:isPublic?'新建工作任务':'新建个人空间'} close={close}>
+  return <Panel title={source?'创建公共任务并关联':base?`${kind}说明`:isPublic?'新建任务空间':'新建个人空间'} close={close}>
     <form className="workspace-form" onSubmit={e=>{e.preventDefault();void run();}}>
-      <p className="resource-help">{isPublic?'所有席位可使用工作任务；任务说明由获授权席位统一管理，文件与对话各自独立。':'仅本席位可查看和管理，用于自己的资料、指令与对话。'}{base?.readOnly?` 此${kind}只读，历史仍可查看。`:base?.state==='archived'?` 此${kind}已归档，历史仍可查看。`:''}</p>
+      <p className="resource-help">{isPublic?'所有席位可使用任务空间；任务说明由获授权席位统一管理，文件与对话各自独立。':'仅本席位可查看和管理，用于自己的资料、指令与对话。'}{base?.readOnly?` 此${kind}只读，历史仍可查看。`:base?.state==='archived'?` 此${kind}已归档，历史仍可查看。`:''}</p>
       <label htmlFor="task-title">{kind}名称</label><input id="task-title" value={title} disabled={!canManage || busy} onChange={e=>setTitle(e.target.value)} maxLength={60} required/>
       <label htmlFor="task-goal">目标与说明</label><textarea id="task-goal" value={goal} disabled={!canManage || busy} onChange={e=>setGoal(e.target.value)} maxLength={8000} rows={6} required={isPublic}/>
       <>{source && <><label htmlFor="task-association-reason">关联理由</label><textarea id="task-association-reason" value={reason} disabled={busy} onChange={event=>setReason(event.target.value)} maxLength={1500} rows={3} required/><p className="resource-help">请确认名称与目标适合公开。原信息、分析正文与附件保留原有访问权限；已启用的持续分析配置会按获准资料范围核对新任务。</p></>}</>
@@ -53,7 +53,7 @@ export function TaskPanel({identity,task,visibility,source,showInformation,close
       {error && base && <button type="button" disabled={busy} onClick={()=>{void api<TaskSpace>(`/api/tasks/${base.id}`).then(setLatest).catch(reason=>setError(String(reason.message)));}}>查看最新说明</button>}
       {latest && <aside className="task-comparison"><strong>最新说明（你的编辑仍保留）</strong><p>{latest.title}</p><p>{latest.goal}</p><TaskContextSummary context={latest.context}/><button type="button" onClick={()=>{setBase(latest);if(!contextDirty)setContext(contextDraft(latest.context));setLatest(undefined);setNeedsQuery(false);setError('已采用最新版本号，请合并需要的内容后再保存。');}}>已核对，继续合并编辑</button></aside>}
       {base && showInformation && <button type="button" onClick={()=>{close();showInformation(base.id);}}>相关信息</button>}
-      {canManage && <div className="dialog-actions">{base && <button type="button" disabled={busy} onClick={()=>{if(base.state==='archived' || window.confirm('归档后保留历史，并停止新的处理；可以重新开启。'))void run(base.state==='active'?'archive':'reopen');}}>{base.state==='active'?`归档${kind}`:'重新开启'}</button>}<button className="primary-action" type="submit" disabled={busy || needsQuery || !title.trim() || Boolean(source && (!goal.trim() || !reason.trim()))}>{busy?'保存中…':source?'创建公共任务并关联':base?'保存说明':isPublic?'创建工作任务':'创建个人空间'}</button></div>}
+      {canManage && <div className="dialog-actions">{base && <button type="button" disabled={busy} onClick={()=>{if(base.state==='archived' || window.confirm('归档后保留历史，并停止新的处理；可以重新开启。'))void run(base.state==='active'?'archive':'reopen');}}>{base.state==='active'?`归档${kind}`:'重新开启'}</button>}<button className="primary-action" type="submit" disabled={busy || needsQuery || !title.trim() || Boolean(source && (!goal.trim() || !reason.trim()))}>{busy?'保存中…':source?'创建公共任务并关联':base?'保存说明':isPublic?'创建任务空间':'创建个人空间'}</button></div>}
     </form>
   </Panel>;
 }

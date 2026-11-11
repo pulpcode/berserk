@@ -38,7 +38,7 @@ export function WorkOverview({ visible, allowed, route, navigate, tasks, seats, 
   const error = detail.denied ? detail.error : active.denied ? active.error : detail.error || active.error;
   return <div className="work-overview">
     <div className="information-toolbar work-overview-toolbar">
-      <label>工作任务<select value={route.taskId} onChange={event => navigate({ taskId: event.target.value, offset: 0, id: '' }, true)}><option value="">全部公共任务</option>{tasks.filter(task => task.visibility === 'public').map(task => <option key={task.id} value={task.id}>{task.title}</option>)}</select></label>
+      <label>任务空间<select value={route.taskId} onChange={event => navigate({ taskId: event.target.value, offset: 0, id: '' }, true)}><option value="">全部公共任务</option>{tasks.filter(task => task.visibility === 'public').map(task => <option key={task.id} value={task.id}>{task.title}</option>)}</select></label>
       <label>相关席位<select value={route.seatId} onChange={event => navigate({ seatId: event.target.value, offset: 0, id: '' }, true)}><option value="">全部席位</option>{seats.map(seat => <option key={seat.id} value={seat.id}>{seat.name}</option>)}</select></label>
       <label>工作状态<select value={route.status} onChange={event => navigate({ status: event.target.value, offset: 0, id: '' }, true)}><option value="">全部状态</option>{Object.entries(workStateLabel).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
       <label>搜索工作<input type="search" value={route.search} onChange={event => navigate({ search: event.target.value, offset: 0, id: '' }, true)} /></label>

@@ -116,11 +116,11 @@ export function InformationContinuation({ conversationOnly = false, scope, visib
           <span className="continuation-target-label">处理位置</span>
           {related.length > 0 && <div className="continuation-task-choices" role="group" aria-label="相关任务">{related.map(item => <button key={item.id} type="button" aria-pressed={task?.id === item.id} onClick={() => selectTask(item.id)}>{task?.id === item.id ? <Check size={14} aria-hidden="true" /> : <Folder size={14} aria-hidden="true" />}{item.title}</button>)}</div>}
           {otherTasks.length > 0 && <select aria-label="处理位置" value={otherTasks.some(item => item.id === draft.taskSpaceId) ? draft.taskSpaceId : ''} onChange={event => selectTask(event.target.value)}>
-            <option value="">{related.length ? '其他任务或个人空间' : '选择工作任务或个人空间'}</option>
+            <option value="">{related.length ? '其他任务或个人空间' : '选择任务空间或个人空间'}</option>
             {otherTasks.map(item => <option key={item.id} value={item.id}>{item.title}{item.visibility === 'private' ? '（个人空间）' : ''}</option>)}
           </select>}
         </div>
-        {!choices.length && <p className="resource-help">请先建立工作任务或个人空间。</p>}
+        {!choices.length && <p className="resource-help">请先建立任务空间或个人空间。</p>}
       </>}
       <label>问题或工作要求<textarea required rows={3} maxLength={12000} placeholder="继续提问，或说明接下来需要完成的工作…" value={draft.goal} onChange={event => update({ ...draft, goal: event.target.value })} /></label>
       <div className="continuation-options">
