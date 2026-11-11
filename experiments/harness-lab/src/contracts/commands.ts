@@ -78,3 +78,21 @@ export interface CommandExecution {
   status: 'accepted' | 'refused' | 'active' | 'completed' | 'cancelled';
   businessNow: string; reason?: string; vehicles: VehicleExecution[]; history: ExecutionHistory[];
 }
+
+/** Task/source-authorized read projection, never a command preparation or authority grant. */
+export interface TaskExecutionSummaryGroup {
+  id: string;
+  /** Present only when this viewer can read the original control-seat command. */
+  commandId?: string;
+  destination: { ref: ContextRef; name: string };
+  status: 'current' | 'saved' | 'unavailable' | 'unsupported' | 'refused';
+  businessNow?: string; revision?: number; reason?: string;
+  vehicles: Array<{ ref: ContextRef; name: string; state: VehicleExecutionState; blockedReason?: string }>;
+}
+export interface TaskExecutionSummary {
+  available: boolean; readOnly: boolean; queriedAt: string; complete: boolean;
+  businessNow?: string;
+  /** Absent for stale, incomplete, mixed-time, refused-only or ambiguous repeated-vehicle results. */
+  counts?: Record<VehicleExecutionState, number>;
+  groups: TaskExecutionSummaryGroup[];
+}

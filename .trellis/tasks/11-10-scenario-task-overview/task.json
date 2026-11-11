@@ -2,8 +2,8 @@
   "id": "scenario-task-overview",
   "name": "scenario-task-overview",
   "title": "P5：任务首页进展整合",
-  "description": "沿用已认可的任务首页示意，明确目标、研判、工作文档、执行摘要的数据来源与新增范围；仅规划，待用户审阅，不编码。",
-  "status": "planning",
+  "description": "P5任务首页与只读执行摘要已完成服务器验证；用户授权提交并另起独立测试版，保留当前线上版。",
+  "status": "review",
   "dev_type": "fullstack",
   "scope": null,
   "package": null,
@@ -22,8 +22,9 @@
   "parent": "11-03-scenario-demo",
   "relatedFiles": [
     ".trellis/tasks/11-10-scenario-task-overview/design.md",
-    ".trellis/tasks/11-10-scenario-task-overview/research/current-state.md"
+    ".trellis/tasks/11-10-scenario-task-overview/research/current-state.md",
+    ".trellis/tasks/11-10-scenario-task-overview/research/verification.md"
   ],
-  "notes": "仅方案待审阅，未启动实施。以design.md v0.1为用户审阅入口；新增跨席执行事实摘要读取范围待批准。",
+  "notes": "144文件1653个唯一单元/集成用例、47个唯一桌面用例完成分批与修正后复验；首次失败和环境问题全部保留。最终类型/lint/build通过，572文件指纹一致。见research/verification.md。",
   "meta": {}
 }

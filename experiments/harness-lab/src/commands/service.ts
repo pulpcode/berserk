@@ -3,8 +3,8 @@ import { DatabaseSync } from 'node:sqlite';
 import { chmod, lstat, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { PiLab } from '../pi/lab.js';
-import type { CommandInput, CommandRecord, CommandReceipt, ExternalCommand } from '../contracts/commands.js';
-import type { SituationObject } from '../contracts/context.js';
+import type { CommandInput, CommandRecord, CommandReceipt, ExternalCommand, TaskExecutionSummary, TaskExecutionSummaryGroup } from '../contracts/commands.js';
+import type { ContextRef, SituationObject } from '../contracts/context.js';
 import { RequestError } from '../contracts/errors.js';
 import { readContextJson } from '../context/http.js';
 import { atomicWrite, checkDirectory, readControlled, stateError } from '../resources/files.js';
@@ -125,6 +125,118 @@ export class CommandService {
       .filter(record => record.seatId === seatId && record.taskSpaceId === taskId
         && (clientActionId === undefined || record.dedupKey === `page:${seatId}:${clientActionId}`))
       .map(record => this.public(record));
+  }
+  private summaryAccess(seatId: string, taskId: string) {
+    const access = this.lab.access;
+    if (!access?.identityForSeat(seatId)) throw new RequestError('FORBIDDEN', '当前身份不可读取执行资料。', 403);
+    const task = access.get(taskId, seatId), context = this.lab.context, config = context?.config.simulation;
+    if (!task.scenarioInstanceId || !context?.config.commands?.enabled || !config?.enabled) return { task };
+    if (!context.config.scopes.some(scope => scope.seatIds.includes(seatId) && scope.systemIds.includes('situation'))) {
+      throw new RequestError('CONTEXT_FORBIDDEN', '当前身份无权访问本次业务资料范围。', 403);
+    }
+    if (!this.lab.scenario || !context.config.systems.some(system => system.id === 'situation' && system.scenarioClock === true)) throw unavailable();
+    return { task, context, config };
+  }
+  /** Shared source facts only. Unlike reconcile(), this read never changes a send or execution record. */
+  async summary(seatId: string, taskId: string, signal?: AbortSignal): Promise<TaskExecutionSummary> {
+    const { task, context, config } = this.summaryAccess(seatId, taskId);
+    const readOnly = task.state !== 'active' || task.scenarioInstanceId !== undefined && !this.lab.scenario?.isWritable(task.scenarioInstanceId);
+    const result: TaskExecutionSummary = { available: Boolean(context && config), readOnly, queriedAt: new Date().toISOString(), complete: false, groups: [] };
+    if (!context || !config) return result;
+    const token = this.env[config.tokenEnv];
+    if (!token) throw unavailable();
+    const records = this.db.prepare("SELECT body FROM commands WHERE json_extract(body,'$.taskSpaceId')=? AND json_extract(body,'$.scenarioInstanceId')=? AND json_extract(body,'$.status')='received' ORDER BY rowid").all(task.id, task.scenarioInstanceId!)
+      .map(row => this.decode(String(row.body))).filter(record => (record.command.action ?? 'dispatch') === 'dispatch');
+    if (records.length > 100) throw new RequestError('COMMAND_SUMMARY_LIMIT', '执行记录过多，请进入原记录分组核对。', 503);
+    const sameAccess = () => {
+      const current = this.summaryAccess(seatId, taskId);
+      if (!current.context || current.context !== context || current.config !== config || current.task.scenarioInstanceId !== task.scenarioInstanceId) throw unavailable();
+      return current.task;
+    };
+    const refKey = (ref: ContextRef) => JSON.stringify([ref.systemId, ref.objectType, ref.objectId]);
+    const objects = new Map<string, SituationObject>();
+    const refs = [...new Map(records.flatMap(record => [...record.command.vehicles, record.command.destination]).map(ref => [refKey(ref), ref])).values()];
+    if (refs.length > 500) throw new RequestError('COMMAND_SUMMARY_LIMIT', '执行对象过多，请进入原记录分组核对。', 503);
+    let namesAvailable = true;
+    let objectBusinessNow: string | undefined;
+    const readId = randomUUID();
+    try {
+      for (let offset = 0; offset < refs.length; offset += 20) {
+        let cursor: string | undefined;
+        const cursors = new Set<string>();
+        do {
+          const response = await context.query('situation_query', { systemId: 'situation', mode: 'current', objectRefs: refs.slice(offset, offset + 20), limit: 100, ...(cursor ? { cursor } : {}) },
+            { kind: 'seat', seatId, scenarioInstanceId: task.scenarioInstanceId, readId }, signal, true);
+          sameAccess();
+          if (!('unknownRefs' in response.data) || !('changeCursor' in response.data)) throw unavailable();
+          objectBusinessNow = response.data.snapshotClock?.businessNow;
+          for (const object of response.data.items) objects.set(refKey(object.ref), object);
+          if (response.data.unknownRefs.length) namesAvailable = false;
+          if (!response.data.hasMore) break;
+          cursor = response.data.nextCursor ?? undefined;
+          if (!cursor || cursors.has(cursor) || cursors.size >= 25) throw unavailable();
+          cursors.add(cursor);
+        } while (cursor);
+      }
+    } catch (error) {
+      signal?.throwIfAborted(); sameAccess();
+      if (error instanceof RequestError && error.statusCode === 403) throw error;
+      namesAvailable = false;
+    }
+    for (const record of records) {
+      const destination = objects.get(refKey(record.command.destination));
+      const group: TaskExecutionSummaryGroup = { id: record.id, destination: { ref: record.command.destination, name: destination?.name ?? '目的地（名称待核实）' }, status: 'unavailable', vehicles: [] };
+      if (record.seatId === seatId && this.allowed(seatId)) group.commandId = record.id;
+      let execution = record.execution;
+      const expected = new Set(record.command.vehicles.map(refKey));
+      const validExecution = (value: NonNullable<CommandRecord['execution']>) => value.commandId === record.id && value.rootCommandId === record.id
+        && value.vehicles.every(vehicle => expected.has(refKey(vehicle.vehicle))) && (value.status === 'refused' || value.vehicles.length === expected.size);
+      if (execution && !validExecution(execution)) throw stateError();
+      try {
+        const raw = await readContextJson(new URL(`${config.baseUrl}/control/commands/${encodeURIComponent(record.id)}/execution`), token, signal, { maxBytes: 4 * 1024 * 1024 });
+        sameAccess();
+        const current = commandExecution(raw);
+        if (!validExecution(current)) throw unavailable();
+        execution = current;
+        group.status = readOnly ? 'saved' : current.status === 'refused' ? 'refused' : 'current';
+        if (readOnly) group.reason = '已结束资料，显示保留的执行事实。';
+      } catch (error) {
+        signal?.throwIfAborted(); sameAccess();
+        if (error instanceof RequestError && error.statusCode === 403) throw error;
+        group.status = execution ? 'saved' : error instanceof RequestError && error.code === 'CONTEXT_NOT_FOUND' ? 'unsupported' : 'unavailable';
+        group.reason = execution ? '来源暂不可读，显示已保存记录。' : group.status === 'unsupported' ? '此记录没有可读取的车辆执行资料。' : '执行资料暂不可读。';
+      }
+      if (execution) {
+        group.businessNow = execution.businessNow; group.revision = execution.revision;
+        group.vehicles = execution.vehicles.map(vehicle => ({ ref: vehicle.vehicle, name: objects.get(refKey(vehicle.vehicle))?.name ?? '车辆（名称待核实）', state: vehicle.state,
+          ...(vehicle.state === 'blocked' && vehicle.blockedReason ? { blockedReason: vehicle.blockedReason } : {}) }));
+        if (group.status === 'refused') group.reason = execution.reason ?? '外部系统未受理本次行动。';
+      }
+      // A later dispatch can reuse a vehicle released before departure. Its original action is history, not a second current vehicle.
+      if (group.status === 'current' && group.businessNow === objectBusinessNow && group.vehicles.some(vehicle => {
+        const properties = objects.get(refKey(vehicle.ref))?.properties;
+        return properties && 'executionCommandId' in properties && properties.executionCommandId !== record.id;
+      })) { group.status = 'saved'; group.reason = '车辆另有后续行动，保留原行动记录。'; }
+      if (!namesAvailable || !destination || group.vehicles.some(vehicle => !objects.has(refKey(vehicle.ref)))) {
+        if (group.status === 'current') { group.status = 'saved'; group.reason = '来源对象未查全，保留本组执行记录。'; }
+      }
+      result.groups.push(group);
+    }
+    const latestTask = sameAccess();
+    if (!this.allowed(seatId)) for (const group of result.groups) delete group.commandId;
+    result.readOnly = latestTask.state !== 'active' || !this.lab.scenario!.isWritable(task.scenarioInstanceId!);
+    if (result.readOnly) for (const group of result.groups) if (group.status === 'current') { group.status = 'saved'; group.reason = '已结束资料，显示保留的执行事实。'; }
+    result.complete = namesAvailable && result.groups.every(group => group.status === 'refused' || group.status === 'current' && group.businessNow === objectBusinessNow);
+    const groups = result.groups.filter(group => group.status === 'current'), times = new Set(groups.map(group => group.businessNow));
+    const vehicles = groups.flatMap(group => group.vehicles);
+    if (times.size > 1 || new Set(vehicles.map(vehicle => refKey(vehicle.ref))).size !== vehicles.length) result.complete = false;
+    if (result.complete && groups.length && times.size === 1) {
+      result.businessNow = groups[0].businessNow;
+      result.counts = { waiting: 0, en_route: 0, blocked: 0, arrived: 0, cancelled: 0 };
+      for (const vehicle of vehicles) result.counts[vehicle.state]++;
+    }
+    result.queriedAt = new Date().toISOString();
+    return result;
   }
   async prepare(seatId: string, workspaceId: string, input: unknown, source: 'page' | 'agent', actionKey: string, signal?: AbortSignal) {
     const workspace = this.lab.workspaces.get(workspaceId, seatId);

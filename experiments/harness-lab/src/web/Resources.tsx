@@ -4,7 +4,7 @@ import type { CompactionDetail, InstructionFile, SkillFile, WorkspaceResources }
 import { useApi } from './api';
 import type { useInstructions } from './useInstructions';
 
-export function Panel({ title, children, close, className = '' }: { title: string; children: ReactNode; close: () => void; className?: string }) {
+export function Panel({ title, children, close, className = '', dismissOnBackdrop = false }: { title: string; children: ReactNode; close: () => void; className?: string; dismissOnBackdrop?: boolean }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const previous = document.activeElement;
@@ -12,7 +12,7 @@ export function Panel({ title, children, close, className = '' }: { title: strin
     element?.showModal();
     return () => { element?.close(); if (previous instanceof HTMLElement && previous.isConnected) previous.focus(); };
   }, []);
-  return <dialog ref={dialog} className={`resource-panel ${className}`} aria-label={title} onCancel={event => { event.preventDefault(); close(); }}>
+  return <dialog ref={dialog} className={`resource-panel ${className}`} aria-label={title} onClick={event => { if (!dismissOnBackdrop || event.target !== event.currentTarget) return; const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) close(); }} onCancel={event => { event.preventDefault(); close(); }}>
     <header className="panel-header"><h2>{title}</h2><button className="icon-button" aria-label="关闭面板" onClick={close} autoFocus><X size={20} /></button></header>
     <div className="panel-body">{children}</div>
   </dialog>;

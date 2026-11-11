@@ -16,7 +16,7 @@ import { createApp } from '../src/server/app.js';
 import { createMockContextServer } from '../scripts/mock-context/server.js';
 import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
 import type { AuthSession } from '../src/contracts/access.js';
-import type { CommandInput, CommandRecord, CommandReceipt } from '../src/contracts/commands.js';
+import type { CommandInput, CommandRecord, CommandReceipt, TaskExecutionSummary } from '../src/contracts/commands.js';
 import type { ContextConfig } from '../src/context/config.js';
 import type { ScenarioMutationResult, ScenarioTaskInitialization, ScenarioInstances } from '../src/contracts/scenarios.js';
 import type { ConfirmationInteraction, InteractionResponse } from '../src/contracts/index.js';
@@ -450,5 +450,206 @@ describe('调整确认中的执行版本竞争', () => {
     const current = (await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>();
     expect(current.execution?.vehicles.every(vehicle => vehicle.state === 'waiting')).toBe(true);
     expect(current.execution?.history.some(item => item.commandId === reroute.id && item.action === 'reroute')).toBe(true);
+  }, 30000);
+});
+
+describe('任务首页只读执行摘要', () => {
+  it('总体席读取来源事实但不能读取完整指令，摘要不写回指令或推进来源', async () => {
+    const f = await setup('7'), { record, client } = await f.prepare();
+    const sent = (await client.call(`/api/commands/${record.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(sent.execution?.vehicles[0].state).toBe('waiting');
+    const before = f.lab.commands!.read(control, record.id);
+    const postCount = f.source.requests.filter(item => item.method === 'POST').length;
+    const o = await login(f.app, overall);
+    expect((await o.call(`/api/commands/${record.id}`)).statusCode).toBe(404);
+    const response = await o.call(`/api/tasks/${f.a.taskId}/execution-summary`);
+    expect(response.statusCode, response.body).toBe(200);
+    const summary = response.json<TaskExecutionSummary>();
+    expect(summary).toMatchObject({ available: true, readOnly: false, complete: true, counts: { waiting: 1, arrived: 0 } });
+    expect(summary.businessNow).toBe(sent.execution!.businessNow);
+    expect(summary.groups).toHaveLength(1);
+    expect(summary.groups[0]).toMatchObject({ id: record.id, status: 'current', vehicles: [{ ref: f.command.vehicles[0], state: 'waiting' }] });
+    expect(summary.groups[0].destination.name).not.toContain('名称待核实');
+    expect(summary.groups[0].vehicles[0].name).not.toContain('名称待核实');
+    expect(summary.groups[0].commandId).toBeUndefined();
+    for (const key of ['workspaceId', 'attachment', 'notes', 'issuedByUserId', 'preparedByUserId', 'scenarioInstanceId', 'history', 'path', 'trace']) expect(response.body).not.toContain(`"${key}"`);
+    const own = (await client.call(`/api/tasks/${f.a.taskId}/execution-summary`)).json<TaskExecutionSummary>();
+    expect(own.groups[0].commandId).toBe(record.id);
+    expect(f.lab.commands!.read(control, record.id)).toEqual(before);
+    expect(f.source.requests.filter(item => item.method === 'POST')).toHaveLength(postCount);
+  }, 30000);
+
+  it('准备、未知结果及其他任务不产生本任务执行，普通任务与停用集成返回不可用', async () => {
+    const f = await setup('7'), { record } = await f.prepare(), o = await login(f.app, overall);
+    const empty = await o.call(`/api/tasks/${f.a.taskId}/execution-summary`);
+    expect(empty.json<TaskExecutionSummary>().groups).toEqual([]);
+    const db = new DatabaseSync(join(f.lab.config.dataDir, 'commands', 'commands.sqlite'));
+    try {
+      const raw = JSON.parse(String(db.prepare('SELECT body FROM commands WHERE id=?').get(record.id)!.body));
+      raw.status = 'unknown'; raw.issuedByUserId = raw.preparedByUserId;
+      db.prepare('UPDATE commands SET body=? WHERE id=?').run(JSON.stringify(raw), record.id);
+      expect((await o.call(`/api/tasks/${f.a.taskId}/execution-summary`)).json<TaskExecutionSummary>().groups).toEqual([]);
+    } finally { db.close(); }
+    const ordinary = (await o.call('/api/tasks', { title: '普通任务', goal: '无来源任务', visibility: 'public', clientActionId: randomUUID() })).json<{ id: string }>();
+    expect((await o.call(`/api/tasks/${ordinary.id}/execution-summary`)).json<TaskExecutionSummary>()).toMatchObject({ available: false, groups: [], complete: false });
+    expect((await o.call(`/api/tasks/${randomUUID()}/execution-summary`)).statusCode).toBe(404);
+    f.context.commands!.enabled = false;
+    await f.restart();
+    const re = await login(f.app, overall);
+    expect((await re.call(`/api/tasks/${f.a.taskId}/execution-summary`)).json<TaskExecutionSummary>()).toMatchObject({ available: false, groups: [] });
+  }, 30000);
+
+  it('来源授权与当前账号在读取前后均核验，来源403不能回退显示缓存', async () => {
+    const f = await setup('7'), { record, client } = await f.prepare();
+    await client.call(`/api/commands/${record.id}/commit`, { confirm: true });
+    const o = await login(f.app, overall), scope = f.lab.context!.config.scopes[0];
+    scope.seatIds = scope.seatIds.filter(id => id !== overall);
+    expect((await o.call(`/api/tasks/${f.a.taskId}/execution-summary`)).statusCode).toBe(403);
+    scope.seatIds.push(overall);
+    const original = globalThis.fetch;
+    for (const revoke of ['http403', 'scope', 'account'] as const) {
+      const spy = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+        if (String(input).endsWith(`/commands/${record.id}/execution`)) {
+          if (revoke === 'http403') return new Response(JSON.stringify({ error: { code: 'FORBIDDEN' } }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+          const response = await original(input, init);
+          if (revoke === 'scope') scope.seatIds = scope.seatIds.filter(id => id !== overall);
+          else f.lab.access!.disable(overall);
+          return response;
+        }
+        return original(input, init);
+      });
+      try {
+        const response = await o.call(`/api/tasks/${f.a.taskId}/execution-summary`);
+        expect(response.statusCode, response.body).toBe(403);
+        expect(response.body).not.toContain('vehicles');
+      } finally { spy.mockRestore(); }
+      if (revoke === 'scope') scope.seatIds.push(overall);
+    }
+  }, 30000);
+
+  it('取消与改道归并原派遣，混合时点、缺失对象和来源失败不返回完整总数', async () => {
+    const f = await setup('7'), { record, client } = await f.prepare();
+    const sent = (await client.call(`/api/commands/${record.id}/commit`, { confirm: true })).json<CommandRecord>();
+    const operation = (await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: { ...f.command, action: 'cancel', targetCommandId: record.id, expectedExecutionRevision: sent.execution!.revision } })).json<CommandRecord>();
+    await client.call(`/api/commands/${operation.id}/commit`, { confirm: true });
+    const o = await login(f.app, overall);
+    const cancelled = (await o.call(`/api/tasks/${f.a.taskId}/execution-summary`)).json<TaskExecutionSummary>();
+    expect(cancelled.groups).toHaveLength(1);
+    expect(cancelled.counts?.cancelled).toBe(1);
+    expect(cancelled.counts?.arrived).toBe(0);
+    const original = globalThis.fetch;
+    for (const fault of ['time', 'names', 'offline'] as const) {
+      const spy = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+        const path = String(input);
+        if (fault === 'offline' && path.endsWith(`/commands/${record.id}/execution`)) throw new TypeError('offline');
+        const response = await original(input, init);
+        if (fault === 'time' && path.endsWith(`/commands/${record.id}/execution`)) {
+          const body = await response.json();
+          return new Response(JSON.stringify({ ...body, businessNow: '2026-11-03T09:11:00+08:00' }), { headers: { 'Content-Type': 'application/json' } });
+        }
+        if (fault === 'names' && path.includes('/situation/objects')) {
+          const body = await response.json();
+          return new Response(JSON.stringify({ ...body, items: [], unknownRefs: [...f.command.vehicles, f.command.destination] }), { headers: { 'Content-Type': 'application/json' } });
+        }
+        return response;
+      });
+      try {
+        const summary = (await o.call(`/api/tasks/${f.a.taskId}/execution-summary`)).json<TaskExecutionSummary>();
+        expect(summary.complete).toBe(false);
+        expect(summary.counts).toBeUndefined();
+        if (fault !== 'time') expect(summary.groups[0].status).toBe('saved');
+      } finally { spy.mockRestore(); }
+    }
+  }, 30000);
+
+  it('旧版本无执行与执行拒绝不冒充出发，历史任务保留本轮事实', async () => {
+    const legacy = await setup(), prepared = await legacy.prepare();
+    await prepared.client.call(`/api/commands/${prepared.record.id}/commit`, { confirm: true });
+    const legacySummary = await legacy.lab.commands!.summary(overall, legacy.a.taskId);
+    expect(legacySummary.groups[0].status).toBe('unsupported');
+    expect(legacySummary.counts).toBeUndefined();
+    const f = await setup('7'), c = await login(f.app, control);
+    const busy = { ...f.command, vehicles: [{ ...f.command.vehicles[0], objectId: `${f.a.run.instance.instanceId}-V02` }] };
+    const rejected = (await c.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: busy })).json<CommandRecord>();
+    await c.call(`/api/commands/${rejected.id}/commit`, { confirm: true });
+    const refused = await f.lab.commands!.summary(overall, f.a.taskId);
+    expect(refused.groups[0].status).toBe('refused');
+    expect(refused.counts).toBeUndefined();
+    const { record, client } = await f.prepare();
+    await client.call(`/api/commands/${record.id}/commit`, { confirm: true });
+    f.lab.scenario!.close(f.a.run.instance.instanceId);
+    const history = await f.lab.commands!.summary(overall, f.a.taskId);
+    expect(history.readOnly).toBe(true);
+    expect(history.groups.some(group => group.id === record.id && group.status === 'saved')).toBe(true);
+    expect(history.counts).toBeUndefined();
+    expect(JSON.stringify(history)).not.toContain('scenarioInstanceId');
+  }, 45000);
+});
+
+describe('执行摘要重复派遣与边界', () => {
+  it('取消后同车再派遣保留原行动历史而不双计，其他任务看不到本任务车辆', async () => {
+    const f = await setup('7'), { record, client } = await f.prepare();
+    const sent = (await client.call(`/api/commands/${record.id}/commit`, { confirm: true })).json<CommandRecord>();
+    const cancel = (await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: { ...f.command, action: 'cancel', targetCommandId: record.id, expectedExecutionRevision: sent.execution!.revision } })).json<CommandRecord>();
+    await client.call(`/api/commands/${cancel.id}/commit`, { confirm: true });
+    const again = (await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: f.command })).json<CommandRecord>();
+    const received = (await client.call(`/api/commands/${again.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(received.execution?.status).toBe('accepted');
+    const result = await f.lab.commands!.summary(overall, f.a.taskId);
+    expect(result.groups).toHaveLength(2);
+    expect(result.groups.find(group => group.id === record.id)).toMatchObject({ status: 'saved', vehicles: [{ state: 'cancelled' }] });
+    expect(result.groups.find(group => group.id === again.id)).toMatchObject({ status: 'current', vehicles: [{ state: 'waiting' }] });
+    expect(result.complete).toBe(false);
+    expect(result.counts).toBeUndefined();
+    const fetchSource = globalThis.fetch;
+    const ambiguous = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      const response = await fetchSource(input, init);
+      if (String(input).includes('/situation/objects')) {
+        const body = await response.json();
+        for (const object of body.items) object.properties = {};
+        return new Response(JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } });
+      }
+      return response;
+    });
+    try {
+      const uncertain = await f.lab.commands!.summary(overall, f.a.taskId);
+      expect(uncertain.groups.every(group => group.status === 'current')).toBe(true);
+      expect(uncertain.complete).toBe(false);
+      expect(uncertain.counts).toBeUndefined();
+    } finally { ambiguous.mockRestore(); }
+    const task = f.lab.access!.get(f.a.taskId, overall), actor = f.lab.access!.identityForSeat(director)!;
+    const other = f.lab.access!.create(actor, { title: '另一个任务', goal: '同一世界中的其他业务', visibility: 'public', clientActionId: randomUUID() }, task.scenarioInstanceId);
+    const separate = await f.lab.commands!.summary(overall, other.id);
+    expect(separate.groups).toEqual([]);
+    expect(JSON.stringify(separate)).not.toContain(record.id);
+    const privateTask = f.lab.access!.create(actor, { title: '私有资料', goal: '不可共享', visibility: 'private', clientActionId: randomUUID() }, task.scenarioInstanceId);
+    await expect(f.lab.commands!.summary(control, privateTask.id)).rejects.toMatchObject({ statusCode: 404 });
+  }, 30000);
+
+  it('大量根记录明确拒绝而不截断，最终撤销控制授权后不保留指令详情入口', async () => {
+    const f = await setup('7'), { record, client } = await f.prepare();
+    await client.call(`/api/commands/${record.id}/commit`, { confirm: true });
+    const original = globalThis.fetch;
+    const spy = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      const response = await original(input, init);
+      if (String(input).endsWith(`/commands/${record.id}/execution`)) f.lab.context!.config.commands!.seatIds = [];
+      return response;
+    });
+    try {
+      const summary = await f.lab.commands!.summary(control, f.a.taskId);
+      expect(summary.groups).toHaveLength(1);
+      expect(summary.groups[0].commandId).toBeUndefined();
+    } finally { spy.mockRestore(); }
+    const db = new DatabaseSync(join(f.lab.config.dataDir, 'commands', 'commands.sqlite'));
+    try {
+      const raw = JSON.parse(String(db.prepare('SELECT body FROM commands WHERE id=?').get(record.id)!.body));
+      for (let index = 0; index < 100; index++) {
+        const id = randomUUID();
+        db.prepare('INSERT INTO commands VALUES(?,?,?)').run(id, `summary-limit-${index}`, JSON.stringify({ ...raw, id, dedupKey: `summary-limit-${index}`, receipt: { ...raw.receipt, commandId: id }, execution: undefined }));
+      }
+      const before = f.source.requests.length;
+      await expect(f.lab.commands!.summary(overall, f.a.taskId)).rejects.toMatchObject({ code: 'COMMAND_SUMMARY_LIMIT', statusCode: 503 });
+      expect(f.source.requests).toHaveLength(before);
+    } finally { db.close(); }
   }, 30000);
 });

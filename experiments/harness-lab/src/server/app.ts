@@ -88,8 +88,8 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   });
   if (lab.context?.config.commands?.enabled && lab.access) {
     lab.commands = await CommandService.open(lab, contextOptions?.env);
-    await commandRoutes(app, lab);
   }
+  if (lab.access) await commandRoutes(app, lab);
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));

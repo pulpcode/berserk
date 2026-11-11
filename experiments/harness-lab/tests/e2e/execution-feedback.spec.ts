@@ -187,6 +187,15 @@ test('director nodes drive real vehicle movement, bridge blockage, confirmed rer
     const feedback = f.store.listEvents().find(event => /道路封闭，等待调整/.test(event.title));
     expect(feedback).toBeDefined();
     await expect(page.getByText(feedback!.title, { exact: true }).first()).toBeVisible();
+    // P5 task homepage reads the actual source across seats, without opening control-seat records.
+    await openTask(overallPage, f.task.id);
+    const summary = overallPage.locator('.task-home-execution');
+    await expect(summary).toContainText('3 辆已到场');
+    await expect(summary).toContainText('4 辆受阻');
+    await expect(summary.getByRole('button', { name: '指令详情', exact: true })).toHaveCount(0);
+    await overallPage.screenshot({ path: test.info().outputPath('task-home-execution-overall.png'), fullPage: true });
+    await summary.getByText('车辆明细', { exact: true }).first().click();
+    await expect(summary).toContainText('V07');
     page = controlPage; await openTask(page, f.task.id);
     await page.getByRole('button', { name: /^4 辆车/ }).click();
     await expect(page.getByRole('region', { name: '逐车进展' })).toContainText('受阻');
@@ -211,6 +220,9 @@ test('director nodes drive real vehicle movement, bridge blockage, confirmed rer
     await expect(page.getByRole('region', { name: '逐车进展' })).toContainText('已到场');
     await page.screenshot({ path: test.info().outputPath('command-arrived.png') });
     await closePanel(page);
+    await openTask(overallPage, f.task.id);
+    await expect(overallPage.locator('.task-home-execution')).toContainText('7 辆已到场');
+    await expect(overallPage.locator('.task-home-execution')).not.toContainText('14 辆');
     await page.goto(`/tasks/${f.task.id}/information?tab=situation`);
     await expect(page.locator('.situation-canvas')).toBeVisible();
     await expect.poll(() => page.evaluate(() => Boolean(window.__basemapTestMap?.getSource('business:execution-tracks')))).toBe(true);
@@ -332,7 +344,7 @@ test('cancelling the remaining vehicle preserves arrival and shows an ended mixe
     await cancel.getByRole('button', { name: '核对取消内容', exact: true }).click();
     await page.getByRole('button', { name: '确认取消行动', exact: true }).click();
     await page.getByRole('button', { name: '查询进展', exact: true }).click();
-    const execution = page.getByRole('region', { name: '执行进展', exact: true });
+    const execution = page.getByRole('dialog').getByRole('region', { name: '执行进展', exact: true });
     await expect(execution).toContainText('本指令行动已结束');
     await expect(execution.getByRole('row', { name: /^V07 / })).toContainText('已到场');
     await expect(execution.getByRole('row', { name: /^V13 / })).toContainText('已取消');

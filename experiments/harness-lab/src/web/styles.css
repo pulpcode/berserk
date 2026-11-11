@@ -1262,3 +1262,47 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .work-swimlane-status.state-submitted { color: #745c95; background: #f0edf8; }
 .work-swimlane-status.state-returned { color: #916044; background: #f9eee9; }
 .work-swimlane-status.state-completed { color: #4f7459; background: #eaf3ed; }
+
+/* Task home: current facts and original work records, with detail kept on demand. */
+.task-home { gap: 24px; }
+.task-home .task-description { padding: 0 0 18px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
+.task-home .task-description-heading { margin-bottom: 10px; }
+.task-goal-preview .information-text > :first-child, .task-home-analysis .information-text > :first-child { margin-top: 0; }
+.task-goal-preview .information-text > :last-child { margin-bottom: 0; }
+.task-home .task-description-heading h2, .task-progress-heading h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.task-progress-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+.task-progress-heading > button, .task-progress-actions button, .task-progress-title { display: inline-flex; gap: 5px; align-items: center; border: 0; background: transparent; color: var(--accent); padding: 3px 0; }
+.task-progress-heading > .icon-button { padding: 5px; }
+.task-progress-meta { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 4px 0; overflow-wrap: anywhere; }
+.task-home-analysis { border-left: 3px solid var(--accent); padding-left: 16px; min-width: 0; }
+.task-home-analysis > .information-text { margin-top: 12px; }
+.task-progress-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 10px; }
+.task-work-rows { list-style: none; padding: 0; margin: 0; }
+.task-work-row { padding: 13px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.task-work-row:first-child { padding-top: 0; }
+.task-work-row-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; }
+.task-work-row-heading > div { min-width: 0; }
+.task-progress-title { color: var(--text); font-weight: 500; text-align: left; overflow-wrap: anywhere; }
+.task-work-state { flex-shrink: 0; color: var(--muted); font-size: 12px; }
+.task-work-file { margin-top: 10px; }
+.task-work-file .handoff-files { margin: 5px 0 0; }
+.task-work-file .handoff-file { padding: 8px 10px; }
+.task-home-execution { border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; min-width: 0; }
+.task-execution-counts { display: flex; flex-wrap: wrap; gap: 12px 24px; padding: 5px 0 12px; }
+.task-execution-counts > span { display: inline-flex; align-items: center; gap: 7px; }
+.task-execution-counts > span::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.task-execution-counts > .execution-blocked::before { background: var(--warning); }
+.task-home-execution details > summary { color: var(--muted); font-size: 12px; cursor: pointer; }
+.task-execution-group { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.task-execution-group .task-progress-heading { margin-bottom: 4px; }
+.task-execution-group .task-progress-heading p { margin: 0; }
+.task-execution-group ul { list-style: none; padding: 0; margin: 8px 0 0; }
+.task-execution-group li { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; font-size: 13px; overflow-wrap: anywhere; }
+.task-home .task-assessments { border-top: 0; padding-block: 0; }
+.task-home .continuous-card:last-child { border-bottom: 0; padding-bottom: 0; }
+.task-home .task-assessment-more { border: 0; background: transparent; color: var(--accent); padding: 4px 0; }
+.task-home-composer { padding: 16px; gap: 9px; border-radius: 10px; }
+.task-home-composer h2 { font-size: 15px; }
+.task-home-composer textarea { min-height: 66px; padding: 10px 0; border: 0; border-radius: 0; background: transparent; }
+.task-home-composer .task-composer-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.task-home-composer-actions .primary-action { padding: 7px 12px; }

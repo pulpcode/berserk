@@ -59,3 +59,42 @@ V7 adds a durable `ScenarioInstance.advancing` anchor tied to one existing step 
 The original operation remains `advancing` until it becomes `completed` or `interrupted`. Exact retries/readback retain the operation ID. On service recovery, stop at committed business time, never catch up downtime. Pause, termination and incoming commands interrupt the active advance before subsequent changes. Old v4/v5/v6 behavior and hashes remain addressable.
 
 V7 stores travelled path prefixes separately as `executionTrail` parts, preserving corners and pre-reroute geometry. These are derived geometry, not synthetic GPS messages; `executionTrack` retains source position records. History state projection omits both heavy geometries. V7 explicitly versions exterior S01 departure/access corridors and the paved warehouse arrival yard; L01 remains the building incident anchor. Synthetic access corridors do not establish legal public navigation.
+
+## Task execution summary (P5)
+
+### Scope / Trigger
+
+Read when integrating task home progress. This is a source-fact projection, separate from private control-seat records; it does not grant command tools or mutations.
+
+### Signatures
+
+`GET /api/tasks/:taskId/execution-summary` accepts only a UUID task parameter and no query fields. It returns `TaskExecutionSummary` (`available`, `readOnly`, `queriedAt`, `complete`, optional `businessNow/counts`, `groups`). Each group carries root identity, authorized destination/vehicle references and labels, source time/revision, a current/saved/unavailable/unsupported/refused tag, and necessary execution causes. `commandId` is an optional detail-navigation affordance reserved for the still-authorized original issuing seat.
+
+### Contracts
+
+Derive run/task ownership from the existing task and received dispatch records. Exclude prepared/unknown/rejected transport intents and amendment duplicates. Read names through the caller's existing situation scope, and execution through the fixed simulation receiver; recheck enabled identity, task and source scope after awaits. Never persist a new result, reconcile a send intent, provision a workspace, advance simulation or call a model while projecting the summary. Unbound tasks/disabled integration return `available:false`, without creating a new ownership association.
+
+The public projection excludes draft instructions, attachments, private goals/sessions, actor-account audit fields and run IDs. Names/ownership and current execution must agree on source business time. Historical or failed-source fallback is explicitly saved and has no current total. Missing objects, repeated/ambiguous vehicle ownership and mixed times yield `complete:false` without `counts`. Deduplicate amendments under the dispatch root; a later dispatch cannot double-count an earlier cancelled movement. Only complete, same-time, unique current vehicles may contribute totals; arrival does not release occupation or end the incident. Strip the detail affordance if control permission changes during reading.
+
+### Validation / Error Matrix
+
+| Condition | Behavior |
+| --- | --- |
+| Missing task or private task inaccessible | 404 |
+| Source scope/account revoked, including during an await | 403; no saved-content fallback |
+| Ordinary unbound task or absent command integration | Authorized read returns unavailable, not an invented empty execution |
+| Source unavailable / legacy receipt-only record | Explicit unavailable/saved/unsupported state; no complete total |
+| More than 100 dispatch roots or 500 referenced objects | Explicit `COMMAND_SUMMARY_LIMIT` 503; do not truncate as complete |
+| Duplicate vehicle or different source times | `complete:false`, omit totals |
+
+### Good / Base / Bad Cases
+
+Base: an ordinary task hides execution when unavailable. Good: an overall seat sees seven authorized source vehicle facts while original command detail remains forbidden. Bad: fallback to private cached control records after a source403, or sum a dispatch and its reroute as two fleets.
+
+### Tests Required
+
+`tests/commands.test.ts` covers source/task/account denial before and after awaits, redaction, no source/host writes, unknown/prepared exclusion, same-world task separation, old/frozen records, refusal, cancel/redispatch, ambiguous ownership, time mismatch and bounds. Task-home browser tests must show real source 3-arrived/4-blocked and 7-arrived summaries without granting full control records.
+
+### Wrong vs Correct
+
+Wrong: expose `/api/commands` to every task reader or parse report prose to infer command ownership. Correct: use the established task/run and accepted root records to return a bounded, authorized source-fact projection.

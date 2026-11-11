@@ -97,7 +97,7 @@ test('multi-task information is visible without workspace creation; task continu
     await page.getByRole('button', { name: '任务说明', exact: true }).click();
     await page.getByRole('button', { name: '相关信息', exact: true }).click();
     await expect(page).toHaveURL(url);
-    await page.screenshot({ path: '/private/tmp/axon-task-page.png', fullPage: true });
+    await page.screenshot({ path: test.info().outputPath('task-page.png'), fullPage: true });
 
     await page.reload();await expect(detail.getByRole('heading',{name:'道路通行信息',exact:true})).toBeVisible();expect(page.url()).toBe(url);
     const legacyLink = new URL(url); legacyLink.searchParams.delete('tab'); await page.goto(legacyLink.href);
@@ -407,12 +407,12 @@ test('task home describes before provisioning, remembers disclosure, sends a rea
     await page.goto(`/tasks/${env.task.id}/information`);
     const home = page.locator('.task-home');
     await expect(home.getByRole('heading', { name: '新建对话' })).toBeVisible();
-    await expect(home.getByRole('button', { name: '目标与说明', exact: true })).toHaveAttribute('aria-expanded', 'true');
+    await expect(home.getByRole('button', { name: '目标与说明', exact: true })).toHaveAttribute('aria-expanded', 'false');
     expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0);
     await home.getByRole('button', { name: '目标与说明', exact: true }).click();
     await home.getByLabel('问题或工作要求').fill('梳理联合任务的第一步');
     await page.reload();
-    await expect(home.getByRole('button', { name: '目标与说明', exact: true })).toHaveAttribute('aria-expanded', 'false');
+    await expect(home.getByRole('button', { name: '目标与说明', exact: true })).toHaveAttribute('aria-expanded', 'true');
     await expect(home.getByLabel('问题或工作要求')).toHaveValue('梳理联合任务的第一步');
     await home.getByRole('button', { name: '目标与说明', exact: true }).click();
     await page.screenshot({ path: '/tmp/axon-task-home-desktop.png', fullPage: true });
@@ -470,6 +470,7 @@ test('archived task home is readonly and long descriptions expand without creati
     const longTask = env.lab.access!.create(env.actor, { title: '长说明归档任务', goal: '目标与背景说明。'.repeat(50), visibility: 'public', clientActionId: randomUUID() });
     await login(page, 'a'); await page.getByRole('button', { name: '进入项目：长说明归档任务', exact: true }).click();
     const home = page.locator('.task-home');
+    await home.getByRole('button', { name: '目标与说明', exact: true }).click();
     await home.getByRole('button', { name: '展开全文', exact: true }).click();
     await expect(home.locator('.task-description-body')).toContainText(longTask.goal);
     await page.getByRole('button', { name: '编辑说明', exact: true }).click();

@@ -1,1 +1,7 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/backend/commands.md", "reason": "原指令授权、执行事实与只读投影边界"}
+{"file": ".trellis/spec/backend/workbench.md", "reason": "原工作总览和参与者权限"}
+{"file": ".trellis/spec/backend/scenario-run-isolation.md", "reason": "可信任务归属及历史只读"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "页面、对话及面板约定"}
+{"file": ".trellis/spec/backend/task-information.md", "reason": "关联来报和已保存分析"}
+{"file": ".trellis/spec/backend/continuous-analysis.md", "reason": "持续研判与单条初析区别"}
+{"file": ".trellis/tasks/11-10-scenario-task-overview/research/current-state.md", "reason": "规划时现状依据"}
