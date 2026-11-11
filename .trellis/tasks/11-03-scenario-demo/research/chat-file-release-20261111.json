@@ -1,0 +1,37 @@
+{
+  "released": true,
+  "commit": "cfd48b3",
+  "archiveSha256": "926832ebb1d53f141d9264cf39c84ad78f4ecd99600218069833fec40a89ac88",
+  "backup": "/home/ubuntu/axon-scenario-release-68dded362074/backup/merged-ui-20261111-071257",
+  "health": true,
+  "pid": 1138762,
+  "dataPreserved": true,
+  "privateConfigPreserved": true,
+  "active": {
+    "instanceId": "run-f84d760a-0d3c-4ed6-90a8-ec6b1ea00dfd",
+    "definitionId": "harbor-fire",
+    "definitionVersion": "7",
+    "definitionHash": "b061c6aa64f1aa739f0b59985dbd29c05ad5b0389f1994fae61afafec2b41ca7",
+    "name": "临港仓储火情",
+    "mode": "main_story",
+    "status": "active",
+    "paused": false,
+    "revision": 19,
+    "businessNow": "2026-11-03T09:19:30.000+08:00",
+    "stepIndex": 6,
+    "stepCount": 12,
+    "createdAt": "2026-11-11T01:34:25.613Z",
+    "updatedAt": "2026-11-11T02:51:08.675Z"
+  },
+  "runtimeFilesVerified": 372,
+  "assets": [
+    "/login",
+    "/scenario-director",
+    "/assets/index-QL41XmEG.js",
+    "/assets/index-BXUCpmvq.css"
+  ],
+  "motionPlanImplemented": true,
+  "modelCalls": 0,
+  "eventsSent": 0,
+  "commandsSent": 0
+}
