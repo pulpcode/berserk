@@ -111,6 +111,27 @@ test('task home shows saved related analysis and real work without running a new
   } finally { await f.close(); }
 });
 
+test('long task homes scroll inside the main pane without moving the sidebar or extending the document', async ({ page }) => {
+  const f = await fixture(); await f.attach(page);
+  try {
+    await f.receive();
+    await login(page, 'overall', f.task.id);
+    await expect(page.locator('.task-home')).toContainText('修订支援安排');
+    for (const width of [1440, 960]) {
+      await page.setViewportSize({ width, height: 600 });
+      const pane = page.locator('.task-information');
+      await expect.poll(() => pane.evaluate(element => element.scrollHeight > element.clientHeight)).toBe(true);
+      expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true);
+      await pane.evaluate(element => { element.scrollTop = element.scrollHeight; });
+      await expect(page.getByLabel('问题或工作要求', { exact: true })).toBeInViewport();
+      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      expect(await page.evaluate(() => window.scrollY)).toBe(0);
+      expect((await page.locator('.sidebar').boundingBox())?.y).toBe(0);
+      expect(await pane.evaluate(element => element.scrollTop)).toBeGreaterThan(0);
+    }
+  } finally { await f.close(); }
+});
+
 test('an overview observer sees work summaries without private work details or document names', async ({ page }, testInfo) => {
   const f = await fixture(); await f.attach(page);
   try {
