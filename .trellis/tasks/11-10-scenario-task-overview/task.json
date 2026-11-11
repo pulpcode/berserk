@@ -1,0 +1,29 @@
+{
+  "id": "scenario-task-overview",
+  "name": "scenario-task-overview",
+  "title": "P5：任务首页进展整合",
+  "description": "沿用已认可的任务首页示意，明确目标、研判、工作文档、执行摘要的数据来源与新增范围；仅规划，待用户审阅，不编码。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-10",
+  "completedAt": null,
+  "branch": "codex/scenario-demo",
+  "base_branch": "codex/scenario-demo",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-03-scenario-demo",
+  "relatedFiles": [
+    ".trellis/tasks/11-10-scenario-task-overview/design.md",
+    ".trellis/tasks/11-10-scenario-task-overview/research/current-state.md"
+  ],
+  "notes": "仅方案待审阅，未启动实施。以design.md v0.1为用户审阅入口；新增跨席执行事实摘要读取范围待批准。",
+  "meta": {}
+}
