@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-11",
+  "evidenceChecks": [
+    {
+      "group": "original",
+      "files": 458,
+      "missing": 0,
+      "changed": 0
+    },
+    {
+      "group": "closeout",
+      "files": 30,
+      "missing": 0,
+      "changed": 0
+    }
+  ],
+  "archive": "/Users/lau/Documents/Codex/Agent结果依据实验归档-20261111/spatial-r12-raw-evidence.tar.gz",
+  "bytes": 5595658,
+  "sha256": "eec58d3eec5969b2696cff52f6999e9e849240d3e6d16fbe6f82f3fc367469ce",
+  "rawEvidencePreserved": true,
+  "newModelCalls": 0,
+  "candidateMatchesFreeze": true,
+  "mainBefore": "fa3c061b9b52cf9bec969d1db147dba329848a76",
+  "scenarioBefore": "4525b3f6118f619649bd79c38afd27bfbbfa87ae",
+  "archiveTag": "archive/agent-result-grounding-20261111"
+}

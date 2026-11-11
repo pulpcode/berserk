@@ -92,3 +92,28 @@ Correct: inspect the actual import receipt and saved bytes; compare source geome
 **Tests required.** Mock the native HTTP/Pi loop for all 12 slots and real conflict recovery; assert exact selected body at each user turn, A/B-only Skill differences, wire request compatibility, failure/retry guards and no evidence overwrite. Use an independent distance oracle and inspect actual state changes. Offline aggregation tests validate gating only; full semantic judgments still require evidence review, explicitly labeled Agent review unless a human actually reviewed.
 
 **Wrong vs correct.** Wrong: `HTTP 200` or a successful tool proves factual correctness. Correct: separately review core completion, process facts, final facts, actual effects and boundaries, retain ambiguous/incomplete entries in the planned denominator, and preserve original evidence and scores.
+
+
+## R12 configured thinking versus observed reasoning
+
+**Scope / trigger.** Apply to the task-local R12 answer-generation comparison and its reviewed closeout. This does not enable product thinking or declare the provider's zero-reasoning behavior correct. Original frozen runners, inputs, failure records and scores remain historical evidence.
+
+**Signatures.** The closeout uses `r12-20261025/reasoning-completion.ts`, with offline regression in `reasoning-completion.test.ts`; exact CLI usage is recorded in that round's completion protocol. The only authorized original slots are `C04-C0`, `C05-C0`, `C05-C1`, `C06-C1`, `C06-C0`. Reopening or rerunning another slot requires a new explicit authorization, not a different output path.
+
+**Contracts.** Record requested `thinking.type` / `reasoning_effort`, observed `reasoning_content` length / `usage.completion_tokens_details.reasoning_tokens`, protocol status, and semantic result separately. Compare groups by their frozen requested configuration. A valid C1 response with zero observable reasoning remains eligible for content review; do not invent reasoning text or tokens, infer hidden reasoning from a correct answer, or exclude the response from the configured-group denominator. Private reasoning is not semantic evidence. Output token totals already include reasoning tokens.
+
+**Validation / error matrix.**
+
+| Condition | R12 closeout behavior |
+| --- | --- |
+| C1 normal complete response, empty reasoning and zero reasoning tokens | Retain answer; flag reasoning not observed; no automatic retry or batch failure |
+| Valid new tool calls | Record needs-evidence; do not execute tools or fabricate replies in this answer-only comparison |
+| C0 requested disabled but returned positive reasoning signal | Record configuration/observation mismatch and stop under this round's protocol |
+| HTTP/stream error, invalid response, unknown usage, model/input/source drift, exhausted combined budget | Preserve attempted slot and stop; no automatic retry |
+| Old slot already started, or original batch already claimed for closeout | Refuse dispatch even with a new output path |
+
+**Good / base / bad cases.** Good: C04-C1's correct saved-state explanation and zero observed reasoning receive independent labels while the old failure record remains unchanged. Base: a valid enabled response has no reasoning signal; score its public content without claiming its internal execution mode is verified. Bad: discard zero-reasoning outputs until only successful-looking thinking responses remain, or count a tool request as a finished correct answer.
+
+**Tests required.** Reuse raw-response parsing and frozen-input verification. Assert exact five original bodies, original seven never dispatched again, failure consumes an attempt, duplicate batch claims fail, zero-signal C1 continues, disabled-positive signal stops, tool outputs are not executed, and budget checks include original seven requests and actual usage. Mock transport tests must not claim a live run or reserve the real batch marker. Keep source/model/hash checks and no-retry behavior exercised offline.
+
+**Wrong vs correct.** Wrong: zero reasoning means API failure; HTTP200 means a correct answer. Correct: response integrity, observable reasoning and answer evidence are separate dimensions. Preserve original and amended classifications with their rules, and report incomplete pairs and timing differences when combining a supplemental batch.

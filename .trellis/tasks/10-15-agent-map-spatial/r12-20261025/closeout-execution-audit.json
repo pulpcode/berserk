@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "scope": "r12_remaining_five_first_attempts",
+  "date": "2026-10-25",
+  "r11FilesVerified": 4002,
+  "oldR12FilesVerified": 488,
+  "productCandidateFilesVerified": 3,
+  "changedFrozenFiles": 0,
+  "oldProviderRequestsReplayed": 0,
+  "originalTotals": {
+    "requests": 7,
+    "input": 146903,
+    "output": 2588,
+    "unknown": 0
+  },
+  "newTotals": {
+    "requests": 5,
+    "input": 117669,
+    "output": 1740,
+    "unknown": 0
+  },
+  "cumulativeTotals": {
+    "requests": 12,
+    "input": 264572,
+    "output": 4328,
+    "unknown": 0
+  },
+  "newGroups": {
+    "C0": {
+      "requests": 3,
+      "input": 70611,
+      "output": 619,
+      "reasoningTokens": 0
+    },
+    "C1": {
+      "requests": 2,
+      "input": 47058,
+      "output": 1121,
+      "reasoningTokens": 332
+    }
+  },
+  "requestsIds": [
+    "C04-C0",
+    "C05-C0",
+    "C05-C1",
+    "C06-C1",
+    "C06-C0"
+  ],
+  "groupsConfiguredNotSelectedByThinking": true,
+  "noNewToolsExecuted": true,
+  "automaticRetries": 0,
+  "additionalTasks": 0,
+  "paidJudges": 0,
+  "allResponseModels": "deepseek-v4-1-flash-261017",
+  "records": [
+    {
+      "id": "C04-C0",
+      "httpStatus": 200,
+      "status": "answer",
+      "requestSha256": "0cf0ffe127325b12ca075aad060b6643b4c7843681125d9389b79665e76ae4b3",
+      "responseSha256": "1556e5812cd5c1e51030694588c18938ff83077f8184c05b1d9ec7f4f81b1c37",
+      "usage": {
+        "input": 23608,
+        "output": 71
+      },
+      "observedThinking": {
+        "signal": "not_observed",
+        "characters": 0,
+        "tokens": 0
+      },
+      "startedAt": "2026-10-25T08:19:46.471Z",
+      "completedAt": "2026-10-25T08:19:47.659Z"
+    },
+    {
+      "id": "C05-C0",
+      "httpStatus": 200,
+      "status": "answer",
+      "requestSha256": "3f835c9d1a5da24b521559b3e50a0205c08cb0e57d086c70088ebc3f7ab8c0ab",
+      "responseSha256": "92be0ba43fe468503a6451ff53ddffc875c8d753b1be961dc15df945e831b182",
+      "usage": {
+        "input": 23619,
+        "output": 338
+      },
+      "observedThinking": {
+        "signal": "not_observed",
+        "characters": 0,
+        "tokens": 0
+      },
+      "startedAt": "2026-10-25T08:19:47.869Z",
+      "completedAt": "2026-10-25T08:19:50.470Z"
+    },
+    {
+      "id": "C05-C1",
+      "httpStatus": 200,
+      "status": "answer",
+      "requestSha256": "ad31de006d6f24f721fcff4106893cce47e8f4863e93191a974fc51dbb9e381f",
+      "responseSha256": "fd41069c099c3fdae918eba9b7674ff582b5a587f2616addce15d84a1c840017",
+      "usage": {
+        "input": 23646,
+        "output": 743
+      },
+      "observedThinking": {
+        "signal": "observed",
+        "characters": 874,
+        "tokens": 240
+      },
+      "startedAt": "2026-10-25T08:19:50.683Z",
+      "completedAt": "2026-10-25T08:19:54.613Z"
+    },
+    {
+      "id": "C06-C1",
+      "httpStatus": 200,
+      "status": "answer",
+      "requestSha256": "f5ab6bac7e8240f17c2b9e3c686960c1f2c337271787dcf6f94a02510f3dca95",
+      "responseSha256": "637d52f887c4f73b9072a42298148dc0035d18a633ad06d8424c00e9fb4e12e1",
+      "usage": {
+        "input": 23412,
+        "output": 378
+      },
+      "observedThinking": {
+        "signal": "observed",
+        "characters": 255,
+        "tokens": 92
+      },
+      "startedAt": "2026-10-25T08:19:54.803Z",
+      "completedAt": "2026-10-25T08:19:57.158Z"
+    },
+    {
+      "id": "C06-C0",
+      "httpStatus": 200,
+      "status": "answer",
+      "requestSha256": "63c706e9e44069d57b57739cac181dc6b8a3f5383a23cf466b59dccc8f00e2c0",
+      "responseSha256": "7b47b5a364da8dd930f285010e418d015a0bca55ba92e7b4f50c2bc3011979c8",
+      "usage": {
+        "input": 23384,
+        "output": 210
+      },
+      "observedThinking": {
+        "signal": "not_observed",
+        "characters": 0,
+        "tokens": 0
+      },
+      "startedAt": "2026-10-25T08:19:57.385Z",
+      "completedAt": "2026-10-25T08:19:59.208Z"
+    }
+  ],
+  "rawEvidence": {
+    ".local/spatial-r12/reasoning-completion-prepared-20261025/C04-C0-request.json": "1b5975aefc52a533c9b7c60ff85bc55f2c12de01f29bdadd854beee2d077a60f",
+    ".local/spatial-r12/reasoning-completion-prepared-20261025/C05-C0-request.json": "e766f80543bed3097729f0960d85bbf8380f74e0fbdeca060eae652314feb3e2",
+    ".local/spatial-r12/reasoning-completion-prepared-20261025/C05-C1-request.json": "120a932785abfc1732d43a8387c5c193e291485285eb776f072cabed2aaca99f",
+    ".local/spatial-r12/reasoning-completion-prepared-20261025/C06-C0-request.json": "ecd60228e868eab2f1630b9b1599a8faece7701b961510e4467b646867b0aec2",
+    ".local/spatial-r12/reasoning-completion-prepared-20261025/C06-C1-request.json": "1af39347d80eb6dbebb696a7c9c423306ed427f60b3daf1ad36eb0ab38ffb24b",
+    ".local/spatial-r12/reasoning-completion-prepared-20261025/freeze.json": "83de4c6c208c74ddada6301bdd64656d103cac02ef1ad046a90f480556e4df52",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/attempt.json": "bc6328d491ade223b1a8cc8bb1a73fcd17e16ebebd1ea4ee7bf0aa06810dbfde",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/record.json": "a0c5ca5ec948498a43f236d5aa0f7e95b33c32e5c63af69d8a8e08aed90807ac",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/request.json": "1b5975aefc52a533c9b7c60ff85bc55f2c12de01f29bdadd854beee2d077a60f",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/response.sse": "1556e5812cd5c1e51030694588c18938ff83077f8184c05b1d9ec7f4f81b1c37",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C0/attempt.json": "c3a89a345eecff84bf8fabb28afba503a7343498099bf0ac7bf6c60a7230cb06",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C0/record.json": "17b16202037a210381be7c55139d0f63b26125fab8c2eee19e04fe701d36bd52",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C0/request.json": "e766f80543bed3097729f0960d85bbf8380f74e0fbdeca060eae652314feb3e2",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C0/response.sse": "92be0ba43fe468503a6451ff53ddffc875c8d753b1be961dc15df945e831b182",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/attempt.json": "4645a0d1439220bd036227bd86348c958967cc0767e4dba25f9d8ffed47f19b4",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/record.json": "375f72997c65ec87bd65e53ccb06a933b1315ae826a62f3fa5e55d6a3a5d2707",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/request.json": "120a932785abfc1732d43a8387c5c193e291485285eb776f072cabed2aaca99f",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/response.sse": "fd41069c099c3fdae918eba9b7674ff582b5a587f2616addce15d84a1c840017",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/attempt.json": "acb81efa8b3e025b3a03fe53e4140c3c788175e4d7013be3a5f4f8ac3e2cbd0d",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/record.json": "106b2604c8d6df300b9caca698c1b4c09e1dfcbe643d68ec0f0087cea93324d5",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/request.json": "ecd60228e868eab2f1630b9b1599a8faece7701b961510e4467b646867b0aec2",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/response.sse": "7b47b5a364da8dd930f285010e418d015a0bca55ba92e7b4f50c2bc3011979c8",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/attempt.json": "d71ec4162b1c2e47a89760666a015efe6446ec453160ecf9fc2235d8b34f8ab9",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/record.json": "de9b7784fe251632ac01a4e79dba143aa8475f4e3a3464fbd42139c4b64c3076",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/request.json": "1af39347d80eb6dbebb696a7c9c423306ed427f60b3daf1ad36eb0ab38ffb24b",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/response.sse": "637d52f887c4f73b9072a42298148dc0035d18a633ad06d8424c00e9fb4e12e1",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/progress.json": "2cd8c7b46c8d6a03b3df41923eb38083dbe4589eb902f6fbfe236d1125add0df",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/protocol.json": "83de4c6c208c74ddada6301bdd64656d103cac02ef1ad046a90f480556e4df52",
+    ".local/spatial-r12/reasoning-completion-batch-20261025/results.json": "2cd8c7b46c8d6a03b3df41923eb38083dbe4589eb902f6fbfe236d1125add0df",
+    ".local/spatial-r12/reasoning-batch-20261025-completion-claim.json": "336e847044f5fcaa858a7aea9f855153d3b91f438f0c19d0f8553dec03b18ddd"
+  }
+}

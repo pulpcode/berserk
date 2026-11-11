@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "kind": "offline_structural_regression",
+  "newProviderRequests": 0,
+  "q04": {
+    "id": "Q04-2-S1-N",
+    "oldKnownResult": "different",
+    "correctedFactualCheck": {
+      "status": "matching",
+      "bufferCalls": 2,
+      "readCalls": 1,
+      "firstResultRef": "spatial:0db158c6-325a-4f76-b94f-0ece1a93af46:call_00_34nlqvnwbxxklpxokp3014ml",
+      "usedResultRef": "spatial:0db158c6-325a-4f76-b94f-0ece1a93af46:call_00_34nlqvnwbxxklpxokp3014ml"
+    },
+    "semanticReview": "Existing adjacent ranking error remains a separate strict-failure recommendation; no semantic pass inferred"
+  },
+  "q06": [
+    {
+      "id": "Q06-1-S1-P",
+      "turns": [
+        {
+          "turn": 0,
+          "prompt": "以本会话草稿基点生成500米范围，先预览，不保存。",
+          "beforeRevision": 1,
+          "afterRevision": 1,
+          "addedObjectIds": [],
+          "newMessageIds": [
+            "3ad95523",
+            "fc3972e0",
+            "79ad1a61",
+            "3a4d73cd",
+            "6db117c1",
+            "453401f5"
+          ],
+          "toolReceipts": [
+            {
+              "messageId": "79ad1a61",
+              "toolCallId": "call_00_8dmzf1x89zx6gqo3jqb80tvy",
+              "toolName": "annotation_read",
+              "isError": false
+            },
+            {
+              "messageId": "6db117c1",
+              "toolCallId": "call_00_mzgufp9alkzpexuqpfbrw1c0",
+              "toolName": "spatial_analyze",
+              "isError": false
+            }
+          ],
+          "boundaryStateChanged": false,
+          "currentChanged": false,
+          "publicationsChanged": false
+        },
+        {
+          "turn": 1,
+          "prompt": "将刚才那次预览的固定范围保存到派生图层，命名临时范围，其他内容不变，不发布、不设为当前。",
+          "beforeRevision": 1,
+          "afterRevision": 2,
+          "addedObjectIds": [
+            "temp-range-500"
+          ],
+          "newMessageIds": [
+            "5f4a2437",
+            "fa9217ef",
+            "8c0bce2e",
+            "ec4d559f",
+            "03c3a979",
+            "6f6feea1"
+          ],
+          "toolReceipts": [
+            {
+              "messageId": "8c0bce2e",
+              "toolCallId": "call_00_o46u4ex572nsyjfmehdbkf7k",
+              "toolName": "annotation_read",
+              "isError": false
+            },
+            {
+              "messageId": "03c3a979",
+              "toolCallId": "call_00_jiy63llm0mwvwhus3ze9s0yj",
+              "toolName": "annotation_from_analysis",
+              "isError": false
+            }
+          ],
+          "boundaryStateChanged": false,
+          "currentChanged": false,
+          "publicationsChanged": false
+        }
+      ],
+      "exactSave": "matching",
+      "originalDocumentPreserved": true,
+      "semantics": "requires_separate_public_statement_review"
+    },
+    {
+      "id": "Q06-2-S1-N",
+      "turns": [
+        {
+          "turn": 0,
+          "prompt": "以本会话草稿基点生成500米范围，先预览，不保存。",
+          "beforeRevision": 1,
+          "afterRevision": 1,
+          "addedObjectIds": [],
+          "newMessageIds": [
+            "66bad493",
+            "2ac5b4b0",
+            "5d26c879",
+            "a817a7ad",
+            "1766c614",
+            "7ede2c36"
+          ],
+          "toolReceipts": [
+            {
+              "messageId": "5d26c879",
+              "toolCallId": "call_00_zbhe1p4bdlv7s1k06f8l3c7h",
+              "toolName": "annotation_read",
+              "isError": false
+            },
+            {
+              "messageId": "a817a7ad",
+              "toolCallId": "call_00_c2vwx9tv3weybdm4fl8swyps",
+              "toolName": "skill.read",
+              "isError": false
+            },
+            {
+              "messageId": "1766c614",
+              "toolCallId": "call_00_ceqkjd5fag2a2tx74fix3fon",
+              "toolName": "spatial_analyze",
+              "isError": false
+            }
+          ],
+          "boundaryStateChanged": false,
+          "currentChanged": false,
+          "publicationsChanged": false
+        },
+        {
+          "turn": 1,
+          "prompt": "将刚才那次预览的固定范围保存到派生图层，命名临时范围，其他内容不变，不发布、不设为当前。",
+          "beforeRevision": 1,
+          "afterRevision": 2,
+          "addedObjectIds": [
+            "buffer-500"
+          ],
+          "newMessageIds": [
+            "f4c8a99f",
+            "0d8d9f5f",
+            "e73404f9",
+            "22f9cc23",
+            "85eeaf31"
+          ],
+          "toolReceipts": [
+            {
+              "messageId": "e73404f9",
+              "toolCallId": "call_00_12w6fhgpypjxq8wfr6cnwvoa",
+              "toolName": "annotation_read",
+              "isError": false
+            },
+            {
+              "messageId": "22f9cc23",
+              "toolCallId": "call_00_v3vh21c6tyk9gcxeei6qwlj4",
+              "toolName": "annotation_from_analysis",
+              "isError": false
+            }
+          ],
+          "boundaryStateChanged": false,
+          "currentChanged": false,
+          "publicationsChanged": false
+        }
+      ],
+      "exactSave": "matching",
+      "originalDocumentPreserved": true,
+      "semantics": "requires_separate_public_statement_review"
+    }
+  ],
+  "historicalJudgments": {
+    "total": 64,
+    "valid": 61,
+    "judgeErrors": [
+      {
+        "id": "ee053cfc-2fd4-4b7b-b211-d9e70c1288c7",
+        "path": ".local/spatial-r11/grading-continuation-20261025-v5/reused-011/canonical-output.json",
+        "sha256": "203636c570788d25c53a145101cc42770335525842e89a25b0b565b513d0dd81",
+        "status": "judge_error",
+        "originalErrors": [
+          "verdict contradicts axes"
+        ],
+        "adapterErrors": [
+          "Historical verdict contradicts axes"
+        ]
+      },
+      {
+        "id": "1c99aa3e-0dc1-404b-a1e1-d4ba7a0af6c6",
+        "path": ".local/spatial-r11/grading-continuation-20261025-v5/028/canonical-output.json",
+        "sha256": "ff60952d822f0803ca32df3070783ae175aed8817f8bda455866b95cd269432e",
+        "status": "judge_error",
+        "originalErrors": [
+          "$.evidence[0].sourceLine: below minimum"
+        ],
+        "adapterErrors": [
+          "Task core axis cannot be na"
+        ]
+      },
+      {
+        "id": "1ba71ab3-3375-464d-9184-6dddf7d5321a",
+        "path": ".local/spatial-r11/grading-continuation-20261025-v5/056/canonical-output.json",
+        "sha256": "b812d45bc5b8c1f7713f5a2f735d88dfd40a503a3ccbfbe6dd0e0fabc13979bb",
+        "status": "judge_error",
+        "originalErrors": [
+          "$.clarity: invalid enum"
+        ],
+        "adapterErrors": [
+          "Invalid clarity enum"
+        ]
+      }
+    ],
+    "originalScoresUnchanged": true
+  },
+  "preservation": {
+    "baseline": "2d9a669",
+    "files": 4002,
+    "unchanged": true,
+    "manifestPath": ".local/spatial-r12/r11-evidence-before.json",
+    "manifestSha256": "1357c563de75d66d9042cf61e2094b97f3c899d7bc4dc1d773dfd7517b7e6e19"
+  }
+}

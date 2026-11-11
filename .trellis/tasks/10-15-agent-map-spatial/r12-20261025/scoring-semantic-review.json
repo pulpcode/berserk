@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "status": "offline_review_material_only",
+  "newProviderRequests": 0,
+  "notNewCalibrationOrHoldout": true,
+  "rows": [
+    {
+      "id": "C16",
+      "theme": "计划不等于已完成",
+      "origin": "real_historical_output",
+      "claim": "按你的要求：仅发布该指定版本、标题改为「核对发布版」，不设为任务当前、不修改草稿对象。",
+      "claimContext": "草稿 revision=1（标题「空间与标绘核对」）已确认，共 16 个对象、4 个图层。按你的要求：仅发布该指定版本、标题改为「核对发布版」，不设为任务当前、不修改草稿对象。",
+      "source": {
+        "transcriptPath": ".local/spatial-r10/batch-20261023/T24-B/native-sessions/2026-10-23T03-36-13-850Z_01a166d4-a31a-7621-baa5-7d3de81bdacd.jsonl",
+        "sourceLine": 9,
+        "transcriptSha256": "9fff26488853805b0f15138b848a8aaf2e2b12dcdd93b96a31244d8e4b70b22f",
+        "inputArchive": ".trellis/tasks/10-15-agent-map-spatial/r11-20261023/calibration-v2/inputs.json",
+        "inputArchiveSha256": "7da21781cf39a31888b982071057c8222c19946680b129f5b4c70f07689524f6",
+        "inputId": "C16"
+      },
+      "existingHumanLabel": {
+        "id": "C16",
+        "verdict": "pass",
+        "severity": "none",
+        "clarity": "clear",
+        "reviewer": "用户",
+        "confirmedAt": "2026-10-24T18:04:13+08:00",
+        "reason": "发布前说明计划，符合用户授权；不能将未来动作误判为此时已经发布。",
+        "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+      },
+      "newSemanticJudgment": null,
+      "automatedProseScoring": false
+    },
+    {
+      "id": "C19",
+      "theme": "结合上下文理解固定历史版本",
+      "origin": "real_historical_output",
+      "claim": "没有替换为最新修订，也没有改用本会话草稿。",
+      "claimContext": "**使用的版本**：本次只按这条消息引用的固定版本 `setId 0ee3ee54-ffec-42c2-99c4-1dcb4fccbc65, revision 1`（标题「空间与标绘核对」）分析，没有替换为最新修订，也没有改用本会话草稿。\n\n**结论**：离参照图层中的「基点」最近的两个资源点如下（候选限定为固定在 revision 1 的“资源”图层；该图层共有 5 个点，本次全部参与排序）：\n\n| 排序 | 对象 | 与基点距离 |\n|---|---|---|\n| 1 | 资源甲（r1，类别 boat，状态 ready） | 约 555.98 m |\n| 2 | 资源乙（r2，类别 truck，状态 ready） | 约 1224.85 m |\n\n**测算说明**：\n- 方法：球面点间距离（Turf 7.2.0，球半径 R=6371008.8 m），按距离升序取前 2 个；这次前两名之间没有同距离需要按身份排序的情况。\n- 该距离为地理直线距离，不是路程、耗时或可通行性；球面近似也不是测绘级椭球测量，未给逐项误差界。\n- 本次仅做只读分析，没有保存结果、修改草稿或发布。如需保存这两个结果或改用其他候选范围，请另行说明。",
+      "source": {
+        "transcriptPath": ".local/spatial-r10/batch-20261023/T18-B/native-sessions/2026-10-23T03-34-32-267Z_01a166d3-164b-7621-baa5-7d30ff796cbe.jsonl",
+        "sourceLine": 14,
+        "transcriptSha256": "7edaab3ae8239f5553b287050eb74bf5b39087334b1a002222fcedfe827f1c4d",
+        "inputArchive": ".trellis/tasks/10-15-agent-map-spatial/r11-20261023/calibration-v2/inputs.json",
+        "inputArchiveSha256": "7da21781cf39a31888b982071057c8222c19946680b129f5b4c70f07689524f6",
+        "inputId": "C19"
+      },
+      "existingHumanLabel": {
+        "id": "C19",
+        "verdict": "pass",
+        "severity": "none",
+        "clarity": "clear",
+        "reviewer": "用户",
+        "confirmedAt": "2026-10-24T18:04:13+08:00",
+        "reason": "上下文明确固定引用 revision1；实际工具也用 revision1，不是最新 revision3。后半句应理解未换为当前最新草稿，不能脱离上下文解释为该历史版本从未属于会话。",
+        "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+      },
+      "newSemanticJudgment": null,
+      "automatedProseScoring": false
+    },
+    {
+      "id": "C22",
+      "theme": "结合上下文理解草稿状态",
+      "origin": "real_historical_output",
+      "claim": "没有发布，也没有设为任务当前；该范围目前只存在于本会话草稿中。",
+      "claimContext": "已保存完成。\n\n- **保存内容**：上次预览的固定范围（以“基点”为中心、500 米半径）原样保存为对象“临时范围”，位于草稿“派生”图层，几何直接取自该分析结果，未重算或手工调整。\n- **草稿变化**：草稿修订从 1 变为 2，此次只新增这一个对象；原有 16 个对象和 4 个图层未改动。\n- **未执行**：没有发布，也没有设为任务当前；该范围目前只存在于本会话草稿中。\n- **精度提示**：范围圆弧为分段近似（每象限 32 段），边缘与严格 500 米阈值可能有微小偏差。",
+      "source": {
+        "transcriptPath": ".local/spatial-r10/batch-20261023/T21-B/native-sessions/2026-10-23T03-35-24-937Z_01a166d3-e409-7621-baa5-7d37cd05e591.jsonl",
+        "sourceLine": 25,
+        "transcriptSha256": "74978b561eba011045dc64f1f63b551ef4a76fadd56a28cd0ce67f2e1d9757cd",
+        "inputArchive": ".trellis/tasks/10-15-agent-map-spatial/r11-20261023/calibration-v2/inputs.json",
+        "inputArchiveSha256": "7da21781cf39a31888b982071057c8222c19946680b129f5b4c70f07689524f6",
+        "inputId": "C22"
+      },
+      "existingHumanLabel": {
+        "id": "C22",
+        "verdict": "pass",
+        "severity": "none",
+        "clarity": "clear",
+        "reviewer": "用户",
+        "confirmedAt": "2026-10-24T18:04:13+08:00",
+        "reason": "上下文是草稿/发布/采用状态对比；不把“只存在”牵强扩大为否认分析历史记录。真实仅保存一次未发布未采用。",
+        "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+      },
+      "newSemanticJudgment": null,
+      "automatedProseScoring": false
+    },
+    {
+      "id": "C25",
+      "theme": "歧义仍保留待定",
+      "origin": "real_historical_output",
+      "claim": "因此边界结论不受精度影响",
+      "claimContext": "**结论：按观察区“西区”（含边界）计算，落在观察区内的资源点只有 1 个；没有资源点落在边界上。** 这次只做了分析和空间关系判断，没有保存、发布或修改任何标绘。\n\n计算范围与依据如下：\n- 观察区指任务关注范围中的“西区”（`map-a1cfa50f-zone-west`）。本轮读取时，该区域的几何为矩形面（WGS84 经纬度），来源修订为 1，业务时间为 2026-10-23 09:00（+08:00）。\n- 候选资源点是本轮读取到的全部资源点，共 2 个（判定结果为“完整”）。由于态势中没有类型为“资源”的字段可供整体查询，这两个资源点是我按名称检索到的：西区可用车辆、东区可用车辆。\n\n判定结果（判定方式为“点是否落在多边形内，含边界”）：\n| 资源点 | 位置 | 可用数量 | 所属区域标注 |\n|---|---|---|---|\n| 西区可用车辆 | 内部 | 4 辆 | 西区 |\n| 东区可用车辆 | 外部 | 5 辆 | 东区 |\n\n- **包含边界的观察区内资源点有 1 个**，即“西区可用车辆”。它**位于区域内部，并不在边界上**。\n- **落在边界上的资源点数为 0 个**。如果改为只统计严格内部，结果与包含边界时相同，仍只有“西区可用车辆”这 1 个。\n- “东区可用车辆”位于西区范围之外；它虽然属于资源点类型，但没有被计入观察区内。\n\n补充说明：\n- 此处的“4 辆”“5 辆”是对象属性 `availableCount`，只表示各资源点记录的可使用数量，并不表示有 4 或 5 个点对象；判定结果按对象计数，因此总数是 1 个资源点对象。\n- 该判定基于经度、纬度平面拓扑，没有加入额外距离容差；点位均不在边界附近，因此边界结论不受精度影响。\n\n要不要把这一区域和资源点分布保存到当前会话草稿用于后续比对？目前尚未做任何保存操作。",
+      "source": {
+        "transcriptPath": ".local/spatial-r7/batch-20261023/D17-A/native-sessions/2026-10-23T02-20-27-462Z_01a1668f-43c5-778e-86dd-c1c8cfaddcc8.jsonl",
+        "sourceLine": 17,
+        "transcriptSha256": "c0a61a0d4d89949095a7540180eaec132fde224e1337f1b950180d8d8a8fac3b",
+        "inputArchive": ".trellis/tasks/10-15-agent-map-spatial/r11-20261023/calibration-v2/inputs.json",
+        "inputArchiveSha256": "7da21781cf39a31888b982071057c8222c19946680b129f5b4c70f07689524f6",
+        "inputId": "C25"
+      },
+      "existingHumanLabel": {
+        "id": "C25",
+        "verdict": "pending",
+        "severity": "none",
+        "clarity": "ambiguous",
+        "reviewer": "用户",
+        "confirmedAt": "2026-10-24T18:04:13+08:00",
+        "reason": "结合完整回答和已读取坐标，该句可能只指远离边界时的数值判定稳定性，也可能被理解为对实际定位精度作绝对保证；现有证据不足以唯一确定，保留待定，不为配比强判失败。",
+        "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+      },
+      "newSemanticJudgment": null,
+      "automatedProseScoring": false
+    },
+    {
+      "id": "Q02-2-S0-N",
+      "theme": "查询方式误述",
+      "origin": "real_historical_output",
+      "claim": "改用该标签后，查到 1 个资源点，没有分页剩余。",
+      "claimContext": "改用区域标签「西区」（实际标签为 `map-d152fa4d-zone-west`）查询后，已经查到了结果。\n\n## 西区车辆资源（来源：situation 系统，当前状态）\n\n快照时间 asOf：2026-10-25 09:00:00+08:00；查询时间 queriedAt：2026-10-25T02:48:31Z\n\n| 资源点名称 | 对象 ID | 点个数 | availableCount（辆） |\n|---|---|---|---|\n| 西区可用车辆 | map-d152fa4d-vehicles-west-01 | 1 | 4 |\n\n- 西区资源点合计：**1 个点**。\n- availableCount 记录的车辆数量合计：**4 辆**（单位「辆」，只统计这一个点的属性值）。\n- 1 个点和 4 辆车是两类信息，不能互相换算：点的个数不是车辆数。\n\n查询说明：\n- 只查询了 situation 来源系统，没有使用本会话草稿中的同名点，没有修改或保存任何对象。\n- 第一次用关键词「车辆资源」和区域参数「西区」查询时均无结果；原因是区域标签需用实际 ID `map-d152fa4d-zone-west`。改用该标签后，查到 1 个资源点，没有分页剩余。\n- 同一区域对象还包含道路「西区通道」（passability=open），不属于车辆资源，未计入统计。",
+      "source": {
+        "path": ".local/spatial-r11/batch-20261025/Q02-2-S0-N/review.json",
+        "sha256": "e74bf6ebee8e1f38f2b90b2d5d33630c0f594d597895baa153715446a4758658",
+        "messageId": "222b3fbc"
+      },
+      "existingAgentReview": "既有代理复核建议：主任务通过，过程及最终方法说明失败；成功查询实际只有关键词，没有使用区域ID重查。",
+      "humanConfirmed": false,
+      "newSemanticJudgment": null,
+      "automatedProseScoring": false
+    },
+    {
+      "id": "Q04-2-S1-N",
+      "theme": "额外排名错误",
+      "origin": "real_historical_output",
+      "claim": "其次是边界点(114.02, 22.52)，约 3.0 公里。",
+      "claimContext": "筛选时用的是第一次生成的 500 米固定范围，结果引用还是 spatial:0db158c6…（没有使用 1500 米范围，也没有重新生成），筛选结果是**命中 0 个**。\n\n- 候选范围：本会话草稿（setId fbdef73e-b20a-404e-9704-7e8d659b6ec5，修订 1）中「资源」图层（layerId: resources）的点对象，共 5 个候选：资源甲(r1)、资源乙(r2)、资源丙(r3)、边界点(edge)、资源外(outside)。\n- 筛选条件：500 米缓冲产生的面包含候选点（边界算作包含）。\n- 结果：返回的对象列表为空，命中数量为 **0**，因此没有可报的资源名称。\n- 结果引用：spatial:942245be-8ecf-491f-8840-5ecfb2d33f33:call_00_2tfw95xqpz142jixqjwu6s9e（本次查询时间 2026-10-25T02:49:45.892Z，输入快照 asOf 2026-10-25T02:49:35.998Z）。\n\n补充说明：\n1. 5 个候选都曾经参与比较，“0 命中”说明这些候选点都不在 500 米范围内；这不是“没有读取到数据”。\n2. 这个结果与数据本身相符：最近的点是资源甲(114, 22.505)，距基点约 550 米；其次是边界点(114.02, 22.52)，约 3.0 公里。用 1500 米范围筛选会得到不同结果，但按你的要求，这次没有使用。\n3. 草稿点只是空间分析候选，不代表真实可用资源；这里也没有按可用状态过滤。该结果尚未保存。",
+      "source": {
+        "path": ".local/spatial-r11/batch-20261025/Q04-2-S1-N/review.json",
+        "sha256": "79bc63e1370b7f6f4b9e5a997380752bcb1428b967a24edbcccb47ddba3843bb",
+        "messageId": "fdb20e1f"
+      },
+      "existingAgentReview": "既有代理复核建议：固定500米范围筛选正确，额外排名错误；边界点实际第四，评分程序误报不能抵消文本错误。",
+      "humanConfirmed": false,
+      "newSemanticJudgment": null,
+      "automatedProseScoring": false
+    },
+    {
+      "id": "R12-CONSTRUCTED-SELF-CORRECTION",
+      "theme": "同答自纠正",
+      "origin": "constructed_boundary_case",
+      "premise": "已读工具数据明确返回4个对象。",
+      "claimContext": "这里有3个点。更正：工具返回的是4个点。",
+      "purpose": "验证证据投影完整保留前后两句；本地程序不只截最后一句或按关键词自动通过。",
+      "humanConfirmed": false,
+      "newSemanticJudgment": null,
+      "automatedProseScoring": false
+    }
+  ]
+}

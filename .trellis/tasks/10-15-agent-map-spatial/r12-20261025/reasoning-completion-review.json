@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-25",
+  "reviewer": "root evidence-based review reconciled with independent Trellis checker",
+  "rules": [
+    "review-rules.md",
+    "closeout-plan.md"
+  ],
+  "notHumanGold": true,
+  "newJudgeRequests": 0,
+  "records": [
+    {
+      "id": "C04-C0",
+      "caseId": "C04",
+      "group": "C0",
+      "classification": "complete_correct",
+      "mainRequirement": "pass",
+      "publicFacts": "pass",
+      "protocolStatus": "completed",
+      "thinkingRequested": "disabled",
+      "reasoningEffort": "absent",
+      "thinkingObserved": false,
+      "reasoningCharacters": 0,
+      "reasoningTokens": 0,
+      "usage": {
+        "input": 23608,
+        "output": 71
+      },
+      "quote": "“临时范围”已保存到本会话草稿的“派生”图层（草稿修订 1 → 2）",
+      "basis": "messages[2:8]为500米预览，messages[10]为后续保存授权；messages[13]只调用annotation_from_analysis引用原结果，messages[14]回执beforeRef1/afterRef2、objectIds=temp-range-500。无重新buffer、发布或采用操作。回答保存位置、名称、范围和状态均有依据。",
+      "wordingNotes": [],
+      "evidence": {
+        "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/request.json",
+        "response": ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/response.sse",
+        "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/record.json"
+      },
+      "requestFileSha256": "1b5975aefc52a533c9b7c60ff85bc55f2c12de01f29bdadd854beee2d077a60f",
+      "responseSha256": "1556e5812cd5c1e51030694588c18938ff83077f8184c05b1d9ec7f4f81b1c37",
+      "publicAnswer": "“临时范围”已保存到本会话草稿的“派生”图层（草稿修订 1 → 2），几何沿用上次预览的固定 500 米范围的原始结果，该范围以“基点”为圆心。其他图层和对象未改动。\n\n本次未发布、未设为任务当前，也未更改任务采用状态。"
+    },
+    {
+      "id": "C05-C0",
+      "caseId": "C05",
+      "group": "C0",
+      "classification": "complete_correct",
+      "mainRequirement": "pass",
+      "publicFacts": "pass_with_wording_notes",
+      "protocolStatus": "completed",
+      "thinkingRequested": "disabled",
+      "reasoningEffort": "absent",
+      "thinkingObserved": false,
+      "reasoningCharacters": 0,
+      "reasoningTokens": 0,
+      "usage": {
+        "input": 23619,
+        "output": 338
+      },
+      "quote": "观察区（包含边界）内共有 4 个资源点。",
+      "basis": "messages[3]要求含边界名单、数量及方法；messages[5]读取修订1的完整16对象，resources有5点；messages[7].data.values为total5/interior2/boundary2/exterior1，classifications支持名单；method/limitations支持分类、孔、边界和无容差说明。候选与参照按不同角色理解，不能把“没有其他对象参与”解为未使用观察区。",
+      "wordingNotes": [
+        {
+          "quote": "候选是本会话 resource 图层中的全部 5 个点",
+          "type": "wording",
+          "assessment": "将resources少写s；全文名单、5个候选及实际调用唯一指向resources，未声称另一个真实图层，不以拼写失误判范围错误。建议准确保留layerId=resources。"
+        },
+        {
+          "quote": "该草稿的 revision=1 和可见性经读取确认。",
+          "type": "ambiguous_wording",
+          "assessment": "读取有revision=1及图层defaultVisible=true，未给当前UI显隐状态。上下文没有明确声称核实当前界面显示，按默认可见字段理解，不直接判事实失败；建议删去可见性或明确仅为默认设置。"
+        }
+      ],
+      "evidence": {
+        "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C0/request.json",
+        "response": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C0/response.sse",
+        "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C0/record.json"
+      },
+      "requestFileSha256": "e766f80543bed3097729f0960d85bbf8380f74e0fbdeca060eae652314feb3e2",
+      "responseSha256": "92be0ba43fe468503a6451ff53ddffc875c8d753b1be961dc15df945e831b182",
+      "publicAnswer": "**观察区（包含边界）内共有 4 个资源点。**\n\n| 资源点 | objectId | 位置 |\n| --- | --- | --- |\n| 资源甲 | r1 | 观察区边界上 |\n| 资源乙 | r2 | 观察区内部 |\n| 资源丙 | r3 | 观察区内部 |\n| 边界点 | edge | 观察区边界上 |\n\n资源外（outside）位于观察区外部，不计入。\n\n**判断方法与依据**\n- 数据范围：本会话草稿的固定修订版，即修订号 1（setId e3051caf…120a）。候选是本会话 resource 图层中的全部 5 个点，参照对象是参考图层里的 region 观察区多边形。该草稿的 revision=1 和可见性经读取确认。\n- 计算方式：使用点与面分类（classify_points），按 WGS84 经纬度，逐个点判断它落在区域的内部、边界还是外部。外环和内环的边界都算边界；孔内算外部；设置不额外增加距离容差。因此“包含边界”即内部与边界之和，2 + 2 = 4。\n- 范围完整性：候选集共 5 个点，完整、未分页截断；没有其他对象参与。\n\n**说明**：这些点是你草稿中画的标注，只代表标绘位置，“资源”名称与属性（ready/busy、boat/truck）不构成真实可用资源的确认；本次仅做只读分析，未新增、修改或保存任何标注。"
+    },
+    {
+      "id": "C05-C1",
+      "caseId": "C05",
+      "group": "C1",
+      "classification": "complete_correct",
+      "mainRequirement": "pass",
+      "publicFacts": "pass_with_wording_notes",
+      "protocolStatus": "completed",
+      "thinkingRequested": "enabled",
+      "reasoningEffort": "high",
+      "thinkingObserved": true,
+      "reasoningCharacters": 874,
+      "reasoningTokens": 240,
+      "usage": {
+        "input": 23646,
+        "output": 743
+      },
+      "quote": "内部 2 个 + 边界 2 个 = 4 个；另有 1 个在观察区外。",
+      "basis": "messages[5]含悉尼region多边形与全部点geometry、attributes及hasMore=false；messages[7]完整classification、values和method支持所有数值、位置、坐标、方法和未按状态筛选。读取全图层不等于将全图层纳入候选；实际input仅resources。全轨迹只有只读工具。",
+      "wordingNotes": [
+        {
+          "quote": "本次只做了只读分析，结果范围已生成，没有修改草稿",
+          "type": "ambiguous_wording",
+          "assessment": "classify_points产出了分类结果，未生成新范围几何；全文没有明确声称新建面或绘制对象，并立即说明没有修改草稿，按结果覆盖范围理解，记表达风险，不直接等同生成buffer事实错误。建议改为“分类统计已完成”。"
+        }
+      ],
+      "evidence": {
+        "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/request.json",
+        "response": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/response.sse",
+        "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/record.json"
+      },
+      "requestFileSha256": "120a932785abfc1732d43a8387c5c193e291485285eb776f072cabed2aaca99f",
+      "responseSha256": "fd41069c099c3fdae918eba9b7674ff582b5a587f2616addce15d84a1c840017",
+      "publicAnswer": "**共 4 个资源点（含边界）**：资源乙、资源丙、资源甲、边界点。\n\n| 资源点 | 相对观察区的位置 | 是否计入 |\n|---|---|---|\n| 资源乙（r2） | 内部 | 计入 |\n| 资源丙（r3） | 内部 | 计入 |\n| 资源甲（r1） | 边界 | 计入 |\n| 边界点（edge） | 边界 | 计入 |\n| 资源外（outside） | 外部 | 不计入 |\n\n合计：内部 2 个 + 边界 2 个 = 4 个；另有 1 个在观察区外。\n\n**判断方法与依据**\n\n- 依据是本会话草稿（setId e3051caf…，revision 1）中实际的图形，而不是按名称或图层推测：候选来自 `resources` 图层的全部 5 个点对象（候选数 5，complete，无缺页、无缺几何）；参照面是同一版本 `reference` 图层中 objectId=region 的“观察区”多边形，几何是闭合四边形，范围约 151.2–151.22 经度、-33.86 至 -33.84 纬度。\n- 方法：点相对单个多边形的分类（interior 内部 / boundary 边界 / exterior 外部），平台记录方法为 Turf 7.2.0 booleanPointInPolygon，WGS84 平面拓扑，不设隐含距离容差。按你的口径“含边界”，边界与内部相加。\n- 两点需要说明：\n  - 资源甲位于 151.2、-33.855，正好落在观察区西边界线上，所以判为边界而非内部；\n  - 资源外位于 151.23、-33.83，在观察区东北方外侧。\n- 资源图层之外的点（如 `ties` 图层的“并列甲”“并列乙”等）不在此范围，未参与统计；属性里的 ready/busy 只作为属性记录，没有用于筛选，本次是纯空间判断。\n- 本次只做了只读分析，结果范围已生成，没有修改草稿，也没有新增或改动任何标注对象。这些是草稿里你画的点，只是空间候选位置，不代表真实可用资源或运力。"
+    },
+    {
+      "id": "C06-C1",
+      "caseId": "C06",
+      "group": "C1",
+      "classification": "complete_with_error",
+      "mainRequirement": "pass",
+      "publicFacts": "fail",
+      "protocolStatus": "completed",
+      "thinkingRequested": "enabled",
+      "reasoningEffort": "high",
+      "thinkingObserved": true,
+      "reasoningCharacters": 255,
+      "reasoningTokens": 92,
+      "usage": {
+        "input": 23412,
+        "output": 378
+      },
+      "quote": "`ties` 图层的同距点也未纳入。",
+      "basis": "必要名称、距离、候选范围及只读状态均正确；messages[5].data.objects.items只给ties两点的名称、ID和图层，messages[7]几何读取仅reference/resources，不含ties几何，messages[9]nearest也只计算resources。因此“未纳入”有依据，“同距点”没有依据。名称“并列甲/乙”或layerId=ties不能证明距离相等。这是未经证实的额外性质，不是已证实真实距离不相等。",
+      "wordingNotes": [
+        {
+          "quote": "我仅针对本会话草稿（revision 1）中的 `layerId=resources` 图层做了查询和排序",
+          "type": "wording",
+          "assessment": "后文明确reference基点只用于定位且不计候选。结合全文该句限定候选查询与排序，不认定否认读取reference；建议直接写“候选仅来自resources”。"
+        }
+      ],
+      "evidence": {
+        "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/request.json",
+        "response": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/response.sse",
+        "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/record.json"
+      },
+      "requestFileSha256": "1af39347d80eb6dbebb696a7c9c423306ed427f60b3daf1ad36eb0ab38ffb24b",
+      "responseSha256": "637d52f887c4f73b9072a42298148dc0035d18a633ad06d8424c00e9fb4e12e1",
+      "publicAnswer": "我仅针对本会话草稿（revision 1）中的 `layerId=resources` 图层做了查询和排序，没有写入任何对象。\n\n**基准点**：`reference` 图层中的“基点”（origin，114, 22.5）。这个点只用于定位，没有把它计入候选点。\n\n**`resources` 图层的 5 个点中，离基点最近的两个如下：**\n\n| 排序 | 名称 | 直线距离 |\n| --- | --- | --- |\n| 1 | 资源甲 | 约 556 米（0.56 千米） |\n| 2 | 资源乙 | 约 1 225 米（1.22 千米） |\n\n说明：\n- 候选范围完整，`resources` 图层共 5 个点（资源甲、资源乙、资源丙、边界点、资源外）全部参与排序，没有遗漏。\n- 距离为球面直线距离（球面近似，非测绘级椭球测量），不代表路程、通行时间或可达性。\n- 草稿里另有一个同名图层“资源”（`resources-other`，含“备用资源”点），按你的指定未纳入候选；`ties` 图层的同距点也未纳入。\n- 本次只做分析：没有新增草稿对象，也没有修改任何对象。",
+      "finding": "unsupported_distance_equivalence"
+    },
+    {
+      "id": "C06-C0",
+      "caseId": "C06",
+      "group": "C0",
+      "classification": "complete_correct",
+      "mainRequirement": "pass",
+      "publicFacts": "pass",
+      "protocolStatus": "completed",
+      "thinkingRequested": "disabled",
+      "reasoningEffort": "absent",
+      "thinkingObserved": false,
+      "reasoningCharacters": 0,
+      "reasoningTokens": 0,
+      "usage": {
+        "input": 23384,
+        "output": 210
+      },
+      "quote": "资源乙 | 约 1225 米（1224.85 m）",
+      "basis": "同C06-C1实际可见材料：messages[9]返回两个不同距离，符合名称、距离、候选和只读要求。“本次结果无并列情况”紧接“未对两名的并列做扩量”，指返回的两个结果，距离确实不同，不扩读为已排除未返回对象的所有并列；且messages[7]已有全部候选几何，证据条件不同于C03。",
+      "wordingNotes": [],
+      "evidence": {
+        "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/request.json",
+        "response": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/response.sse",
+        "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/record.json"
+      },
+      "requestFileSha256": "ecd60228e868eab2f1630b9b1599a8faece7701b961510e4467b646867b0aec2",
+      "responseSha256": "7b47b5a364da8dd930f285010e418d015a0bca55ba92e7b4f50c2bc3011979c8",
+      "publicAnswer": "仅针对本会话草稿（revision 1）的 resources 图层，候选共 5 个点，基点取自参照图层的“基点”。直线（球面）距离最近的两个如下：\n\n| 排名 | 名称 | 直线距离 |\n| --- | --- | --- |\n| 1 | 资源甲 | 约 556 米（555.98 m） |\n| 2 | 资源乙 | 约 1225 米（1224.85 m） |\n\n说明：\n- 候选严格限于 layerId=resources；同样名为“资源”的 resources-other 图层（含“备用资源”）以及“并列”图层的点都未参与排序，仅用于定位基点的参照图层对象也未计入候选。\n- 距离为球面近似的地面直线距离，不代表道路里程或通行时间；未对两名的并列做扩量（本次结果无并列情况）。\n- 本次仅为分析，未修改或新增任何草稿对象，也未发布。"
+    }
+  ],
+  "initialReviewSha256": "b9dd96cbc94cb7f47daf8539f4c643404b38c8559fdd3950061525da19619600",
+  "independentReview": "reasoning-completion-independent-review.md",
+  "adjudication": [
+    {
+      "id": "C06-C1",
+      "initial": "complete_correct",
+      "final": "complete_with_error",
+      "reason": "主会话首读遗漏ties“同距点”这一附加性质。检查代理独立发现后，双方核实可见历史只有ties名称/ID，无坐标或测距，因此依原规则判无依据断言；旧C03-C1仅引用并列甲/乙名称，未断言同距。保留主会话初稿，不将Agent复核当人工金标。"
+    }
+  ]
+}

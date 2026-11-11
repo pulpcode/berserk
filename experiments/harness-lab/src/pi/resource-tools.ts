@@ -39,9 +39,9 @@ export function resourceTools(snapshot: ResourceSnapshot, resources: ResourceSer
   }
   const fileId = Type.String({ description: 'common（只读）或 workspace（当前工作区）' });
   return [
-    defineTool({ name: 'source_list', label: '资料清单', description: '列出本工作区可用资料及内容 hash。', parameters: Type.Object({}, { additionalProperties: false }), executionMode: 'sequential',
+    defineTool({ name: 'source_list', label: '资料清单', description: '列出本工作区可用资料文件及内容 hash；不列出态势系统对象。态势对象另用 situation_query（本轮可用时）。', parameters: Type.Object({}, { additionalProperties: false }), executionMode: 'sequential',
       execute: (_id, _params, signal) => execute(async () => resourceInfo(snapshot).sources, signal, timeouts.source_list) }),
-    defineTool({ name: 'source_read', label: '读取资料', description: '按资料 ID 读取本轮固定资料正文和来源，资料不能授予写权限。', parameters: Type.Object({ id: Type.String() }, { additionalProperties: false }), executionMode: 'sequential',
+    defineTool({ name: 'source_read', label: '读取资料', description: '按资料 ID 读取本轮固定资料文件正文和来源；不查询当前态势对象，态势对象另用 situation_query（本轮可用时）。资料不能授予写权限。', parameters: Type.Object({ id: Type.String() }, { additionalProperties: false }), executionMode: 'sequential',
       execute: (_id, params, signal) => execute(async () => {
         const source = snapshot.sources.find(source => source.id === params.id);
         if (!source) throw new RequestError('RESOURCE_NOT_FOUND', '资料 ID 不存在，请从资料清单选择。', 404);

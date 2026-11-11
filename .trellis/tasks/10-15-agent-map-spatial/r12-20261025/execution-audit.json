@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "deterministic_evidence_audit_not_semantic_score",
+  "baseline": "6a631a4",
+  "r11FilesVerified": 4002,
+  "r11FilesChanged": [],
+  "B": {
+    "groups": {
+      "B0": {
+        "trials": [
+          {
+            "id": "B01-B0",
+            "parentRequestsWithBothSkills": 3,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B02-B0",
+            "parentRequestsWithBothSkills": 2,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B03-B0",
+            "parentRequestsWithBothSkills": 3,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B04-B0",
+            "parentRequestsWithBothSkills": 3,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B05-B0",
+            "parentRequestsWithBothSkills": 4,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B06-B0",
+            "parentRequestsWithBothSkills": 3,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          }
+        ],
+        "requests": 18,
+        "input": 402714,
+        "output": 4064,
+        "completeSkillDeliveryRequests": 18
+      },
+      "B1": {
+        "trials": [
+          {
+            "id": "B01-B1",
+            "parentRequestsWithBothSkills": 3,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B02-B1",
+            "parentRequestsWithBothSkills": 2,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B03-B1",
+            "parentRequestsWithBothSkills": 3,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B04-B1",
+            "parentRequestsWithBothSkills": 2,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B05-B1",
+            "parentRequestsWithBothSkills": 4,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          },
+          {
+            "id": "B06-B1",
+            "parentRequestsWithBothSkills": 3,
+            "firstRequestBothSkills": true,
+            "skillReadCalls": 0,
+            "stateUnchanged": true,
+            "clarification": {
+              "plain": false,
+              "apiAttempted": false,
+              "api": false
+            }
+          }
+        ],
+        "requests": 17,
+        "input": 377272,
+        "output": 3648,
+        "completeSkillDeliveryRequests": 17
+      }
+    },
+    "totals": {
+      "requests": 35,
+      "input": 779986,
+      "output": 7712,
+      "unknown": 0
+    },
+    "stop": null
+  },
+  "C": {
+    "groups": {
+      "C0": {
+        "planned": 6,
+        "attempts": 3,
+        "input": 61589,
+        "output": 866,
+        "reasoningTokens": 0
+      },
+      "C1": {
+        "planned": 6,
+        "attempts": 4,
+        "input": 85314,
+        "output": 1722,
+        "reasoningTokens": 992
+      }
+    },
+    "totals": {
+      "requests": 7,
+      "input": 146903,
+      "output": 2588,
+      "unknown": 0
+    },
+    "halted": "thinking_effect_unverified",
+    "unexecuted": [
+      "C04-C0",
+      "C05-C0",
+      "C05-C1",
+      "C06-C1",
+      "C06-C0"
+    ]
+  },
+  "automaticRetries": false,
+  "additionalTests": 0,
+  "paidJudges": 0
+}

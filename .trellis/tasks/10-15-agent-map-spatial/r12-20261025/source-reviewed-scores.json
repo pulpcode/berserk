@@ -1,0 +1,2468 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-25",
+  "batch": "source-batch-20261025",
+  "reviewType": "agent-semantic-review",
+  "humanGold": false,
+  "rubric": "review-rules.md",
+  "reviewPolicy": "结合完整公开轨迹判断事实；已明确口径下的表达歧义单列，不按术语孤立扣分。未调用模型或付费裁判。",
+  "summary": {
+    "B0": {
+      "planned": 6,
+      "recorded": 6,
+      "mainPass": 6,
+      "strictPass": 6,
+      "processFactsPass": 6,
+      "finalFactsPass": 6,
+      "effectsPass": 6
+    },
+    "B1": {
+      "planned": 6,
+      "recorded": 6,
+      "mainPass": 5,
+      "strictPass": 5,
+      "processFactsPass": 6,
+      "finalFactsPass": 6,
+      "effectsPass": 6
+    },
+    "paired": {
+      "bothPass": 5,
+      "candidateFixes": 0,
+      "candidateRegressions": [
+        "B03"
+      ],
+      "baselineFailures": 0,
+      "positiveSignalCriterionMet": false
+    },
+    "skillDelivery": {
+      "map-annotations": {
+        "tasks": 12,
+        "requests": 35
+      },
+      "spatial-analysis": {
+        "tasks": 12,
+        "requests": 35
+      },
+      "beforeFirstSpatialCalculationTasks": 10,
+      "withoutSpatialCalculationTasks": 2,
+      "activeSkillReadCalls": 0
+    },
+    "clarification": {
+      "plain": 0,
+      "apiAttempted": 0,
+      "apiCompleted": 0,
+      "driverLimitations": 0
+    },
+    "hashVerification": {
+      "BManifestFiles": 395,
+      "mismatches": 0,
+      "R11Files": 4002
+    },
+    "interpretation": "单次六对开发诊断，非生产准确率或独立保留集；候选未达到至少修复两项基准失败的正信号。未观察改善不证明稳定退化。"
+  },
+  "runs": [
+    {
+      "id": "B01-B0",
+      "caseId": "B01",
+      "group": "B0",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "用户明确指定草稿 region / resources；annotation_read 读取草稿，未查询来源。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "明确来源，无需澄清。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "classify_points：input=草稿 resources；target=草稿 region；5 个候选，内部 2、边界 2、外部 1。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "4 个命中名称及内部/边界分类与回执一致；未以 ready 筛选。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 3,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B01",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "inside": [
+            "r1",
+            "r2",
+            "r3",
+            "edge"
+          ],
+          "count": 4
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-2e4cc182-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_1q2m9gfb60psnnp2kxn9idw1",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft",
+            "fields": [
+              "geometry"
+            ]
+          },
+          "firstObservedRequest": 2
+        },
+        {
+          "id": "call_00_vynkp6rhl8pig1nrincctmm5",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "5d3e4a00-0a28-4e3e-9d60-de90c61e934f",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "5d3e4a00-0a28-4e3e-9d60-de90c61e934f",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 3
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_vynkp6rhl8pig1nrincctmm5",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "5d3e4a00-0a28-4e3e-9d60-de90c61e934f",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "5d3e4a00-0a28-4e3e-9d60-de90c61e934f",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "49767cd1"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "eb9e02f2",
+          "text": "我先读取本会话草稿，确认对象和图层中实际存在的对象。"
+        },
+        {
+          "turn": 0,
+          "messageId": "673a2c66",
+          "text": "**西区（region）范围内（含边界）共有 4 个资源点**，它们全部来自本会话草稿的 resources 图层，未使用来源系统对象。\n\n- 位于范围内部的 2 个：资源乙（r2）、资源丙（r3）\n- 位于边界上的 2 个：资源甲（r1）、边界点（edge）\n- 不在范围内：资源外（outside），该点位于西区外侧。\n\n本次候选对象是草稿 revision 2 中 resources 图层的全部 5 个点，判断完整、无缺页；这一结果表示的是地理上的包含关系，这些点的 status 属性（ready/busy）并未参与筛选。\n\n本次只进行了分析：结果范围已生成，没有添加草稿对象，也没有发布、修改或采用任何版本。"
+        }
+      ],
+      "wordingNotes": [
+        {
+          "quote": "结果范围已生成",
+          "decision": "表达建议，不单独判错",
+          "reason": "同句明确没有添加草稿对象；结合 classify_points 的分析结果范围理解，不等同于宣称生成并保存面对象。"
+        }
+      ],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B01-B0",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B01-B1",
+      "caseId": "B01",
+      "group": "B1",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "用户明确指定草稿；annotation_read 后直接按两个标识计算，未查询来源。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "明确来源，无需澄清。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "classify_points 正确使用 layerIds=[resources] 与 objectIds=[region]。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "名单、4 个命中、4 个 ready 有回执支持；“你自己画的点”由题干“我画的点”支持。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 3,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B01",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "inside": [
+            "r1",
+            "r2",
+            "r3",
+            "edge"
+          ],
+          "count": 4
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-2140fd22-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_9o3kxehpvsh5c3bh2jauiyfz",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft"
+          },
+          "firstObservedRequest": 5
+        },
+        {
+          "id": "call_00_snnb2n9f9ooo0xhqsdgvnaee",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "2dfef3f2-ef8d-4131-85f1-2c67d1686601",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "2dfef3f2-ef8d-4131-85f1-2c67d1686601",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 6
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_snnb2n9f9ooo0xhqsdgvnaee",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "2dfef3f2-ef8d-4131-85f1-2c67d1686601",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "2dfef3f2-ef8d-4131-85f1-2c67d1686601",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "beab89a7"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "bccd31a5",
+          "text": "我先读取本会话草稿，确认这两个图层（region 西区和 resources 资源图层）的实际几何与资源点。"
+        },
+        {
+          "turn": 0,
+          "messageId": "654724bf",
+          "text": "已在西区（region）范围内对资源图层（resources）的 5 个点做了位置分类，计算范围完整，没有缺页：\n\n- 内部 2 个：资源乙、资源丙\n- 边界上 2 个：资源甲、边界点\n- 外部 1 个：资源外\n\n包含边界在内，西区内共有 4 个资源点：资源乙、资源丙、资源甲、边界点。统计的是本会话草稿（修订 2）中你自己画的点，没有使用来源系统对象。本次只做分析，未添加或修改任何草稿对象。\n\n注：这 4 个点的属性中状态都记为 ready，但“在区域内”不等于真实可用资源，是否可用需另按实际情况判断。"
+        }
+      ],
+      "wordingNotes": [
+        {
+          "quote": "确认这两个图层（region 西区和 resources 资源图层）的实际几何与资源点",
+          "decision": "表达问题，不单独判过程事实失败",
+          "reason": "region 实际是 reference 层的对象，确有类型口误；该句是将要读取的计划，实际计算及最终回答正确区分区域和资源图层，未声称已查询两个图层。若按术语逐字扣分，B1 严格数会由 5/6 降为 4/6，但不改变无改善结论。"
+        }
+      ],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B01-B1",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B02-B0",
+      "caseId": "B02",
+      "group": "B0",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "situation_query(query=西区) 得到 area/resource/road，hasMore=false；未读草稿。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "明确 situation 来源，无需澄清。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "按 objectType=resource 及 availableCount 属性区分点数与车辆数，无须强制空间工具。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "资源名称、1 个点、availableCount=4 辆正确；时间、版本、完整查询均由回执支持。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 2,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "not_applicable_no_spatial_call",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B02",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "sourceRef": {
+            "systemId": "situation",
+            "objectType": "resource",
+            "objectId": "map-287d0fa7-vehicles-west-01"
+          },
+          "count": 1,
+          "availableCount": 4,
+          "unit": "辆"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-287d0fa7-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_d4z0lle4sf6640tphbnycyq1",
+          "name": "situation_query",
+          "arguments": {
+            "systemId": "situation",
+            "mode": "current",
+            "query": "西区",
+            "limit": 100
+          },
+          "firstObservedRequest": 10
+        }
+      ],
+      "spatialOperations": [],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "2239bb11",
+          "text": "我先查询 situation 来源系统中西区的车辆资源对象。"
+        },
+        {
+          "turn": 0,
+          "messageId": "023a4837",
+          "text": "查询到西区下有一个资源对象。\n\n## situation 来源 · 西区车辆资源对象\n\n| 资源点名称 | 点的个数 | availableCount 记录车辆数量 |\n| --- | --- | --- |\n| 西区可用车辆 | 1 个点 | 4 辆 |\n\n**说明**\n- 数据来源：situation 来源系统，查询时间 2026-10-25T07:31:03.280Z，来源快照时间 asOf 为 2026-10-25T09:00:00+08:00，业务有效期 09:00–11:00（+08:00），均为 revision 1。\n- 本次为完整查询结果，无分页、无更多结果，也没有未找到的引用。\n- 范围内的 vehicle 类资源对象仅“西区可用车辆”一个，几何类型为 Point，所属区域为西区（map-287d0fa7-zone-west）。\n- 该区域另外两个成员对象是区域本身和“西区通道”道路，不属于车辆资源，未计入上表。\n- 车辆数量 4 辆取自 availableCount 属性，不是点的个数；未读取或使用本会话草稿中的任何同名对象。\n- 本次仅查询，未创建、修改、发布任何标注。"
+        }
+      ],
+      "wordingNotes": [
+        {
+          "quote": "该区域另外两个成员对象是区域本身和“西区通道”道路",
+          "decision": "表达歧义，不按全文判事实错误",
+          "reason": "memberRefs 的确只有 road/resource，不含区域本身；但查询 items 有 area/resource/road，三者 areaIds 都为西区。全文在列查询结果并排除非车辆对象，未声称 memberRefs 含自身，允许“成员”泛指查询所得对象。应改称“返回的另外两个对象”。若坚持 memberRefs 狭义理解，B0 严格数为 5/6，仍无两项修复信号。"
+        }
+      ],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B02-B0",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B02-B1",
+      "caseId": "B02",
+      "group": "B1",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "只查询 situation，返回西区 area、resource、road，hasMore=false。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "明确 situation 来源，无需澄清。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "筛选资源对象并读取属性，未把 area/road 算为车辆资源点。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "1 个资源点、4 辆属性数量及三个时间字段均与回执一致。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 2,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "not_applicable_no_spatial_call",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B02",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "sourceRef": {
+            "systemId": "situation",
+            "objectType": "resource",
+            "objectId": "map-fc1743b0-vehicles-west-01"
+          },
+          "count": 1,
+          "availableCount": 4,
+          "unit": "辆"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-fc1743b0-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_3p2zmzfmv22nifo09go5q1o1",
+          "name": "situation_query",
+          "arguments": {
+            "systemId": "situation",
+            "mode": "current",
+            "query": "西区",
+            "limit": 100
+          },
+          "firstObservedRequest": 8
+        }
+      ],
+      "spatialOperations": [],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "854eca86",
+          "text": "我先查询 situation 来源系统中西区的车辆资源对象。"
+        },
+        {
+          "turn": 0,
+          "messageId": "6a5c17b8",
+          "text": "本次只查询了 situation 来源系统，未读取或使用草稿点，也未做任何修改。\n\n查询依据：situation 来源系统，mode=current，查询时间 2026-10-25T07:30:55.946Z（UTC），来源快照 asOf 2026-10-25T09:00:00+08:00，业务生效时间与有效区间为 2026-10-25 09:00–11:00（+08:00）。\n\n西区（区域对象 map-fc1743b0-zone-west）的车辆资源对象：\n\n| 资源点名称 | 点的个数 | availableCount 记录的车辆数量 |\n| --- | --- | --- |\n| 西区可用车辆（resource: map-fc1743b0-vehicles-west-01） | 1 个点 | 4 辆 |\n\n需要区分以下两点：\n- 资源点本身只有 1 个点，这是点位个数，不代表车辆数量。\n- 车辆的 4 辆是来源属性 availableCount 的记录值，单位为“辆”。\n\n此外，返回结果中还有西区区域面（map-fc1743b0-zone-west）和西区通道道路（map-fc1743b0-road-west-01，passability=open）。两者都不是车辆资源对象，因此未计入上表。本次查询返回 hasMore=false，西区范围内查询到的车辆资源对象只有上述 1 个；这是对本次查询条件和来源快照得出的结论。"
+        }
+      ],
+      "wordingNotes": [],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B02-B1",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B03-B0",
+      "caseId": "B03",
+      "group": "B0",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "主动 annotation_read + situation_query，实际发现草稿与来源两个西区。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "明确说明两定义，完整分别回答草稿与来源；未合并，非末尾另查冒充澄清。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "草稿 classify_points；来源 relate contains（闭区域，含边界）；两组区域/候选来源分别对应。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "草稿 4 个命中/5 候选；来源 1 个资源对象、4 辆属性数量。全部与实际回执和 fixture truth 一致。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 3,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B03",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "draft": {
+            "inside": [
+              "r1",
+              "r2",
+              "r3",
+              "edge"
+            ],
+            "count": 4
+          },
+          "source": {
+            "inside": [
+              "map-6a825c75-vehicles-west-01"
+            ],
+            "count": 1
+          },
+          "accepted": "clarify_then_draft_or_complete_conditionals"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-6a825c75-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_ou48dgz316fyuahhjd04032e",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft"
+          },
+          "firstObservedRequest": 12
+        },
+        {
+          "id": "call_01_6plmdiue16srzipo55g9ci37",
+          "name": "situation_query",
+          "arguments": {
+            "systemId": "situation",
+            "mode": "current",
+            "query": "西区"
+          },
+          "firstObservedRequest": 12
+        },
+        {
+          "id": "call_00_umchnw9a3yrfr5tsj6cfspm5",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "1a93e8c8-6aac-43c4-bd15-df07aec5f683",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "1a93e8c8-6aac-43c4-bd15-df07aec5f683",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 13
+        },
+        {
+          "id": "call_01_z0sswru5vjvbf5191kgrru42",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "relate",
+            "relation": "contains",
+            "input": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-6a825c75-zone-west"
+                }
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "map-6a825c75-vehicles-west-01"
+                }
+              ]
+            }
+          },
+          "firstObservedRequest": 13
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_umchnw9a3yrfr5tsj6cfspm5",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "1a93e8c8-6aac-43c4-bd15-df07aec5f683",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "1a93e8c8-6aac-43c4-bd15-df07aec5f683",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "5de3de10"
+          ]
+        },
+        {
+          "toolCallId": "call_01_z0sswru5vjvbf5191kgrru42",
+          "operation": "relate",
+          "arguments": {
+            "operation": "relate",
+            "relation": "contains",
+            "input": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-6a825c75-zone-west"
+                }
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "map-6a825c75-vehicles-west-01"
+                }
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "relation": "contains",
+            "matches": true
+          },
+          "receiptMessageIds": [
+            "5dd0b07d"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "33d6b161",
+          "text": "我先查看一下当前会话的草稿内容，以及来源中的“西区”对象。"
+        },
+        {
+          "turn": 0,
+          "messageId": "4cc19b56",
+          "text": "“西区”有两处定义：草稿中的多边形，以及来源系统的区域对象。按指令不默认任一来源，我先分别分析，再分别报告结果。"
+        },
+        {
+          "turn": 0,
+          "messageId": "d15d59e2",
+          "text": "“西区”目前有两个不同定义，我分别做了空间点是、否判定，结果如下。\n\n## 一、本会话草稿中的“西区”多边形（草稿修订 2，参照对象层）\n候选为本会话草稿的“资源”层全部 5 个点，完整，无重复：\n\n| 资源点 | 类别（属性） | 状态（属性） | 位置 |\n| --- | --- | --- | --- |\n| 资源乙 | truck | ready | 位于内部 |\n| 资源丙 | boat | ready | 位于内部 |\n| 资源甲 | boat | ready | 位于边界 |\n| 边界点 | truck | ready | 位于边界 |\n| 资源外 | boat | busy | 不在范围内（外部） |\n\n按包含边界口径计算，共 **4 个**资源点在范围内：内部 2 个（资源乙、资源丙）、边界 2 个（资源甲、边界点）；1 个在范围外（资源外）。总计 5 个分类。\n\n注意：这些是会话草稿点，按工作区约定，草稿点可作为候选参加计算，但名称和类别属性不自动代表真实的资源数量或可用性；点数也不等于运力。\n\n## 二、来源系统的“西区”区域（situation/area: map-6a825c75-zone-west，revision 1，有效 09:00–11:00）\n该区域的对象成员（memberRefs）中有 1 个资源对象：**西区可用车辆**，属性记录 availableCount=4，单位辆。空间关系核对结果为：该资源点位于区域内部，包含边界口径下 matches=true。另有一个道路对象“西区通道”（passability=open）属于成员，但不是资源点。\n\n## 说明与限制\n- 两份结果分开报告，未合并、未去重：草稿“西区”是本次会话的标绘副本，与来源区域对象各有身份，同名不构成同一对象。\n- 本次只做空间判定与分析：没有修改草稿，也没有新增、保存或发布标注；未把草稿点标记为已登记资源。\n- 判定基于 WGS84 经纬度线段拓扑，不加距离容差，边界附近不等于位于边界，不宣称测绘级精度。属性“ready/busy”只是对象上记录的值，不代表专业可用性结论。\n\n如果需要，我可以再按类别（truck/boat）统计范围内分布，或改用保存的草稿点位置做其他测距。"
+        }
+      ],
+      "wordingNotes": [
+        {
+          "quote": "草稿“西区”是本次会话的标绘副本",
+          "decision": "用词建议，不判无依据来源复制",
+          "reason": "句子紧接“与来源区域对象各有身份，同名不构成同一对象”，没有声称从 situation 复制；不扩写为原文没有的来源关系。建议直说“草稿标绘对象”。"
+        }
+      ],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B03-B0",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B03-B1",
+      "caseId": "B03",
+      "group": "B1",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "fail",
+      "strict": "fail",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "fail",
+      "sourceScope": "fail",
+      "source_discovery": {
+        "status": "fail",
+        "evidence": "仅 annotation_read，未 situation_query；未发现第二来源的具体候选。"
+      },
+      "ambiguity": {
+        "status": "fail",
+        "evidence": "没有普通澄清或交互 API，也未分别回答来源；默认把“本会话”绑定为草稿。"
+      },
+      "input": {
+        "status": "fail",
+        "evidence": "在自选的草稿范围内计算正确，但未经用户指定/澄清的范围不能代表完整问题。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "草稿 4 个命中及分类/状态均正确；缺少来源分歧处理，属于漏处理而非几何数值算错。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 3,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B03",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "draft": {
+            "inside": [
+              "r1",
+              "r2",
+              "r3",
+              "edge"
+            ],
+            "count": 4
+          },
+          "source": {
+            "inside": [
+              "map-c3759f57-vehicles-west-01"
+            ],
+            "count": 1
+          },
+          "accepted": "clarify_then_draft_or_complete_conditionals"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-c3759f57-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_e3xugdyul4dc9cnu6zitq9ja",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft"
+          },
+          "firstObservedRequest": 15
+        },
+        {
+          "id": "call_00_n7br2ofotm67d328rn5pr0pn",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "712353f1-45a9-486c-a001-706da5320cf3",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "712353f1-45a9-486c-a001-706da5320cf3",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 16
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_n7br2ofotm67d328rn5pr0pn",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "712353f1-45a9-486c-a001-706da5320cf3",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "712353f1-45a9-486c-a001-706da5320cf3",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "1c157c0d"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "43305d22",
+          "text": "我先读取本会话草稿，确认西区区域对象和资源点分别在哪一层。"
+        },
+        {
+          "turn": 0,
+          "messageId": "d0bad110",
+          "text": "我已在草稿的“资源”图层中找到 5 个资源点，并逐个对照“参照对象”图层中的“西区”面判断。本次只做分析，没有修改草稿。\n\n**位于西区范围内（含边界）的资源点共 4 个：**\n- 资源甲：位于边界上\n- 资源乙：位于内部\n- 资源丙：位于内部\n- 边界点：位于边界上\n\n**不在范围内：** 资源外（位于西区外部）。\n\n分类计数：内部 2 个、边界 2 个、外部 1 个，共 5 个候选点，数据完整。\n\n两点说明：\n- 依据是草稿当前版本（修订 2）中的几何，判断不加距离容差；边界附近的点不自动算作边界。\n- 这 4 个是草稿图层中的点，属性记录的状态为“可用”（资源甲、乙、丙、边界点均为 ready），但草稿点不自动等同于已登记的真实可用资源。另外，“并列”图层的两个点属于其他图层，本次未纳入统计。"
+        }
+      ],
+      "wordingNotes": [],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B03-B1",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ],
+      "failure": {
+        "type": "source_discovery_and_unresolved_ambiguity",
+        "quote": "位于西区范围内（含边界）的资源点共 4 个",
+        "messageId": "d0bad110",
+        "counterevidence": "用户未指明草稿；workspace 明确“本会话”不自动指定草稿。真实 sourceBefore 及 truth 另有 situation 西区和 1 个资源点；轨迹仅 annotation_read/classify_points，无来源查询、澄清或来源分项答案。4 点是已选择草稿口径下正确结果，但不是完整问题的唯一依据。",
+        "not": "不是工具几何错误、没有正文送达或未接上合理澄清。"
+      }
+    },
+    {
+      "id": "B04-B0",
+      "caseId": "B04",
+      "group": "B0",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "首个 provider 请求已带真实 annotation_read/situation_query 的 providedQueries；据此识别两个来源。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "完整分别回答两个来源；末尾邀请选一组为后续建议，不计本轮澄清。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "草稿正确；来源首次 areaIds 包含非点，工具拒绝；随后 objectRefs 收窄到 resource，成功得 1 内部点。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "草稿 4 点、来源 1 点/4 辆正确，未把失败调用谎报为成功；全文分开两来源。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 3,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B04",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "draft": {
+            "inside": [
+              "r1",
+              "r2",
+              "r3",
+              "edge"
+            ],
+            "count": 4
+          },
+          "source": {
+            "inside": [
+              "map-082d940c-vehicles-west-01"
+            ],
+            "count": 1
+          },
+          "accepted": "clarify_then_draft_or_complete_conditionals"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-082d940c-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_53son90obep0fubrgxtwbfzk",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "e182a7b1-5a2e-41b9-a44b-51bb1f084f8c",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "e182a7b1-5a2e-41b9-a44b-51bb1f084f8c",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 20
+        },
+        {
+          "id": "call_01_dadeboawu7sawzozrrtdk2iz",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "source",
+              "systemId": "situation",
+              "areaIds": [
+                "map-082d940c-zone-west"
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-082d940c-zone-west"
+                }
+              ]
+            }
+          },
+          "firstObservedRequest": 20
+        },
+        {
+          "id": "call_00_5x8iq18pbvhjwzntdv6vsato",
+          "name": "spatial_analyze",
+          "arguments": {
+            "input": {
+              "kind": "source",
+              "objectRefs": [
+                {
+                  "objectId": "map-082d940c-vehicles-west-01",
+                  "objectType": "resource",
+                  "systemId": "situation"
+                }
+              ],
+              "systemId": "situation"
+            },
+            "operation": "classify_points",
+            "target": {
+              "kind": "source",
+              "objectRefs": [
+                {
+                  "objectId": "map-082d940c-zone-west",
+                  "objectType": "area",
+                  "systemId": "situation"
+                }
+              ],
+              "systemId": "situation"
+            }
+          },
+          "firstObservedRequest": 21
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_53son90obep0fubrgxtwbfzk",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "e182a7b1-5a2e-41b9-a44b-51bb1f084f8c",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "e182a7b1-5a2e-41b9-a44b-51bb1f084f8c",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "acc40e8b"
+          ]
+        },
+        {
+          "toolCallId": "call_01_dadeboawu7sawzozrrtdk2iz",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "source",
+              "systemId": "situation",
+              "areaIds": [
+                "map-082d940c-zone-west"
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-082d940c-zone-west"
+                }
+              ]
+            }
+          },
+          "success": false,
+          "values": null,
+          "receiptMessageIds": [
+            "00f7357d"
+          ]
+        },
+        {
+          "toolCallId": "call_00_5x8iq18pbvhjwzntdv6vsato",
+          "operation": "classify_points",
+          "arguments": {
+            "input": {
+              "kind": "source",
+              "objectRefs": [
+                {
+                  "objectId": "map-082d940c-vehicles-west-01",
+                  "objectType": "resource",
+                  "systemId": "situation"
+                }
+              ],
+              "systemId": "situation"
+            },
+            "operation": "classify_points",
+            "target": {
+              "kind": "source",
+              "objectRefs": [
+                {
+                  "objectId": "map-082d940c-zone-west",
+                  "objectType": "area",
+                  "systemId": "situation"
+                }
+              ],
+              "systemId": "situation"
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 1,
+            "interior": 1,
+            "boundary": 0,
+            "exterior": 0
+          },
+          "receiptMessageIds": [
+            "bf2f2f09"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "ce072f21",
+          "text": "我先核实“本会话”草稿和态势来源里的“西区”，因为两者可能对应不同对象；再按需判断资源点是否在西区内（含边界）。"
+        },
+        {
+          "turn": 0,
+          "messageId": "f85152b5",
+          "text": "“本会话”对应的草稿里有两个名为“西区”的对象范围：一个是草稿对象“西区”这个多边形，另一个是态势系统中的来源区域“西区”。两者的坐标位置完全不同，结果分别如下，我没有把它们合并：\n\n**一、本会话草稿（草稿修订 2，包含“资源”图层）**\n在草稿的“西区”多边形范围内（包含边界），资源点共有 4 个：\n- 内部：资源乙（truck，ready）、资源丙（boat，ready）\n- 边界上：资源甲（boat，ready）、边界点（truck，ready）\n- 不在范围内：资源外（boat，busy），它位于该多边形之外\n\n本次分类的候选是 5 个点：内部 2 个、边界 2 个、外部 1 个。资源甲虽然在名称上属于资源，但按坐标位置，它位于西区的边界上；因此按“包含边界”的统计标准，它也算在范围内。\n\n**二、态势来源（西区对象 map-082d940c-zone-west，对象版本 1，业务时间为 2026-10-25 09:00，有效至 11:00）**\n在西区范围内，来源资源点只有 1 个：西区可用车辆，位于内部。属性中记录“可用车辆 4 辆”，这是该资源点属性里的数量，并不表示有 4 个点。此外，来源西区还包含一条成员道路“西区通道”，它属于道路，不是资源点。\n\n**说明**\n- 以上结果都是只读的空间分类，没有添加或修改任何草稿对象；本次也没有发布或采用任何版本。\n- “包含边界”按对象外环边界处理；边界附近不等于位于边界，该方法不附加距离容差，也不代表测绘级精度。\n- 如果你要的是草稿里的点集，或者是来源对象，请告诉我，我可以按其中一组单独结论再核对。草稿点也不等同于已登记的真实可用资源。"
+        }
+      ],
+      "wordingNotes": [
+        {
+          "quote": "“本会话”对应的草稿里有两个名为“西区”的对象范围",
+          "decision": "表达问题，全文已明确拆分来源",
+          "reason": "同一句后半及两个章节明确一组在草稿、一组在态势系统；实际两套计算也分离。不能孤立前半句判定模型实际混合了来源。"
+        }
+      ],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B04-B0",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B04-B1",
+      "caseId": "B04",
+      "group": "B1",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "首个请求已收到真实两来源候选，直接利用。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "分别回答两来源，不合并/去重，未要求必须调用交互 API。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "两次 classify_points，分别草稿 region/resources 与来源 area/resource，均成功。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "草稿 4 点且 ready/boat2/truck2；来源 1 内部点及 availableCount=4，均有依据。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 2,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B04",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "draft": {
+            "inside": [
+              "r1",
+              "r2",
+              "r3",
+              "edge"
+            ],
+            "count": 4
+          },
+          "source": {
+            "inside": [
+              "map-4120ee5b-vehicles-west-01"
+            ],
+            "count": 1
+          },
+          "accepted": "clarify_then_draft_or_complete_conditionals"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-4120ee5b-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_k6obnfbgnusc1y49jnqvkd7q",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "54c323e4-621c-49f7-8217-1f5c4c187d3a",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "54c323e4-621c-49f7-8217-1f5c4c187d3a",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 18
+        },
+        {
+          "id": "call_01_ioy7r5tdad6lmx16o50xbv91",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "source",
+              "systemId": "situation",
+              "areaIds": [
+                "map-4120ee5b-zone-west"
+              ],
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "map-4120ee5b-vehicles-west-01"
+                }
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "areaIds": [
+                "map-4120ee5b-zone-west"
+              ],
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-4120ee5b-zone-west"
+                }
+              ]
+            }
+          },
+          "firstObservedRequest": 18
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_k6obnfbgnusc1y49jnqvkd7q",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "54c323e4-621c-49f7-8217-1f5c4c187d3a",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "54c323e4-621c-49f7-8217-1f5c4c187d3a",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "a9291485"
+          ]
+        },
+        {
+          "toolCallId": "call_01_ioy7r5tdad6lmx16o50xbv91",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "source",
+              "systemId": "situation",
+              "areaIds": [
+                "map-4120ee5b-zone-west"
+              ],
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "map-4120ee5b-vehicles-west-01"
+                }
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "areaIds": [
+                "map-4120ee5b-zone-west"
+              ],
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-4120ee5b-zone-west"
+                }
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 1,
+            "interior": 1,
+            "boundary": 0,
+            "exterior": 0
+          },
+          "receiptMessageIds": [
+            "9da2e322"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "0e707689",
+          "text": "我先核对两组“西区”：本会话草稿里的西区面属于标注对象，态势系统中的西区属于来源对象；随后分别判断资源点是否位于范围内。"
+        },
+        {
+          "turn": 0,
+          "messageId": "8f1b3624",
+          "text": "“西区”在本会话草稿和态势系统来源中分别有对象，两组结果差别较大，因此下面分开报告，不做合并，也不去重。\n\n**一、本会话草稿版本（基线为 null，修订 2）：用“资源”图层与“西区”面判断**\n候选是“资源”图层全部 5 个点，均已完整计算：\n\n| 点 | 位置 | 属性 |\n| --- | --- | --- |\n| 资源甲 | 边界上 | ready / boat |\n| 资源乙 | 内部 | ready / truck |\n| 资源丙 | 内部 | ready / boat |\n| 边界点 | 边界上 | ready / truck |\n| 资源外 | 外部 | busy / boat |\n\n包含边界时，西区内共有 4 个资源点：**资源甲、资源乙、资源丙、边界点**。其中资源甲和边界点位于边界上，资源乙、资源丙位于内部；“资源外”不在范围内。以上是草稿中的标绘对象，不代表真实登记可用资源；就属性看，这 4 个点的 status 均为 ready，其中 boat 2 个、truck 2 个。对象个数与属性数量是两回事。\n\n**二、态势系统来源（situation，业务时间 2026-10-25 09:00 +08:00，有效期至 11:00）：**\n用来源“西区”区域面判断，范围内点共 1 个：**西区可用车辆**，位于内部（不在边界上），记录 availableCount = 4 辆。该区域还有一条成员道路“西区通道”（passability 为 open），记录中并非资源点，因此未计入。\n\n本次仅做只读分析，没有生成或修改任何草稿对象。如果你要的是其中某一组（草稿点集或态势来源），或需要把两组作为同一批资源联合统计，请告知，我再按对应范围处理。"
+        }
+      ],
+      "wordingNotes": [],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B04-B1",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B05-B0",
+      "caseId": "B05",
+      "group": "B0",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "第 0 轮用户明确草稿对象/图层；第 1 轮按此前指代读取，不重新猜测来源。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "前文已唯一指定，无须重复澄清。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "第 0 轮仅确认；第 1 轮草稿 classify_points，5 候选/4 命中。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "两轮公开说法和当轮状态一致；没有把确认轮说成已经读取/完成计算。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        },
+        {
+          "turn": 1,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 4,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B05",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "inside": [
+            "r1",
+            "r2",
+            "r3",
+            "edge"
+          ],
+          "count": 4
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-de775322-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_m6mbo8wv8u8mkusk45z21fsh",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft",
+            "fields": [
+              "geometry"
+            ]
+          },
+          "firstObservedRequest": 24
+        },
+        {
+          "id": "call_00_glzh2r7anyb42bg6kno3jbdb",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "63d941ff-b675-4a4f-bcb9-cc093e22ef49",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "63d941ff-b675-4a4f-bcb9-cc093e22ef49",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 25
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_glzh2r7anyb42bg6kno3jbdb",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "63d941ff-b675-4a4f-bcb9-cc093e22ef49",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "63d941ff-b675-4a4f-bcb9-cc093e22ef49",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "d1ad163c"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "9ef0dc3f",
+          "text": "明白，已确认本轮指代：\n\n- **西区** = 本会话草稿中 objectId 为 `region` 的对象\n- **资源点** = 本会话草稿中 layerId 为 `resources` 图层内的对象\n- 不使用来源系统（situation）对象，也不与来源对象合并或去重\n\n本条仅作理解确认：未读取草稿内容、未做任何分析、未修改地图或工作区指令。后续提问时我会按这两个明确指代取对象。若这两个标识在实际草稿中不存在或存在多个候选，我会先说明再处理。"
+        },
+        {
+          "turn": 1,
+          "messageId": "f53fd812",
+          "text": "我先读取本会话草稿，确认 `region` 的几何和 `resources` 图层中的点，再做包含边界的空间分类。"
+        },
+        {
+          "turn": 1,
+          "messageId": "a9c61c6d",
+          "text": "已按“西区”= 草稿对象 `region`、“资源点”= 草稿图层 `resources`（共 5 个点）核对完成，包含边界后共有 4 个点在范围内：\n\n| 资源点 | 位置 |\n| --- | --- |\n| 资源甲 | 边界上 |\n| 资源乙 | 内部 |\n| 资源丙 | 内部 |\n| 边界点 | 边界上 |\n| 资源外 | 范围外（不含） |\n\n分类计数：内部 2、边界 2、外部 1，合计 5 个候选点，本次候选集合完整。\n\n说明：\n- 这里的“资源点”仅指草稿 `resources` 图层中的点对象，不代表已核实的可用资源；其属性中记录的状态（如 ready/busy）是对象数据，本次未据此筛选。\n- 只做只读分析，未新增或修改任何草稿对象。"
+        }
+      ],
+      "wordingNotes": [],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B05-B0",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B05-B1",
+      "caseId": "B05",
+      "group": "B1",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "第 0 轮明确草稿；第 1 轮定向读取 region 几何与 resources 属性。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "沿用已明确前文指代，无多余消歧。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "第 0 轮无工具；第 1 轮 layerIds/objectIds 分别正确，5 候选/4 命中。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "第 0 轮 setId/revision 来自宿主真实自动会话上下文，不是未读先猜；几何、个数在第 1 轮取证后报告。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        },
+        {
+          "turn": 1,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 4,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B05",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "inside": [
+            "r1",
+            "r2",
+            "r3",
+            "edge"
+          ],
+          "count": 4
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-1135e1c3-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_jge7lvzndvqawza1jrfqpzo0",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft",
+            "objectIds": [
+              "region"
+            ],
+            "fields": [
+              "geometry"
+            ]
+          },
+          "firstObservedRequest": 28
+        },
+        {
+          "id": "call_01_awaa74vqvtyi8prvjvzunzr5",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft",
+            "layerIds": [
+              "resources"
+            ],
+            "fields": [
+              "attributes"
+            ],
+            "limit": 100
+          },
+          "firstObservedRequest": 28
+        },
+        {
+          "id": "call_00_8721rcnb1ex2s66mxwk4pm0n",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "3ce1bd3e-5b1e-4953-835e-d20d177df6bb",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "3ce1bd3e-5b1e-4953-835e-d20d177df6bb",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "firstObservedRequest": 29
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_8721rcnb1ex2s66mxwk4pm0n",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "3ce1bd3e-5b1e-4953-835e-d20d177df6bb",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "3ce1bd3e-5b1e-4953-835e-d20d177df6bb",
+                "revision": 2
+              },
+              "objectIds": [
+                "region"
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 2,
+            "boundary": 2,
+            "exterior": 1
+          },
+          "receiptMessageIds": [
+            "e9a355e8"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "3cedd7e7",
+          "text": "确认理解：\n\n1. **“西区”** 指本会话草稿（setId 3ce1bd3e-5b1e-4953-835e-d20d177df6bb，revision 2）中 objectId = `region` 的对象。\n2. **“资源点”** 指同一草稿中 layerId = `resources` 图层内的对象集合。\n3. 后续涉及这两个词的问题只使用本会话草稿中的上述对象，不查询或混入来源系统（situation）中的对象，也不按同名对象去重或合并。\n4. 本条不进行空间分析、不读写地图内容、不修改工作区指令。\n\n提醒一点：我尚未读取该草稿的具体内容（`region` 的几何类型、`resources` 图层内实际对象个数和属性）。等后续提出具体问题时，我会按需定向读取后再分析，不会把当前上下文当作已核实的数据。"
+        },
+        {
+          "turn": 1,
+          "messageId": "0d4319e1",
+          "text": "我先读取本会话草稿中的 region 对象和 resources 图层，然后做点与面的包含判断。"
+        },
+        {
+          "turn": 1,
+          "messageId": "5c3ad757",
+          "text": "已按本会话草稿（revision 2）核对：西区是 `reference` 图层中的 polygon 对象，资源点候选来自 `resources` 图层，共 5 个，全部参与计算（完整、无缺页）。\n\n**包含边界时（内部 + 边界）共 4 个资源点：**\n\n| 对象 | 位置 | 状态 / 类别 |\n| --- | --- | --- |\n| 资源乙 | 内部 | ready / truck |\n| 资源丙 | 内部 | ready / boat |\n| 资源甲 | 边界上 | ready / boat |\n| 边界点 | 边界上 | ready / truck |\n\n**不在范围内：**资源外（位于西区外部，状态 busy / boat）。\n\n说明几点：\n- 分类结果：内部 2 个、边界 2 个、外部 1 个，合计 5 个，与图层候选数一致。\n- “包含边界”按闭区域口径统计；内部与边界分别列出，边界判定不含距离容差，边界附近不等于在边界上。\n- 仅按几何位置统计。“ready”等属性是所记录的标注字段，草稿点本身不代表已登记的真实可用资源；名称也不影响位置判断。\n\n本次仅做读取与空间分析，未修改草稿、未新增对象、未发布或改变任务采用状态。"
+        }
+      ],
+      "wordingNotes": [],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B05-B1",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B06-B0",
+      "caseId": "B06",
+      "group": "B0",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "annotation_read + situation_query，分别取得草稿候选与来源区域。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "用户明确跨来源两个角色，无须澄清，不合并资源集合。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "classify_points：input=草稿 resources；target=来源 area；未改用草稿面或来源资源。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "仅 r1/资源甲 内部，其他 4 点外部，boundary=0；“边界点”名称不代替几何。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 3,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B06",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "inside": [
+            "r1"
+          ],
+          "count": 1,
+          "regionSource": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "map-953b9e32-zone-west"
+          },
+          "candidatesSource": "draft/resources"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-953b9e32-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_h03wiuc2x20kg2kh5xpu6g05",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft"
+          },
+          "firstObservedRequest": 34
+        },
+        {
+          "id": "call_01_77irp022okgz6uve453h3tgy",
+          "name": "situation_query",
+          "arguments": {
+            "systemId": "situation",
+            "mode": "current",
+            "query": "西区"
+          },
+          "firstObservedRequest": 34
+        },
+        {
+          "id": "call_00_nimjf8wssrelu7cwe3jfbrc8",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "6c15cbe6-4f94-4ad3-b510-de73adf2d885",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-953b9e32-zone-west"
+                }
+              ]
+            }
+          },
+          "firstObservedRequest": 35
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_nimjf8wssrelu7cwe3jfbrc8",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "6c15cbe6-4f94-4ad3-b510-de73adf2d885",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-953b9e32-zone-west"
+                }
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 1,
+            "boundary": 0,
+            "exterior": 4
+          },
+          "receiptMessageIds": [
+            "e9db1ec8"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "2cd0a7b6",
+          "text": "我会先读取本会话草稿，确认 resources 图层中的点；再查询 situation 来源系统的“西区”区域边界，最后做点分类。"
+        },
+        {
+          "turn": 0,
+          "messageId": "a26a6a2b",
+          "text": "结果已得出，但其中一点需要说明，因为它与直觉不同：名为“边界点”的草稿点经计算被判定为位于区域外部，并没有落在边界上。\n\n**结果：草稿 resources 图层中的 5 个点里，位于 situation 来源系统西区（含边界）范围内的只有 1 个：资源甲。**\n\n- 资源甲：位于西区内部。\n- 其余 4 个点（资源乙、资源丙、边界点、资源外）都位于西区外部，其中“边界点”按其实际坐标测得也在外部，不在边界上。\n- 分类计数：总计 5 个点，内部 1 个、边界 0 个、外部 4 个；含边界共 1 个。\n\n范围说明：候选点仅取自本会话草稿（setId 6c15cbe6…，revision 2）的 resources 图层，共 5 个点，已完整读取；参照区域仅使用 situation 来源系统对象 area/map-953b9e32-zone-west（revision 1，有效区间 2026-10-25 09:00–11:00 +08:00），未使用草稿中的“西区”面，也未引入来源系统资源点。判定采用单面经纬度平面拓扑，未设置距离容差，因此点落在边界附近并不等于位于边界上。\n\n本次仅作读取和分析，没有修改任何草稿或来源数据，也未新增标注对象。"
+        }
+      ],
+      "wordingNotes": [],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B06-B0",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    },
+    {
+      "id": "B06-B1",
+      "caseId": "B06",
+      "group": "B1",
+      "status": "reviewed",
+      "reviewer": "agent-review-not-human-gold",
+      "mainTask": "pass",
+      "strict": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "requiredAnswerComplete": "pass",
+      "sourceScope": "pass",
+      "source_discovery": {
+        "status": "pass",
+        "evidence": "定向读取 resources 几何 + situation_query，取得两个指定角色的实际对象。"
+      },
+      "ambiguity": {
+        "status": "pass",
+        "evidence": "明确跨来源要求，按原意执行。"
+      },
+      "input": {
+        "status": "pass",
+        "evidence": "input=草稿 resources，target=来源 area；全部 5 点计算完整。"
+      },
+      "claims": {
+        "status": "pass",
+        "evidence": "1 内部、0 边界、4 外部及名称正确，保留只读边界。"
+      },
+      "clarification": {
+        "plain": false,
+        "apiAttempted": false,
+        "api": false
+      },
+      "driverLimitation": false,
+      "stateUnchanged": true,
+      "turnStates": [
+        {
+          "turn": 0,
+          "beforeRevision": 2,
+          "afterRevision": 2,
+          "stateUnchanged": true
+        }
+      ],
+      "skillDelivery": {
+        "requests": 3,
+        "bodyPresentEveryRequest": {
+          "map-annotations": true,
+          "spatial-analysis": true
+        },
+        "firstCalculationBeforeDelivery": false,
+        "beforeFirstCalculation": "both_bodies_present_from_first_request",
+        "activeSkillReads": 0
+      },
+      "expected": {
+        "caseId": "B06",
+        "method": "Exact fixture identities and independent rectangle membership; real source preparation snapshot",
+        "expected": {
+          "inside": [
+            "r1"
+          ],
+          "count": 1,
+          "regionSource": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "map-507a3f98-zone-west"
+          },
+          "candidatesSource": "draft/resources"
+        },
+        "sourceRegion": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-507a3f98-zone-west"
+        }
+      },
+      "actualToolCalls": [
+        {
+          "id": "call_00_s83ows95e3yvd9nrcn3n75qh",
+          "name": "annotation_read",
+          "arguments": {
+            "mode": "draft",
+            "layerIds": [
+              "resources"
+            ],
+            "fields": [
+              "geometry"
+            ],
+            "limit": 100
+          },
+          "firstObservedRequest": 31
+        },
+        {
+          "id": "call_01_54t7243aq0ub6u3m2n5arm9q",
+          "name": "situation_query",
+          "arguments": {
+            "systemId": "situation",
+            "mode": "current",
+            "query": "西区",
+            "limit": 50
+          },
+          "firstObservedRequest": 31
+        },
+        {
+          "id": "call_00_w8q20qve6xaf03m1d3l19sy4",
+          "name": "spatial_analyze",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "2fcf7751-f7ec-4e2d-89a4-7e45d373f608",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-507a3f98-zone-west"
+                }
+              ]
+            }
+          },
+          "firstObservedRequest": 32
+        }
+      ],
+      "spatialOperations": [
+        {
+          "toolCallId": "call_00_w8q20qve6xaf03m1d3l19sy4",
+          "operation": "classify_points",
+          "arguments": {
+            "operation": "classify_points",
+            "input": {
+              "kind": "annotation",
+              "ref": {
+                "setId": "2fcf7751-f7ec-4e2d-89a4-7e45d373f608",
+                "revision": 2
+              },
+              "layerIds": [
+                "resources"
+              ]
+            },
+            "target": {
+              "kind": "source",
+              "systemId": "situation",
+              "objectRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "area",
+                  "objectId": "map-507a3f98-zone-west"
+                }
+              ]
+            }
+          },
+          "success": true,
+          "values": {
+            "total": 5,
+            "interior": 1,
+            "boundary": 0,
+            "exterior": 4
+          },
+          "receiptMessageIds": [
+            "f2f04e56"
+          ]
+        }
+      ],
+      "publicStatements": [
+        {
+          "turn": 0,
+          "messageId": "b34928a5",
+          "text": "我先读取本会话草稿中的 resources 图层，同时查询来源系统（situation）的西区边界对象。"
+        },
+        {
+          "turn": 0,
+          "messageId": "1166ff8b",
+          "text": "已确认西区区域对象和 5 个草稿点。现在按“点在面内或落在面上”进行判定。"
+        },
+        {
+          "turn": 0,
+          "messageId": "b0c30836",
+          "text": "按你指定的条件核对完成：参照区域只用 situation 来源系统里的「西区」区域对象（objectId `map-507a3f98-zone-west`，revision 1），候选点只用本会话草稿 revision 2 中 `resources` 图层里的 5 个点。\n\n**位于该来源区域内的点（含边界）：1 个**\n- 资源甲（`r1`）——位于区域内部\n\n**其余 4 个点都不在该区域内，也没有落在边界上**\n- 资源乙、资源丙、边界点、资源外——均在区域外\n\n需要说明两点：\n\n1. 「边界点」虽然名称叫边界点，但按它当前的坐标判定，它位于区域外，没有落在西区边界上；该区域的外环边界判定结果为 0 个点。\n2. 上面 5 个点都来自你指定的草稿 `resources` 图层，本次没有把来源系统里的资源点计入，也没有使用任何草稿面作为参照。判定依据为点面的平面拓扑关系（WGS84 经纬度，不额外增加距离容差）。\n\n本次只做了只读分析，没有修改草稿、没有新增标注，也没有发布或设置为任务当前状态。"
+        }
+      ],
+      "wordingNotes": [],
+      "evidenceDirectory": ".local/spatial-r12/source-batch-20261025/B06-B1",
+      "evidenceFiles": [
+        "judge-input.json",
+        "review.json",
+        "tool-arguments.json",
+        "fixture.json",
+        "deterministic-evidence.json",
+        "provider-*-delivery.json",
+        "provider-*-wire-input.json",
+        "turn-*.json"
+      ]
+    }
+  ]
+}
