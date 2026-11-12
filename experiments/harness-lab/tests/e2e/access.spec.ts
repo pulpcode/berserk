@@ -224,7 +224,7 @@ test('catalog managers maintain all work tasks while every seat owns its persona
 });
 
 
-test('task catalog groups fold independently and creation stays accessible across desktop rail and mobile', async ({ page }) => {
+test('task catalog groups preserve disclosure and hide all space entries in the desktop rail', async ({ page }) => {
   const env = await setup();
   await env.attach(page);
   let writes = 0;
@@ -277,19 +277,21 @@ test('task catalog groups fold independently and creation stays accessible acros
     expect(writes).toBe(writesBeforeFolding);
 
     await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
-    await expect(publicEntry).toBeVisible();
-    await expect(privateEntry).toBeVisible();
+    await expect(publicEntry).toBeHidden();
+    await expect(privateEntry).toBeHidden();
     for (const action of ['新建任务空间', '新建个人空间']) {
-      const create = page.getByRole('button', { name: action, exact: true });
-      await expect(create).toBeVisible();
-      await expect(create.locator('.catalog-rail-icon')).toBeVisible();
-      await expect(create).toHaveCSS('opacity', '1');
-      await create.click();
-      await expect(page.getByRole('dialog', { name: action, exact: true })).toBeVisible();
-      await page.keyboard.press('Escape');
-      await expect(page.getByRole('dialog')).toBeHidden();
-      await expect(create).toBeFocused();
+      await expect(page.getByRole('button', { name: action, exact: true })).toBeHidden();
     }
+    const sidebar = page.locator('.sidebar');
+    const globalActions = sidebar.locator('button:visible');
+    const actionCount = await globalActions.count();
+    expect(actionCount).toBeGreaterThan(2);
+    for (let index = 0; index < actionCount; index++) {
+      await expect(globalActions.nth(index)).not.toHaveAttribute('aria-label', /进入项目|新建任务空间|新建个人空间/);
+    }
+    await page.getByRole('button', { name: '新建对话', exact: true }).focus();
+    for (let index = 0; index < actionCount - 2; index++) await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: '设置', exact: true })).toBeFocused();
 
     await page.getByRole('button', { name: '展开侧边栏', exact: true }).click();
     await expect(publicEntry).toBeVisible();

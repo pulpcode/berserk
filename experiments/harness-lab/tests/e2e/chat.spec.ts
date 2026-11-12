@@ -1581,14 +1581,19 @@ test('交付文件卡分组有序、默认折叠四项、固定下载且各宽�
   } finally { await mock.close(); }
 });
 
-test('折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦点', async ({ page }) => {
+test('折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿', async ({ page }) => {
   const mock = await mockApi(page);
+  mock.workspaces.push(...Array.from({ length: 30 }, (_, index) => ({ id: `extra-${index}`, name: `额外项目 ${index}`, createdAt: '2026-11-12' })));
   try {
     await page.goto('/');
     const input = page.getByRole('textbox', { name: '发送消息' });
     await input.fill('图标导航保留草稿');
+    await page.getByRole('button', { name: '折叠项目：另一工作区', exact: true }).click();
+    const projects = page.locator('.workspace-groups');
+    const scrollTop = await projects.evaluate(element => { element.scrollTop = 150; return element.scrollTop; });
+    expect(scrollTop).toBeGreaterThan(0);
     await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
-    for (const name of ['新建对话', '新建项目', '设置']) {
+    for (const name of ['新建对话', '设置']) {
       const button = page.getByRole('button', { name, exact: true });
       await expect(button).toBeVisible();
       await expect(button).toHaveAttribute('title', name);
@@ -1598,6 +1603,18 @@ test('折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦�
       await expect(button.locator('svg:visible').first()).toBeVisible();
       if (await button.locator('span').count()) await expect(button.locator('span').first()).toBeHidden();
     }
+    await expect(projects.locator('.workspace-entry')).toHaveCount(32);
+    await expect(projects.locator('.workspace-entry:visible')).toHaveCount(0);
+    await expect(page.locator('.sidebar button:visible')).toHaveCount(3);
+    await expect(page.getByRole('button', { name: '新建项目', exact: true })).toBeHidden();
+    await expect(page.getByRole('button', { name: '进入项目：默认工作区', exact: true })).toBeHidden();
+    await expect(page.getByRole('button', { name: '进入项目：另一工作区', exact: true })).toBeHidden();
+    const sidebar = page.locator('.sidebar');
+    const footer = sidebar.locator('.sidebar-footer');
+    expect((await footer.boundingBox())!.y + (await footer.boundingBox())!.height).toBe((await sidebar.boundingBox())!.height);
+    await page.getByRole('button', { name: '新建对话', exact: true }).focus();
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: '设置', exact: true })).toBeFocused();
     await page.getByRole('button', { name: '设置', exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.keyboard.press('Escape');
@@ -1625,11 +1642,15 @@ test('折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦�
     await expect(page.getByRole('button', { name: '全部动态', exact: true })).toHaveCount(0);
     await expect(resources).toBeVisible();
     await expect(resources).toBeEnabled();
+    await page.getByRole('button', { name: '展开侧边栏', exact: true }).click();
+    expect(await projects.evaluate(element => element.scrollTop)).toBe(scrollTop);
+    await expect(page.getByRole('button', { name: '展开项目：另一工作区', exact: true })).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('button', { name: '新建项目', exact: true })).toBeVisible();
     await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
     await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
     await expect(input).toHaveValue('图标导航保留草稿');
-    await expect(page.getByRole('button', { name: '展开侧边栏', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '折叠侧边栏', exact: true })).toBeVisible();
     expect(mock.counts.sends).toBe(0);
   } finally { await mock.close(); }
 });

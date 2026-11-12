@@ -162,23 +162,16 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
   .sidebar-collapsed .sidebar .section-label,
   .sidebar-collapsed .sidebar .activity-counts,
   .sidebar-collapsed .sidebar .test-seat-selector,
-  .sidebar-collapsed .sidebar .group-sessions,
-  .sidebar-collapsed .sidebar .sidebar-empty,
-  .sidebar-collapsed .sidebar .workspace-group-heading > :not(.workspace-entry),
+  .sidebar-collapsed .sidebar .workspace-groups,
   .sidebar-collapsed .sidebar button > span,
   .sidebar-collapsed .sidebar .activity-entry > svg:last-child { display: none; }
   .sidebar-collapsed .navigation-actions { margin: 20px 0 4px; }
-  .sidebar-collapsed .sidebar :is(.new-chat, .create-workspace, .activity-entry, .work-inbox-trigger, .workspace-entry, .settings-trigger) {
+  .sidebar-collapsed .sidebar :is(.new-chat, .activity-entry, .work-inbox-trigger, .settings-trigger) {
     display: flex; align-items: center; justify-content: center; width: 44px; min-height: 44px; padding: 0; margin-left: auto; margin-right: auto; flex-shrink: 0;
   }
   .sidebar-collapsed .sidebar button > svg { width: 20px; height: 20px; }
   .sidebar-collapsed .work-inbox-trigger { margin-bottom: 4px; }
-  .sidebar-collapsed .workspace-groups { margin: 12px 0 0; padding: 0; min-height: 0; }
-  .sidebar-collapsed .workspace-group { margin-bottom: 4px; }
-  .sidebar-collapsed .workspace-group-heading { padding: 0; }
-  .sidebar-collapsed .workspace-entry > .workspace-rail-icon { display: block; }
-  .sidebar-collapsed .workspace-entry[aria-current] { background: var(--accent-soft); color: var(--accent); }
-  .sidebar-collapsed .sidebar .sidebar-footer { flex-direction: column; gap: 4px; padding: 8px 0 12px; }
+  .sidebar-collapsed .sidebar .sidebar-footer { margin-top: auto; flex-direction: column; gap: 4px; padding: 8px 0 12px; }
 }
 @media (min-width: 1600px) { .app-shell { grid-template-columns: 290px minmax(0, 1fr); } .sidebar { padding-left: 22px; padding-right: 22px; } }
 @media (max-width: 1000px) { .app-shell { grid-template-columns: 238px minmax(0, 1fr); } .sidebar { padding-left: 12px; padding-right: 12px; } .button-hint { display: none; } .workspace-header { padding: 5px 24px; } .conversation-scroll { padding: 0 24px; } .composer-dock { padding-left: 24px; padding-right: 24px; } .empty-state { padding-top: 8vh; } }
@@ -940,7 +933,7 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
   .group-toggle .workspace-disclosure-icon { visibility: visible; }
 }
 
-/* Independent catalog groups retain their quick entries in the sidebar rail. */
+/* Independent catalog groups are browsed in the expanded sidebar. */
 .workspace-groups .catalog-heading { gap: 4px; min-height: 36px; margin-bottom: 4px; padding: 0 8px; }
 .catalog-toggle { display: flex; flex: 1; align-items: center; gap: 6px; min-width: 0; min-height: 36px; padding: 8px 0; border: 0; background: transparent; color: var(--muted); text-align: left; font-size: 14px; font-weight: 400; line-height: 20px; }
 .catalog-toggle span { font-size: inherit; }
@@ -953,14 +946,6 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .catalog-rail-icon { display: none; }
 .sidebar .catalog-create { width: 32px; height: 32px; min-height: 32px; padding: 0; border-color: transparent; background: transparent; }
 .sidebar .catalog-create:hover:not(:disabled) { background: var(--control-hover); }
-@media (min-width: 768px) {
-  .sidebar-collapsed .sidebar .catalog-heading { display: flex; padding: 0; justify-content: center; }
-  .sidebar-collapsed .catalog-toggle, .sidebar-collapsed .catalog-plus { display: none; }
-  .sidebar-collapsed .catalog-items { margin-bottom: 0; }
-  .sidebar-collapsed .catalog-items.is-collapsed { display: block; }
-  .sidebar-collapsed .catalog-rail-icon { display: block; }
-  .sidebar-collapsed .sidebar .catalog-create { width: 44px; height: 44px; min-height: 44px; }
-}
 @media (max-width: 767px), (pointer: coarse) {
   .sidebar .catalog-create { width: 44px; height: 44px; min-height: 44px; }
   .catalog-toggle { min-height: 44px; }
