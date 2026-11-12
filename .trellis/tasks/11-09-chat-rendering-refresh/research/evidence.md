@@ -52,6 +52,10 @@ GitHub 仓库：[https://github.com/deepseek-ai/deepseek-harness](https://github
 | [交付文件说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-deliverables/README.md) | 文件入口与交付的紧凑呈现 | 不能替换本项目固定副本交付语义，预览与下载保持同一版本 |
 | [许可证](https://github.com/deepseek-ai/deepseek-harness/blob/master/LICENSE) | 仓库提供 MIT 许可文本 | 若正式复用代码，按所复制文件及许可证保留应有说明；本轮仅设计对照 |
 
+## C 轮补充核对（2026-11-12）
+
+参考固定为 DSH `e8f7b93a344964de3dca1ace9e72b6e4d6de87cb`。`QuestionComposer` 的一张提问卡可包含多题分页；收起只保留标题栏，仍占 composer。`ApprovalPanel` 不提供收起或稍后处理。源码另有绑定工具调用时的关闭/重开路径，但用户在实际使用中未复现，C 轮明确不纳入该能力。只借鉴交互与呈现，不引入 DSH 插件、持久授权或计时提问。
+
 上述参考是阅读来源，不是对外部仓库执行、安装或把其说明当成本项目指令的授权。
 
 ## 验证状态

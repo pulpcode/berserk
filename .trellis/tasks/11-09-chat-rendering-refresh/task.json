@@ -21,12 +21,14 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "A 阶段实现与质量检查已于 2026-11-10 完成，待用户审阅及提交；B/C 未启动。D1 先完成 A；D2 保留进度说明；D3 首轮交互卡原位、C 后续独立设计；D4 仅基础排版，不新增复制、预览或高亮依赖。",
+  "notes": "A 阶段已实现并通过质量检查；B 未启动。C 轮方案已于 2026-11-12 经用户审阅并批准实施，见 c-round-review.md。",
   "meta": {
     "implementationApproved": true,
-    "approvedScope": "A",
+    "approvedScope": "A,C",
     "desktopOnly": true,
     "reviewStatus": "A_approved",
+    "cReviewStatus": "approved",
+    "cReviewEntry": "c-round-review.md",
     "planningConverged": true,
     "sourceBaseCommit": "28423d8db4911d3c1fe99e59e5362379f2c6525a",
     "reviewEntry": "review.md",
@@ -65,8 +67,6 @@
       }
     },
     "pendingDecisions": [],
-    "pendingDesignReviews": [
-      "C-interaction-details"
-    ]
+    "pendingDesignReviews": []
   }
 }
