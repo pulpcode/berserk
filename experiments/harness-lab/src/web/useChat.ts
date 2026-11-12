@@ -218,7 +218,9 @@ export function useChat(enabled = true) {
     const previous = current.interactions?.find(entry => entry.interactionId === item.interactionId);
     if (previous && (previous.requestId !== item.requestId || previous.toolCallId !== item.toolCallId || (previous.status !== 'pending' && previous.status !== item.status))) return;
     item = mergeInteraction(previous, item);
-    const interactions = [...(current.interactions || []).filter(entry => entry.interactionId !== item.interactionId), item];
+    const interactions = previous
+      ? (current.interactions || []).map(entry => entry.interactionId === item.interactionId ? item : entry)
+      : [...(current.interactions || []), item];
     const waiting = interactions.find(entry => entry.requestId === item.requestId && entry.status === 'pending');
     const active = current.active?.requestId === item.requestId && current.active.status !== 'stopping' && (!previous || previous.status === 'pending')
       ? { ...current.active, phase: waiting ? waiting.kind === 'question' ? 'waiting_answer' as const : 'waiting_confirmation' as const : item.status === 'approved' ? 'tool' as const : 'preparing' as const }

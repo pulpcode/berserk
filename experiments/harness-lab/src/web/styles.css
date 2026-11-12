@@ -529,7 +529,7 @@ input, select { font: inherit; }
 .interaction-text { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .interaction-text textarea { width: 100%; min-height: 90px; resize: vertical; padding: 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--text); background: var(--surface); }
 .interaction-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 16px; }
-.interaction-answer, .interaction-reason { white-space: pre-wrap; }
+.interaction-reason { white-space: pre-wrap; }
 .interaction-card pre { max-width: 100%; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; background: var(--faint); border-radius: 6px; font-size: 12px; }
 .interaction-card summary { cursor: pointer; min-height: 32px; }
 .interaction-rule, .interaction-reason { color: var(--muted); }
@@ -537,6 +537,36 @@ input, select { font: inherit; }
 .interaction-history-options ul { padding-left: 20px; margin: 4px 0 0; }
 .interaction-result { margin-top: 14px; }
 @media (max-width: 767px) { .interaction-card { padding: 14px; } .interaction-text textarea { font-size: 16px; } }
+
+/* A pending interaction leaves only a status pointer in the message flow. */
+.interaction-pointer { color: var(--muted); padding: 12px 16px; }
+.interaction-pointer > header { color: var(--accent); }
+.interaction-pointer-summary { margin: 6px 0 0; color: var(--text); overflow-wrap: anywhere; }
+
+/* Answered questions read as concise prompt + actual-answer bubbles. */
+.qa-record { margin: 12px 0; }
+.qa-question { margin: 0 0 6px; font-weight: 500; white-space: pre-wrap; }
+.qa-answer { margin: 0; padding: 8px 12px; background: var(--faint); border-radius: 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.qa-record .interaction-history-options { margin-top: 6px; }
+
+/* The current interaction occupies the composer area with bounded height and internal scroll. */
+.composer-interaction { display: flex; flex-direction: column; padding: 0; margin: 0; max-height: min(60vh, 560px); border-radius: 16px; overflow: hidden; }
+.composer-interaction:focus { outline: none; }
+.composer-interaction:focus, .composer-interaction:focus-within { border-color: #789883; box-shadow: 0 0 0 2px #78988314; }
+.composer-interaction-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px 10px 16px; border-bottom: 1px solid var(--line); color: var(--accent); flex-shrink: 0; }
+.composer-interaction-header .interaction-status { margin-left: auto; }
+.interaction-page { font-size: 12px; color: var(--muted); }
+.interaction-collapse { width: 32px; height: 32px; min-height: 32px; }
+.interaction-collapse[aria-expanded="false"] svg { transform: rotate(-90deg); }
+.composer-interaction-body { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 2px 16px 10px; }
+.composer-interaction-body .interaction-questions fieldset { margin: 10px 0 4px; }
+.composer-interaction-footer { flex-shrink: 0; border-top: 1px solid var(--line); padding: 10px 16px; }
+.composer-interaction-footer .interaction-actions { margin-top: 0; }
+.composer-interaction-footer .resource-error { margin: 0 0 8px; }
+.composer-interaction.confirmation-card .confirmation-body { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.composer-interaction.confirmation-card .confirmation-strip { border-radius: 0; flex-shrink: 0; }
+.composer-interaction.confirmation-card .confirmation-footer { flex-shrink: 0; }
+.interaction-toolbar { margin-top: 8px; }
 
 /* Confirmations share chat surfaces and ordinary action controls. */
 .interaction-card.confirmation-card { padding: 0; border-radius: 16px; line-height: 1.65; }

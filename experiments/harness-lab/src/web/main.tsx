@@ -32,6 +32,7 @@ import type { Workspace } from '../contracts/index';
 import { Seats, type SeatView } from './Seats';
 import { ComposerReferences, type ComposerReferenceHandle } from './ComposerReferences';
 import { ChatPresentation, type ProcessChoices } from './ChatPresentation';
+import { ComposerInteractionCard, currentInteraction } from './InteractionCard';
 import { OpenSituationMap, SituationProvider, SituationWorkspace } from './situation/MapContext';
 import { parseMapHref, refKey } from './situation/evidence';
 import type { ContextCatalog, MapConfig, SituationObject } from '../contracts/context';
@@ -151,6 +152,9 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [newContent, setNewContent] = useState(false);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const dockFocus = useRef(false);
+  const interactionFocusScope = useRef('');
+  interactionFocusScope.current = `${seatActive}:${view}:${chat.selected}`;
   const scroll = useRef<HTMLDivElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -189,11 +193,16 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const pendingInputs = (queue?.items || []).filter(item => item.status === 'pending');
   const intakeNotice = richDraft && active ? '回复期间只支持追加文字；附件和引用已保留，请等待本次回复结束后发送。' : '';
   const canSend = composerReady && !busy && !intakeWorking && !intakeUncertain && !loadingSession && !chat.loading && Boolean(chat.selectedModel?.configured && chat.selectedModel.contextReady) && !chat.modelSaving && !chat.modelsError && !chat.modelError && !snapshot?.recoveryWarning && Boolean(chat.draft.trim()) && !blockedAttachments;
+  // A pending question/confirmation occupies the composer; drafts, attachments and the queue stay intact.
+  const currentCard = canCollaborate && view === 'chat' ? currentInteraction(snapshot) : undefined;
+  const composerControl = backgroundJob ? <button type="button" className="stop-button" disabled={backgroundStopping} onClick={() => void stopBackground()}><Square size={13} aria-hidden="true" />{backgroundStopping ? '正在停止' : backgroundJob.status === 'queued' ? '取消排队' : '停止后台分析'}</button>
+    : busy ? <button type="button" className="stop-button composer-stop" aria-label={active?.status === 'stopping' ? '正在停止' : '停止回复'} title={active?.status === 'stopping' ? '正在停止' : '停止回复'} disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" /></button>
+    : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>;
 
   useEffect(() => {
     const input = textarea.current;
     if (input) { input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 180)}px`; }
-  }, [chat.draft]);
+  }, [chat.draft, currentCard?.interactionId]);
   const markRead = chat.markRead;
   const selectedId = chat.selected;
   const loading = chat.loading;
@@ -435,7 +444,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const globalMap = view === 'situation' && !(canCollaborate && annotationMapTaskId);
   let annotationInitial:AnnotationSelection | undefined;try{const value=JSON.parse(new URLSearchParams(location.search).get('annotationRef') || 'null');if(isAnnotationSelection(value))annotationInitial=value;}catch{/* Invalid URL references confer no authority. */}
   const annotationMapSessionId=view==='situation'?new URLSearchParams(location.search).get('sessionId') || undefined:undefined;
-  return <SituationProvider readOnly={!canCollaborate} annotations={canCollaborate&&annotationTaskId?{taskId:annotationTaskId,taskTitle:annotationTask?.title,openTask:()=>showTaskInformation(annotationTaskId),sessionId:view==='chat'?chat.selected || undefined:undefined,taskContext:annotationTask?.context,archived:Boolean(annotationTask?.readOnly||annotationTask?.state==='archived'),refreshKey:snapshot?.updatedAt,reference:referenceAnnotation,derive:deriveAnnotations,openSession:selectSession}:undefined} navigationKey={`${seatActive}:${view}:${chat.selected}:${informationTaskId}:${routeRevision}`} reference={referenceMapObject}><div className={`app-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
+  return <SituationProvider readOnly={!canCollaborate} annotations={canCollaborate&&annotationTaskId?{taskId:annotationTaskId,taskTitle:annotationTask?.title,openTask:()=>showTaskInformation(annotationTaskId),sessionId:view==='chat'?chat.selected || undefined:undefined,taskContext:annotationTask?.context,archived:Boolean(annotationTask?.readOnly||annotationTask?.state==='archived'),refreshKey:snapshot?.updatedAt,reference:referenceAnnotation,derive:deriveAnnotations,openSession:selectSession}:undefined} navigationKey={`${seatActive}:${view}:${chat.selected}:${informationTaskId}:${routeRevision}`} reference={referenceMapObject}><div className={`app-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} onPointerDownCapture={event => { if (!(event.target instanceof Element) || !event.target.closest('.composer-dock')) dockFocus.current = false; }}>
     <a className="skip-link" href={`#${domId(!canCollaborate&&['work','chat','simulation'].includes(view)?'business-forbidden':view === 'chat' ? 'conversation' : view === 'work' ? 'workbench' : view === 'information' ? 'information-center' : view === 'scenario_director' ? 'scenario-director' : 'task-information')}`}>{view === 'chat' ? '跳至对话' : view === 'work' ? '跳至工作待办' : view === 'information' ? '跳至工作总览' : view === 'task_information' ? '跳至任务详情' : view === 'scenario_director' ? '跳至场景导演台' : '跳至相关信息'}</a>
     {sidebarOpen && <button className="sidebar-scrim" aria-label="关闭会话列表" onClick={closeSidebar} tabIndex={-1} />}
     <aside id={domId('sidebar')} ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
@@ -512,7 +521,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
         </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && Boolean(scroll.current?.getClientRects().length) && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} />}{busy && !waiting && backgroundJob?.status !== 'queued' && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
-      <div className="composer-dock">
+      <div className="composer-dock" onFocusCapture={() => { dockFocus.current = true; }} onBlurCapture={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) dockFocus.current = false; }}>
         {newContent && <button className="new-content" onClick={() => { if (scroll.current) scroll.current.scrollTop = scroll.current.scrollHeight; follow.current = true; setNewContent(false); markVisibleRead(); }}><ArrowDown size={15} aria-hidden="true" />有新内容</button>}
         <div className="composer-container">
           {!chat.loading && chat.models && !chat.modelsError && !chat.selectedModel?.configured && <div className="notice configuration-notice"><CircleAlert size={16} aria-hidden="true" /><span>{chat.models.models.some(model => model.configured && model.contextReady) ? '当前模型尚未配置，请在下方选择一个可用模型。' : !identity || identity.manageModelSettings ? '模型尚未配置，请在侧栏左下角的“设置”中完成配置后开始对话。' : '模型尚未配置，请联系具有模型管理权限的席位完成配置。'}</span></div>}
@@ -528,7 +537,10 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
           <InputQueue key={chat.draftKey} items={pendingInputs} disabled={!queue?.available || Boolean(intakeWorking || intakeUncertain) || active?.status === 'stopping'} act={(item, action) => { void chat.inputQueue.act(chat.selected, item, action)?.then(() => { if (action === 'takeback') textarea.current?.focus(); }); }} />
           {chat.inputQueue.deleted[chat.selected] && <div className="queue-notice" role="status">已删除排队消息<button type="button" disabled={Boolean(intakeWorking || intakeUncertain)} onClick={() => void chat.inputQueue.act(chat.selected, chat.inputQueue.deleted[chat.selected]!, 'undo')}>撤销</button></div>}
           {(intakeUncertain || chat.inputQueue.errors[chat.selected]) && <div className="queue-notice" role="status"><span>{chat.inputQueue.errors[chat.selected] || (intakeWorking ? '正在提交…' : '上次操作结果需核对，草稿已保留。')}</span>{intakeUncertain && !intakeWorking && <><button type="button" onClick={() => void chat.inputQueue.query(chat.selected)}>查询状态</button><button type="button" onClick={() => chat.inputQueue.dismiss(chat.selected)}>已核对，关闭提示</button></>}</div>}
-          <form className={`composer${draggingFiles ? ' file-dragging' : ''}`} onDragOver={event => { if (fileLimits?.enabled && event.dataTransfer.types.includes('Files')) { event.preventDefault(); setDraggingFiles(true); } }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDraggingFiles(false); }} onDrop={event => { if (fileLimits?.enabled && event.dataTransfer.files.length) { event.preventDefault(); setDraggingFiles(false); uploadFiles(Array.from(event.dataTransfer.files)); } }} onSubmit={event => { event.preventDefault(); if (canQueue) void chat.inputQueue.submit(chat.selected, 'followUp'); else if (canSend) void chat.send(); }}>
+          {currentCard ? <>
+            <ComposerInteractionCard key={currentCard.interactionId} interaction={currentCard} submission={chat.interactionSubmissions[currentCard.interactionId]} respond={chat.respondInteraction} query={chat.queryInteraction} composerInput={textarea} dockFocus={dockFocus} focusScope={interactionFocusScope} />
+            <div className="composer-toolbar interaction-toolbar">{composerControl}</div>
+          </> : <form className={`composer${draggingFiles ? ' file-dragging' : ''}`} onDragOver={event => { if (fileLimits?.enabled && event.dataTransfer.types.includes('Files')) { event.preventDefault(); setDraggingFiles(true); } }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDraggingFiles(false); }} onDrop={event => { if (fileLimits?.enabled && event.dataTransfer.files.length) { event.preventDefault(); setDraggingFiles(false); uploadFiles(Array.from(event.dataTransfer.files)); } }} onSubmit={event => { event.preventDefault(); if (canQueue) void chat.inputQueue.submit(chat.selected, 'followUp'); else if (canSend) void chat.send(); }}>
             <MapReferenceChips key={chat.draftKey} sources={picks?.contextRefs || []} annotations={picks?.annotationRefs || []} removeSource={ref=>chat.composerSelections.setContextRefs(chat.resolveDraftOwner(),(chat.composerSelections.current(chat.resolveDraftOwner()).contextRefs || []).filter(item=>refKey(item)!==refKey(ref)))} removeAnnotation={index=>chat.composerSelections.setAnnotationRefs(chat.resolveDraftOwner(),(chat.composerSelections.current(chat.resolveDraftOwner()).annotationRefs || []).filter((_,i)=>i!==index))}/>
             <ComposerReferences key={`${chat.draftKey}:${seatActive}:${view}`} control={referenceControl} scope={chat.draftKey} workspaceId={chat.workspaceId} enabled={seatActive && view === 'chat' && composerReady && !busy} fileEnabled={Boolean(fileLimits?.enabled)} text={chat.draft} textarea={textarea} selection={chat.composerSelections.all[chat.draftKey] || {}} setText={chat.setDraft} select={chat.setComposerSelection} reference={file => chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 0)} upload={() => attachmentInput.current?.click()} />
             {attachmentList}
@@ -542,12 +554,12 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
                 else if (canSend) void chat.send();
               }
             }} />
-            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button><ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{backgroundJob ? <button type="button" className="stop-button" disabled={backgroundStopping} onClick={() => void stopBackground()}><Square size={13} aria-hidden="true" />{backgroundStopping ? '正在停止' : backgroundJob.status === 'queued' ? '取消排队' : '停止后台分析'}</button> : busy ? <button type="button" className="stop-button composer-stop" aria-label={active?.status === 'stopping' ? '正在停止' : '停止回复'} title={active?.status === 'stopping' ? '正在停止' : '停止回复'} disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" /></button> : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>}</div>
-          </form>
-          {intakeNotice && <p className="attachment-notice" role="status">{intakeNotice}</p>}
-          {blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
-          {fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
-          {(attachmentItems.length > 0 || chat.composerSelections.all[chat.draftKey]?.skill || chat.composerSelections.all[chat.draftKey]?.agent) && !chat.draft.trim() && <p className="attachment-notice">请描述本次希望完成的目标。</p>}
+            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button><ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{composerControl}</div>
+          </form>}
+          {!currentCard && intakeNotice && <p className="attachment-notice" role="status">{intakeNotice}</p>}
+          {!currentCard && blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
+          {!currentCard && fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
+          {!currentCard && (attachmentItems.length > 0 || chat.composerSelections.all[chat.draftKey]?.skill || chat.composerSelections.all[chat.draftKey]?.agent) && !chat.draft.trim() && <p className="attachment-notice">请描述本次希望完成的目标。</p>}
         </div>
       </div>
       </>}
