@@ -400,3 +400,9 @@ Wrong: `if (draft.trim() === submittedText) clearDraft()` after an async acknowl
 ### Ended task read-only projection
 
 Task API `readOnly` is independent of the persisted active/archived business state. Disable new conversation, composer, task edits, work assignment and annotation writes when it is true; use ordinary “只读” copy without scene/run concepts. Keep the selected task's metadata through its authorized direct read even after it leaves the current directory; never retarget an old draft/session to a new task. Task maps pass the existing parent task ID to context routes, not a hidden run marker. Global unsourced task creation remains unchanged pending SIM-TASK-002. Director restart confirmation uses full preflight counts and states that old work remains read-only; native stopping is distinct from successful new activation.
+
+### C repair interaction surfaces
+
+The question/confirmation takeover shows no request-stop control, including collapsed, submitting and uncertain-result states. After all pending cards are acknowledged, ordinary running requests retain the existing stop control. Questions use inline auto-growing text, bottom-left paging, explicit per-question skipping and single-choice auto-advance; selecting/skipping the final question never auto-submits. Submit is exposed only after each question is answered or explicitly skipped. IME composition does not advance.
+
+Pending transcript interactions occupy one muted status line; answered batches share one compact Q/A bubble without default whole-batch folding. Original questions/options stay read-only in one detail disclosure. Confirmation history shows actual command/title, decision and evidence-derived execution outcome in a compact row; exact details remain expandable. Do not alter general chat layout, process grouping or infer completion from approval.

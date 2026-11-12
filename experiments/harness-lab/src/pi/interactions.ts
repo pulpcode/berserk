@@ -22,6 +22,7 @@ export const questionSchema = Type.Object({
   }, strict), { minItems: 1, maxItems: 4 }),
 }, strict);
 const answerSchema = Type.Union([
+  Type.Object({ questionId: id, skipped: Type.Literal(true) }, strict),
   Type.Object({ questionId: id, optionIds: Type.Array(id, { minItems: 1, maxItems: 20, uniqueItems: true }) }, strict),
   Type.Object({ questionId: id, text }, strict),
 ]);
@@ -56,6 +57,7 @@ function answersFor(item: QuestionInteraction, answers: InteractionAnswer[]): In
   return item.questions.map(question => {
     const answer = answers.find(answer => answer.questionId === question.id);
     if (!answer) invalid();
+    if ('skipped' in answer) return { questionId: question.id, skipped: true };
     if ('text' in answer) { if (!answer.text.trim()) invalid(); return { questionId: question.id, text: answer.text }; }
     if (!question.options || (!question.multiSelect && answer.optionIds.length !== 1) || answer.optionIds.some(id => !question.options!.some(option => option.id === id))) invalid();
     return { questionId: question.id, optionIds: question.options.filter(option => answer.optionIds.includes(option.id)).map(option => option.id) };

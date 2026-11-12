@@ -5,7 +5,7 @@ export interface InteractionQuestion {
   options?: { id: string; label: string; description?: string }[];
   multiSelect?: boolean;
 }
-export type InteractionAnswer = { questionId: string; optionIds: string[] } | { questionId: string; text: string };
+export type InteractionAnswer = { questionId: string; skipped: true } | { questionId: string; optionIds: string[] } | { questionId: string; text: string };
 interface InteractionBase {
   schemaVersion: 1;
   interactionId: string;

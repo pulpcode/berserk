@@ -1,9 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FocusEvent, type RefObject } from 'react';
 import { AssignmentAttachments, HandoffFiles } from './HandoffFiles';
-import { Check, ChevronDown, CircleAlert, CircleHelp, Clock3, X } from 'lucide-react';
+import { Check, ChevronDown, CircleAlert, CircleHelp, Clock3, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import type { ConfirmationInteraction, Interaction, InteractionAnswer, InteractionQuestion, InteractionResponse, PublicMessage, QuestionInteraction, SessionSnapshot } from '../contracts/index';
 
-type AnswerDraft = Record<string, { optionIds: string[]; text: string; custom: boolean }>;
+type AnswerDraft = Record<string, { optionIds: string[]; text: string; custom: boolean; skipped?: boolean }>;
 const draftAnswer = (draft: AnswerDraft, id: string) => Object.hasOwn(draft, id) ? draft[id] : undefined;
 const memory = new Map<string, AnswerDraft>();
 export const interactionDraftKey = (item: Interaction) => `berserk.answer:${item.sessionId}:${item.requestId}:${item.interactionId}`;
@@ -18,7 +18,7 @@ function readDraft(item: Interaction): AnswerDraft {
     const saved: unknown = JSON.parse(sessionStorage.getItem(key) || '{}');
     if (saved && typeof saved === 'object' && !Array.isArray(saved)) return Object.fromEntries(Object.entries(saved).filter((entry): entry is [string, AnswerDraft[string]] => {
       const value = entry[1] as Partial<AnswerDraft[string]> | null;
-      return Boolean(value && typeof value.text === 'string' && typeof value.custom === 'boolean' && Array.isArray(value.optionIds) && value.optionIds.every(id => typeof id === 'string'));
+      return Boolean(value && (value.skipped === undefined || typeof value.skipped === 'boolean') && typeof value.text === 'string' && typeof value.custom === 'boolean' && Array.isArray(value.optionIds) && value.optionIds.every(id => typeof id === 'string'));
     }));
   } catch { /* Invalid or unavailable storage starts with an empty answer. */ }
   return {};
@@ -49,25 +49,35 @@ function useAnswerDraft(item: QuestionInteraction) {
 function answerDraftOf(item: QuestionInteraction, draft: AnswerDraft) {
   const answers: InteractionAnswer[] = item.questions.map(question => {
     const value = draftAnswer(draft, question.id);
+    if (value?.skipped) return { questionId: question.id, skipped: true };
     return !question.options?.length || value?.custom ? { questionId: question.id, text: value?.text.trim() || '' } : { questionId: question.id, optionIds: value?.optionIds || [] };
   });
-  const complete = answers.every(answer => 'text' in answer ? Boolean(answer.text) : answer.optionIds.length > 0);
+  const complete = answers.every(answer => 'skipped' in answer || ('text' in answer ? Boolean(answer.text) : answer.optionIds.length > 0));
   return { answers, complete };
 }
 
 function answerText(question: InteractionQuestion, answer: InteractionAnswer): string {
-  return 'text' in answer ? answer.text : answer.optionIds.map(id => question.options?.find(option => option.id === id)?.label || id).join('、');
+  return 'skipped' in answer ? '已跳过' : 'text' in answer ? answer.text : answer.optionIds.map(id => question.options?.find(option => option.id === id)?.label || id).join('、');
 }
 
-/** One editable question; pagination keeps the rest of the group mounted elsewhere. */
-function QuestionFields({ item, question, index, total, value, disabled, change }: {
-  item: QuestionInteraction; question: InteractionQuestion; index: number; total: number;
-  value: AnswerDraft[string]; disabled: boolean; change: (id: string, value: AnswerDraft[string]) => void;
+/** Inline answer grows within its row; composition never advances the question. */
+function QuestionFields({ item, question, value, disabled, change, next }: {
+  item: QuestionInteraction; question: InteractionQuestion; value: AnswerDraft[string]; disabled: boolean;
+  change: (id: string, value: AnswerDraft[string]) => void; next: () => void;
 }) {
-  return <fieldset disabled={disabled}><legend>{total > 1 ? `${index + 1}. ` : ''}{question.prompt}</legend>
-    {question.options?.map(option => <label className="interaction-option" key={option.id}><input type={question.multiSelect ? 'checkbox' : 'radio'} name={`${item.interactionId}:${question.id}`} checked={!value.custom && value.optionIds.includes(option.id)} onChange={event => change(question.id, { ...value, custom: false, optionIds: question.multiSelect ? event.target.checked ? [...value.optionIds, option.id] : value.optionIds.filter(id => id !== option.id) : [option.id] })} /><span>{option.label}{option.description && <small>{option.description}</small>}</span></label>)}
-    {Boolean(question.options?.length) && <label className="interaction-option"><input type="radio" name={`${item.interactionId}:${question.id}`} checked={value.custom} onChange={() => change(question.id, { ...value, custom: true, optionIds: [] })} /><span>自定义回答</span></label>}
-    {(!question.options?.length || value.custom) && <div className="interaction-text"><label htmlFor={`${item.interactionId}:${question.id}:text`}>{question.options?.length ? '填写自定义回答' : '填写回答'}</label><textarea id={`${item.interactionId}:${question.id}:text`} rows={3} value={value.text} onChange={event => change(question.id, { ...value, custom: true, optionIds: [], text: event.target.value })} /></div>}
+  const field = useRef<HTMLTextAreaElement>(null);
+  useLayoutEffect(() => {
+    const input = field.current;
+    if (input) { input.style.height = '0px'; input.style.height = `${Math.min(160, input.scrollHeight)}px`; }
+  }, [value.text, question.id]);
+  return <fieldset disabled={disabled}><legend>{question.prompt}</legend>
+    {question.options?.map(option => <label className="interaction-option" key={option.id}><input type={question.multiSelect ? 'checkbox' : 'radio'} name={`${item.interactionId}:${question.id}`} checked={!value.custom && !value.skipped && value.optionIds.includes(option.id)} onChange={event => {
+      change(question.id, { ...value, skipped: false, custom: false, text: '', optionIds: question.multiSelect ? event.target.checked ? [...value.optionIds, option.id] : value.optionIds.filter(id => id !== option.id) : [option.id] });
+      if (!question.multiSelect) next();
+    }} /><span>{option.label}{option.description && <small>{option.description}</small>}</span></label>)}
+    <div className="interaction-inline-answer"><textarea ref={field} aria-label="自定义回答" placeholder="输入你的答案…" rows={1} value={value.text} onFocus={() => { if (!value.custom) change(question.id, { ...value, custom: true, skipped: false, optionIds: [] }); }} onChange={event => change(question.id, { custom: true, skipped: false, optionIds: [], text: event.target.value })} onKeyDown={event => {
+      if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing && event.keyCode !== 229) { event.preventDefault(); if (value.text.trim()) next(); }
+    }} /></div>
   </fieldset>;
 }
 
@@ -79,25 +89,20 @@ export interface InteractionCardProps {
 }
 
 /** Message-flow rendering: pending items are a status pointer only; the composer owns the form. */
-export function InteractionCard({ interaction: item, canRespond, result, executing }: InteractionCardProps) {
+export function InteractionCard({ interaction: item, result, executing }: InteractionCardProps) {
   if (item.status === 'pending') {
     const question = item.kind === 'question';
     return <section className="interaction-card interaction-pointer" data-interaction-id={item.interactionId} data-state="pending" aria-label={question ? '提问状态' : '确认状态'}>
-      <header>{question ? <CircleHelp size={18} aria-hidden="true" /> : <Clock3 size={18} aria-hidden="true" />}<strong>{question ? '需要你的回答' : '需要你的确认'}</strong><span className="interaction-status">{canRespond ? '请在下方输入区处理' : '等待处理'}</span></header>
-      <p className="interaction-pointer-summary">{question ? item.questions.length > 1 ? `共 ${item.questions.length} 个问题` : item.questions[0]?.prompt || '' : item.action.title}</p>
+      {question ? <CircleHelp size={16} aria-hidden="true" /> : <Clock3 size={16} aria-hidden="true" />}<span>{question ? '提问 · 等待回答' : '确认 · 等待确认'}</span>
     </section>;
   }
   if (item.kind === 'confirmation') return <ConfirmationHistory item={item} result={result} executing={executing} />;
-  return <section className="interaction-card question-card" data-interaction-id={item.interactionId} data-state={item.status} aria-label="回答记录">
-    <header><CircleHelp size={18} aria-hidden="true" /><strong>回答记录</strong><span className="interaction-status">{questionLabels[item.status]}</span></header>
-    <div className="interaction-questions">{item.questions.map((question, index) => {
+  return <section className="interaction-card question-card question-history" data-interaction-id={item.interactionId} data-state={item.status} aria-label="回答记录">
+    {item.status === 'answered' ? <div className="qa-bubble">{item.questions.map(question => {
       const answer = item.answers?.find(entry => entry.questionId === question.id);
-      return <div className="qa-record" key={question.id}>
-        <p className="qa-question">{item.questions.length > 1 ? `${index + 1}. ` : ''}{question.prompt}</p>
-        {answer && <p className="qa-answer">{answerText(question, answer)}</p>}
-        {question.options?.length ? <details className="interaction-history-options"><summary>查看全部选项</summary><ul>{question.options.map(option => <li key={option.id}>{option.label}{option.description ? ` — ${option.description}` : ''}</li>)}</ul></details> : null}
-      </div>;
-    })}</div>
+      return <div className="qa-record" key={question.id}><p className="qa-question">{question.prompt}</p><p className="qa-answer">{answer ? answerText(question, answer) : '未记录回答'}</p></div>;
+    })}</div> : <p className="interaction-ended">提问 · {questionLabels[item.status]}</p>}
+    <details className="interaction-history-options"><summary>原始提问</summary>{item.questions.map(question => <div key={question.id}><p>{question.prompt}</p>{question.options?.length ? <ul>{question.options.map(option => <li key={option.id}>{option.label}{option.description ? ` — ${option.description}` : ''}</li>)}</ul> : null}</div>)}</details>
     {item.reason && <p className="interaction-reason">{item.reason}</p>}
   </section>;
 }
@@ -145,8 +150,8 @@ function ConfirmationHistory({ item, result, executing }: { item: ConfirmationIn
     : command || item.execution === 'failed' || item.execution === 'unknown' ? CircleAlert : Clock3;
   return <section className="interaction-card confirmation-card" data-interaction-id={item.interactionId} data-state={item.status} data-command={command} data-execution={item.execution} aria-label="操作确认">
     <details className="confirmation-history">
-      <summary><Icon size={16} aria-hidden="true" /><span className="confirmation-history-heading"><span className="confirmation-title">{item.action.title}</span>{outcome && <span className="confirmation-outcome">{outcome}</span>}</span><span className="confirmation-decision">{status}</span><ChevronDown className="confirmation-chevron" size={16} aria-hidden="true" /></summary>
-      <div className="confirmation-body"><ConfirmationDetails item={item} /><p className="interaction-rule">{item.rule.reason}</p>
+      <summary><Icon size={16} aria-hidden="true" /><span className="confirmation-history-heading"><span className="confirmation-title">{item.action.command ?? item.action.title}</span>{outcome && <span className="confirmation-outcome">{outcome}</span>}</span><span className="confirmation-decision">{status}</span><ChevronDown className="confirmation-chevron" size={16} aria-hidden="true" /></summary>
+      <div className="confirmation-body">{command && <h3>{item.action.title}</h3>}<ConfirmationDetails item={item} />{item.rule.reason !== item.action.description && item.rule.reason !== item.reason && <p className="interaction-rule">{item.rule.reason}</p>}
         {result?.text && <details className="interaction-result"><summary>{item.status === 'rejected' ? '拒绝后的工具返回' : result.isError ? '工具返回（未完成）' : '工具返回'}</summary><pre tabIndex={0}>{result.text}</pre></details>}
       </div>
     </details>
@@ -207,28 +212,28 @@ function ComposerQuestion({ item, submission, respond, query, section, focusHand
   const total = item.questions.length;
   const pageIndex = Math.min(page, total - 1);
   const question = item.questions[pageIndex];
+  const advance = () => setPage(current => Math.min(current + 1, total - 1));
   const value = (question && draftAnswer(draft, question.id)) || { optionIds: [], text: '', custom: false };
   return <section ref={section} tabIndex={-1} {...focusHandlers} className="interaction-card question-card composer-interaction" data-interaction-id={item.interactionId} data-state="pending" aria-label="Agent 提问" aria-busy={submission?.busy || undefined}>
     <header className="composer-interaction-header">
-      <CircleHelp size={16} aria-hidden="true" /><strong>需要你的回答</strong>
-      {total > 1 && <span className="interaction-page">第 {pageIndex + 1} / {total} 题</span>}
-      <span className="interaction-status">{questionLabels[item.status]}</span>
+      <span className="interaction-collapsed-title">{collapsed ? question?.prompt : "提问"}</span>
       <button type="button" className="icon-button interaction-collapse" aria-expanded={!collapsed} aria-label={collapsed ? '展开提问' : '收起提问'} title={collapsed ? '展开提问' : '收起提问'} onClick={() => setCollapsed(value => !value)}><ChevronDown size={16} aria-hidden="true" /></button>
     </header>
     {!collapsed && question && <>
       <div className="composer-interaction-body">
         {item.reason && <p className="interaction-reason">{item.reason}</p>}
-        <div className="interaction-questions"><QuestionFields item={item} question={question} index={pageIndex} total={total} value={value} disabled={busy} change={change} /></div>
+        <div className="interaction-questions"><QuestionFields item={item} question={question} value={value} disabled={busy} change={change} next={advance} /></div>
       </div>
       <footer className="composer-interaction-footer">
         {submission?.error && <p className="resource-error" role="alert">{submission.error}</p>}
-        <div className="interaction-actions">
-          {submission?.needsQuery ? <button type="button" disabled={submission.busy} onClick={() => void query(item)}>{submission.busy ? '正在查询…' : '查询最新状态'}</button> : <>
-            <button type="button" disabled={busy} onClick={() => void respond(item, { requestId: item.requestId, kind: 'question', action: 'skip' })}>跳过提问</button>
-            {pageIndex > 0 && <button type="button" disabled={busy} onClick={() => setPage(pageIndex - 1)}>上一题</button>}
-            {pageIndex < total - 1 && <button type="button" disabled={busy} onClick={() => setPage(pageIndex + 1)}>下一题</button>}
-            <button type="button" className="primary-action" disabled={busy || !complete} onClick={() => void respond(item, { requestId: item.requestId, kind: 'question', action: 'answer', answers })}>{submission?.busy ? '提交中…' : '提交回答'}</button>
-          </>}
+        <div className="question-navigation">
+          <div className="question-pager"><button type="button" className="icon-button" aria-label="上一题" disabled={busy || pageIndex === 0} onClick={() => setPage(pageIndex - 1)}><ChevronLeft size={16} /></button><span>{pageIndex + 1} / {total}</span><button type="button" className="icon-button" aria-label="后一题" disabled={busy || pageIndex === total - 1} onClick={advance}><ChevronRight size={16} /></button></div>
+          <div className="interaction-actions">
+            {submission?.needsQuery ? <button type="button" disabled={submission.busy} onClick={() => void query(item)}>{submission.busy ? '正在查询…' : '查询最新状态'}</button> : <>
+              <button type="button" disabled={busy} onClick={() => { change(question.id, { optionIds: [], text: '', custom: false, skipped: true }); advance(); }}>跳过本题</button>
+              {complete ? <button type="button" className="primary-action" disabled={busy} onClick={() => void respond(item, { requestId: item.requestId, kind: 'question', action: 'answer', answers })}>{submission?.busy ? '提交中…' : '提交回答'}</button> : <button type="button" className="primary-action" disabled={busy || !(value.skipped || (value.custom || !question.options?.length ? value.text.trim() : value.optionIds.length))} onClick={() => { const missing = answers.findIndex(answer => !('skipped' in answer) && ('text' in answer ? !answer.text : !answer.optionIds.length)); if (pageIndex === total - 1 && missing >= 0) setPage(missing); else advance(); }}>下一题</button>}
+            </>}
+          </div>
         </div>
       </footer>
     </>}
@@ -243,7 +248,7 @@ function ComposerConfirmation({ item, submission, respond, query, section, focus
     <header className="confirmation-strip"><Icon size={16} aria-hidden="true" /><span>{confirmationLabels[item.status]}</span><span className="confirmation-kind">{item.action.handoff ? '工作交接' : command ? '命令执行' : '操作确认'}</span></header>
     <div className="confirmation-body"><h3>{item.action.title}</h3><ConfirmationDetails item={item} /></div>
     <footer className="confirmation-footer">
-      <p className="interaction-rule">{item.rule.reason}</p>
+      {item.rule.reason !== item.action.description && item.rule.reason !== item.reason && <p className="interaction-rule">{item.rule.reason}</p>}
       {submission?.error && <p className="resource-error" role="alert">{submission.error}</p>}
       <div className="interaction-actions">
         {submission?.needsQuery ? <button type="button" disabled={submission.busy} onClick={() => void query(item)}>{submission.busy ? '正在查询…' : '查询最新状态'}</button> : <>

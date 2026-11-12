@@ -2,7 +2,7 @@
   "id": "chat-rendering-refresh",
   "name": "chat-rendering-refresh",
   "title": "聊天页面渲染统一与 DSH 对齐方案",
-  "description": "C轮实现与独立复核修复已完成，服务器验证通过；用户授权部署独立测试版待审阅。",
+  "description": "C轮修复v0.3实现与服务器验证完成，测试版发布和用户验收另见仓库外记录。",
   "status": "review",
   "dev_type": null,
   "scope": "harness",
@@ -21,7 +21,7 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "A 阶段已实现并通过质量检查；B 未启动。C 轮方案已于 2026-11-12 经用户审阅并批准实施，见 c-round-review.md。 2026-11-12独立复核修复5类问题，服务器145文件1656项分批核验、123项核心浏览器通过，见c-final-verification.md；未合入main。",
+  "notes": "A 阶段已实现并通过质量检查；B 未启动。C 轮方案已于 2026-11-12 经用户审阅并批准实施，见 c-round-review.md。 2026-11-12独立复核修复5类问题，服务器145文件1656项分批核验、123项核心浏览器通过，见c-final-verification.md；未合入main。 2026-11-12 用户批准 C 修复 v0.3，方案提交 f4d5e22；实现、服务器145文件1657项单元/集成及125项核心浏览器回归通过，截图已审阅，更新既有4316测试版待用户审阅。",
   "meta": {
     "implementationApproved": true,
     "approvedScope": "A,C",
@@ -67,6 +67,8 @@
       }
     },
     "pendingDecisions": [],
-    "pendingDesignReviews": []
+    "pendingDesignReviews": [],
+    "cRepairStatus": "verified_pending_user_review",
+    "cRepairEntry": "c-repair-plan.md"
   }
 }

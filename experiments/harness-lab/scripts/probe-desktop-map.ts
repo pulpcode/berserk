@@ -66,6 +66,7 @@ export function validateOperatorAnswer(value:unknown,item:Interaction):Interacti
 export async function fillQuestionAnswers(page:Page,item:QuestionInteraction,answers:InteractionAnswer[]) {
  const card=page.locator(`[data-interaction-id="${item.interactionId}"]`);await expect(card).toBeVisible();
  for(const answer of answers){const index=item.questions.findIndex(q=>q.id===answer.questionId);assert.ok(index>=0);const q=item.questions[index],field=card.locator('fieldset').nth(index);
+  if ('skipped' in answer) throw new Error('This business probe requires explicit answers');
   if('text' in answer){if(q.options?.length)await field.getByLabel('自定义回答',{exact:true}).check();await field.getByRole('textbox').fill(answer.text);}
   else {for(const id of answer.optionIds){const optionIndex=q.options!.findIndex(o=>o.id===id);assert.ok(optionIndex>=0);await field.locator('.interaction-option').nth(optionIndex).locator('input').check();}await expect(field.locator('input:checked')).toHaveCount(answer.optionIds.length);}
  }

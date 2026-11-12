@@ -55,46 +55,44 @@ const composerCard = (page: Page, name: string) => page.locator('.composer-dock'
 /** Fill all three fixture questions through the card's pagination; ends on the last page. */
 async function answer(page: Page) {
   const card = composerCard(page, 'Agent 提问');
-  await card.getByRole('radio', { name: 'PDF 适合阅读' }).check();
-  await card.getByRole('button', { name: '下一题', exact: true }).click();
+  await card.getByRole('radio', { name: 'PDF 适合阅读' }).click();
   await card.getByLabel('正文', { exact: true }).check(); await card.getByLabel('附录', { exact: true }).check();
-  await card.getByRole('button', { name: '下一题', exact: true }).click();
-  await card.getByLabel('填写回答', { exact: true }).fill('中文输入内容');
+  await card.getByRole('button', { name: '后一题', exact: true }).click();
+  await card.getByLabel('自定义回答', { exact: true }).fill('中文输入内容');
 }
 async function lastQuestionPage(page: Page) {
   const card = composerCard(page, 'Agent 提问');
-  await card.getByRole('button', { name: '下一题', exact: true }).click();
-  await card.getByRole('button', { name: '下一题', exact: true }).click();
+  await card.getByRole('button', { name: '后一题', exact: true }).click();
+  await card.getByRole('button', { name: '后一题', exact: true }).click();
   return card;
 }
 
-test('a pending question occupies the composer as the only operable form, with stop still available', async ({ page }) => {
+test('a pending question occupies the composer as the only operable form, without a redundant stop control', async ({ page }) => {
   const { state } = await fixture(page);
   const card = composerCard(page, 'Agent 提问');
   await expect(card).toBeVisible();
   const pointer = page.getByRole('region', { name: '提问状态', exact: true });
   await expect(pointer).toBeVisible();
-  await expect(pointer.getByText('请在下方输入区处理', { exact: true })).toBeVisible();
+  await expect(pointer).toHaveText('提问 · 等待回答');
   await expect(pointer.getByRole('radio')).toHaveCount(0);
   await expect(pointer.getByRole('button')).toHaveCount(0);
   await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: '停止回复', exact: true })).toHaveCount(0);
   expect(state.sends).toBe(0); expect(state.posts).toHaveLength(0);
 });
 
 test('a multi-question card pages through questions and keeps drafts across pages', async ({ page }) => {
   const { state } = await fixture(page);
   const card = composerCard(page, 'Agent 提问');
-  await expect(card.getByText(/第 1 \/ 3 题/)).toBeVisible();
-  await expect(card.getByRole('button', { name: '上一题' })).toHaveCount(0);
-  await expect(card.getByRole('button', { name: '提交回答' })).toBeDisabled();
-  await card.getByRole('radio', { name: 'PDF 适合阅读' }).check();
-  await card.getByRole('button', { name: '下一题', exact: true }).click();
-  await expect(card.getByText(/第 2 \/ 3 题/)).toBeVisible();
-  await expect(card.getByRole('group', { name: '1. 需要什么格式？' })).toHaveCount(0);
+  await expect(card.getByText('1 / 3', { exact: true })).toBeVisible();
+  await expect(card.getByRole('button', { name: '上一题' })).toBeDisabled();
+  await expect(card.getByRole('button', { name: '提交回答' })).toHaveCount(0);
+  await card.getByRole('radio', { name: 'PDF 适合阅读' }).click();
+  await expect(card.getByText('2 / 3', { exact: true })).toBeVisible();
+  await expect(card.getByRole('group', { name: '需要什么格式？' })).toHaveCount(0);
   await card.getByLabel('正文', { exact: true }).check();
   await card.getByRole('button', { name: '下一题', exact: true }).click();
-  await card.getByLabel('填写回答', { exact: true }).fill('中文输入内容');
+  await card.getByLabel('自定义回答', { exact: true }).fill('中文输入内容');
   await expect(card.getByRole('button', { name: '下一题' })).toHaveCount(0);
   await expect(card.getByRole('button', { name: '提交回答' })).toBeEnabled();
   await card.getByRole('button', { name: '上一题', exact: true }).click();
@@ -108,13 +106,14 @@ test('a multi-question card pages through questions and keeps drafts across page
 test('a question card collapses to its title bar without freeing the composer', async ({ page }) => {
   await fixture(page);
   const card = composerCard(page, 'Agent 提问');
-  await card.getByRole('radio', { name: 'PDF 适合阅读' }).check();
+  await card.getByRole('radio', { name: 'PDF 适合阅读' }).click();
   await card.getByRole('button', { name: '收起提问', exact: true }).click();
   await expect(card.getByRole('radio')).toHaveCount(0);
   await expect(card.getByRole('button', { name: '提交回答' })).toHaveCount(0);
   await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveCount(0);
-  await expect(card.getByText('需要你的回答', { exact: true })).toBeVisible();
+  await expect(card.getByText('包含哪些部分？', { exact: true })).toBeVisible();
   await card.getByRole('button', { name: '展开提问', exact: true }).click();
+  await card.getByRole('button', { name: '上一题' }).click();
   await expect(card.getByRole('radio', { name: 'PDF 适合阅读' })).toBeChecked();
 });
 
@@ -126,7 +125,7 @@ test('a pending confirmation occupies the composer without a collapse option and
   await expect(card.getByLabel('完整命令', { exact: true })).toBeVisible();
   await expect(card.getByRole('button', { name: '允许本次执行', exact: true })).toBeEnabled();
   const pointer = page.getByRole('region', { name: '确认状态', exact: true });
-  await expect(pointer.getByText('删除测试文件', { exact: true })).toBeVisible();
+  await expect(pointer).toHaveText('确认 · 等待确认');
   await expect(pointer.getByRole('button')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   for (const width of [960, 680]) {
@@ -145,14 +144,14 @@ test('pending cards are handled one at a time in record order and the composer r
   a.interactions = [first, second];
   await page.reload();
   const card = composerCard(page, 'Agent 提问');
-  await expect(card.getByRole('group', { name: '1. 需要什么格式？' })).toBeVisible();
+  await expect(card.getByRole('group', { name: '需要什么格式？' })).toBeVisible();
   await expect(card.getByRole('group', { name: '是否继续？' })).toHaveCount(0);
   await expect(page.getByRole('region', { name: '提问状态' })).toHaveCount(2);
   await answer(page);
   await card.getByRole('button', { name: '提交回答' }).click();
   // Acceptance exits the first card at once; the next card follows without waiting for the reply.
   await expect(card.getByRole('group', { name: '是否继续？', exact: true })).toBeVisible();
-  await expect(card.getByRole('button', { name: '下一题' })).toHaveCount(0);
+  await expect(card.getByRole('button', { name: '提交回答' })).toHaveCount(0);
   await expect(page.getByRole('region', { name: '回答记录', exact: true })).toHaveCount(1);
   await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveCount(0);
   await card.getByRole('radio', { name: '继续', exact: true }).check();
@@ -174,7 +173,7 @@ test('an accepted answer exits the card at once, keeps the running request, and 
   await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled();
   const record = page.getByRole('region', { name: '回答记录', exact: true });
   await expect(record.locator('.qa-answer').nth(0)).toHaveText('PDF');
-  await expect(record.getByText('已回答', { exact: true })).toBeVisible();
+  await expect(record).toHaveAttribute('data-state', 'answered');
   expect(state.posts).toHaveLength(1);
   expect(state.sends).toBe(0);
 });
@@ -271,6 +270,7 @@ for (const viewport of [
   const card = composerCard(page, '操作确认');
   await expect(card.getByRole('heading', { level: 3, name: item.action.title, exact: true })).toBeVisible();
   await expect(card.getByText('请确认本次操作', { exact: true })).toHaveCount(0);
+  await expect(card.getByRole('heading', { name: item.action.title, exact: true })).toBeVisible();
   await expect(card.getByText(item.action.description, { exact: true })).toBeVisible();
   await expect(card.getByLabel('完整命令', { exact: true })).toHaveText(item.action.command!);
   await expect(card.getByLabel('完整命令', { exact: true })).toBeVisible();
@@ -313,7 +313,7 @@ for (const scenario of [
   const history = card.locator('details.confirmation-history');
   const summary = history.locator(':scope > summary');
   await expect(history).toHaveJSProperty('open', false);
-  await expect(summary.getByText(item.action.title, { exact: true })).toBeVisible();
+  await expect(summary.getByText(item.action.command ?? item.action.title, { exact: true })).toBeVisible();
   await expect(summary.getByText(scenario.label, { exact: true })).toBeVisible();
   if (scenario.outcome) await expect(summary.getByText(scenario.outcome, { exact: true })).toBeVisible();
   await expect(card.getByLabel('完整命令', { exact: true })).toBeHidden();
@@ -322,6 +322,7 @@ for (const scenario of [
   if (scenario.execution === 'unknown') await page.screenshot({ path: test.info().outputPath('confirmation-history-collapsed.png'), fullPage: true });
   await summary.focus(); await page.keyboard.press('Enter');
   await expect(history).toHaveJSProperty('open', true);
+  await expect(card.getByRole('heading', { name: item.action.title, exact: true })).toBeVisible();
   await expect(card.getByText(item.action.description, { exact: true })).toBeVisible();
   await expect(card.getByLabel('完整命令', { exact: true })).toHaveText(item.action.command!);
   await expect(card.getByLabel('完整命令', { exact: true })).toBeVisible();
@@ -339,8 +340,8 @@ for (const initial of [question(), confirmation()]) test(`restart expires ${init
   const { a, state } = await fixture(page, initial);
   a.inputQueue = { requestId: 'r1', revision: 1, available: false, reason: '请先回答或确认当前问题。', items: [] };
   await page.reload();
-  // The pending card occupies the composer; the ordinary input stays hidden and stop remains available.
-  await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled();
+  // The pending card occupies the composer; the ordinary input stays hidden without an extra stop control.
+  await expect(page.getByRole('button', { name: '停止回复', exact: true })).toHaveCount(0);
   await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveCount(0);
   await expect(page.locator('.composer-footnote')).toHaveCount(0);
   await expect(page.getByText('请先回答或确认当前问题。', { exact: true })).toHaveCount(0);
@@ -349,7 +350,7 @@ for (const initial of [question(), confirmation()]) test(`restart expires ${init
   a.lastResult = { requestId: 'r1', status: 'interrupted', message: '上次处理已中断，已保存内容保留，可继续发送消息。' };
   a.interactions = [{ ...initial, status: 'expired', reason: '服务重启，交互已失效' }];
   await page.reload();
-  await expect(page.getByText('已失效', { exact: true })).toBeVisible();
+  await expect(page.locator('.interaction-card[data-state="expired"]')).toBeVisible();
   await expect(page.getByRole('button', { name: '允许本次执行', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: '提交回答', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: '停止回复', exact: true })).toHaveCount(0);
@@ -362,33 +363,33 @@ for (const initial of [question(), confirmation()]) test(`restart expires ${init
 test('question drafts survive switch and refresh, submit exact answers once without IME auto-send', async ({ page }) => {
   const { state } = await fixture(page);
   const card = composerCard(page, 'Agent 提问');
-  await expect(card.getByRole('button', { name: '提交回答' })).toBeDisabled();
+  await expect(card.getByRole('button', { name: '提交回答' })).toHaveCount(0);
   await answer(page);
-  const text = card.getByLabel('填写回答', { exact: true });
+  const text = card.getByLabel('自定义回答', { exact: true });
   await text.dispatchEvent('compositionstart'); await text.press('Enter'); await text.dispatchEvent('compositionend');
   expect(state.posts).toHaveLength(0); expect(state.sends).toBe(0);
   await page.getByRole('button', { name: '会话 B', exact: true }).click();
   await page.getByRole('button', { name: '会话 A', exact: true }).click();
   // Pagination restarts from the first question; the answers themselves are preserved.
   await lastQuestionPage(page);
-  await expect(composerCard(page, 'Agent 提问').getByLabel('填写回答', { exact: true })).toHaveValue(/中文输入内容/);
+  await expect(composerCard(page, 'Agent 提问').getByLabel('自定义回答', { exact: true })).toHaveValue(/中文输入内容/);
   await page.reload();
   await lastQuestionPage(page);
-  await expect(composerCard(page, 'Agent 提问').getByLabel('填写回答', { exact: true })).toHaveValue(/中文输入内容/);
+  await expect(composerCard(page, 'Agent 提问').getByLabel('自定义回答', { exact: true })).toHaveValue(/中文输入内容/);
   state.delay = true;
   await composerCard(page, 'Agent 提问').getByRole('button', { name: '提交回答' }).click();
   await expect(composerCard(page, 'Agent 提问').getByRole('button', { name: '提交中…' })).toBeDisabled();
   await expect.poll(() => state.posts.length).toBe(1); state.hold!();
   // The accepted answer exits the composer immediately; the request is still running.
   await expect(page.getByRole('textbox', { name: '发送消息' })).toBeVisible();
-  await expect(page.getByText('已回答', { exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: '回答记录', exact: true })).toHaveAttribute('data-state', 'answered');
   const answered = page.getByRole('region', { name: '回答记录', exact: true });
   await expect(answered.locator('.qa-answer').nth(0)).toHaveText('PDF');
   await expect(answered.locator('.qa-answer').nth(1)).toHaveText('正文、附录');
   await expect(answered.locator('.qa-answer').nth(2)).toHaveText('中文输入内容');
   await expect(answered.getByText('Word', { exact: true })).toBeHidden();
   await page.screenshot({ path: test.info().outputPath('question-answered.png'), fullPage: true });
-  await answered.getByText('查看全部选项', { exact: true }).first().click();
+  await answered.getByText('原始提问', { exact: true }).first().click();
   await expect(answered.getByText('Word', { exact: true })).toBeVisible();
   // The ordinary composer draft works again after the card exits.
   await page.getByRole('textbox', { name: '发送消息' }).fill('下一条聊天草稿');
@@ -405,15 +406,16 @@ test('custom text is exclusive with choices and skip never sends draft answers',
   await answer(page);
   await card.getByRole('button', { name: '上一题', exact: true }).click();
   await card.getByRole('button', { name: '上一题', exact: true }).click();
-  const first = card.getByRole('group', { name: '1. 需要什么格式？' });
-  await first.getByLabel('自定义回答').check(); await first.getByLabel('填写自定义回答').fill('Markdown');
+  const first = card.getByRole('group', { name: '需要什么格式？' });
+  await first.getByLabel('自定义回答').fill('Markdown');
   await card.getByRole('button', { name: '提交回答' }).click();
   expect(state.posts[0]).toMatchObject({ answers: [{ questionId: 'format', text: 'Markdown' }, { questionId: 'parts', optionIds: ['body', 'appendix'] }, { questionId: 'note', text: '中文输入内容' }] });
   a.interactions = [{ ...question(), interactionId: 'i2' }]; a.active = { requestId: 'r1', status: 'responding', phase: 'waiting_answer' }; await page.reload();
-  await card.getByRole('button', { name: '跳过提问' }).click();
-  expect(state.posts[1]).toEqual({ requestId: 'r1', kind: 'question', action: 'skip' });
-  await expect(page.getByText('已跳过', { exact: true })).toBeVisible();
-  await expect(page.locator('.qa-answer')).toHaveCount(0);
+  for (let i = 0; i < 3; i++) await card.getByRole('button', { name: '跳过本题' }).click();
+  expect(state.posts).toHaveLength(1);
+  await card.getByRole('button', { name: '提交回答' }).click();
+  expect(state.posts[1]).toMatchObject({ action: 'answer', answers: ['format', 'parts', 'note'].map(questionId => ({ questionId, skipped: true })) });
+  await expect(page.locator('.qa-answer').filter({ hasText: '已跳过' })).toHaveCount(3);
 });
 
 test('uncertain response requires GET before manual retry and keeps answers on read failure', async ({ page }) => {
@@ -423,13 +425,13 @@ test('uncertain response requires GET before manual retry and keeps answers on r
   await expect(card.getByRole('button', { name: '查询最新状态' })).toBeVisible();
   await card.getByRole('button', { name: '查询最新状态' }).click();
   await expect(card.getByText(/查询未完成，草稿已保留/)).toBeVisible();
-  await expect(card.getByLabel('填写回答', { exact: true })).toHaveValue('中文输入内容');
+  await expect(card.getByLabel('自定义回答', { exact: true })).toHaveValue('中文输入内容');
   expect(state.posts).toHaveLength(1); state.readFailure = false;
   await card.getByRole('button', { name: '查询最新状态' }).click();
   await expect(card.getByRole('button', { name: '提交回答' })).toBeEnabled();
   expect(state.posts).toHaveLength(1); state.fault = '';
   await card.getByRole('button', { name: '提交回答' }).click();
-  await expect(page.getByText('已回答', { exact: true })).toBeVisible(); expect(state.posts).toHaveLength(2);
+  await expect(page.getByRole('region', { name: '回答记录', exact: true })).toHaveAttribute('data-state', 'answered'); expect(state.posts).toHaveLength(2);
 });
 
 test('uncertain confirmation must be queried before explicit retry and approval does not imply execution', async ({ page }) => {
@@ -477,12 +479,13 @@ for (const fault of ['lost', 'conflict'] as const) test(`confirmation ${fault} r
 
 test('stop and expired history disable decisions; approved unknown results stay distinct', async ({ page }) => {
   const { state, a } = await fixture(page, confirmation());
-  await page.getByRole('button', { name: '停止回复', exact: true }).click();
+  await expect(page.getByRole('button', { name: '停止回复', exact: true })).toHaveCount(0);
+  a.interactions = [{ ...confirmation(), status: 'cancelled' }]; a.active = null; await page.reload();
   await expect(page.getByText('已取消', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: '允许本次执行' })).toHaveCount(0);
-  expect(state.cancels).toBe(1); expect(state.posts).toHaveLength(0);
+  expect(state.cancels).toBe(0); expect(state.posts).toHaveLength(0);
   a.interactions = [{ ...confirmation(), status: 'expired', reason: '服务重启，交互已失效' }, { ...confirmation(), interactionId: 'i2', toolCallId: 't2', status: 'approved', execution: 'unknown' }, { ...confirmation(), interactionId: 'i3', toolCallId: 't3', status: 'approved', execution: 'not_started' }];
-  await page.reload(); await expect(page.getByText('已失效', { exact: true })).toBeVisible();
+  await page.reload(); await expect(page.locator('.interaction-card[data-state="expired"]')).toBeVisible();
   await expect(page.getByText('执行结果未确认，请核对后再继续。')).toBeVisible(); await expect(page.getByText('未执行：操作在开始前已停止。')).toBeVisible(); expect(state.sends).toBe(0);
 });
 
@@ -514,9 +517,9 @@ test('arbitrary question IDs remain editable when session storage is unavailable
   await page.getByRole('button', { name: '会话 B', exact: true }).click();
   await page.getByRole('button', { name: '会话 A', exact: true }).click();
   await lastQuestionPage(page);
-  await expect(composerCard(page, 'Agent 提问').getByLabel('填写回答', { exact: true })).toHaveValue('中文输入内容');
+  await expect(composerCard(page, 'Agent 提问').getByLabel('自定义回答', { exact: true })).toHaveValue('中文输入内容');
   await composerCard(page, 'Agent 提问').getByRole('button', { name: '提交回答' }).click();
-  await expect(page.getByText('已回答', { exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: '回答记录', exact: true })).toHaveAttribute('data-state', 'answered');
   expect(state.posts[0]).toMatchObject({ answers: [{ questionId: 'constructor', optionIds: ['pdf'] }, { questionId: '__proto__', optionIds: ['body', 'appendix'] }, { questionId: 'toString', text: '中文输入内容' }] });
 });
 
@@ -532,19 +535,21 @@ test('accepted stream failure and waiting refresh never restore the already sent
   await expect(page.getByRole('alert')).toBeVisible();
   await expect(composer).toHaveCount(0);
   await lastQuestionPage(page);
-  await card.getByLabel('填写回答', { exact: true }).fill('问题回答草稿');
+  await card.getByLabel('自定义回答', { exact: true }).fill('问题回答草稿');
   await page.reload();
   await expect(page.getByRole('article', { name: '你的消息' })).toContainText('已发送的报告要求');
   await lastQuestionPage(page);
-  await expect(composerCard(page, 'Agent 提问').getByLabel('填写回答', { exact: true })).toHaveValue('问题回答草稿');
+  await expect(composerCard(page, 'Agent 提问').getByLabel('自定义回答', { exact: true })).toHaveValue('问题回答草稿');
   await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveCount(0);
-  // Skipping frees the composer; the already sent text is not restored into it.
-  await composerCard(page, 'Agent 提问').getByRole('button', { name: '跳过提问' }).click();
+  // Answering frees the composer; the already sent text is not restored into it.
+  await card.getByRole('button', { name: '上一题' }).click();
+  await card.getByRole('button', { name: '上一题' }).click();
+  await answer(page); await composerCard(page, 'Agent 提问').getByRole('button', { name: '提交回答' }).click();
   await expect(composer).toHaveValue('');
   await composer.fill('真正的新聊天草稿');
   await page.reload();
   await expect(composer).toHaveValue('真正的新聊天草稿');
-  expect(state.sends).toBe(1); expect(state.posts).toEqual([{ requestId: 'r1', kind: 'question', action: 'skip' }]);
+  expect(state.sends).toBe(1); expect(state.posts).toHaveLength(1);
 });
 
 for (const kind of ['confirmation', 'question'] as const) test(`${kind} cards align with reply content at desktop and narrow widths`, async ({ page }) => {
@@ -586,7 +591,7 @@ test('querying an unaccepted first card keeps its order and its answer draft', a
   await card.getByRole('button', { name: '提交回答' }).click();
   await card.getByRole('button', { name: '查询最新状态' }).click();
   await expect(card.getByRole('button', { name: '提交回答' })).toBeEnabled();
-  await expect(card.getByLabel('填写回答', { exact: true })).toHaveValue('中文输入内容');
+  await expect(card.getByLabel('自定义回答', { exact: true })).toHaveValue('中文输入内容');
   await expect(card).not.toContainText('第二张卡的问题');
   expect(state.posts).toHaveLength(1);
   state.fault = ''; await card.getByRole('button', { name: '提交回答' }).click();
@@ -631,4 +636,42 @@ test('a card arriving after the user clicks outside the input does not steal rea
   await expect(composerCard(page, 'Agent 提问')).toBeVisible();
   await expect(composerCard(page, 'Agent 提问')).not.toBeFocused();
   expect(await page.evaluate(() => Boolean(document.activeElement?.closest('.composer-interaction')))).toBe(false);
+});
+
+
+test('per-question skip keeps other drafts and final selection never auto-submits', async ({ page }) => {
+  const { state } = await fixture(page);
+  const card = composerCard(page, 'Agent 提问');
+  await card.getByRole('radio', { name: 'PDF 适合阅读' }).click();
+  await expect(card.getByRole('checkbox', { name: '正文', exact: true })).toBeVisible();
+  await card.getByRole('button', { name: '跳过本题' }).click();
+  await expect(card.getByRole('button', { name: '提交回答' })).toHaveCount(0);
+  await card.getByRole('textbox', { name: '自定义回答' }).fill('保留这条文字');
+  await card.getByRole('textbox', { name: '自定义回答' }).press('Enter');
+  expect(state.posts).toHaveLength(0);
+  await card.getByRole('button', { name: '上一题' }).click();
+  await expect(card.getByRole('checkbox', { name: '正文', exact: true })).not.toBeChecked();
+  await page.reload();
+  await expect(composerCard(page, 'Agent 提问').getByRole('button', { name: '提交回答' })).toBeVisible();
+  await composerCard(page, 'Agent 提问').getByRole('button', { name: '提交回答' }).click();
+  expect(state.posts[0]).toMatchObject({ answers: [{ questionId: 'format', optionIds: ['pdf'] }, { questionId: 'parts', skipped: true }, { questionId: 'note', text: '保留这条文字' }] });
+  await expect(page.locator('.qa-bubble')).toHaveCount(1);
+  await expect(page.locator('.qa-answer').nth(1)).toHaveText('已跳过');
+});
+
+test('several approved commands keep distinct compact summaries and exact expanded commands', async ({ page }) => {
+  const { a, state } = await fixture(page, confirmation());
+  a.active = null;
+  a.interactions = Array.from({ length: 5 }, (_, i) => ({ ...confirmation(), interactionId: `i${i + 1}`, toolCallId: `t${i + 1}`, status: 'approved', execution: 'succeeded', action: { ...confirmation().action, command: `python3 report-${i + 1}.py` } }));
+  await page.reload();
+  const rows = page.locator('.confirmation-history > summary');
+  await expect(rows).toHaveCount(5);
+  for (let i = 0; i < 5; i++) {
+    await expect(rows.nth(i)).toContainText(`python3 report-${i + 1}.py`);
+    expect((await rows.nth(i).boundingBox())!.height).toBeLessThan(48);
+  }
+  await page.screenshot({ path: test.info().outputPath('approved-commands-compact.png'), fullPage: true });
+  await rows.first().click();
+  await expect(page.locator('.confirmation-history').first().getByLabel('完整命令', { exact: true })).toHaveText('python3 report-1.py');
+  expect(state.posts).toHaveLength(0);
 });

@@ -9,7 +9,7 @@ import { loadConfig } from '../../src/server/config.js';
 import type { Interaction, StreamEvent } from '../../src/contracts/index.js';
 import { DockerExecutionService, type DockerRunner } from '../../src/execution/docker.js';
 import * as policy from '../../src/execution/command-policy.js';
-import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory, interactionEvidence } from '../../src/pi/interactions.js';
+import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory, interactionEvidence, decodeResponse, questionResult } from '../../src/pi/interactions.js';
 import { fakeRuntime, testConfig } from './fake-runtime.js';
 const cleanup: Array<() => Promise<void>> = [];
 afterEach(async () => { vi.restoreAllMocks(); for (const fn of cleanup.splice(0).reverse()) await fn(); });
@@ -460,3 +460,18 @@ describe('fixed Pi web interactions', () => {
     expect(() => interactionHistory(entries, session.workspaceId, session.id)).toThrow();
   });
 });
+
+ it('persists explicit per-question skips, returns them once to Pi, and rejects ambiguous answers', async () => {
+  const { lab, fake, session, config } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'ask_user', arguments: { questions: [ ...questions, { id: 'note', prompt: '说明' } ] } }] } : { text: '继续' });
+  const { item, done } = await start(lab, session.id);
+  const response = { requestId: item.requestId, kind: 'question', action: 'answer', answers: [{ questionId: 'format', optionIds: ['md'] }, { questionId: 'note', skipped: true }] };
+  expect(() => decodeResponse({ ...response, answers: [{ questionId: 'format', optionIds: ['md'] }] }, item)).toThrow();
+  expect(() => decodeResponse({ ...response, answers: [{ questionId: 'format', optionIds: ['md'] }, { questionId: 'note', skipped: true, text: '不应同时有答案' }] }, item)).toThrow();
+  const accepted = lab.respondInteraction(session.id, item.interactionId, response);
+  expect(accepted.kind === 'question' && questionResult(accepted)).toMatchObject({ status: 'answered', answers: response.answers });
+  await done;
+  expect(JSON.stringify(fake.calls[1].context.messages)).toContain('"skipped":true');
+  expect(lab.respondInteraction(session.id, item.interactionId, response)).toEqual(accepted);
+  await lab.close(); const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
+  expect(restored.get(session.id).interactions?.[0]).toMatchObject({ status: 'answered', answers: response.answers });
+ });

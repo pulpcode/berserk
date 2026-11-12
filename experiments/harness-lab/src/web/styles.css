@@ -1335,3 +1335,28 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .task-home-composer textarea { min-height: 66px; padding: 10px 0; border: 0; border-radius: 0; background: transparent; }
 .task-home-composer .task-composer-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .task-home-composer-actions .primary-action { padding: 7px 12px; }
+
+/* C repair: only interaction surfaces and their corresponding transcript records. */
+.interaction-pointer { display: flex; align-items: center; gap: 7px; border: 0; padding: 0; margin-top: 8px; margin-bottom: 8px; background: transparent; font-size: 13px; }
+.question-history { display: flex; flex-direction: column; align-items: flex-end; }
+.question-card.question-history { border: 0; padding: 0; margin-top: 12px; margin-bottom: 12px; }
+.qa-bubble { max-width: 82%; background: var(--faint); border-radius: 14px; padding: 12px 16px; }
+.qa-record { margin: 0; }
+.qa-record + .qa-record { margin-top: 12px; }
+.qa-question { color: var(--muted); font-size: 13px; margin: 0 0 3px; font-weight: 400; }
+.qa-answer { padding: 0; border-radius: 0; background: transparent; }
+.question-history > .interaction-history-options { font-size: 12px; margin-top: 4px; }
+.interaction-ended { color: var(--muted); margin: 0; }
+.composer-interaction .interaction-option { border: 0; padding: 6px 4px; margin: 3px 0; }
+.composer-interaction .interaction-option:hover { background: var(--faint); }
+.interaction-inline-answer textarea { display: block; width: 100%; min-height: 32px; max-height: 160px; resize: none; overflow-y: auto; border: 0; border-radius: 4px; background: transparent; padding: 5px 4px; font: inherit; color: var(--text); }
+.interaction-collapsed-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.question-navigation { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.question-pager { display: flex; align-items: center; gap: 4px; color: var(--muted); white-space: nowrap; font-size: 13px; }
+.question-pager .icon-button { min-height: 28px; height: 28px; width: 28px; }
+.confirmation-card:not([data-state="pending"]) { margin-top: 6px; margin-bottom: 6px; }
+.confirmation-history > summary { padding: 5px 0; gap: 8px; border-radius: 4px; }
+.confirmation-history-heading { display: flex; align-items: baseline; gap: 12px; }
+.confirmation-history-heading .confirmation-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 400; }
+.confirmation-outcome { flex-shrink: 0; font-size: 12px; }
+.confirmation-decision { font-size: 12px; }
