@@ -1,7 +1,8 @@
 import { RiFolderCloudLine } from '@remixicon/react';
 import { LoadingIndicator } from './LoadingIndicator';
 import { useApi } from './api';
-import { useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Activity, ArrowUpRight, ChevronDown, Folder, FolderPlus, LoaderCircle, MessageSquare, Plus } from 'lucide-react';
 import type { SessionActivity, Workspace } from '../contracts/index';
 
@@ -45,6 +46,89 @@ function Status({ session, unread = false, id }: { session: SessionActivity; unr
   return <span id={id} className={`conversation-indicator${waiting ? ' waiting' : failed ? ' failed' : running ? ' running' : ' unread'}`} role="img" aria-label={label} title={label}>{running && !waiting ? <LoaderCircle size={14} aria-hidden="true" /> : <span />}</span>;
 }
 
+function shortUpdateTime(value: string) {
+  const elapsed = Math.max(0, Date.now() - Date.parse(value));
+  if (!Number.isFinite(elapsed)) return '时间未知';
+  if (elapsed < 60_000) return '刚刚';
+  if (elapsed < 3_600_000) return `${Math.floor(elapsed / 60_000)}分钟`;
+  if (elapsed < 86_400_000) return `${Math.floor(elapsed / 3_600_000)}小时`;
+  return `${Math.floor(elapsed / 86_400_000)}天`;
+}
+
+/** One hover owner for the whole list; moving between rows keeps the card immediate. */
+function useSessionHover() {
+  const [target, setTarget] = useState<{ id: string; anchor: HTMLButtonElement } | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const warm = useRef(false);
+  const pendingAnchor = useRef<HTMLButtonElement | null>(null);
+  const keep = useCallback(() => { clearTimeout(timer.current); }, []);
+  const hide = useCallback(() => { clearTimeout(timer.current); pendingAnchor.current = null; warm.current = false; setTarget(null); }, []);
+  const show = (id: string, anchor: HTMLButtonElement) => {
+    keep();
+    pendingAnchor.current = anchor;
+    const open = () => { if (anchor.isConnected && anchor.getClientRects().length && anchor.matches(':hover, :focus-visible')) { warm.current = true; setTarget({ id, anchor }); } };
+    if (warm.current) open(); else timer.current = setTimeout(open, 800);
+  };
+  const leave = () => {
+    keep();
+    if (document.activeElement === target?.anchor && target.anchor.matches(':focus-visible')) return;
+    timer.current = setTimeout(hide, 120);
+  };
+  useEffect(() => {
+    if (!target) return;
+    const observer = new ResizeObserver(() => {
+      if (!target.anchor.isConnected || !target.anchor.getClientRects().length) hide();
+    });
+    observer.observe(target.anchor);
+    return () => observer.disconnect();
+  }, [target, hide]);
+  useEffect(() => {
+    const dismissOutside = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest('.session-hover-card')) return;
+      // Tab may scroll the newly focused row into view before its delayed card opens.
+      if (event.type === 'scroll' && !warm.current && pendingAnchor.current?.matches(':focus-visible')) return;
+      hide();
+    };
+    const dismissKey = (event: KeyboardEvent) => { if (event.key === 'Escape') hide(); };
+    // Closing rather than repositioning also covers navigation and hidden sidebar panes.
+    window.addEventListener('resize', hide);
+    window.addEventListener('blur', hide);
+    document.addEventListener('scroll', dismissOutside, true);
+    document.addEventListener('pointerdown', dismissOutside);
+    document.addEventListener('keydown', dismissKey);
+    return () => {
+      clearTimeout(timer.current);
+      window.removeEventListener('resize', hide);
+      window.removeEventListener('blur', hide);
+      document.removeEventListener('scroll', dismissOutside, true);
+      document.removeEventListener('pointerdown', dismissOutside);
+      document.removeEventListener('keydown', dismissKey);
+    };
+  }, [hide]);
+  return { target, show, keep, leave, hide };
+}
+
+function SessionHoverCard({ id, session, workspace, unread, anchor, keep, leave }: {
+  id: string; session: SessionActivity; workspace: string; unread: boolean; anchor: HTMLButtonElement; keep: () => void; leave: () => void;
+}) {
+  const card = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const element = card.current;
+    if (!element) return;
+    const rect = anchor.getBoundingClientRect();
+    const bounds = element.getBoundingClientRect();
+    element.style.left = `${Math.max(8, Math.min(rect.right + 8, window.innerWidth - bounds.width - 8))}px`;
+    element.style.top = `${Math.max(8, Math.min(rect.top, window.innerHeight - bounds.height - 8))}px`;
+  }, [anchor, session, workspace, unread]);
+  const status = activityStatus(session);
+  return createPortal(<div ref={card} id={id} role="tooltip" className="session-hover-card" onPointerEnter={keep} onPointerLeave={leave}>
+    <strong>{session.title}</strong><span className="session-hover-workspace">{workspace}</span>
+    <time dateTime={session.updatedAt}>更新于 {new Date(session.updatedAt).toLocaleString('zh-CN')}</time>
+    <span className="session-hover-status">{status || (unread ? '有新回复未读' : '空闲')}</span>
+    {session.recoveryWarning && <span>{session.recoveryWarning}</span>}
+  </div>, document.body);
+}
+
 interface NavigationProps {
   taskMode?: boolean;
   readOnly?: boolean;
@@ -71,6 +155,8 @@ export function WorkspaceNavigation({ readOnly=false,taskMode,taskMeta,createTas
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [catalogCollapsed, setCatalogCollapsed] = useState<Record<string, boolean>>({});
+  const hover = useSessionHover();
+  const hovered = hover.target && activities.find(session => session.id === hover.target!.id);
   return <>
     <nav className="workspace-groups" aria-label="会话列表">
       {loading && !workspaces.length && <LoadingIndicator label="正在加载项目…" />}
@@ -90,24 +176,28 @@ export function WorkspaceNavigation({ readOnly=false,taskMode,taskMeta,createTas
         <div id={domId(`catalog-${group}`)} className={`catalog-items${folded?' is-collapsed':''}`}>
       {workspaces.filter(workspace=>group==='legacy' || taskMeta?.[workspace.id]?.visibility===group).map(workspace => {
         const sessions = activities.filter(session => session.workspaceId === workspace.id);
-        const activeCount = sessions.filter(session => session.active || session.backgroundJob).length;
-        const attentionCount = sessions.filter(session => needsAttention(session, unread)).length;
         return <section className={`workspace-group${(informationTaskId ? informationTaskId === workspace.taskSpaceId : workspaceId === workspace.id) ? ' current' : ''}`} key={workspace.id} aria-label={workspace.name}>
           <div className="workspace-group-heading">
             <button className="group-toggle" aria-label={`${collapsed[workspace.id] ? '展开' : '折叠'}项目：${workspace.name}`} aria-expanded={!collapsed[workspace.id]} aria-controls={`workspace-sessions-${workspace.id}`} onClick={() => setCollapsed(previous => ({ ...previous, [workspace.id]: !previous[workspace.id] }))}><WorkspaceIcon className="workspace-folder-icon" size={16} aria-hidden="true" /><ChevronDown className="workspace-disclosure-icon" size={16} aria-hidden="true" /></button>
             <button className="workspace-entry" aria-label={`进入项目：${workspace.name}`} aria-current={(taskMode ? informationTaskId === workspace.taskSpaceId : !activityView && workspaceId === workspace.id) ? 'page' : undefined} title={workspace.name} onClick={() => enterWorkspace(workspace.id)}><WorkspaceIcon className="workspace-rail-icon" size={20} aria-hidden="true" /><span>{workspace.name}</span></button>
-            {activeCount > 0 && <span className="group-count running" aria-label={`${activeCount} 个处理中`} title={`${activeCount} 个处理中`}>{activeCount}</span>}
-            {attentionCount > 0 && <span className="group-count attention" aria-label={`${attentionCount} 个需关注`} title={`${attentionCount} 个需关注`}>{attentionCount}</span>}
             {!readOnly&&<button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading || taskMeta?.[workspace.id]?.state==='archived'} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>}
           </div>
           <div id={`workspace-sessions-${workspace.id}`} hidden={collapsed[workspace.id]} className="group-sessions">
-            {readOnly?<p className="sidebar-empty">任务说明 · 只读核对</p>:sessions.length ? sessions.map(session => <button key={session.id} className={`session-item${!activityView && selected === session.id ? ' selected' : ''}`} aria-label={session.title} aria-describedby={activityStatus(session) || unread[session.id] ? `session-status-${session.id}` : undefined} aria-current={!activityView && selected === session.id ? 'page' : undefined} onClick={() => selectSession(session.id)}>
-              <span className="session-copy"><span className="session-title-row"><span className="session-title" title={session.title}>{session.title}</span><Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} /></span></span>
+            {readOnly?<p className="sidebar-empty">任务说明 · 只读核对</p>:sessions.length ? sessions.map(session => <button key={session.id} className={`session-item${!activityView && selected === session.id ? ' selected' : ''}`} aria-label={session.title} aria-describedby={[activityStatus(session) || unread[session.id] ? `session-status-${session.id}` : '', hover.target?.id === session.id ? domId('session-hover') : ''].filter(Boolean).join(' ') || undefined} aria-current={!activityView && selected === session.id ? 'page' : undefined}
+              onPointerEnter={event => { if (event.pointerType !== 'touch') hover.show(session.id, event.currentTarget); }} onPointerLeave={hover.leave}
+              onFocus={event => { if (event.currentTarget.matches(':focus-visible')) hover.show(session.id, event.currentTarget); }} onBlur={hover.leave}
+              onClick={() => { hover.hide(); selectSession(session.id); }}>
+              <span className="session-status-slot"><Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} /></span>
+              <span className="session-title">{session.title}</span>
+              {session.active?.status !== 'stopping' && (session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation')
+                ? <span className="session-pending-label">{activityStatus(session)}</span>
+                : <time className="session-update-time" dateTime={session.updatedAt} title={`更新于 ${new Date(session.updatedAt).toLocaleString('zh-CN')}`}>{shortUpdateTime(session.updatedAt)}</time>}
             </button>) : <p className="sidebar-empty">还没有对话</p>}
           </div>
         </section>;
       })}</div></div>;})}
     </nav>
+    {hover.target && hovered && <SessionHoverCard id={domId('session-hover')} session={hovered} workspace={workspaces.find(workspace => workspace.id === hovered.workspaceId)?.name || '项目'} unread={Boolean(unread[hovered.id])} anchor={hover.target.anchor} keep={hover.keep} leave={hover.leave} />}
   </>;
 }
 

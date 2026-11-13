@@ -1,3 +1,4 @@
 {"file": ".trellis/spec/frontend/harness-lab.md", "reason": "已读的聊天、过程折叠、交互、固定文件、队列与焦点保护约定；实施前结合获批方案复核冲突。"}
 {"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "后续展示字段需先证明原生来源和公共契约缺口，避免首轮静默跨层扩展。"}
 {"file": ".trellis/tasks/11-09-chat-rendering-refresh/c-round-review.md", "reason": "C 轮已收敛并于 2026-11-12 获用户批准的产品行为、验收与范围边界。"}
+{"file": ".trellis/tasks/11-09-chat-rendering-refresh/sidebar-status-dsh-review.md", "reason": "2026-11-13 用户已批准并要求实施的最新侧栏状态交互范围；本轮优先于旧C轮范围限制。"}

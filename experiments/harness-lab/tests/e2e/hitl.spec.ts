@@ -495,7 +495,8 @@ test('SSE question receives attention without unread dot or animation; mobile co
   await expect(page.getByRole('region', { name: 'Agent 提问' })).toHaveCount(1);
   await expect(page.locator('.thinking')).toHaveCount(0); await expect(page.getByLabel('有新回复未读')).toHaveCount(0);
   await expect(page.getByRole('button', { name: '会话 A', exact: true }).getByRole('img', { name: '待回答' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '会话 A', exact: true })).toHaveText('会话 A');
+  await expect(page.getByRole('button', { name: '会话 A', exact: true }).locator('.session-title')).toHaveText('会话 A');
+  await expect(page.getByRole('button', { name: '会话 A', exact: true }).locator('.session-pending-label')).toHaveText('待回答');
   await expect(page.getByRole('button', { name: '会话 B', exact: true }).getByRole('img')).toHaveCount(0);
   a.interactions = [confirmation()]; a.active = { requestId: 'r1', status: 'responding', phase: 'waiting_confirmation' };
   await page.setViewportSize({ width: 375, height: 812 }); await page.reload();
