@@ -1,0 +1,17 @@
+{
+  "provider": "volcengine-agent-plan",
+  "model": "deepseek-v4.1-flash",
+  "baseUrl": "https://ark.cn-beijing.volces.com/api/plan/v3",
+  "completedDialogueRequests": 4,
+  "initialProcessId": 65573,
+  "independentRestartProcessId": 66075,
+  "expertRevisionId": "rev-b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+  "explicitSkills": [
+    "synthesis",
+    "review"
+  ],
+  "testData": "isolated synthetic fixtures only",
+  "modelCodeChanged": false,
+  "configurationLocation": "experiments/harness-lab/.env.local (gitignored, mode 0600)",
+  "dockerStatus": "daemon unavailable; physical file/confirmation acceptance pending"
+}

@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-11-13T13:57:44.939114+00:00",
+  "archiveSha256": "9305ecd5cad4e4024704ac3bf681fc6fe94c6a2a5d2dbcce00c7d21625489e2d",
+  "health": 200,
+  "restartRequired": false,
+  "assets": [
+    {
+      "asset": "/assets/index-Cr4KpgBx.js",
+      "sha256": "7199b7b299a823de3ed90ff51f303d46a0dfdc7bf513633fd5187e80616700d1"
+    },
+    {
+      "asset": "/assets/index-Cyn_EzLY.css",
+      "sha256": "96b78f591623f4d3076597a445425260b5b5eea41431593a95d35d3e59c9539a"
+    }
+  ],
+  "backup": "/home/ubuntu/axon-r1-preview-4316-20261113/backup-ui-composer"
+}

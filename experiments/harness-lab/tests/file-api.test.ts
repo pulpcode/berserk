@@ -72,7 +72,8 @@ describe('file HTTP and Pi history integration', () => {
     await lab.close(); const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
     expect(restored.get(session.id).fileOutputs).toEqual(snapshot.fileOutputs);
     expect(restored.get(session.id).recoveryWarning).toBeUndefined();
-    expect((await app.inject(`/api/sessions/${session.id}`)).json<SessionSnapshot>().fileOutputs).toHaveLength(1);
+    const restoredApp = await createApp(restored); cleanup.push(() => restoredApp.close());
+    expect((await restoredApp.inject(`/api/sessions/${session.id}`)).json<SessionSnapshot>().fileOutputs).toHaveLength(1);
   });
   it('rejects unsupported images and oversized decoded dimensions; HTML stays text', () => {
     expect(previewType('page.html', Buffer.from('<script>alert(1)</script>'))).toBe('text/plain; charset=utf-8');

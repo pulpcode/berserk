@@ -1,0 +1,117 @@
+{
+  "checks": [
+    "专业专家创建空会话"
+  ],
+  "failure": "insufficient_quota: 模型额度不足，请检查账户后重试。\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n",
+  "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-capabilities-live-lgOfFj",
+  "model": "deepseek-flash",
+  "snapshots": [
+    {
+      "id": "d9e9c92e-932d-42ee-bd7e-d52c3f338b2f",
+      "workspaceId": "f12affa5-5a4a-4103-b6b5-c50f50dba314",
+      "title": "请实际读取当前工作区的项目讨论纪要和资源约束资料，按我选择的资料综合方法，给出活",
+      "updatedAt": "2026-11-13T09:06:36.146Z",
+      "expert": {
+        "expertId": "synthesis-expert",
+        "revisionId": "rev-b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+        "name": "资料综合专家（示范）",
+        "description": "读取资料、交叉核对来源，形成有依据的综合结论并复核缺口。",
+        "releaseVersion": "1.0.0",
+        "digest": "b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+        "modes": [
+          "interactive"
+        ],
+        "dependencies": [
+          {
+            "id": "review",
+            "name": "结果检查",
+            "revisionId": "skill-624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18",
+            "releaseVersion": "1",
+            "digest": "624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18"
+          },
+          {
+            "id": "synthesis",
+            "name": "资料综合写作",
+            "revisionId": "skill-cbdbcedc0afb55ce7a1b3f1a37e2f53c42a1d423cef85361f663a815350c06e4",
+            "releaseVersion": "1",
+            "digest": "cbdbcedc0afb55ce7a1b3f1a37e2f53c42a1d423cef85361f663a815350c06e4"
+          }
+        ],
+        "availability": {
+          "available": true,
+          "state": "enabled"
+        },
+        "currentRevisionId": "rev-b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+        "updateAvailable": false
+      },
+      "modelId": "default",
+      "inputQueue": {
+        "revision": 2,
+        "available": false,
+        "reason": "当前回复已结束。",
+        "items": []
+      },
+      "messages": [
+        {
+          "id": "5d987d4c",
+          "requestId": "b5cbea0b-0e85-45b2-9a70-ed4ada6e8d02",
+          "role": "user",
+          "text": "请实际读取当前工作区的项目讨论纪要和资源约束资料，按我选择的资料综合方法，给出活动目标、资源约束、冲突和待确认项。引用实际读取的来源，不修改文件或指令。",
+          "selections": {
+            "skill": {
+              "id": "synthesis",
+              "name": "资料综合写作",
+              "description": "综合多份资料形成有来源、可执行的方案。",
+              "version": "1",
+              "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6",
+              "content": "---\nname: synthesis\ndescription: 综合多份资料形成有来源、可执行的方案。\n---\n先辨认用户目标和约束，再按需读取获准资料。区分资料事实、用户要求与自己的建议，不编造未读来源。\n综合结果应包括：结论、依据（标注资料 ID）、行动步骤，以及资料缺口或尚待确认的问题。出现冲突时明确列出，不偷偷取舍。\n本 Skill 只提供写作方法，不授权写入工作区指令。\n"
+            }
+          }
+        }
+      ],
+      "active": null,
+      "turns": [
+        {
+          "requestId": "b5cbea0b-0e85-45b2-9a70-ed4ada6e8d02",
+          "status": "failed"
+        }
+      ],
+      "interactions": [],
+      "lastResult": {
+        "requestId": "b5cbea0b-0e85-45b2-9a70-ed4ada6e8d02",
+        "status": "failed",
+        "message": "insufficient_quota: 模型额度不足，请检查账户后重试。",
+        "compactionIds": [],
+        "compactions": [],
+        "usageSummary": {
+          "modelAttempts": 1,
+          "replyAttempts": 1,
+          "compactionAttempts": 0,
+          "toolCalls": 0,
+          "unknownUsageAttempts": 1,
+          "actual": null
+        }
+      }
+    }
+  ],
+  "capabilityLoads": {
+    "hits": 4,
+    "misses": 1,
+    "loadMs": [
+      6.326853999999912,
+      0.1201470000005429,
+      0.1250499999996464,
+      0.11683600000014849,
+      0.09276800000043295
+    ],
+    "cacheEntries": 1,
+    "cacheBytes": 2624
+  },
+  "executionTimings": [
+    {
+      "assemblyMs": 94.4753069999997,
+      "toolsMs": []
+    }
+  ],
+  "docker": "未执行：本探针不替代 Docker 与真实文件/确认验证。"
+}

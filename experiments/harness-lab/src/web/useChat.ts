@@ -3,6 +3,7 @@ import type { InputQueueState, Interaction, InteractionResponse, AppInfo, ModelC
 import { isConnectionFailure, useApi } from './api';
 import { clearInteractionDraft, type InteractionSubmission } from './InteractionCard';
 import { randomUUID } from './random-uuid';
+import { sessionAction } from './session-action';
 import { useInputQueue } from './useInputQueue';
 import { useAttachments } from './useAttachments';
 import { useComposerSelections, selectionInput } from './useComposerSelections';
@@ -62,6 +63,7 @@ export function useChat(enabled = true) {
   const draftVersions = useRef(stored(DRAFT_VERSION_KEY));
   const SENT_KEY = storageKey('berserk.submitted');
   const READ_KEY = storageKey('berserk.read-results');
+  const CREATION_ACTION_KEY = storageKey('berserk.session-actions');
   const attachments = useAttachments();
   const composerSelections = useComposerSelections();
   const { move: moveSelections, consume: consumeSelections, recover: recoverSelections, clearSubmitted: clearSubmittedSelections } = composerSelections;
@@ -200,7 +202,7 @@ export function useChat(enabled = true) {
       const stream = streams.current.get(id);
       if (stream && !stream.terminal && result.active) {
         const current = snapshotsRef.current[id];
-        if (current && result.active.requestId === stream.requestId) put({ ...current, title: result.title, interactions: result.interactions, active: result.active, inputQueue: result.inputQueue });
+        if (current && result.active.requestId === stream.requestId) put({ ...current, title: result.title, expert: result.expert, interactions: result.interactions, active: result.active, inputQueue: result.inputQueue });
         return;
       }
       // Polling may observe completion before the final SSE frame arrives.
@@ -397,7 +399,10 @@ export function useChat(enabled = true) {
     try {
       const key = options?.draftKey || `workspace:${targetWorkspaceId}`;
       const modelId = draftModelsRef.current[key];
-      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}), ...(modelId ? { modelId } : {}) });
+      const input = { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}), ...(modelId ? { modelId } : {}) };
+      const action = sessionAction(CREATION_ACTION_KEY, input);
+      const snapshot = await api<SessionSnapshot>('/api/sessions', { ...input, clientActionId: action.id });
+      action.complete();
       put(snapshot);
       // A delayed creation may populate its project, but must not undo later navigation.
       if (!options && navigationRevision.current === navigation) {
@@ -415,7 +420,7 @@ export function useChat(enabled = true) {
       return snapshot.id;
     } catch (error) { setErrors(previous => ({ ...previous, [options?.draftKey || `workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = null; setCreating(false); }
-  }, [MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
+  }, [CREATION_ACTION_KEY, MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
 
   const send = useCallback(async (targetSessionId?: string) => {
     // Continuation may send before navigation renders; every input belongs to its explicit target.
@@ -427,7 +432,7 @@ export function useChat(enabled = true) {
     const picks = composerSelections.current(key);
     if (!text || files.some(file => file.status !== 'ready') || !model?.configured || !model.contextReady || modelsError || modelErrors[key] || modelLocks.current.has(key)) return;
     const id = targetSessionId || selected || await create();
-    if (!id || streams.current.has(id)) return;
+    if (!id || streams.current.has(id) || snapshotsRef.current[id]?.expert?.availability.available === false) return;
     const before = snapshotsRef.current[id];
     const activity = activitiesRef.current.find(item => item.id === id);
     if (!before || before.active || before.backgroundJob || activity?.active || activity?.backgroundJob) return;

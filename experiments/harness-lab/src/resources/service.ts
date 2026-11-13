@@ -85,7 +85,7 @@ export class ResourceService {
     if (!effectiveSkillIds(workspace.skillIds).includes(id)) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
     return (await loadControlledSkills([id]))[0];
   }
-  snapshot(workspaceId: string, signal?: AbortSignal, seatId?: string): Promise<ResourceSnapshot> {
+  snapshot(workspaceId: string, signal?: AbortSignal, seatId?: string, fixedSkills: readonly SkillFile[] = []): Promise<ResourceSnapshot> {
     return this.lock(workspaceId, seatId).run(async () => {
       signal?.throwIfAborted();
       const workspace = this.workspaces.get(workspaceId, seatId);
@@ -94,7 +94,10 @@ export class ResourceService {
         const content = (await readControlled(join(this.workspaces.directory(workspaceId, seatId), 'sources', `${source.id}.md`), 32768))!;
         return { ...source, content, hash: hashContent(content) };
       }));
-      const loadedSkills = await loadControlledSkills(effectiveSkillIds(workspace.skillIds), signal);
+      const ids = effectiveSkillIds(workspace.skillIds);
+      const loadedSkills = await loadControlledSkills(ids.filter(id => !fixedSkills.some(skill => skill.id === id)), signal);
+      for (const fixed of fixedSkills) loadedSkills.push({ id: fixed.id, name: fixed.name, description: fixed.description, version: fixed.version, hash: fixed.hash, content: fixed.content });
+      loadedSkills.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
       signal?.throwIfAborted();
       const task = this.workspaces.access?.get(workspace.taskSpaceId, workspace.seatId);
       return { workspaceId, instructions, sources, skills: loadedSkills, ...(task ? { task: { id:task.id,title:task.title,goal:task.goal,visibility:task.visibility } } : {}) };

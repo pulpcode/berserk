@@ -1,3 +1,4 @@
+import { EXPERT_BINDING, EXECUTION_MANIFEST, decodeExpertBinding, decodeExecutionManifest } from './capability-history.js';
 import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
 import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
 import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
@@ -102,7 +103,12 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
   const fileCalls = new Map<string, {requestId: string | undefined; path: unknown}>();
   const fileReturned = new Set<string>();
   let currentRequestHasUser = false;
+  let binding: ReturnType<typeof decodeExpertBinding> | undefined;
+  const manifests = new Set<string>();
+  let hasWork = false;
   for (const entry of entries) {
+    if (entry.type === 'message' || entry.type === 'compaction' || entry.type === 'custom' && [RESOURCE_ENTRY, EXECUTION_MANIFEST].includes(entry.customType)) hasWork = true;
+    if (entry.type === 'message' && binding && currentRequest && !manifests.has(currentRequest)) throw stateError();
     // Once host request records exist, later native messages must have a request boundary.
     // Earlier migrated Pi-only history remains readable without invented request IDs.
     if (entry.type === 'message' && requests.size && currentRequest === undefined) throw stateError();
@@ -139,6 +145,21 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
     }
     if (entry.type === 'compaction') compactedBy.set(entry.id, currentRequest);
     if (entry.type !== 'custom' || !entry.customType.startsWith('berserk.')) continue;
+    if (entry.customType === EXPERT_BINDING) {
+      if (readonly || binding) throw stateError();
+      binding = decodeExpertBinding(entry.data, workspaceId, parentSessionId);
+      if (hasWork && !binding.legacy) throw stateError();
+      continue;
+    }
+    if (entry.customType === EXECUTION_MANIFEST) {
+      const manifest = decodeExecutionManifest(entry.data, workspaceId, parentSessionId);
+      if (currentRequest !== manifest.requestId || manifests.has(manifest.requestId) || currentRequestHasUser
+        || readonly && manifest.mode !== 'delegated'
+        || binding && (!['interactive', 'background'].includes(manifest.mode) || manifest.identity.seatId !== binding.seatId
+          || manifest.expertRef.expertId !== binding.expertRef.expertId || manifest.expertRef.revisionId !== binding.expertRef.revisionId || manifest.digest !== binding.digest)) throw stateError();
+      manifests.add(manifest.requestId);
+      continue;
+    }
     if (entry.customType === MODEL_SELECTION) {
       if (readonly) throw stateError();
       decodeModelSelection(entry.data, workspaceId, parentSessionId);

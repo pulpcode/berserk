@@ -1,0 +1,7 @@
+
+> @berserk/harness-lab@0.1.0 probe:capabilities
+> tsx --env-file-if-exists=.env.local scripts/probe-capabilities.ts
+
+(node:65573) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"checks":["专业专家创建空会话","真实模型读取资料并使用固定综合方法","同专家多轮及固定复核方法","进程实例重建后原修订续聊"],"evidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-capabilities-live-BMnwA2/capability-probe.json"}

@@ -1,3 +1,4 @@
+import { migrateCapabilities } from '../../src/pi/capability-migration.js';
 import { mkdtemp, rm, writeFile, readFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -361,6 +362,10 @@ describe('Pi collaboration tools and native HITL', () => {
     const cut = boundary === 'completed' ? entries.length : entries.findIndex(entry => entry.type === 'custom' && entry.customType === (boundary === 'waiting' ? INTERACTION_REQUESTED : INTERACTION_RESOLVED)) + 1;
     const original = entries.slice(0, cut).map(entry => JSON.stringify(entry)).join('\n') + '\n';
     await writeFile(path, original);
+    // This fixture predates R1. Reconstruct its pre-capability directory, then perform the explicit upgrade.
+    await rm(join(config.dataDir, 'capabilities'), { recursive: true });
+    const backupDir = `${config.dataDir}-before-capabilities`; cleanup.push(() => rm(backupDir, { recursive: true, force: true }));
+    await migrateCapabilities({ dataDir: config.dataDir, backupDir, apply: true, serviceStopped: true });
     const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
     expect(restored.get(session.id).interactions?.[0]).toMatchObject(boundary === 'completed' ? { status: 'approved', execution: 'succeeded' } : boundary === 'waiting' ? { status: 'expired' } : { status: 'approved', execution: 'unknown' });
     expect(restored.get(session.id).recoveryWarning).toBeUndefined(); expect(await readFile(path, 'utf8')).toBe(original);

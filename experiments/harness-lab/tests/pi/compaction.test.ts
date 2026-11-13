@@ -235,7 +235,8 @@ describe('native recovery and sustained work', () => {
   });
 
   it('stops a summary at an explicit whole-request deadline', async () => {
-    const { lab, session, calls } = await setup(() => ({ waitForAbort: true }), true, { agentRunTimeoutMs: 50 });
+    // Leave room for fixed capability/resource preparation so the deadline exercises an in-flight summary.
+    const { lab, session, calls } = await setup(() => ({ waitForAbort: true }), true, { agentRunTimeoutMs: 1000 });
     await ask(lab, session.id);
     expect(calls).toHaveLength(1);
     expect(lab.get(session.id).lastResult).toMatchObject({ status: 'failed', message: expect.stringContaining('超时') });

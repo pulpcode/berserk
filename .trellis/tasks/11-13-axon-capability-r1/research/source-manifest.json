@@ -1,0 +1,22 @@
+{
+  "discussion": "https://chatgpt.com/share/6af6cb27-3e9c-83ea-a58d-aa02d8b0734b",
+  "implementationBase": "66d0cba3ad4420d74593f31ffd540b893ed41ae6",
+  "designBase": "6527702a8af19bdc0f55b333ea1080a7f405e6d3",
+  "files": [
+    {
+      "file": "Axon_0A_产品设计评审稿_v0.3.md",
+      "sha256": "34cd192050fae46de11785aa76b87dc7f9a3f50952f9364b18c9a2976db87766",
+      "bytes": 10990
+    },
+    {
+      "file": "Axon_0B_技术设计稿_v0.3_评审通过.md",
+      "sha256": "b37f98668ceaab432e154ca7f9101c6dab739ad82d7fd20c0e1eeee2fba84b08",
+      "bytes": 31229
+    },
+    {
+      "file": "Axon_R1_实施方案与计划_v0.2.md",
+      "sha256": "b0cb1e33e0c9f8d27b775eb33bb39e43d57d716fdcfe12314511158faf486bb0",
+      "bytes": 21670
+    }
+  ]
+}

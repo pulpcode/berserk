@@ -1,0 +1,6 @@
+{
+  "status": "harness-comparison-corrected",
+  "processId": 65826,
+  "cause": "In-memory optional undefined fields were compared directly with JSON-deserialized public snapshots; JSON omits undefined fields. No continuation/model call was issued before this comparison failed. The follow-up compares the serialized public DTO and separately checks native history bytes.",
+  "productCodeChanged": false
+}

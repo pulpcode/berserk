@@ -1,0 +1,3 @@
+(node:66075) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"status":"passed","checks":["new independent Node process reopened exact original history and expert binding","startup and GET left history bytes unchanged","one explicit continuation appended one user input without replay","real Ark response after process restart used original expert and fixed review skill"],"processId":66075}

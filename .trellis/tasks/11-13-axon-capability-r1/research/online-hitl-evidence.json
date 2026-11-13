@@ -1,0 +1,3162 @@
+{
+  "date": "2026-11-13T13:02:18.412Z",
+  "model": "deepseek-v4.1-flash",
+  "pi": "0.85.1",
+  "image": "berserk-file-runtime:w01-5",
+  "passed": true,
+  "checks": [
+    "真实 AskUser 回答经一次工具结果进入续作，生成并交付文件",
+    "真实 bash approve 与持久文件效果一致；重复响应无重复执行",
+    "真实 bash reject 与持久文件效果一致；重复响应无重复执行",
+    "真实 bash stop 与持久文件效果一致；重复响应无重复执行",
+    "重新打开服务后已完成问题与答案可查，不重发任务"
+  ],
+  "evidence": [
+    {
+      "label": "AskUser→刷新查询→回答→真实文件交付",
+      "snapshot": {
+        "id": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+        "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+        "title": "请先通过 ask_user 只询问一个问题：报告采用 Markdown 还是纯文",
+        "updatedAt": "2026-11-13T13:02:02.451Z",
+        "expert": {
+          "expertId": "axon-general",
+          "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "name": "Axon 通用助手",
+          "description": "帮助处理通用任务，保留工作台现有能力。",
+          "releaseVersion": "1.0.0",
+          "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "modes": [
+            "interactive"
+          ],
+          "dependencies": [],
+          "availability": {
+            "available": true,
+            "state": "enabled"
+          },
+          "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "updateAvailable": false
+        },
+        "modelId": "default",
+        "inputQueue": {
+          "revision": 2,
+          "available": false,
+          "reason": "当前回复已结束。",
+          "items": []
+        },
+        "messages": [
+          {
+            "id": "685a510e",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "role": "user",
+            "text": "请先通过 ask_user 只询问一个问题：报告采用 Markdown 还是纯文本？提供这两个选项。收到答案前不要写文件。收到答案后用 write 在 /workspace/hitl-report.md 写入对应格式的简短报告，内容包含“人工回答已接收”，最后用 file_output 交付文件。不要用 bash 或其他工具代替提问。"
+          },
+          {
+            "id": "13b86610",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "role": "tool",
+            "text": "{\"status\":\"answered\",\"answers\":[{\"questionId\":\"report_format\",\"optionIds\":[\"markdown\"]}]}",
+            "toolName": "ask_user",
+            "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+            "isError": false
+          },
+          {
+            "id": "088d894b",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "role": "tool",
+            "text": "Successfully wrote to /workspace/hitl-report.md",
+            "toolName": "write",
+            "toolCallId": "call_00_k6tyq5corz907mzh5of9zy33",
+            "isError": false
+          },
+          {
+            "id": "ea309bde",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "role": "tool",
+            "text": "文件已提供下载：hitl-report.md（75 字节）。",
+            "toolName": "file_output",
+            "toolCallId": "call_00_qnvd69xa4gtsy2nn4b895ax3",
+            "isError": false
+          },
+          {
+            "id": "354f2472",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "role": "assistant",
+            "text": "已完成：\n\n- 你在提问中选择了 **Markdown** 格式。\n- 已按该格式在 `/workspace/hitl-report.md` 写入简短报告，记住的要点为：格式 Markdown、状态「人工回答已接收」。\n- 已通过 `file_output` 交付文件：`hitl-report.md`（75 字节）。"
+          }
+        ],
+        "active": null,
+        "turns": [
+          {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "status": "succeeded",
+            "finalMessageId": "354f2472"
+          }
+        ],
+        "interactions": [
+          {
+            "schemaVersion": 1,
+            "interactionId": "f8e6ca72-dee5-4716-a8e9-0bc93cae4d39",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+            "toolName": "ask_user",
+            "createdAt": "2026-11-13T13:01:58.246Z",
+            "kind": "question",
+            "questions": [
+              {
+                "id": "report_format",
+                "prompt": "报告采用哪种格式？",
+                "options": [
+                  {
+                    "id": "markdown",
+                    "label": "Markdown"
+                  },
+                  {
+                    "id": "plain",
+                    "label": "纯文本"
+                  }
+                ]
+              }
+            ],
+            "status": "answered",
+            "resolvedAt": "2026-11-13T13:01:58.387Z",
+            "answers": [
+              {
+                "questionId": "report_format",
+                "optionIds": [
+                  "markdown"
+                ]
+              }
+            ]
+          }
+        ],
+        "fileOutputs": [
+          {
+            "downloadId": "84f86a0e-a027-4a12-b822-ca1f4014246a",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "toolCallId": "call_00_qnvd69xa4gtsy2nn4b895ax3",
+            "createdAt": "2026-11-13T13:02:00.868Z",
+            "path": "hitl-report.md",
+            "name": "hitl-report.md",
+            "size": 75,
+            "hash": "f58a5938453192bf1011c4967c34c617f2449091ea6952b3bf0f1d08a8283fef"
+          }
+        ],
+        "lastResult": {
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "status": "succeeded",
+          "compactionIds": [],
+          "compactions": [],
+          "usageSummary": {
+            "modelAttempts": 4,
+            "replyAttempts": 4,
+            "compactionAttempts": 0,
+            "toolCalls": 3,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 4274,
+              "output": 300,
+              "cacheRead": 11520,
+              "cacheWrite": 0,
+              "totalTokens": 16094
+            }
+          }
+        }
+      },
+      "events": [
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "response.started"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "resources.loaded",
+          "resources": {
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "instructions": [
+              {
+                "fileId": "common",
+                "name": "通用指令（AGENTS.md）",
+                "hash": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07",
+                "editable": false
+              },
+              {
+                "fileId": "workspace",
+                "name": "工作区指令（AGENTS.md）",
+                "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "editable": true
+              }
+            ],
+            "sources": [
+              {
+                "id": "meeting-notes",
+                "title": "项目讨论纪要",
+                "description": "通用资料示例：目标、约束与待办。",
+                "hash": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+              },
+              {
+                "id": "resource-brief",
+                "title": "资源与约束说明",
+                "description": "通用资料示例：人员、时间与交付条件。",
+                "hash": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+              }
+            ],
+            "skills": [
+              {
+                "id": "synthesis",
+                "name": "资料综合写作",
+                "description": "综合多份资料形成有来源、可执行的方案。",
+                "version": "1",
+                "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+              },
+              {
+                "id": "review",
+                "name": "结果检查",
+                "description": "根据资料检查草稿的事实、约束与可执行性。",
+                "version": "1",
+                "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+              },
+              {
+                "id": "map-annotations",
+                "name": "态势标绘",
+                "description": "查询、创建、修改、导入、比较或发布地图标注；说明资源声明、可信来源身份、固定版本、字段保留和保存回执的使用方法。",
+                "version": "3",
+                "hash": "6d5bbfd01e41858ab5ed6ce039b3e7d642e02fc0db8f4019e5a64a8836581fe0"
+              },
+              {
+                "id": "spatial-analysis",
+                "name": "空间分析",
+                "description": "分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持组合分析、边界判断、固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。",
+                "version": "3",
+                "hash": "f947a59341898f1d89eccbb122b6518d1f174fa65f928b27721b564afe83bede"
+              }
+            ]
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "tool.started",
+          "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+          "toolName": "ask_user"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "f8e6ca72-dee5-4716-a8e9-0bc93cae4d39",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+            "toolName": "ask_user",
+            "createdAt": "2026-11-13T13:01:58.246Z",
+            "kind": "question",
+            "questions": [
+              {
+                "id": "report_format",
+                "prompt": "报告采用哪种格式？",
+                "options": [
+                  {
+                    "id": "markdown",
+                    "label": "Markdown"
+                  },
+                  {
+                    "id": "plain",
+                    "label": "纯文本"
+                  }
+                ]
+              }
+            ],
+            "status": "pending"
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "f8e6ca72-dee5-4716-a8e9-0bc93cae4d39",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+            "toolName": "ask_user",
+            "createdAt": "2026-11-13T13:01:58.246Z",
+            "kind": "question",
+            "questions": [
+              {
+                "id": "report_format",
+                "prompt": "报告采用哪种格式？",
+                "options": [
+                  {
+                    "id": "markdown",
+                    "label": "Markdown"
+                  },
+                  {
+                    "id": "plain",
+                    "label": "纯文本"
+                  }
+                ]
+              }
+            ],
+            "status": "answered",
+            "resolvedAt": "2026-11-13T13:01:58.387Z",
+            "answers": [
+              {
+                "questionId": "report_format",
+                "optionIds": [
+                  "markdown"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "tool.completed",
+          "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+          "toolName": "ask_user",
+          "text": "{\"status\":\"answered\",\"answers\":[{\"questionId\":\"report_format\",\"optionIds\":[\"markdown\"]}]}",
+          "isError": false
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "tool.started",
+          "toolCallId": "call_00_k6tyq5corz907mzh5of9zy33",
+          "toolName": "write"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "tool.completed",
+          "toolCallId": "call_00_k6tyq5corz907mzh5of9zy33",
+          "toolName": "write",
+          "text": "Successfully wrote to /workspace/hitl-report.md",
+          "isError": false
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "tool.started",
+          "toolCallId": "call_00_qnvd69xa4gtsy2nn4b895ax3",
+          "toolName": "file_output"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "files.output",
+          "file": {
+            "downloadId": "84f86a0e-a027-4a12-b822-ca1f4014246a",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "toolCallId": "call_00_qnvd69xa4gtsy2nn4b895ax3",
+            "createdAt": "2026-11-13T13:02:00.868Z",
+            "path": "hitl-report.md",
+            "name": "hitl-report.md",
+            "size": 75,
+            "hash": "f58a5938453192bf1011c4967c34c617f2449091ea6952b3bf0f1d08a8283fef"
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "tool.completed",
+          "toolCallId": "call_00_qnvd69xa4gtsy2nn4b895ax3",
+          "toolName": "file_output",
+          "text": "文件已提供下载：hitl-report.md（75 字节）。",
+          "isError": false
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "已完成"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "：\n\n- 你在提问"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "中选择了 **Mark"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "down** 格式"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "。\n- 已按"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "该格式在"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": " `/workspace/hit"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "l-report.md` "
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "写入简短"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "报告，记住的"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "要点"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "为："
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "格式 Mark"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "down、"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "状态「"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "人工回答已接收」"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "。\n- 已通过"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": " `file_output` "
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "交付文件："
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "`hitl-report.md"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "`（75 字节"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "text.delta",
+          "delta": "）。"
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "input.queue",
+          "queue": {
+            "revision": 2,
+            "available": false,
+            "reason": "当前回复已结束。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+          "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+          "type": "response.completed",
+          "snapshot": {
+            "id": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "title": "请先通过 ask_user 只询问一个问题：报告采用 Markdown 还是纯文",
+            "updatedAt": "2026-11-13T13:02:02.451Z",
+            "expert": {
+              "expertId": "axon-general",
+              "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "name": "Axon 通用助手",
+              "description": "帮助处理通用任务，保留工作台现有能力。",
+              "releaseVersion": "1.0.0",
+              "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "modes": [
+                "interactive"
+              ],
+              "dependencies": [],
+              "availability": {
+                "available": true,
+                "state": "enabled"
+              },
+              "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "updateAvailable": false
+            },
+            "modelId": "default",
+            "inputQueue": {
+              "revision": 2,
+              "available": false,
+              "reason": "当前回复已结束。",
+              "items": []
+            },
+            "messages": [
+              {
+                "id": "685a510e",
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "role": "user",
+                "text": "请先通过 ask_user 只询问一个问题：报告采用 Markdown 还是纯文本？提供这两个选项。收到答案前不要写文件。收到答案后用 write 在 /workspace/hitl-report.md 写入对应格式的简短报告，内容包含“人工回答已接收”，最后用 file_output 交付文件。不要用 bash 或其他工具代替提问。"
+              },
+              {
+                "id": "13b86610",
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "role": "tool",
+                "text": "{\"status\":\"answered\",\"answers\":[{\"questionId\":\"report_format\",\"optionIds\":[\"markdown\"]}]}",
+                "toolName": "ask_user",
+                "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+                "isError": false
+              },
+              {
+                "id": "088d894b",
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "role": "tool",
+                "text": "Successfully wrote to /workspace/hitl-report.md",
+                "toolName": "write",
+                "toolCallId": "call_00_k6tyq5corz907mzh5of9zy33",
+                "isError": false
+              },
+              {
+                "id": "ea309bde",
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "role": "tool",
+                "text": "文件已提供下载：hitl-report.md（75 字节）。",
+                "toolName": "file_output",
+                "toolCallId": "call_00_qnvd69xa4gtsy2nn4b895ax3",
+                "isError": false
+              },
+              {
+                "id": "354f2472",
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "role": "assistant",
+                "text": "已完成：\n\n- 你在提问中选择了 **Markdown** 格式。\n- 已按该格式在 `/workspace/hitl-report.md` 写入简短报告，记住的要点为：格式 Markdown、状态「人工回答已接收」。\n- 已通过 `file_output` 交付文件：`hitl-report.md`（75 字节）。"
+              }
+            ],
+            "active": null,
+            "turns": [
+              {
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "status": "succeeded",
+                "finalMessageId": "354f2472"
+              }
+            ],
+            "interactions": [
+              {
+                "schemaVersion": 1,
+                "interactionId": "f8e6ca72-dee5-4716-a8e9-0bc93cae4d39",
+                "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+                "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "toolCallId": "call_00_8tsh34kfo9fxxct966i26oum",
+                "toolName": "ask_user",
+                "createdAt": "2026-11-13T13:01:58.246Z",
+                "kind": "question",
+                "questions": [
+                  {
+                    "id": "report_format",
+                    "prompt": "报告采用哪种格式？",
+                    "options": [
+                      {
+                        "id": "markdown",
+                        "label": "Markdown"
+                      },
+                      {
+                        "id": "plain",
+                        "label": "纯文本"
+                      }
+                    ]
+                  }
+                ],
+                "status": "answered",
+                "resolvedAt": "2026-11-13T13:01:58.387Z",
+                "answers": [
+                  {
+                    "questionId": "report_format",
+                    "optionIds": [
+                      "markdown"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "fileOutputs": [
+              {
+                "downloadId": "84f86a0e-a027-4a12-b822-ca1f4014246a",
+                "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+                "sessionId": "95e3bd25-bdac-47fc-88e3-9daa2d1b052f",
+                "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+                "toolCallId": "call_00_qnvd69xa4gtsy2nn4b895ax3",
+                "createdAt": "2026-11-13T13:02:00.868Z",
+                "path": "hitl-report.md",
+                "name": "hitl-report.md",
+                "size": 75,
+                "hash": "f58a5938453192bf1011c4967c34c617f2449091ea6952b3bf0f1d08a8283fef"
+              }
+            ],
+            "lastResult": {
+              "requestId": "742c74fc-4627-4ef9-9acc-e8b178c6842d",
+              "status": "succeeded",
+              "compactionIds": [],
+              "compactions": [],
+              "usageSummary": {
+                "modelAttempts": 4,
+                "replyAttempts": 4,
+                "compactionAttempts": 0,
+                "toolCalls": 3,
+                "unknownUsageAttempts": 0,
+                "actual": {
+                  "input": 4274,
+                  "output": 300,
+                  "cacheRead": 11520,
+                  "cacheWrite": 0,
+                  "totalTokens": 16094
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "bash approve→核对实际文件效果",
+      "snapshot": {
+        "id": "7074518e-e725-43a8-9fd7-e1117940d3db",
+        "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+        "title": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-app",
+        "updatedAt": "2026-11-13T13:02:10.158Z",
+        "expert": {
+          "expertId": "axon-general",
+          "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "name": "Axon 通用助手",
+          "description": "帮助处理通用任务，保留工作台现有能力。",
+          "releaseVersion": "1.0.0",
+          "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "modes": [
+            "interactive"
+          ],
+          "dependencies": [],
+          "availability": {
+            "available": true,
+            "state": "enabled"
+          },
+          "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "updateAvailable": false
+        },
+        "modelId": "default",
+        "inputQueue": {
+          "revision": 2,
+          "available": false,
+          "reason": "当前回复已结束。",
+          "items": []
+        },
+        "messages": [
+          {
+            "id": "5437827f",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "role": "user",
+            "text": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-approve.txt，它的内容是 fixture-approve。请先用 read 核对文件，然后发起 bash 调用 rm -- /workspace/hitl-approve.txt，由服务端在执行前展示确认卡片，我会在卡片中作出决定。不要用 ask_user 或聊天文字代替操作授权，也不要用替代命令执行删除；拒绝后保持文件并说明，批准后简短说明实际结果。"
+          },
+          {
+            "id": "baef5026",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "role": "assistant",
+            "text": "我先核对文件内容。"
+          },
+          {
+            "id": "4122a5cc",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "role": "tool",
+            "text": "fixture-approve",
+            "toolName": "read",
+            "toolCallId": "call_00_f8xgdxgjeauha55kdu7v9l9i",
+            "isError": false
+          },
+          {
+            "id": "8677974b",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "role": "assistant",
+            "text": "已核对：`/workspace/hitl-approve.txt` 的内容是 `fixture-approve`，与你所述一致。现在发起删除调用，具体结果以服务端确认卡片中的决定为准。"
+          },
+          {
+            "id": "773c5901",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "role": "tool",
+            "text": "(no output)",
+            "toolName": "bash",
+            "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+            "isError": false
+          },
+          {
+            "id": "7787e3f1",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "role": "tool",
+            "text": ".\n..\nhitl-report.md\n",
+            "toolName": "bash",
+            "toolCallId": "call_00_4mszipc08wctmwnee6nwjbgi",
+            "isError": false
+          },
+          {
+            "id": "302180f2",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "role": "assistant",
+            "text": "删除已执行完成。\n\n- 核对：`/workspace/hitl-approve.txt` 原内容为 `fixture-approve`，与你的说明一致。\n- 执行：`rm -- /workspace/hitl-approve.txt` 返回成功，无错误输出。\n- 复核：当前 `/workspace` 目录下已不再有该文件，仅剩 `hitl-report.md`。\n\n如果需要恢复该文件（内容 `fixture-approve`），可以告诉我重新创建。"
+          }
+        ],
+        "active": null,
+        "turns": [
+          {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "status": "succeeded",
+            "finalMessageId": "302180f2"
+          }
+        ],
+        "interactions": [
+          {
+            "schemaVersion": 1,
+            "interactionId": "7cea0a82-db74-4410-808f-c90282a9eec6",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:06.508Z",
+            "kind": "confirmation",
+            "status": "approved",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-approve.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-approve.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "resolvedAt": "2026-11-13T13:02:06.514Z",
+            "execution": "succeeded"
+          }
+        ],
+        "commandPolicies": [
+          {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+            "command": "rm -- /workspace/hitl-approve.txt",
+            "cwd": "/workspace",
+            "policy": {
+              "decision": "ask",
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "execution": "succeeded"
+          },
+          {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "toolCallId": "call_00_4mszipc08wctmwnee6nwjbgi",
+            "command": "ls -a /workspace",
+            "cwd": "/workspace",
+            "policy": {
+              "decision": "allow",
+              "ruleId": "shell.ordinary",
+              "reason": "可分析的普通命令，在既有 Docker 沙盒中执行。",
+              "version": "axon-bash-v2"
+            },
+            "execution": "succeeded"
+          }
+        ],
+        "lastResult": {
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "status": "succeeded",
+          "compactionIds": [],
+          "compactions": [],
+          "usageSummary": {
+            "modelAttempts": 4,
+            "replyAttempts": 4,
+            "compactionAttempts": 0,
+            "toolCalls": 3,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 2413,
+              "output": 443,
+              "cacheRead": 13568,
+              "cacheWrite": 0,
+              "totalTokens": 16424
+            }
+          }
+        }
+      },
+      "events": [
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "response.started"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "resources.loaded",
+          "resources": {
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "instructions": [
+              {
+                "fileId": "common",
+                "name": "通用指令（AGENTS.md）",
+                "hash": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07",
+                "editable": false
+              },
+              {
+                "fileId": "workspace",
+                "name": "工作区指令（AGENTS.md）",
+                "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "editable": true
+              }
+            ],
+            "sources": [
+              {
+                "id": "meeting-notes",
+                "title": "项目讨论纪要",
+                "description": "通用资料示例：目标、约束与待办。",
+                "hash": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+              },
+              {
+                "id": "resource-brief",
+                "title": "资源与约束说明",
+                "description": "通用资料示例：人员、时间与交付条件。",
+                "hash": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+              }
+            ],
+            "skills": [
+              {
+                "id": "synthesis",
+                "name": "资料综合写作",
+                "description": "综合多份资料形成有来源、可执行的方案。",
+                "version": "1",
+                "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+              },
+              {
+                "id": "review",
+                "name": "结果检查",
+                "description": "根据资料检查草稿的事实、约束与可执行性。",
+                "version": "1",
+                "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+              },
+              {
+                "id": "map-annotations",
+                "name": "态势标绘",
+                "description": "查询、创建、修改、导入、比较或发布地图标注；说明资源声明、可信来源身份、固定版本、字段保留和保存回执的使用方法。",
+                "version": "3",
+                "hash": "6d5bbfd01e41858ab5ed6ce039b3e7d642e02fc0db8f4019e5a64a8836581fe0"
+              },
+              {
+                "id": "spatial-analysis",
+                "name": "空间分析",
+                "description": "分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持组合分析、边界判断、固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。",
+                "version": "3",
+                "hash": "f947a59341898f1d89eccbb122b6518d1f174fa65f928b27721b564afe83bede"
+              }
+            ]
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "我先"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "核对"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "文件内容。"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "tool.started",
+          "toolCallId": "call_00_f8xgdxgjeauha55kdu7v9l9i",
+          "toolName": "read"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "tool.completed",
+          "toolCallId": "call_00_f8xgdxgjeauha55kdu7v9l9i",
+          "toolName": "read",
+          "text": "fixture-approve",
+          "isError": false
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "已"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "核对："
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "`/workspace/h"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "itl-approve"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": ".txt` 的内容"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "是 `fixture-"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "approve`，与你"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "所述"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "一致。现在发起"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "删除调用"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "，具体结果"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "以服务端确认卡片"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "中的决定"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "为准。"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "tool.started",
+          "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+          "toolName": "bash"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "7cea0a82-db74-4410-808f-c90282a9eec6",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:06.508Z",
+            "kind": "confirmation",
+            "status": "pending",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-approve.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-approve.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            }
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "7cea0a82-db74-4410-808f-c90282a9eec6",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:06.508Z",
+            "kind": "confirmation",
+            "status": "approved",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-approve.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-approve.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "resolvedAt": "2026-11-13T13:02:06.514Z"
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "tool.completed",
+          "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+          "toolName": "bash",
+          "text": "(no output)",
+          "isError": false
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "tool.started",
+          "toolCallId": "call_00_4mszipc08wctmwnee6nwjbgi",
+          "toolName": "bash"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "tool.completed",
+          "toolCallId": "call_00_4mszipc08wctmwnee6nwjbgi",
+          "toolName": "bash",
+          "text": ".\n..\nhitl-report.md\n",
+          "isError": false
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "删除"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "已执行"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "完成"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "。\n\n- 核对：`"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "/workspace/hit"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "l-approve"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": ".txt` 原"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "内容为 `fi"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "xture-approve`"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "，与你的"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "说明一致。\n- "
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "执行：`rm --"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": " /workspace/hit"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "l-approve.txt"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "` 返回成功"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "，无错误"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "输出。\n- 复核"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "：当前"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": " `/workspace` "
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "目录下"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "已不再"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "有该文件，仅"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "剩 `hitl-report"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": ".md`。\n\n如果需要恢复"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "该"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "文件（内容"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": " `"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "fixture-approve"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "`），可以告诉我"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "重新"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "创建"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "text.delta",
+          "delta": "。"
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "input.queue",
+          "queue": {
+            "revision": 2,
+            "available": false,
+            "reason": "当前回复已结束。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+          "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+          "type": "response.completed",
+          "snapshot": {
+            "id": "7074518e-e725-43a8-9fd7-e1117940d3db",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "title": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-app",
+            "updatedAt": "2026-11-13T13:02:10.158Z",
+            "expert": {
+              "expertId": "axon-general",
+              "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "name": "Axon 通用助手",
+              "description": "帮助处理通用任务，保留工作台现有能力。",
+              "releaseVersion": "1.0.0",
+              "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "modes": [
+                "interactive"
+              ],
+              "dependencies": [],
+              "availability": {
+                "available": true,
+                "state": "enabled"
+              },
+              "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "updateAvailable": false
+            },
+            "modelId": "default",
+            "inputQueue": {
+              "revision": 2,
+              "available": false,
+              "reason": "当前回复已结束。",
+              "items": []
+            },
+            "messages": [
+              {
+                "id": "5437827f",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "role": "user",
+                "text": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-approve.txt，它的内容是 fixture-approve。请先用 read 核对文件，然后发起 bash 调用 rm -- /workspace/hitl-approve.txt，由服务端在执行前展示确认卡片，我会在卡片中作出决定。不要用 ask_user 或聊天文字代替操作授权，也不要用替代命令执行删除；拒绝后保持文件并说明，批准后简短说明实际结果。"
+              },
+              {
+                "id": "baef5026",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "role": "assistant",
+                "text": "我先核对文件内容。"
+              },
+              {
+                "id": "4122a5cc",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "role": "tool",
+                "text": "fixture-approve",
+                "toolName": "read",
+                "toolCallId": "call_00_f8xgdxgjeauha55kdu7v9l9i",
+                "isError": false
+              },
+              {
+                "id": "8677974b",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "role": "assistant",
+                "text": "已核对：`/workspace/hitl-approve.txt` 的内容是 `fixture-approve`，与你所述一致。现在发起删除调用，具体结果以服务端确认卡片中的决定为准。"
+              },
+              {
+                "id": "773c5901",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "role": "tool",
+                "text": "(no output)",
+                "toolName": "bash",
+                "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+                "isError": false
+              },
+              {
+                "id": "7787e3f1",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "role": "tool",
+                "text": ".\n..\nhitl-report.md\n",
+                "toolName": "bash",
+                "toolCallId": "call_00_4mszipc08wctmwnee6nwjbgi",
+                "isError": false
+              },
+              {
+                "id": "302180f2",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "role": "assistant",
+                "text": "删除已执行完成。\n\n- 核对：`/workspace/hitl-approve.txt` 原内容为 `fixture-approve`，与你的说明一致。\n- 执行：`rm -- /workspace/hitl-approve.txt` 返回成功，无错误输出。\n- 复核：当前 `/workspace` 目录下已不再有该文件，仅剩 `hitl-report.md`。\n\n如果需要恢复该文件（内容 `fixture-approve`），可以告诉我重新创建。"
+              }
+            ],
+            "active": null,
+            "turns": [
+              {
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "status": "succeeded",
+                "finalMessageId": "302180f2"
+              }
+            ],
+            "interactions": [
+              {
+                "schemaVersion": 1,
+                "interactionId": "7cea0a82-db74-4410-808f-c90282a9eec6",
+                "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+                "sessionId": "7074518e-e725-43a8-9fd7-e1117940d3db",
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+                "toolName": "bash",
+                "createdAt": "2026-11-13T13:02:06.508Z",
+                "kind": "confirmation",
+                "status": "approved",
+                "action": {
+                  "title": "执行命令",
+                  "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "command": "rm -- /workspace/hitl-approve.txt",
+                  "cwd": "/workspace",
+                  "parameters": {
+                    "command": "rm -- /workspace/hitl-approve.txt"
+                  }
+                },
+                "rule": {
+                  "ruleId": "shell.modify",
+                  "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "version": "axon-bash-v2"
+                },
+                "resolvedAt": "2026-11-13T13:02:06.514Z",
+                "execution": "succeeded"
+              }
+            ],
+            "commandPolicies": [
+              {
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "toolCallId": "call_00_u7mh9s1a7z4jxvhr5fhl4et4",
+                "command": "rm -- /workspace/hitl-approve.txt",
+                "cwd": "/workspace",
+                "policy": {
+                  "decision": "ask",
+                  "ruleId": "shell.modify",
+                  "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "version": "axon-bash-v2"
+                },
+                "execution": "succeeded"
+              },
+              {
+                "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+                "toolCallId": "call_00_4mszipc08wctmwnee6nwjbgi",
+                "command": "ls -a /workspace",
+                "cwd": "/workspace",
+                "policy": {
+                  "decision": "allow",
+                  "ruleId": "shell.ordinary",
+                  "reason": "可分析的普通命令，在既有 Docker 沙盒中执行。",
+                  "version": "axon-bash-v2"
+                },
+                "execution": "succeeded"
+              }
+            ],
+            "lastResult": {
+              "requestId": "de602562-0c52-4e0b-b0d9-8de7e975ae62",
+              "status": "succeeded",
+              "compactionIds": [],
+              "compactions": [],
+              "usageSummary": {
+                "modelAttempts": 4,
+                "replyAttempts": 4,
+                "compactionAttempts": 0,
+                "toolCalls": 3,
+                "unknownUsageAttempts": 0,
+                "actual": {
+                  "input": 2413,
+                  "output": 443,
+                  "cacheRead": 13568,
+                  "cacheWrite": 0,
+                  "totalTokens": 16424
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "bash reject→核对实际文件效果",
+      "snapshot": {
+        "id": "9ce74600-f17e-488d-a4d5-3139aab49912",
+        "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+        "title": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-rej",
+        "updatedAt": "2026-11-13T13:02:14.811Z",
+        "expert": {
+          "expertId": "axon-general",
+          "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "name": "Axon 通用助手",
+          "description": "帮助处理通用任务，保留工作台现有能力。",
+          "releaseVersion": "1.0.0",
+          "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "modes": [
+            "interactive"
+          ],
+          "dependencies": [],
+          "availability": {
+            "available": true,
+            "state": "enabled"
+          },
+          "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "updateAvailable": false
+        },
+        "modelId": "default",
+        "inputQueue": {
+          "revision": 2,
+          "available": false,
+          "reason": "当前回复已结束。",
+          "items": []
+        },
+        "messages": [
+          {
+            "id": "87b0e5c6",
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "role": "user",
+            "text": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-reject.txt，它的内容是 fixture-reject。请先用 read 核对文件，然后发起 bash 调用 rm -- /workspace/hitl-reject.txt，由服务端在执行前展示确认卡片，我会在卡片中作出决定。不要用 ask_user 或聊天文字代替操作授权，也不要用替代命令执行删除；拒绝后保持文件并说明，批准后简短说明实际结果。"
+          },
+          {
+            "id": "de78abc4",
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "role": "tool",
+            "text": "fixture-reject",
+            "toolName": "read",
+            "toolCallId": "call_00_nx2t6glp9jsfj8tefhimn7hc",
+            "isError": false
+          },
+          {
+            "id": "88633f36",
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "role": "tool",
+            "text": "用户拒绝了本次操作，尚未执行。请说明或调整方案。",
+            "toolName": "bash",
+            "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+            "isError": true
+          },
+          {
+            "id": "52ef4c47",
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "role": "assistant",
+            "text": "核对与操作结果如下：\n\n- 已用 read 核对 `/workspace/hitl-reject.txt`，内容确为 `fixture-reject`。\n- 已按你的要求发起 `rm -- /workspace/hitl-reject.txt`，服务端在执行前展示确认卡片，你选择拒绝，因此命令**未执行**，删除操作没有发生。\n\n文件应仍原样保留。需要的话我可以用 read 再核对一次确认其仍存在；或者你以后想删除时，我可以再发起同一条删除命令供你在卡片中决定。"
+          }
+        ],
+        "active": null,
+        "turns": [
+          {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "status": "succeeded",
+            "finalMessageId": "52ef4c47"
+          }
+        ],
+        "interactions": [
+          {
+            "schemaVersion": 1,
+            "interactionId": "4dfc6092-b3d2-4f4b-9d65-ffabef9a539b",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:12.997Z",
+            "kind": "confirmation",
+            "status": "rejected",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-reject.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-reject.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "resolvedAt": "2026-11-13T13:02:13.002Z"
+          }
+        ],
+        "commandPolicies": [
+          {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+            "command": "rm -- /workspace/hitl-reject.txt",
+            "cwd": "/workspace",
+            "policy": {
+              "decision": "ask",
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "execution": "not_started"
+          }
+        ],
+        "lastResult": {
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "status": "succeeded",
+          "compactionIds": [],
+          "compactions": [],
+          "usageSummary": {
+            "modelAttempts": 3,
+            "replyAttempts": 3,
+            "compactionAttempts": 0,
+            "toolCalls": 2,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 415,
+              "output": 267,
+              "cacheRead": 11264,
+              "cacheWrite": 0,
+              "totalTokens": 11946
+            }
+          }
+        }
+      },
+      "events": [
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "response.started"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "resources.loaded",
+          "resources": {
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "instructions": [
+              {
+                "fileId": "common",
+                "name": "通用指令（AGENTS.md）",
+                "hash": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07",
+                "editable": false
+              },
+              {
+                "fileId": "workspace",
+                "name": "工作区指令（AGENTS.md）",
+                "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "editable": true
+              }
+            ],
+            "sources": [
+              {
+                "id": "meeting-notes",
+                "title": "项目讨论纪要",
+                "description": "通用资料示例：目标、约束与待办。",
+                "hash": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+              },
+              {
+                "id": "resource-brief",
+                "title": "资源与约束说明",
+                "description": "通用资料示例：人员、时间与交付条件。",
+                "hash": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+              }
+            ],
+            "skills": [
+              {
+                "id": "synthesis",
+                "name": "资料综合写作",
+                "description": "综合多份资料形成有来源、可执行的方案。",
+                "version": "1",
+                "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+              },
+              {
+                "id": "review",
+                "name": "结果检查",
+                "description": "根据资料检查草稿的事实、约束与可执行性。",
+                "version": "1",
+                "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+              },
+              {
+                "id": "map-annotations",
+                "name": "态势标绘",
+                "description": "查询、创建、修改、导入、比较或发布地图标注；说明资源声明、可信来源身份、固定版本、字段保留和保存回执的使用方法。",
+                "version": "3",
+                "hash": "6d5bbfd01e41858ab5ed6ce039b3e7d642e02fc0db8f4019e5a64a8836581fe0"
+              },
+              {
+                "id": "spatial-analysis",
+                "name": "空间分析",
+                "description": "分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持组合分析、边界判断、固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。",
+                "version": "3",
+                "hash": "f947a59341898f1d89eccbb122b6518d1f174fa65f928b27721b564afe83bede"
+              }
+            ]
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "tool.started",
+          "toolCallId": "call_00_nx2t6glp9jsfj8tefhimn7hc",
+          "toolName": "read"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "tool.completed",
+          "toolCallId": "call_00_nx2t6glp9jsfj8tefhimn7hc",
+          "toolName": "read",
+          "text": "fixture-reject",
+          "isError": false
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "tool.started",
+          "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+          "toolName": "bash"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "4dfc6092-b3d2-4f4b-9d65-ffabef9a539b",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:12.997Z",
+            "kind": "confirmation",
+            "status": "pending",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-reject.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-reject.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            }
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "4dfc6092-b3d2-4f4b-9d65-ffabef9a539b",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:12.997Z",
+            "kind": "confirmation",
+            "status": "rejected",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-reject.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-reject.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "resolvedAt": "2026-11-13T13:02:13.002Z"
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "tool.completed",
+          "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+          "toolName": "bash",
+          "text": "用户拒绝了本次操作，尚未执行。请说明或调整方案。",
+          "isError": true
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "核对与"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "操作结果如下"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "：\n\n- 已用"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": " read 核对 `/works"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "pace/hitl-re"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "ject.txt`，内容"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "确为 `fi"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "xture-reject`"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "。\n- 已"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "按你的"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "要求发起 `rm"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": " -- /workspace/h"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "itl-reject.txt"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "`，"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "服务端在执行"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "前展示确认"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "卡片，"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "你选择"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "拒绝，"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "因此命令"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "**"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "未执行**，删除"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "操作"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "没有发生。\n\n文件应"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "仍"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "原"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "样保留。"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "需要的话"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "我可以用 read"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": " 再核对一次确认"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "其仍"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "存在；或者你"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "以后想删除"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "时，我可以"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "再"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "发起同一条删除命令"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "供你在"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "卡片中"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "决定"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "text.delta",
+          "delta": "。"
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "input.queue",
+          "queue": {
+            "revision": 2,
+            "available": false,
+            "reason": "当前回复已结束。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+          "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+          "type": "response.completed",
+          "snapshot": {
+            "id": "9ce74600-f17e-488d-a4d5-3139aab49912",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "title": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-rej",
+            "updatedAt": "2026-11-13T13:02:14.811Z",
+            "expert": {
+              "expertId": "axon-general",
+              "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "name": "Axon 通用助手",
+              "description": "帮助处理通用任务，保留工作台现有能力。",
+              "releaseVersion": "1.0.0",
+              "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "modes": [
+                "interactive"
+              ],
+              "dependencies": [],
+              "availability": {
+                "available": true,
+                "state": "enabled"
+              },
+              "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "updateAvailable": false
+            },
+            "modelId": "default",
+            "inputQueue": {
+              "revision": 2,
+              "available": false,
+              "reason": "当前回复已结束。",
+              "items": []
+            },
+            "messages": [
+              {
+                "id": "87b0e5c6",
+                "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+                "role": "user",
+                "text": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-reject.txt，它的内容是 fixture-reject。请先用 read 核对文件，然后发起 bash 调用 rm -- /workspace/hitl-reject.txt，由服务端在执行前展示确认卡片，我会在卡片中作出决定。不要用 ask_user 或聊天文字代替操作授权，也不要用替代命令执行删除；拒绝后保持文件并说明，批准后简短说明实际结果。"
+              },
+              {
+                "id": "de78abc4",
+                "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+                "role": "tool",
+                "text": "fixture-reject",
+                "toolName": "read",
+                "toolCallId": "call_00_nx2t6glp9jsfj8tefhimn7hc",
+                "isError": false
+              },
+              {
+                "id": "88633f36",
+                "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+                "role": "tool",
+                "text": "用户拒绝了本次操作，尚未执行。请说明或调整方案。",
+                "toolName": "bash",
+                "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+                "isError": true
+              },
+              {
+                "id": "52ef4c47",
+                "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+                "role": "assistant",
+                "text": "核对与操作结果如下：\n\n- 已用 read 核对 `/workspace/hitl-reject.txt`，内容确为 `fixture-reject`。\n- 已按你的要求发起 `rm -- /workspace/hitl-reject.txt`，服务端在执行前展示确认卡片，你选择拒绝，因此命令**未执行**，删除操作没有发生。\n\n文件应仍原样保留。需要的话我可以用 read 再核对一次确认其仍存在；或者你以后想删除时，我可以再发起同一条删除命令供你在卡片中决定。"
+              }
+            ],
+            "active": null,
+            "turns": [
+              {
+                "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+                "status": "succeeded",
+                "finalMessageId": "52ef4c47"
+              }
+            ],
+            "interactions": [
+              {
+                "schemaVersion": 1,
+                "interactionId": "4dfc6092-b3d2-4f4b-9d65-ffabef9a539b",
+                "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+                "sessionId": "9ce74600-f17e-488d-a4d5-3139aab49912",
+                "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+                "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+                "toolName": "bash",
+                "createdAt": "2026-11-13T13:02:12.997Z",
+                "kind": "confirmation",
+                "status": "rejected",
+                "action": {
+                  "title": "执行命令",
+                  "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "command": "rm -- /workspace/hitl-reject.txt",
+                  "cwd": "/workspace",
+                  "parameters": {
+                    "command": "rm -- /workspace/hitl-reject.txt"
+                  }
+                },
+                "rule": {
+                  "ruleId": "shell.modify",
+                  "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "version": "axon-bash-v2"
+                },
+                "resolvedAt": "2026-11-13T13:02:13.002Z"
+              }
+            ],
+            "commandPolicies": [
+              {
+                "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+                "toolCallId": "call_00_xbcnlnunuk0euez7uragcnqq",
+                "command": "rm -- /workspace/hitl-reject.txt",
+                "cwd": "/workspace",
+                "policy": {
+                  "decision": "ask",
+                  "ruleId": "shell.modify",
+                  "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "version": "axon-bash-v2"
+                },
+                "execution": "not_started"
+              }
+            ],
+            "lastResult": {
+              "requestId": "a5aa58c9-1241-4ba9-917d-773f57a6e35d",
+              "status": "succeeded",
+              "compactionIds": [],
+              "compactions": [],
+              "usageSummary": {
+                "modelAttempts": 3,
+                "replyAttempts": 3,
+                "compactionAttempts": 0,
+                "toolCalls": 2,
+                "unknownUsageAttempts": 0,
+                "actual": {
+                  "input": 415,
+                  "output": 267,
+                  "cacheRead": 11264,
+                  "cacheWrite": 0,
+                  "totalTokens": 11946
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "bash stop→核对实际文件效果",
+      "snapshot": {
+        "id": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+        "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+        "title": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-sto",
+        "updatedAt": "2026-11-13T13:02:18.157Z",
+        "expert": {
+          "expertId": "axon-general",
+          "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "name": "Axon 通用助手",
+          "description": "帮助处理通用任务，保留工作台现有能力。",
+          "releaseVersion": "1.0.0",
+          "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "modes": [
+            "interactive"
+          ],
+          "dependencies": [],
+          "availability": {
+            "available": true,
+            "state": "enabled"
+          },
+          "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "updateAvailable": false
+        },
+        "modelId": "default",
+        "inputQueue": {
+          "revision": 3,
+          "available": false,
+          "reason": "当前回复已结束。",
+          "items": []
+        },
+        "messages": [
+          {
+            "id": "c3c94e69",
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "role": "user",
+            "text": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-stop.txt，它的内容是 fixture-stop。请先用 read 核对文件，然后发起 bash 调用 rm -- /workspace/hitl-stop.txt，由服务端在执行前展示确认卡片，我会在卡片中作出决定。不要用 ask_user 或聊天文字代替操作授权，也不要用替代命令执行删除；拒绝后保持文件并说明，批准后简短说明实际结果。"
+          },
+          {
+            "id": "e5ac89bb",
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "role": "tool",
+            "text": "fixture-stop",
+            "toolName": "read",
+            "toolCallId": "call_00_qa2avzezfmcg1dyy5i5q0cfs",
+            "isError": false
+          },
+          {
+            "id": "3804122e",
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "role": "assistant",
+            "text": "我已核对文件 `/workspace/hitl-stop.txt`，其内容确为 `fixture-stop`。现在发起删除命令，是否批准由你来决定。"
+          },
+          {
+            "id": "04eca933",
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "role": "tool",
+            "text": "Operation aborted",
+            "toolName": "bash",
+            "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+            "isError": true
+          }
+        ],
+        "active": null,
+        "turns": [
+          {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "status": "cancelled"
+          }
+        ],
+        "interactions": [
+          {
+            "schemaVersion": 1,
+            "interactionId": "68e3c7a2-cbd3-4cec-aacb-72f9ef137a75",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:18.054Z",
+            "kind": "confirmation",
+            "status": "cancelled",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-stop.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-stop.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "resolvedAt": "2026-11-13T13:02:18.057Z",
+            "reason": "本次请求已停止。"
+          }
+        ],
+        "commandPolicies": [
+          {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+            "command": "rm -- /workspace/hitl-stop.txt",
+            "cwd": "/workspace",
+            "policy": {
+              "decision": "ask",
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "execution": "not_started"
+          }
+        ],
+        "lastResult": {
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "status": "cancelled",
+          "message": "已停止。",
+          "compactionIds": [],
+          "compactions": [],
+          "usageSummary": {
+            "modelAttempts": 2,
+            "replyAttempts": 2,
+            "compactionAttempts": 0,
+            "toolCalls": 2,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 259,
+              "output": 166,
+              "cacheRead": 7424,
+              "cacheWrite": 0,
+              "totalTokens": 7849
+            }
+          }
+        }
+      },
+      "events": [
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "response.started"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "resources.loaded",
+          "resources": {
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "instructions": [
+              {
+                "fileId": "common",
+                "name": "通用指令（AGENTS.md）",
+                "hash": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07",
+                "editable": false
+              },
+              {
+                "fileId": "workspace",
+                "name": "工作区指令（AGENTS.md）",
+                "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "editable": true
+              }
+            ],
+            "sources": [
+              {
+                "id": "meeting-notes",
+                "title": "项目讨论纪要",
+                "description": "通用资料示例：目标、约束与待办。",
+                "hash": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+              },
+              {
+                "id": "resource-brief",
+                "title": "资源与约束说明",
+                "description": "通用资料示例：人员、时间与交付条件。",
+                "hash": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+              }
+            ],
+            "skills": [
+              {
+                "id": "synthesis",
+                "name": "资料综合写作",
+                "description": "综合多份资料形成有来源、可执行的方案。",
+                "version": "1",
+                "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+              },
+              {
+                "id": "review",
+                "name": "结果检查",
+                "description": "根据资料检查草稿的事实、约束与可执行性。",
+                "version": "1",
+                "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+              },
+              {
+                "id": "map-annotations",
+                "name": "态势标绘",
+                "description": "查询、创建、修改、导入、比较或发布地图标注；说明资源声明、可信来源身份、固定版本、字段保留和保存回执的使用方法。",
+                "version": "3",
+                "hash": "6d5bbfd01e41858ab5ed6ce039b3e7d642e02fc0db8f4019e5a64a8836581fe0"
+              },
+              {
+                "id": "spatial-analysis",
+                "name": "空间分析",
+                "description": "分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持组合分析、边界判断、固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。",
+                "version": "3",
+                "hash": "f947a59341898f1d89eccbb122b6518d1f174fa65f928b27721b564afe83bede"
+              }
+            ]
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "tool.started",
+          "toolCallId": "call_00_qa2avzezfmcg1dyy5i5q0cfs",
+          "toolName": "read"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "tool.completed",
+          "toolCallId": "call_00_qa2avzezfmcg1dyy5i5q0cfs",
+          "toolName": "read",
+          "text": "fixture-stop",
+          "isError": false
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "我已"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "核对文件 `/"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "workspace/hitl"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "-stop.txt`，其"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "内容确"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "为 `fixture-stop"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "`。现在发起删除"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "命令"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "，是否批准"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "由你来"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "决定"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "text.delta",
+          "delta": "。"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "tool.started",
+          "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+          "toolName": "bash"
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "68e3c7a2-cbd3-4cec-aacb-72f9ef137a75",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:18.054Z",
+            "kind": "confirmation",
+            "status": "pending",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-stop.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-stop.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            }
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 2,
+            "available": false,
+            "reason": "正在停止，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "interaction.updated",
+          "interaction": {
+            "schemaVersion": 1,
+            "interactionId": "68e3c7a2-cbd3-4cec-aacb-72f9ef137a75",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+            "toolName": "bash",
+            "createdAt": "2026-11-13T13:02:18.054Z",
+            "kind": "confirmation",
+            "status": "cancelled",
+            "action": {
+              "title": "执行命令",
+              "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "command": "rm -- /workspace/hitl-stop.txt",
+              "cwd": "/workspace",
+              "parameters": {
+                "command": "rm -- /workspace/hitl-stop.txt"
+              }
+            },
+            "rule": {
+              "ruleId": "shell.modify",
+              "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+              "version": "axon-bash-v2"
+            },
+            "resolvedAt": "2026-11-13T13:02:18.057Z",
+            "reason": "本次请求已停止。"
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 2,
+            "available": false,
+            "reason": "正在停止，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 2,
+            "available": false,
+            "reason": "正在停止，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+            "revision": 2,
+            "available": false,
+            "reason": "正在停止，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "input.queue",
+          "queue": {
+            "revision": 3,
+            "available": false,
+            "reason": "当前回复已结束。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+          "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+          "type": "response.cancelled",
+          "snapshot": {
+            "id": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+            "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+            "title": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-sto",
+            "updatedAt": "2026-11-13T13:02:18.157Z",
+            "expert": {
+              "expertId": "axon-general",
+              "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "name": "Axon 通用助手",
+              "description": "帮助处理通用任务，保留工作台现有能力。",
+              "releaseVersion": "1.0.0",
+              "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "modes": [
+                "interactive"
+              ],
+              "dependencies": [],
+              "availability": {
+                "available": true,
+                "state": "enabled"
+              },
+              "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "updateAvailable": false
+            },
+            "modelId": "default",
+            "inputQueue": {
+              "revision": 3,
+              "available": false,
+              "reason": "当前回复已结束。",
+              "items": []
+            },
+            "messages": [
+              {
+                "id": "c3c94e69",
+                "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+                "role": "user",
+                "text": "我希望删除专门为本次验收创建的一次性文件 /workspace/hitl-stop.txt，它的内容是 fixture-stop。请先用 read 核对文件，然后发起 bash 调用 rm -- /workspace/hitl-stop.txt，由服务端在执行前展示确认卡片，我会在卡片中作出决定。不要用 ask_user 或聊天文字代替操作授权，也不要用替代命令执行删除；拒绝后保持文件并说明，批准后简短说明实际结果。"
+              },
+              {
+                "id": "e5ac89bb",
+                "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+                "role": "tool",
+                "text": "fixture-stop",
+                "toolName": "read",
+                "toolCallId": "call_00_qa2avzezfmcg1dyy5i5q0cfs",
+                "isError": false
+              },
+              {
+                "id": "3804122e",
+                "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+                "role": "assistant",
+                "text": "我已核对文件 `/workspace/hitl-stop.txt`，其内容确为 `fixture-stop`。现在发起删除命令，是否批准由你来决定。"
+              },
+              {
+                "id": "04eca933",
+                "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+                "role": "tool",
+                "text": "Operation aborted",
+                "toolName": "bash",
+                "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+                "isError": true
+              }
+            ],
+            "active": null,
+            "turns": [
+              {
+                "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+                "status": "cancelled"
+              }
+            ],
+            "interactions": [
+              {
+                "schemaVersion": 1,
+                "interactionId": "68e3c7a2-cbd3-4cec-aacb-72f9ef137a75",
+                "workspaceId": "b2ba7a11-a996-4621-a879-9fd0b476b8d4",
+                "sessionId": "fb6398b4-a35b-44e3-b3e3-87a748cffc30",
+                "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+                "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+                "toolName": "bash",
+                "createdAt": "2026-11-13T13:02:18.054Z",
+                "kind": "confirmation",
+                "status": "cancelled",
+                "action": {
+                  "title": "执行命令",
+                  "description": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "command": "rm -- /workspace/hitl-stop.txt",
+                  "cwd": "/workspace",
+                  "parameters": {
+                    "command": "rm -- /workspace/hitl-stop.txt"
+                  }
+                },
+                "rule": {
+                  "ruleId": "shell.modify",
+                  "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "version": "axon-bash-v2"
+                },
+                "resolvedAt": "2026-11-13T13:02:18.057Z",
+                "reason": "本次请求已停止。"
+              }
+            ],
+            "commandPolicies": [
+              {
+                "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+                "toolCallId": "call_00_16ou5in85r3qef3ycxqanjjy",
+                "command": "rm -- /workspace/hitl-stop.txt",
+                "cwd": "/workspace",
+                "policy": {
+                  "decision": "ask",
+                  "ruleId": "shell.modify",
+                  "reason": "rm 可能删除、截断文件或修改文件权限／归属，请确认完整命令。",
+                  "version": "axon-bash-v2"
+                },
+                "execution": "not_started"
+              }
+            ],
+            "lastResult": {
+              "requestId": "0dc1f837-7cac-4047-a9f8-b56c8e0c5bce",
+              "status": "cancelled",
+              "message": "已停止。",
+              "compactionIds": [],
+              "compactions": [],
+              "usageSummary": {
+                "modelAttempts": 2,
+                "replyAttempts": 2,
+                "compactionAttempts": 0,
+                "toolCalls": 2,
+                "unknownUsageAttempts": 0,
+                "actual": {
+                  "input": 259,
+                  "output": 166,
+                  "cacheRead": 7424,
+                  "cacheWrite": 0,
+                  "totalTokens": 7849
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

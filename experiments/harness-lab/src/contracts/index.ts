@@ -1,3 +1,5 @@
+import type { SessionExpert } from './capabilities.js';
+export type * from './capabilities.js';
 import type { TaskDiscovery } from './continuous.js';
 import type { ResourceResult } from './resource-results.js';
 import type { SpatialResult } from './spatial.js';
@@ -91,6 +93,7 @@ export interface InputAction {
 }
 export interface InputResult { receipt: InputReceipt | null; queue: InputQueueState }
 export interface SessionSnapshot extends SessionSummary {
+  expert?: SessionExpert;
   inputQueue?: InputQueueState;
   modelId?: string;
   backgroundJob?: BackgroundJobReservation;

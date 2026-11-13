@@ -284,7 +284,11 @@ describe('annotation input and native tools', () => {
     replace = () => { lab.access!.disable('original'); lab.access!.db.prepare('UPDATE accounts SET enabled=1 WHERE id=?').run(replacement.userId); };
     await lab.start(session.id, '重命名当前草稿', {}, 'alpha', undefined, original.userId).run(() => {});
     expect(lab.annotations!.binding(replacement, session.id).draft?.headRevision).toBe(1);
-    expect(lab.get(session.id, 'alpha').messages.find(message => message.role === 'tool')).toMatchObject({isError: true, text: expect.stringContaining('AUTH_REQUIRED')});
+    const stopped = lab.get(session.id, 'alpha');
+    // The shared capability guard now stops before tool execution; native Pi may expose its abort result.
+    expect(stopped.messages.find(message => message.role === 'tool')).toMatchObject({isError: true, text: expect.stringMatching(/AUTH_REQUIRED|Operation aborted/)});
+    expect(stopped.lastResult).toMatchObject({status: 'failed', message: expect.stringContaining('AUTH_REQUIRED')});
+    expect(fake.calls).toHaveLength(1);
   });
 });
 

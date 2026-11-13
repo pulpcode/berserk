@@ -1,0 +1,33 @@
+{
+  "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-r1-perf-mFZ63h",
+  "scope": "Synthetic isolated data; immutable content load and actual Pi assembly. Provider transport is deterministic. First text chunk is not first token.",
+  "unit": "ms",
+  "coldLoads": {
+    "n": 20,
+    "p50": 17.57170799999949,
+    "p95": 207.99889600000097
+  },
+  "hotLoads": {
+    "n": 100,
+    "p50": 0.14417800000046554,
+    "p95": 0.46547199999986333
+  },
+  "cacheHitRate": 0.9900990099009901,
+  "assembly": {
+    "n": 10,
+    "p50": 56.694353999999294,
+    "p95": 118.78804200000013
+  },
+  "firstTextChunk": {
+    "n": 10,
+    "p50": 72,
+    "p95": 146
+  },
+  "tools": {
+    "n": 10,
+    "p50": 3.537116999999853,
+    "p95": 11.122197999999116
+  },
+  "cacheEntries": 1,
+  "cacheBytes": 2624
+}

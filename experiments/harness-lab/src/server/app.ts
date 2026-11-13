@@ -1,3 +1,5 @@
+import { CapabilityRoles } from '../access/capability-roles.js';
+import type { ExpertSessionSelection } from '../contracts/capabilities.js';
 import { CommandService } from '../commands/service.js';
 import { commandRoutes } from './command-routes.js';
 import { continuousRoutes } from './continuous-routes.js';
@@ -93,7 +95,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
-    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation','/scenario-director']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
+    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation','/scenario-director','/capabilities']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
     app.get('/tasks/:taskId/information',(_request,reply)=>reply.sendFile('index.html'));
   }
   return app;
@@ -108,6 +110,19 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
     return lab.context?.catalog(scope.seat(request)) ?? {systems: []};
   });
   const settingsQuery = { type: 'object', additionalProperties: false };
+  const principal = (request: FastifyRequest) => lab.access ? identityOf(request).userId : `seat:${scope.seat(request)}`;
+  app.get(`${scope.base}/capabilities/experts`, { schema: { querystring: settingsQuery } }, request => lab.capabilities.list(principal(request)));
+  app.get<{ Params: { expertId: string } }>(`${scope.base}/capabilities/experts/:expertId`, { schema: {
+    params: scope.params({ expertId: { type: 'string', pattern: '^[a-z][a-z0-9_-]{0,127}$' } }), querystring: settingsQuery,
+  } }, request => lab.capabilities.detail(request.params.expertId, principal(request)));
+  app.get(`${scope.base}/capabilities/access`, { schema: { querystring: settingsQuery } }, request => ({
+    administrator: !!lab.access && new CapabilityRoles(lab.access.db).has(identityOf(request).userId),
+  }));
+  app.get(`${scope.base}/admin/capabilities/summary`, { schema: { querystring: settingsQuery } }, request => {
+    if (!lab.access) throw new RequestError('FORBIDDEN', '当前账号无权管理能力。', 403);
+    new CapabilityRoles(lab.access.db).requireAdministrator(identityOf(request).userId);
+    return lab.capabilities.adminSummary();
+  });
   const requireModelSettings = async (request: FastifyRequest) => {
     if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN', '当前席位无权管理模型配置。', 403);
   };
@@ -137,7 +152,15 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
     return reply.code(201).send(await lab.workspaces.create(request.body.name, undefined, scope.seat(request)));
   });
   app.get<{ Querystring: { workspaceId?: string } }>(`${scope.base}/sessions`, { schema: { querystring: workspaceBody } }, async request => lab.list(request.query.workspaceId, scope.seat(request)));
-  app.post<{ Body: { workspaceId?: string; workItemId?: string; modelId?: string } }>(`${scope.base}/sessions`, { schema: { body: { ...workspaceBody, properties: { ...workspaceBody.properties, workItemId: uuid, modelId } } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId, undefined, request.body.modelId));
+  app.post<{ Body: ExpertSessionSelection & { workspaceId?: string; workItemId?: string; modelId?: string } }>(`${scope.base}/sessions`, { schema: { body: {
+    ...workspaceBody, properties: { ...workspaceBody.properties, workItemId: uuid, modelId, clientActionId: uuid,
+      expertRef: { type: 'object', additionalProperties: false, required: ['expertId', 'revisionId'], properties: {
+        expertId: { type: 'string', pattern: '^[a-z][a-z0-9_-]{0,127}$' }, revisionId: { type: 'string', pattern: '^rev-[0-9a-f]{64}$' },
+      } }, expectedDigest: { type: 'string', pattern: '^[0-9a-f]{64}$' },
+    }, dependencies: { expertRef: ['expectedDigest'], expectedDigest: ['expertRef'] },
+  } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId, undefined, request.body.modelId,
+    { expertRef: request.body.expertRef, expectedDigest: request.body.expectedDigest, clientActionId: request.body.clientActionId,
+      ...(lab.access ? { userId: identityOf(request).userId } : {}) }));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => lab.resources.info(request.params.id, scope.seat(request)));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/agents`, { schema: { params, querystring: settingsQuery } }, async request => lab.agents(request.params.id, scope.seat(request)));
   const resourceParams = (key: string) => scope.params({ id: uuid, [key]: { type: 'string', minLength: 1, maxLength: 80 } });
