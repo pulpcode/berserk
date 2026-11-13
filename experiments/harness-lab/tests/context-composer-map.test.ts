@@ -4,6 +4,7 @@ import { ContextService } from '../src/context/service.js';
 import { loadComposerContext, validLoadedContext } from '../src/context/composer.js';
 import { composerInputText, decodeComposerInput } from '../src/pi/composer-input.js';
 import { randomUUID } from 'node:crypto';
+import type { StreamEvent } from '../src/contracts/index.js';
 const cleanup: Array<()=>Promise<unknown>>=[];
 afterEach(async()=>{for(const close of cleanup.splice(0).reverse())await close();});
 async function setup(){
@@ -35,15 +36,25 @@ it('loads data before the actual Pi model request and reopens native history wit
   const {service,mock}=await setup();const dir=await mkdtemp(join(tmpdir(),'axon-map-native-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
   const config=testConfig(dir,{seatId:'a'}),fake=await fakeRuntime(config,()=>({text:'根据所选资料回答'}));
   const lab=await PiLab.create(config,fake.runtime);lab.context=service;cleanup.push(()=>lab.close());const session=await lab.createSession();
-  await lab.start(session.id,'这条道路情况如何？',{contextRefs:[ref]}).run(()=>{});
+  const events:StreamEvent[]=[];
+  let callsAtLoad=-1;
+  await lab.start(session.id,'这条道路情况如何？',{contextRefs:[ref]}).run(event=>{
+    events.push(event);
+    if(event.type==='resources.loaded')callsAtLoad=fake.calls.length;
+  });
   const snapshot=lab.get(session.id);expect(snapshot.lastResult?.status).toBe('succeeded');expect(fake.calls).toHaveLength(1);
   expect(JSON.stringify(fake.calls[0]!.context.messages)).toContain('发送时加载');
   expect(snapshot.messages[0]?.selections?.context?.refs).toEqual([ref]);expect(snapshot.messages.some(message=>message.role==='tool')).toBe(false);
+  const loaded=events.find(event=>event.type==='resources.loaded');
+  expect(callsAtLoad).toBe(0);
+  expect(loaded?.type==='resources.loaded' && loaded.selections).toEqual(snapshot.messages[0]?.selections);
   const count=mock.requests.length;await lab.close();
   const next=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);cleanup.push(()=>next.close());
   expect(next.get(session.id).messages).toEqual(snapshot.messages);expect(mock.requests.length).toBe(count);
-  next.context=service;await next.start(session.id,'读取不存在的对象',{contextRefs:[{...ref,objectId:'missing'}]}).run(()=>{});
+  const failed:StreamEvent[]=[];
+  next.context=service;await next.start(session.id,'读取不存在的对象',{contextRefs:[{...ref,objectId:'missing'}]}).run(event=>failed.push(event));
   expect(next.get(session.id).lastResult?.status).toBe('failed');
+  expect(failed.some(event=>event.type==='resources.loaded')).toBe(false);
 });
 it('derives only source-backed spatial links, keeping report revisions separate from object revisions',async()=>{
  const {mapReferences}=await import('../src/context/map-references.js');

@@ -169,7 +169,7 @@ export type StreamEvent = {
   | { type: 'input.consumed'; submissionId: string; text: string }
   | { type: 'context.compaction_started'; reason: CompactionReason }
   | { type: 'context.compaction_completed'; compaction: CompactionSummary }
-  | { type: 'resources.loaded'; resources: WorkspaceResources }
+  | { type: 'resources.loaded'; resources: WorkspaceResources; selections?: LoadedComposerSelection; attachments?: FileRef[] }
   | { type: 'instructions.updated'; change: InstructionUpdate }
   | { type: 'text.delta'; delta: string }
   | { type: 'tool.started'; toolCallId: string; toolName: string }

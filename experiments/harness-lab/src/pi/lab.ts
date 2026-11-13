@@ -1310,7 +1310,8 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       active.controller.signal.throwIfAborted();
       if (!record.service) this.access?.assertCanCollaborate(record.seatId);
       record.manager.appendCustomEntry(RESOURCE_ENTRY, requestRecord(active.id, snapshot, Boolean(child) || Boolean(active.background)));
-      emit({ ...base, type: 'resources.loaded', resources: resourceInfo(active.background ? { ...snapshot, instructions: snapshot.instructions.map(file => ({ ...file, editable: false })) } : snapshot) });
+      emit({ ...base, type: 'resources.loaded', resources: resourceInfo(active.background ? { ...snapshot, instructions: snapshot.instructions.map(file => ({ ...file, editable: false })) } : snapshot),
+        ...(active.selections ? { selections: active.selections } : {}), ...(active.files?.length ? { attachments: active.files } : {}) });
       const session = await this.openSession(record, snapshot, active, change => {
         active.changes.push(change);
         emit({ ...base, type: 'instructions.updated', change });

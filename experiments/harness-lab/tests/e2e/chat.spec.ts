@@ -1,7 +1,7 @@
 import { createServer, type ServerResponse } from 'node:http';
 import { once } from 'node:events';
 import { test, expect, type Page } from '@playwright/test';
-import type { SessionSnapshot, StreamEvent, InstructionFile, Workspace, ActivityOverview, ModelSettings, ModelSettingsUpdate, CompactionDetail, SubagentSummary } from '../../src/contracts/index';
+import type { SessionSnapshot, StreamEvent, InstructionFile, Workspace, ActivityOverview, ModelSettings, ModelSettingsUpdate, CompactionDetail, SubagentSummary, LoadedComposerSelection } from '../../src/contracts/index';
 
 const tableReply = `| 工作项 | 负责角色 | 交付内容 | 验收条件 |
 | --- | --- | --- | --- |
@@ -193,6 +193,66 @@ async function mockApi(page: Page) {
   await page.route('**/api/**', route => route.continue({ url: `http://127.0.0.1:${address.port}${new URL(route.request().url()).pathname}${new URL(route.request().url()).search}` }));
   return { sessions, workspaces, instructions, faults, counts, finish, event, updateChild, disconnect: (id: string) => { responses.get(id)?.end(); responses.delete(id); }, compactions, modelFaults, modelWrites, setModel: (settings: Partial<ModelSettings>) => { modelSettings = { ...modelSettings, ...settings }; }, close: async () => { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); } };
 }
+
+test('resolved references stay visible during streaming, polling and navigation before completion', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    await page.getByRole('textbox', { name: '发送消息' }).fill('慢速回复');
+    await page.getByRole('button', { name: '发送消息', exact: true }).click();
+    await expect(page.getByRole('button', { name: '停止回复' })).toBeVisible();
+    const session = mock.sessions.get('A')!;
+    const requestId = session.active!.requestId;
+    const ref = { systemId: 'situation', objectType: 'resource', objectId: 'H05' };
+    const selections: LoadedComposerSelection = {
+      skill: { id: 'synthesis', name: '资料综合写作', description: '综合资料', version: '1.0', hash: 'skill-hash', content: '本轮实际加载的 Skill 正文' },
+      agent: { name: 'analyst', description: '资料分析', hash: 'agent-hash' },
+      context: { refs: [ref], queries: [{ systemId: 'situation', query: { systemId: 'situation', mode: 'current', objectRefs: [ref] }, queriedAt: '2026-11-13T00:00:00Z', data: {
+        systemId: 'situation', asOf: '2026-11-13T00:00:00Z', items: [{ ref, name: 'H05 消火栓', revision: 1, geometry: { type: 'Point', coordinates: [116.4, 39.9] }, areaIds: [], effectiveAt: null, validTime: null, properties: {} }],
+        limit: 1, nextCursor: null, hasMore: false, timeUnknownCount: 0, unknownRefs: [], changeCursor: '1',
+      } }] },
+    };
+    const attachments = [{ path: '方案.md', name: '方案.md', size: 12, hash: 'file-hash' }];
+    const loaded = { type: 'resources.loaded' as const, sessionId: 'A', requestId, resources: { workspaceId: 'w1', instructions: [], sources: [], skills: [] }, selections, attachments };
+    const user = page.getByLabel('你的消息', { exact: true });
+    // A foreign request/session must not attach its inputs to this bubble.
+    mock.event('A', { ...loaded, requestId: 'old-request' });
+    mock.event('A', { ...loaded, sessionId: 'B' });
+    await expect(user.getByLabel('本条消息使用的能力')).toHaveCount(0);
+    Object.assign(session.messages[0], { selections, attachments });
+    mock.event('A', loaded);
+    await expect(user.getByRole('button', { name: 'Skill · 资料综合写作', exact: true })).toBeVisible();
+    await expect(user.getByLabel('本条消息使用的能力')).toContainText('analyst');
+    await expect(user.getByRole('button', { name: '在地图查看 · H05 · 证据版本 1', exact: true })).toBeVisible();
+    await expect(user.getByLabel('本条消息引用的文件')).toContainText('方案.md');
+    await user.getByRole('button', { name: 'Skill · 资料综合写作', exact: true }).click();
+    await expect(page.getByRole('dialog')).toContainText('本轮实际加载的 Skill 正文');
+    await page.getByRole('button', { name: '关闭面板', exact: true }).click();
+    // A later delta and selected-session polling must retain the loaded metadata.
+    mock.event('A', { type: 'text.delta', sessionId: 'A', requestId, delta: '，继续处理' });
+    await expect(page.getByLabel('Axon 的回复')).toContainText('继续处理');
+    const reads = mock.counts.sessionReads.length;
+    await expect.poll(() => mock.counts.sessionReads.length).toBeGreaterThan(reads);
+    await expect(user.getByLabel('本条消息引用的文件')).toContainText('方案.md');
+    await page.getByRole('button', { name: '会话 B', exact: true }).click();
+    await expect(user).toHaveCount(0);
+    await page.getByRole('button', { name: /^会话 A/ }).click();
+    await expect(user.getByRole('button', { name: 'Skill · 资料综合写作', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '停止回复' })).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath('streaming-input-references.png') });
+    mock.finish('A');
+    await expect(page.getByRole('button', { name: '停止回复' })).toHaveCount(0);
+    await expect(user).toHaveCount(1);
+    await expect(user.getByLabel('本条消息引用的文件')).toContainText('方案.md');
+    await page.reload();
+    await expect(user.getByRole('button', { name: '在地图查看 · H05 · 证据版本 1', exact: true })).toBeVisible();
+    await page.getByRole('textbox', { name: '发送消息' }).fill('普通续聊');
+    await page.getByRole('button', { name: '发送消息', exact: true }).click();
+    await expect(user).toHaveCount(2);
+    await expect(user.nth(1).getByLabel('本条消息使用的能力')).toHaveCount(0);
+    expect(mock.counts.sends).toBe(2);
+  } finally { await mock.close(); }
+});
 
 test('中文输入、独立草稿、多轮消息与刷新不重发', async ({ page }) => {
   const mock = await mockApi(page);

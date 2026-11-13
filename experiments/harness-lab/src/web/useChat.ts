@@ -461,6 +461,11 @@ export function useChat(enabled = true) {
         applyInteraction(event.interaction); return;
       }
       if (event.type === 'input.queue') { applyInputQueue(id, event.queue); return; }
+      if (event.type === 'resources.loaded') {
+        // Update the stream's message list too, so the next delta retains the resolved inputs.
+        messages = messages.map(message => message.id === 'sending-user' && message.requestId === event.requestId
+          ? { ...message, selections: event.selections, attachments: event.attachments } : message);
+      }
       if (event.type === 'input.consumed') {
         messages = [...messages, { id: event.submissionId, role: 'user', requestId: event.requestId, text: event.text }];
       }

@@ -15,7 +15,7 @@ import { CHILD_ORIGIN, SUBAGENT_START } from '../../src/pi/subagent-history.js';
 import { validateHistoryEvidence } from '../../src/pi/history-evidence.js';
 import { RESOURCE_ENTRY, RESULT_ENTRY, SKILL_ENTRY } from '../../src/pi/resource-tools.js';
 import { fakeRuntime, testConfig } from './fake-runtime.js';
-import type { ComposerSelection } from '../../src/contracts/index.js';
+import type { ComposerSelection, StreamEvent } from '../../src/contracts/index.js';
 import type { LabConfig } from '../../src/server/config.js';
 const cleanup: Array<() => Promise<unknown>> = [];
 afterEach(async () => { vi.restoreAllMocks(); for (const fn of cleanup.splice(0).reverse()) await fn(); });
@@ -34,6 +34,28 @@ async function parentFile(config: LabConfig) { const dir = join(config.dataDir, 
 async function restart(config: LabConfig) { const next = await PiLab.create(config, (await fakeRuntime(config, () => ({ text: '继续' }))).runtime); cleanup.push(() => next.close()); return next; }
 
 describe('controlled composer inputs through native Pi sessions', () => {
+  it('streams resolved Skill, role and files before model work, matching the final user message', async () => {
+    const { lab, session, calls, skill, agents } = await setup();
+    await lab.files.prepareWorkspace(session.workspaceId);
+    await writeFile(join(lab.files.filesDirectory(session.workspaceId), '方案.md'), '方案原文');
+    const events: StreamEvent[] = [];
+    let callsAtLoad = -1;
+    await lab.start(session.id, '检查方案', { skill, agent: agents[0], fileRefs: [{ path: '方案.md' }] }).run(event => {
+      events.push(event);
+      if (event.type === 'resources.loaded') callsAtLoad = calls.length;
+    });
+    const loaded = events.find(event => event.type === 'resources.loaded');
+    expect(loaded?.type).toBe('resources.loaded');
+    if (loaded?.type !== 'resources.loaded') throw new Error('Missing loaded input');
+    expect(callsAtLoad).toBe(0);
+    expect(loaded.selections).toEqual({ skill, agent: agents[0] });
+    expect(loaded.attachments).toEqual([expect.objectContaining({ path: '方案.md', hash: expect.any(String) })]);
+    const user = lab.get(session.id).messages[0];
+    expect(loaded.selections).toEqual(user.selections);
+    expect(loaded.attachments).toEqual(user.attachments);
+    expect(events.indexOf(loaded)).toBeLessThan(events.findIndex(event => event.type === 'text.delta'));
+  });
+
   it('loads explicit Skill once without a synthetic tool call and retains its exact version after restart', async () => {
     const { lab, config, calls, session, skill } = await setup();
     const snapshot = await ask(lab, session.id, { skill });

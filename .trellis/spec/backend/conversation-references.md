@@ -10,6 +10,7 @@ Read when changing composer file references, explicit Skill loading, role select
 - `POST /sessions/:id/messages` accepts optional `skill:{id,hash}`, `agent:{name,hash}`, and `contextRefs:ContextRef[]`, alongside existing text/uploadIds/fileRefs. Reject extra fields; clients cannot supply Skill content, source object bodies, system prompts or permissions.
 - `resolveComposerSelection` validates against the request resource snapshot and roles. `snapshotSkill` is shared with `skill_read`.
 - `PublicMessage.selections` contains the resolved Skill (including body) and/or role metadata for historical display.
+- `resources.loaded` SSE optionally includes `selections: LoadedComposerSelection` and `attachments: FileRef[]`, resolved by the host before the first model call.
 
 ## 3. Contracts
 
@@ -28,6 +29,8 @@ Known annotation/spatial errors may carry optional `methodAdvice:{skillId,reason
 Host method-selection guidance is an instruction, not proof of reading or a permission gate. Measure actual body delivery and task correctness separately. Changing this guidance must not rewrite historical composer templates, force every task to read a Skill, or expand tool authority.
 
 Explicit Skill selection loads the controlled body before `AgentSession.prompt`, without a synthetic `skill_read` call. No selection preserves ordinary on-demand tools. AGENTS.md, permissions and operation confirmation retain their existing authority.
+
+Publish the resolved current-request inputs in the existing `resources.loaded` event after all selection/file authorization and loading succeeds. Reuse the same Skill body, context query envelopes, annotation selections and file metadata used by the request; do not reconstruct them from browser picks or model prose. This event means inputs were loaded, not that native user text or execution succeeded. Terminal snapshots remain authoritative, including preparation failures or cancellation before user text is persisted. Do not add a second persistent input record.
 
 Map object references use complete `{systemId,objectType,objectId}` keys, at most 20, deduplicated independently of file limits. Before prompting, the host reads all selected current objects through `ContextService` as the authenticated seat. Missing/forbidden objects or failed queries stop preparation; do not silently send partial selections. Store the validated references and actual query envelopes (256 KiB combined limit) in the existing native custom input. `PublicMessage.selections.context` projects these facts on reopen. This is material supplied by the host, not a fabricated model tool call. Validate stored query/ref coverage and timestamps; never reload current facts to replace history. Old records without context retain their existing representation. See [Situation Map](./situation-map.md).
 
@@ -51,12 +54,16 @@ Cancellation between saving custom input and saving user text can leave input hi
 | Repeated file via upload and reference | One entry, counted once |
 | Bad native record or child-input mismatch | Existing history validation failure; no reconstructed success |
 | Preparation failure | Release session activity; browser retains recoverable input |
+| Selection/file authorization or loading fails | No `resources.loaded` success event for that request |
+| Legacy event omits selections/attachments | Ordinary streaming continues; terminal history remains authoritative |
 
 ## 5. Good / Base / Bad Cases
 
 Base: ordinary text with no selection behaves as before.
 
 Good: reviewer receives a selected review method and file paths, actually reads files, returns its result to the parent; the UI distinguishes requested role from actual execution.
+
+Good: selected inputs appear in the owning user bubble while the answer is streaming, using loaded metadata before the first reply delta. Base: plain-text requests carry no selections or attachments.
 
 Bad: reporting a completed delegation from a selection tag, trusting browser-supplied Skill text, adding child write tools, or counting uploads and references separately before deduplication.
 
@@ -68,6 +75,8 @@ Bad: reporting a completed delegation from a selection tag, trusting browser-sup
 
 `tests/pi/composer-input.test.ts` exercises the actual Pi loop with deterministic model output: controlled loading, selected child inputs, permissions, invalid selections, file deduplication, preparation/cancel boundaries, compaction and restart. Existing subagent/history/recovery tests remain required. `tests/e2e/references.spec.ts` covers browser drafts, candidates and submission.
 
+Streaming regressions: `composer-input.test.ts` checks loaded Skill/role/files against the terminal user message and observes zero model calls at publication; `context-composer-map.test.ts` checks actual query envelopes and absence of a success event for invalid refs. `tests/e2e/chat.spec.ts` checks visible Skill/role/map/file references before completion, retention across deltas/polls/navigation, foreign event rejection, settled/reloaded history and plain follow-up isolation.
+
 `npm run probe:references` runs configured real model and Docker against a new temporary data directory, without a production listener. Check actual tool calls, file reads, Skill use, ordinary continuation and reopened history. Record failures honestly; model compliance is distinct from deterministic delivery.
 
 ## 7. Wrong vs Correct
@@ -75,5 +84,7 @@ Bad: reporting a completed delegation from a selection tag, trusting browser-sup
 Wrong: silently retry a model that ignored a role or method until the test passes.
 
 Correct: inspect the delivered input and actual delegation task, fix a demonstrated ambiguity if present, rerun the same acceptance scenario and retain the earlier failure in the validation report.
+
+Wrong: only patch the React snapshot with loaded inputs while the stream closure still holds a text-only user message; the next delta erases the metadata. Correct: merge inputs into the guarded stream-local message list before publishing the snapshot.
 
 Explicit annotation selections use composer v6 locators as specified in [Map Annotations](map-annotations.md#complete-explicit-reference-reads-2026-11-03). Other map inputs remain v5. Keep old template bytes and strict readers intact.
