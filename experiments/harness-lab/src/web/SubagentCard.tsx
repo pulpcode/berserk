@@ -68,7 +68,7 @@ export function conversationItems(messages: PublicMessage[], subagents: Subagent
   messages.forEach((message, index) => {
     const child = childForMessage(message);
     if (child) add(child);
-    else items.push({ kind: 'message', key: `message:${message.id}`, message });
+    else items.push({ kind: 'message', key: message.role === 'tool' && message.toolStatus && message.toolCallId ? `message:${message.requestId}:tool:${message.toolCallId}` : `message:${message.id}`, message });
     // A start/interruption record can precede the native tool-result message.
     if (message.requestId && lastRequestIndex.get(message.requestId) === index) {
       (byRequest.get(message.requestId) || []).filter(child => !anchored.has(child.subagentId)).forEach(add);

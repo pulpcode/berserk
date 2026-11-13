@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { FileOutput, Interaction, PublicMessage, SessionSnapshot, SubagentSummary } from '../../src/contracts/index';
-import { chatBlocks, processLabel, toolActionLabel, type ProcessGroup } from '../../src/web/processGroups';
+import { chatBlocks, processLabel, toolActionLabel, turnFoldable, turnDuration, type ProcessGroup } from '../../src/web/processGroups';
 const msg = (id: string, role: PublicMessage['role'], extra: Partial<PublicMessage> = {}): PublicMessage => ({ id, role, text: id, requestId: 'r1', ...extra });
 const base = (messages: PublicMessage[]): SessionSnapshot => ({ id: 's1', workspaceId: 'w1', title: 'Test', updatedAt: '', active: null, lastResult: null, messages, turns: [{ requestId: 'r1', status: 'succeeded', finalMessageId: 'final' }] });
 const child: SubagentSummary = { subagentId: 'child', parentRequestId: 'r1', toolCallId: 'child-call', role: 'reviewer', description: 'Review', task: 'Check', status: 'succeeded', startedAt: '', result: 'Done' };
@@ -123,4 +123,33 @@ describe('conversation presentation boundaries', () => {
     expect(blocks[0]!.kind === 'files' && blocks[0]!.files).toHaveLength(2);
   });
 
+});
+
+describe('B first batch process content', () => {
+  it('keeps thinking and ordinary text in native block order', () => {
+    const snapshot = base([msg('u', 'user'), msg('a', 'assistant', { content: [
+      { id: 'b0', type: 'thinking', text: '思考内容' }, { id: 'b1', type: 'text', text: '进度说明' }, { id: 'b2', type: 'thinking', text: '再次核对' },
+    ] }), msg('read', 'tool', { toolName: 'read' }), msg('final', 'assistant')]);
+    const blocks = chatBlocks(snapshot);
+    expect(blocks.map(block => block.kind)).toEqual(['message', 'process', 'message', 'process', 'message']);
+    expect(blocks[1].kind === 'process' && blocks[1].items[0].key).toBe('thinking:b0');
+    expect(blocks[2].kind === 'message' && blocks[2].message.text).toBe('进度说明');
+    expect(blocks[3].kind === 'process' && blocks[3].items[0].key).toBe('thinking:b2');
+  });
+});
+
+it('B first batch never hides across consumed user inputs or unresolved results', () => {
+  const snapshot = base([msg('u', 'user'), msg('read', 'tool'), msg('u2', 'user'), msg('edit', 'tool'), msg('final', 'assistant')]);
+  const groups = chatBlocks(snapshot).filter((block): block is ProcessGroup => block.kind === 'process');
+  expect(turnFoldable(snapshot, 'r1', groups)).toBe(false);
+  snapshot.messages = snapshot.messages.filter(message => message.id !== 'u2');
+  expect(turnFoldable(snapshot, 'r1', groups)).toBe(true);
+  snapshot.messages[1].resultMissing = true;
+  expect(turnFoldable(snapshot, 'r1', groups)).toBe(false);
+});
+it('B first batch uses only reliable matching times', () => {
+  expect(turnDuration('2026-11-13T00:00:00Z', '2026-11-13T00:00:23Z')).toBe('23 秒');
+  expect(turnDuration(undefined, '2026-11-13T00:00:23Z')).toBeUndefined();
+  expect(turnDuration('bad', 'bad')).toBeUndefined();
+  expect(turnDuration('2026-11-13T00:00:23Z', '2026-11-13T00:00:00Z')).toBeUndefined();
 });

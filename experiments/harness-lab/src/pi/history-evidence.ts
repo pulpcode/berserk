@@ -58,20 +58,25 @@ export function unfinishedRequests(entries: SessionEntry[]) {
 /** Read only after strict history validation. Never infer completion from message text/order alone. */
 export function conversationTurns(entries: SessionEntry[], messages: PublicMessage[], activeRequestId?: string): ConversationTurn[] {
   const turns = new Map<string, ConversationTurn>();
+  const starts = new Map<string, string>();
   const visible = new Map(messages.map(message => [message.id, message]));
   let currentRequest: string | undefined;
   let lastMessage: Extract<SessionEntry, { type: 'message' }> | undefined;
   for (const entry of entries) {
     if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) {
       currentRequest = (entry.data as { requestId: string }).requestId;
-      turns.set(currentRequest, { requestId: currentRequest, status: 'interrupted' });
+      if (Number.isFinite(Date.parse(entry.timestamp))) starts.set(currentRequest, entry.timestamp);
+      turns.set(currentRequest, { requestId: currentRequest, status: 'interrupted', ...(starts.has(currentRequest) ? { startedAt: starts.get(currentRequest) } : {}) });
       lastMessage = undefined;
     } else if (entry.type === 'message' && currentRequest) {
       // Empty/tool-only assistant messages still replace the candidate; never look backwards.
       lastMessage = entry;
     } else if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) {
       const { requestId, status } = entry.data as RequestResult;
-      const turn: ConversationTurn = { requestId, status };
+      const startedAt = starts.get(requestId);
+      const completedAt = entry.timestamp;
+      const timed = currentRequest === requestId && startedAt && Number.isFinite(Date.parse(completedAt)) && Date.parse(completedAt) >= Date.parse(startedAt);
+      const turn: ConversationTurn = { requestId, status, ...(timed ? { startedAt, completedAt } : {}) };
       const message = lastMessage?.message;
       const projected = lastMessage && visible.get(lastMessage.id);
       if (lastMessage && status === 'succeeded' && currentRequest === requestId && message?.role === 'assistant'

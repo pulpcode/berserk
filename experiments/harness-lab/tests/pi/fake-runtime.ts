@@ -3,7 +3,7 @@ import { createAssistantMessageEventStream, InMemoryCredentialStore, InMemoryMod
   type AssistantMessage, type Context, type SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { LabConfig } from '../../src/server/config.js';
 
-export type Reply = { text?: string; toolIds?: string[]; tools?: Array<{ name: string; arguments: Record<string, unknown> }>; error?: string; length?: boolean; waitForAbort?: boolean; usageInput?: number; usageOutput?: number; delayMs?: number };
+export type Reply = { blocks?: Array<{ type: 'text'; text: string } | { type: 'thinking'; thinking: string; redacted?: boolean; thinkingSignature?: string }>; text?: string; toolIds?: string[]; tools?: Array<{ name: string; arguments: Record<string, unknown> }>; error?: string; length?: boolean; waitForAbort?: boolean; usageInput?: number; usageOutput?: number; delayMs?: number };
 export interface CapturedCall { context: Context; maxTokens?: number; aborted: boolean }
 
 /** Fake only the provider stream: Pi itself performs the real tool loop and persistence. */
@@ -44,6 +44,22 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
           block.text = plan.text;
           stream.push({ type: 'text_delta', contentIndex: 0, delta: plan.text, partial: message });
           stream.push({ type: 'text_end', contentIndex: 0, content: plan.text, partial: message });
+        }
+        for (const original of plan.blocks ?? []) {
+          const index = message.content.length;
+          if (original.type === 'text') {
+            const block = { ...original, text: '' }; message.content.push(block);
+            stream.push({ type: 'text_start', contentIndex: index, partial: message });
+            block.text = original.text;
+            stream.push({ type: 'text_delta', contentIndex: index, delta: original.text, partial: message });
+            stream.push({ type: 'text_end', contentIndex: index, content: original.text, partial: message });
+          } else {
+            const block = { ...original, thinking: '' }; message.content.push(block);
+            stream.push({ type: 'thinking_start', contentIndex: index, partial: message });
+            block.thinking = original.thinking;
+            stream.push({ type: 'thinking_delta', contentIndex: index, delta: original.thinking, partial: message });
+            stream.push({ type: 'thinking_end', contentIndex: index, content: original.thinking, partial: message });
+          }
         }
         if (plan.error) {
           message.stopReason = 'error'; message.errorMessage = plan.error;

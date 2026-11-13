@@ -61,10 +61,14 @@ describe('local API with real Pi sessions', () => {
     expect(reply.statusCode).toBe(200);
     expect(reply.headers['content-type']).toContain('text/event-stream');
     const stream = events(reply.payload);
-    expect(stream.filter(event => event.type !== 'input.queue').map(event => event.type)).toEqual(['response.started', 'resources.loaded', 'text.delta', 'response.completed']);
+    expect(stream.filter(event => event.type !== 'input.queue' && event.type !== 'assistant.updated').map(event => event.type)).toEqual(['response.started', 'resources.loaded', 'text.delta', 'response.completed']);
     expect(stream.every(event => event.sessionId === a.id && event.requestId === stream[0].requestId)).toBe(true);
     const history = (await app.inject(`/api/sessions/${a.id}`)).json<SessionSnapshot>();
     expect(history.messages.map(message => message.text)).toEqual(['记住请求标记', '实际 Pi 回复']);
+    const updates = stream.filter(event => event.type === 'assistant.updated');
+    expect(updates.length).toBeGreaterThan(0);
+    expect(updates.at(-1)?.message.content).toEqual(history.messages.at(-1)?.content);
+    expect(updates.at(-1)?.message.presentationId).toBe(history.messages.at(-1)?.presentationId);
     expect((await app.inject(`/api/sessions/${b.id}`)).json<SessionSnapshot>().messages).toEqual([]);
     const list = (await app.inject('/api/sessions')).json<Array<{ id: string }>>();
     expect(list.map(item => item.id)).toEqual(expect.arrayContaining([a.id, b.id]));

@@ -290,13 +290,19 @@ input, select { font: inherit; }
 .workspace-entry > .workspace-rail-icon { display: none; }
 .workspace-entry span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .workspace-group.current .workspace-folder-icon { color: var(--accent); }
-.group-count { border-radius: 4px; min-width: 18px; padding: 2px 4px; text-align: center; font-size: 10px; font-variant-numeric: tabular-nums; }
-.group-count.running { background: var(--accent-soft); color: var(--accent); }
-.group-count.attention { color: #805727; background: #f3eadc; }
-.group-sessions .session-item { align-items: center; min-height: 32px; padding: 6px 8px 6px 32px; margin-bottom: 2px; color: var(--text); font-size: 14px; font-weight: 400; line-height: 20px; }
+.group-sessions .session-item { align-items: center; gap: 6px; min-height: 32px; padding: 6px 8px 6px 16px; margin-bottom: 2px; color: var(--text); font-size: 14px; font-weight: 400; line-height: 20px; }
 .group-sessions .session-item.selected { background: rgba(38, 49, 72, .06); }
 .group-sessions .sidebar-empty { margin: 2px 0; padding: 6px 8px 6px 32px; line-height: 20px; }
-.group-sessions .session-item > .session-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; overflow: visible; white-space: normal; flex: 1; }
+.group-sessions .session-item > .session-title { flex: 1; min-width: 0; }
+.session-status-slot { flex: 0 0 16px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.session-status-slot .conversation-indicator { margin: 0; }
+.session-status-slot .conversation-indicator.running { color: var(--muted); }
+.session-update-time, .session-pending-label { flex-shrink: 0; font-size: 11px; line-height: 16px; white-space: nowrap; color: var(--muted); }
+.session-pending-label { color: #805727; }
+.session-hover-card { position: fixed; z-index: 40; width: min(320px, calc(100vw - 16px)); max-height: calc(100vh - 16px); overflow: auto; display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 4px 18px #17231a1a; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.session-hover-card strong { font-size: 13px; font-weight: 500; }
+.session-hover-workspace, .session-hover-card time { color: var(--muted); }
+.session-hover-status { border-top: 1px solid var(--line); padding-top: 8px; }
 .session-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 20px; }
 .activity-status { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; color: var(--muted); font-size: 10px; font-weight: 400; line-height: 1.5; }
 .activity-status.running { color: var(--accent); }
@@ -349,8 +355,7 @@ input, select { font: inherit; }
 .navigation-actions .new-chat { min-height: 44px; }
 .project-new-chat { display: grid; place-items: center; flex-shrink: 0; width: 28px; height: 32px; border: 0; border-radius: var(--control-radius); background: transparent; color: var(--muted); }
 .project-new-chat:hover:not(:disabled) { background: var(--accent-soft); color: var(--accent); }
-.session-title-row, .activity-title-row { display: flex; min-width: 0; align-items: center; gap: 9px; }
-.session-title-row .session-title { flex: 1; }
+.activity-title-row { display: flex; min-width: 0; align-items: center; gap: 9px; }
 .unread-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #3975dc; flex-shrink: 0; }
 .sidebar .sidebar-footer { display: flex; padding: 8px 0 12px; }
 .settings-trigger { display: flex; align-items: center; gap: var(--control-gap); width: 100%; text-align: left; }
@@ -1150,6 +1155,7 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .conversation-indicator.unread > span { background: #3578ce; }
 .conversation-indicator.waiting > span { width: 10px; height: 10px; background: #d88b08; box-shadow: 0 0 0 2px #d88b0828; }
 .conversation-indicator.failed > span { background: #c43c36; }
+.session-status-slot .conversation-indicator > span { width: 6px; height: 6px; box-shadow: none; }
 .conversation-indicator.running > svg { animation: conversation-spin 1s linear infinite; }
 @keyframes conversation-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .conversation-indicator.running > svg { animation: none; } }
@@ -1360,3 +1366,21 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .confirmation-history-heading .confirmation-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 400; }
 .confirmation-outcome { flex-shrink: 0; font-size: 12px; }
 .confirmation-decision { font-size: 12px; }
+
+/* B first batch: live process rows and settled whole-turn disclosure. */
+.chat-presentation, .chat-block { display: contents; }
+.chat-block > .interaction-card { margin-left: var(--reply-inset); }
+.turn-process-control { display: flex; align-items: center; gap: 6px; margin: 4px 0 16px var(--reply-inset); padding: 6px 0; border: 0; background: transparent; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.turn-process-control:disabled { opacity: 1; cursor: default; }
+.turn-process-control svg { transform: rotate(-90deg); }
+.turn-process-control svg.expanded { transform: none; }
+.process-group.running > summary { display: none; }
+.process-group.running > .process-content { margin: 0; padding: 0; border: 0; }
+.tool-result > summary > .tool-subject, .tool-result > summary > .thinking-preview { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--muted); }
+.tool-result > summary > span:first-of-type { flex-shrink: 0; }
+.tool-body h4 { margin: 10px 0 4px; color: var(--muted); font-weight: 500; font-size: 12px; }
+.tool-body pre, .tool-body .tool-diff { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.tool-input-range, .tool-output-notice { color: var(--muted); font-size: 12px; }
+.thinking-body { padding: 8px 14px; border-left: 1px solid var(--line); color: var(--muted); font-size: 13px; max-height: 420px; overflow: auto; }
+.tool-diff .diff-add { color: #286044; background: #edf6ee; }
+.tool-diff .diff-remove { color: #963f3f; background: #fff0ef; }

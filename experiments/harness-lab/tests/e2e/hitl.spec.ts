@@ -495,7 +495,8 @@ test('SSE question receives attention without unread dot or animation; mobile co
   await expect(page.getByRole('region', { name: 'Agent 提问' })).toHaveCount(1);
   await expect(page.locator('.thinking')).toHaveCount(0); await expect(page.getByLabel('有新回复未读')).toHaveCount(0);
   await expect(page.getByRole('button', { name: '会话 A', exact: true }).getByRole('img', { name: '待回答' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '会话 A', exact: true })).toHaveText('会话 A');
+  await expect(page.getByRole('button', { name: '会话 A', exact: true }).locator('.session-title')).toHaveText('会话 A');
+  await expect(page.getByRole('button', { name: '会话 A', exact: true }).locator('.session-pending-label')).toHaveText('待回答');
   await expect(page.getByRole('button', { name: '会话 B', exact: true }).getByRole('img')).toHaveCount(0);
   a.interactions = [confirmation()]; a.active = { requestId: 'r1', status: 'responding', phase: 'waiting_confirmation' };
   await page.setViewportSize({ width: 375, height: 812 }); await page.reload();
@@ -557,8 +558,8 @@ for (const kind of ['confirmation', 'question'] as const) test(`${kind} cards al
   const { a, state } = await fixture(page, item);
   a.messages.unshift({ id: 'previous-reply', role: 'assistant', text: '请核对以下内容后继续。' });
   await page.reload();
-  const card = page.locator('.message-list > .interaction-card');
-  const reply = page.locator('.message-list > .assistant .message-content > p');
+  const card = page.locator('.message-list .interaction-card');
+  const reply = page.locator('.message-list .assistant .message-content > p');
   for (const width of [1280, 800, 375]) {
     await page.setViewportSize({ width, height: 900 });
     await expect(card).toBeVisible();

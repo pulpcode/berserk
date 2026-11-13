@@ -1,12 +1,13 @@
 import type { FileOutput, PublicMessage, SessionSnapshot } from '../contracts/index';
 import { conversationItems, type ConversationItem } from './SubagentCard';
 
-export type DisplayItem = ConversationItem | { kind: 'file'; key: string; file: FileOutput };
+export type ThinkingItem = { kind: 'thinking'; key: string; requestId?: string; text: string; running: boolean };
+export type DisplayItem = ConversationItem | ThinkingItem | { kind: 'file'; key: string; file: FileOutput };
 export type ProcessGroup = { kind: 'process'; key: string; requestId: string; items: DisplayItem[]; collapsible: boolean; tools: number; agents: number; categories: string[] };
 /** Presentation-only group of adjacent same-request downloads; order and ownership stay untouched. */
 export type FileGroup = { kind: 'files'; key: string; requestId: string; files: FileOutput[] };
 export type ChatBlock = DisplayItem | ProcessGroup | FileGroup;
-const requestOf = (item: DisplayItem) => item.kind === 'message' ? item.message.requestId : item.kind === 'subagent' ? item.child.parentRequestId : item.kind === 'interaction' ? item.interaction.requestId : item.file.requestId;
+const requestOf = (item: DisplayItem) => item.kind === 'thinking' ? item.requestId : item.kind === 'message' ? item.message.requestId : item.kind === 'subagent' ? item.child.parentRequestId : item.kind === 'interaction' ? item.interaction.requestId : item.file.requestId;
 const matchesOutput = (message: PublicMessage, file: FileOutput) => message.role === 'tool' && message.toolName === 'file_output' && message.requestId === file.requestId && message.toolCallId === file.toolCallId;
 
 const toolActions: Record<string, string> = {
@@ -33,7 +34,14 @@ export function chatBlocks(snapshot: SessionSnapshot): ChatBlock[] {
   const usedFiles = new Set<string>();
   for (const item of conversationItems(snapshot.messages, snapshot.subagents || [], snapshot.active?.requestId, snapshot.interactions || [])) {
     const outputs = item.kind === 'message' ? files.filter(file => matchesOutput(item.message, file)) : [];
-    if (!outputs.length || (item.kind === 'message' && item.message.isError)) items.push(item);
+    if (!outputs.length || (item.kind === 'message' && item.message.isError)) {
+      if (item.kind === 'message' && item.message.role === 'assistant' && item.message.content) {
+        for (const block of item.message.content) if (block.text.trim()) {
+          if (block.type === 'thinking') items.push({ kind: 'thinking', key: `thinking:${block.id}`, requestId: item.message.requestId, text: block.text, running: item.message.requestId === snapshot.active?.requestId && snapshot.messages.at(-1)?.id === item.message.id && item.message.content.at(-1)?.id === block.id });
+          else items.push({ ...item, key: `text:${block.id}`, message: { ...item.message, text: block.text } });
+        }
+      } else items.push(item);
+    }
     for (const file of outputs) if (!usedFiles.has(file.downloadId)) {
       usedFiles.add(file.downloadId); items.push({ kind: 'file', key: `file:${file.downloadId}`, file });
     }
@@ -44,7 +52,7 @@ export function chatBlocks(snapshot: SessionSnapshot): ChatBlock[] {
   for (const item of items) {
     const requestId = requestOf(item);
     // Every ordinary assistant reply stays visible; only tool results and eligible Agent records fold.
-    const process = requestId && (item.kind === 'subagent' ? ['running', 'stopping', 'succeeded'].includes(item.child.status) : item.kind === 'message' && item.message.role === 'tool' && !item.message.isError && !item.message.resultMissing && item.message.toolName !== 'file_output' && item.message.toolName !== 'subagent');
+    const process = requestId && (item.kind === 'thinking' ? true : item.kind === 'subagent' ? ['running', 'stopping', 'succeeded'].includes(item.child.status) : item.kind === 'message' && item.message.role === 'tool' && !item.message.isError && !item.message.resultMissing && item.message.toolName !== 'file_output' && item.message.toolName !== 'subagent');
     if (!process || !requestId) {
       if (item.kind === 'file') {
         // Only adjacent files with the same known request merge; legacy files keep a single-file wrapper.
@@ -74,4 +82,23 @@ export function chatBlocks(snapshot: SessionSnapshot): ChatBlock[] {
 export function processLabel(group: ProcessGroup): string {
   const tools = group.tools ? `${group.tools} 次工具调用${group.categories.length ? `（${group.categories.join('、')}）` : ''}` : '';
   return ['处理过程', tools, group.agents ? `${group.agents} 个 Agent 任务` : ''].filter(Boolean).join(' · ');
+}
+
+/** Whole-turn hiding must never span a consumed user input or conceal unresolved work. */
+export function turnFoldable(snapshot: SessionSnapshot, requestId: string, groups: ProcessGroup[]): boolean {
+  if (!groups.length || groups.some(group => !group.collapsible)) return false;
+  const messages = snapshot.messages.filter(message => message.requestId === requestId);
+  let processStarted = false;
+  for (const message of messages) {
+    if (message.role === 'user' && processStarted) return false;
+    if (message.isError || message.resultMissing) return false;
+    if (message.role === 'tool' || message.content?.some(block => block.type === 'thinking' && block.text.trim())) processStarted = true;
+  }
+  return true;
+}
+export function turnDuration(startedAt?: string, completedAt?: string): string | undefined {
+  const start = Date.parse(startedAt || ''), end = Date.parse(completedAt || '');
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) return undefined;
+  const seconds = Math.max(1, Math.round((end - start) / 1000));
+  return seconds < 60 ? `${seconds} 秒` : `${Math.floor(seconds / 60)} 分 ${seconds % 60} 秒`;
 }

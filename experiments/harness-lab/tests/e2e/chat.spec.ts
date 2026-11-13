@@ -673,7 +673,7 @@ test('失败请求不展示调试资料入口，准备失败恢复草稿且刷�
   } finally { await mock.close(); }
 });
 
-test('分组侧栏持续汇总未打开会话，未读回复用蓝点显示并在阅读后清除', async ({ page }) => {
+test('分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     const c = mock.sessions.get('C')!;
@@ -688,16 +688,16 @@ test('分组侧栏持续汇总未打开会话，未读回复用蓝点显示并�
     expect(mock.counts.sessionReads).not.toContain('D');
     const originalOrder = await page.locator('.workspace-groups .session-item').allTextContents();
     await page.getByRole('button', { name: '折叠项目：另一工作区' }).click();
-    await expect(group.getByLabel('1 个处理中', { exact: true })).toBeVisible();
+    await expect(group.locator('.group-count')).toHaveCount(0);
     await expect(group.getByRole('button', { name: '会话 C', exact: true })).toBeHidden();
     c.messages.push({ id: 'external-answer', role: 'assistant', requestId: 'external-c', text: '来自后台的 C 回复' });
     mock.finish('C');
     await expect(group.getByLabel('1 个处理中', { exact: true })).toHaveCount(0);
-    await expect(group.locator('.group-count.attention')).toBeVisible();
+    await expect(group.locator('.group-count')).toHaveCount(0);
     await page.getByRole('button', { name: '展开项目：另一工作区' }).click();
     const cButton = group.getByRole('button', { name: '会话 C', exact: true });
     await expect(cButton.getByRole('img', { name: '有新回复未读' })).toBeVisible();
-    await expect(cButton).toHaveText('会话 C');
+    await expect(cButton.locator('.session-title')).toHaveText('会话 C');
     await expect(page.getByRole('button', { name: '全部动态', exact: true })).toHaveCount(0);
     await page.reload();
     await expect(cButton.getByRole('img', { name: '有新回复未读' })).toBeVisible();
@@ -705,13 +705,154 @@ test('分组侧栏持续汇总未打开会话，未读回复用蓝点显示并�
     await expect(page.getByText('来自后台的 C 回复', { exact: true })).toBeVisible();
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
     await expect(page.locator('.conversation-indicator.failed')).toHaveCount(1);
+    // Restore C before the first overview resolves, reproducing the bootstrap race.
+    const readsBeforeReload = mock.counts.sessionReads.filter(id => id === 'C').length;
+    mock.faults.holdActivity = true;
     await page.reload();
+    await expect.poll(() => mock.counts.sessionReads.filter(id => id === 'C').length).toBeGreaterThan(readsBeforeReload);
+    await expect(page.getByRole('main').getByText('会话 C', { exact: true })).toBeVisible();
+    await expect.poll(() => Boolean(mock.faults.releaseActivity)).toBe(true);
+    mock.faults.releaseActivity!();
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
     await expect(page.locator('.conversation-indicator.failed')).toHaveCount(1);
     const finalOrder = await page.locator('.workspace-groups .session-item').allTextContents();
     expect(originalOrder.map(text => text.slice(0, 4))).toEqual(finalOrder.map(text => text.slice(0, 4)));
     expect(mock.counts.sends).toBe(0);
     expect(mock.counts.cancels).toEqual([]);
+  } finally { await mock.close(); }
+});
+
+test('DSH sidebar places one status before aligned titles, shows pending labels and delayed hover details', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    mock.sessions.get('B')!.active = { requestId: 'running-b', status: 'responding', phase: 'generating' };
+    const question = mock.sessions.get('C')!;
+    question.title = '核实临港仓储区烟情并核对消防水源与周边道路通行条件';
+    question.active = { requestId: 'question-c', status: 'responding', phase: 'waiting_answer' };
+    mock.sessions.get('D')!.active = { requestId: 'approval-d', status: 'responding', phase: 'waiting_confirmation' };
+    await page.goto('/');
+    const idle = page.getByRole('button', { name: '会话 A', exact: true });
+    const running = page.getByRole('button', { name: '会话 B', exact: true });
+    const waiting = page.getByRole('button', { name: question.title, exact: true });
+    const approval = page.getByRole('button', { name: '会话 D', exact: true });
+    await expect(idle).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('.group-count')).toHaveCount(0);
+    await expect(idle.locator('.session-status-slot')).toBeVisible();
+    await expect(idle.locator('.conversation-indicator')).toHaveCount(0);
+    await expect(running.getByRole('img', { name: '生成回复' })).toBeVisible();
+    await expect(waiting.getByRole('img', { name: '待回答' })).toBeVisible();
+    await expect(waiting.locator('.session-pending-label')).toHaveText('待回答');
+    await expect(approval.locator('.session-pending-label')).toHaveText('待确认');
+    await expect(waiting.locator('.conversation-indicator > span')).toHaveCSS('width', '6px');
+    await expect(waiting.locator('.conversation-indicator > span')).toHaveCSS('box-shadow', 'none');
+    await expect(waiting.locator('time')).toHaveCount(0);
+    await expect(waiting.locator('.conversation-indicator.running')).toHaveCount(0);
+    await expect(idle.locator('time')).toHaveAttribute('datetime', mock.sessions.get('A')!.updatedAt);
+    const positions = await Promise.all([idle, running, waiting, approval].map(row => row.locator('.session-title').boundingBox()));
+    expect(new Set(positions.map(box => box!.x)).size).toBe(1);
+    const statusBox = (await running.locator('.session-status-slot').boundingBox())!;
+    expect(statusBox.x + statusBox.width).toBeLessThan(positions[1]!.x);
+    for (const row of [running, waiting]) {
+      const title = (await row.locator('.session-title').boundingBox())!;
+      const marker = (await row.locator('.conversation-indicator > span, .conversation-indicator > svg').boundingBox())!;
+      expect(Math.abs(marker.y + marker.height / 2 - title.y - title.height / 2)).toBeLessThanOrEqual(1);
+    }
+
+    await running.hover();
+    await page.waitForTimeout(200); // The first card must not flash on incidental pointer movement.
+    await expect(page.getByRole('tooltip')).toHaveCount(0);
+    const tooltip = page.getByRole('tooltip');
+    await expect(tooltip).toContainText('生成回复');
+    await expect(tooltip).toContainText('默认工作区');
+    await expect(tooltip).toContainText('更新于');
+    expect(await tooltip.evaluate(node => node.parentElement === document.body)).toBe(true);
+    await tooltip.hover();
+    await page.waitForTimeout(200);
+    await expect(tooltip).toBeVisible();
+    await waiting.hover();
+    await expect(tooltip).toContainText(question.title, { timeout: 700 });
+    await expect(tooltip).toContainText('待回答');
+    await expect(tooltip).toBeInViewport({ ratio: 1 });
+    await expect(idle).toHaveAttribute('aria-current', 'page');
+    await page.screenshot({ path: test.info().outputPath('sidebar-dsh-status-hover.png') });
+    await page.mouse.move(900, 700);
+    await expect(tooltip).toHaveCount(0);
+
+    const completed = mock.sessions.get('D')!;
+    completed.active = null;
+    completed.lastResult = { requestId: 'unread-d', status: 'succeeded' };
+    completed.messages = [{ id: 'answer-d', requestId: 'unread-d', role: 'assistant', text: '尚未查看的回复' }];
+    await expect(approval.getByRole('img', { name: '有新回复未读' })).toBeVisible();
+    await approval.hover();
+    await expect(tooltip).toContainText('有新回复未读');
+    await expect(idle).toHaveAttribute('aria-current', 'page');
+    await expect(approval.getByRole('img', { name: '有新回复未读' })).toBeVisible();
+
+    await page.keyboard.press('Tab');
+    await waiting.focus();
+    await expect(tooltip).toContainText(question.title);
+    await expect(waiting).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(tooltip).toHaveCount(0);
+    await expect(waiting).toBeFocused();
+    await idle.focus();
+    await expect(tooltip).toContainText('空闲');
+    await running.focus();
+    await expect(tooltip).toContainText('生成回复');
+    await page.getByRole('button', { name: '折叠项目：默认工作区', exact: true }).click();
+    await expect(tooltip).toHaveCount(0);
+    await expect(page.locator('.group-count')).toHaveCount(0);
+    expect(mock.counts.sends).toBe(0);
+    expect(mock.counts.cancels).toHaveLength(0);
+    expect(mock.counts.creates).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('DSH sidebar hover stays inside a short desktop viewport and closes on scroll, blur or hidden rows', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const original = mock.sessions.get('D')!;
+    for (let index = 0; index < 12; index++) {
+      const id = `extra-${index}`;
+      mock.sessions.set(id, { ...original, id, title: `待核对的历史会话 ${index}` });
+    }
+    const last = { ...original, id: 'last', title: '核对最后一条长标题会话及恢复原因，确保窄桌面窗口也能完整阅读', recoveryWarning: '执行环境尚未恢复，请稍后检查。' };
+    mock.sessions.set(last.id, last);
+    await page.setViewportSize({ width: 960, height: 600 });
+    await page.goto('/');
+    const row = page.getByRole('button', { name: last.title, exact: true });
+    await row.hover();
+    const tooltip = page.getByRole('tooltip');
+    await expect(tooltip).toContainText(last.recoveryWarning);
+    await expect(tooltip).toBeInViewport({ ratio: 1 });
+    const box = (await tooltip.boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(8);
+    expect(box.y).toBeGreaterThanOrEqual(8);
+    expect(box.x + box.width).toBeLessThanOrEqual(952);
+    expect(box.y + box.height).toBeLessThanOrEqual(592);
+    await page.screenshot({ path: test.info().outputPath('sidebar-dsh-narrow-hover.png') });
+    await page.evaluate(() => window.dispatchEvent(new Event('blur')));
+    await expect(tooltip).toHaveCount(0);
+
+    await page.mouse.move(850, 300);
+    await row.scrollIntoViewIfNeeded();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await row.hover();
+    await expect(tooltip).toBeVisible();
+    await page.getByRole('navigation', { name: '会话列表' }).evaluate(node => { node.scrollTop -= 50; });
+    await expect(tooltip).toHaveCount(0);
+
+    await page.mouse.move(850, 300);
+    await row.scrollIntoViewIfNeeded();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await row.hover();
+    await expect(tooltip).toBeVisible();
+    // A state-driven collapse has no pointerdown to dismiss the card; its hidden anchor must close it.
+    await page.getByRole('button', { name: '折叠侧边栏', exact: true }).evaluate(button => button.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await expect(row).toBeHidden();
+    await expect(tooltip).toHaveCount(0);
+    expect(mock.counts.sends).toBe(0);
+    expect(mock.counts.creates).toBe(0);
   } finally { await mock.close(); }
 });
 
@@ -1492,7 +1633,7 @@ for (const target of ['link', 'table'] as const) test(`流式说明保留在过�
   } finally { await mock.close(); }
 });
 
-test('尾部说明保持在过程之外且焦点稳定，手动收起的选择在完成时保留', async ({ page }) => {
+test('尾部说明保持在过程之外且焦点稳定，运行中手动查看详情在完成时保留', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     const session = mock.sessions.get('A')!; presentationSession(session);
@@ -1500,8 +1641,8 @@ test('尾部说明保持在过程之外且焦点稳定，手动收起的选择�
     await page.goto('/');
     const process = page.locator('.process-group').first();
     await expect(process).toHaveAttribute('open', '');
-    await process.locator(':scope > summary').click();
-    await expect(process).not.toHaveAttribute('open');
+    await expect(process.locator(':scope > summary')).toBeHidden();
+    await process.locator('.tool-result > summary').click();
     const link = page.getByRole('link', { name: '继续核对来源' }); await link.focus();
     session.messages.push({ id: 'last-read', requestId: 'presentation', role: 'tool', toolName: 'read', text: '核对结果' });
     completePresentation(session);
@@ -1509,6 +1650,9 @@ test('尾部说明保持在过程之外且焦点稳定，手动收起的选择�
     await expect(link).toBeFocused(); await expect(link).toBeVisible();
     expect(await link.evaluate(node => node.closest('.process-group'))).toBeNull();
     await expect(page.locator('.process-group')).toHaveCount(2);
+    await expect(process).toHaveAttribute('open', '');
+    await expect(process.locator('.tool-result')).toHaveAttribute('open', '');
+    await process.locator(':scope > summary').click();
     await expect(process).not.toHaveAttribute('open');
     await process.locator(':scope > summary').click();
     await expect(process).toHaveAttribute('open', ''); await expect(process.locator(':scope > summary')).toBeFocused();
@@ -1854,6 +1998,105 @@ test('地图聚焦时继续接收回复但不误标已读，返回对话保留�
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(1);
     await conversation.evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
+    expect(mock.counts.sends).toBe(1);
+  } finally { await mock.close(); }
+});
+
+test('B首批：思考和工具原序展示，真实累积输出更新且手动展开不被完成收起', async ({ page }, testInfo) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages[1] = { ...session.messages[1], content: [
+      { id: 'native-think', type: 'thinking', text: '先检查依据\n核对资料范围。' },
+      { id: 'native-note', type: 'text', text: '先核对资料中的依据。' },
+    ] };
+    session.messages[2] = { ...session.messages[2], toolName: 'bash', text: '第一行\n', toolStatus: 'running', toolInput: { command: 'python analyze.py' } };
+    await page.goto('/');
+    const thinking = page.locator('.thinking-result');
+    await expect(thinking).not.toHaveAttribute('open');
+    await expect(page.locator('.process-group.running > summary').first()).toBeHidden();
+    await thinking.locator('summary').click();
+    await expect(page.getByText('核对资料范围。', { exact: false })).toBeVisible();
+    const command = page.locator('.tool-result').filter({ hasText: 'python analyze.py' });
+    await command.locator('summary').click();
+    await expect(command).toContainText('正在执行命令');
+    session.messages[2].text = '第一行\n第二行';
+    await expect(command.locator('.tool-body pre').last()).toHaveText('第一行\n第二行');
+    await page.getByRole('textbox', { name: '发送消息' }).focus();
+    await page.screenshot({ path: testInfo.outputPath('b-live-thinking-command.png') });
+    session.messages[2].toolStatus = 'completed'; completePresentation(session);
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(thinking).toBeVisible(); await expect(command).toHaveAttribute('open', '');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('B首批：完成耗时入口收起过程但保留回复，展开查看原生diff且刷新保持内容', async ({ page }, testInfo) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages[2] = { ...session.messages[2], toolName: 'edit', toolInput: { path: '/workspace/brief.md' }, toolStatus: 'completed', toolDetails: { diff: '-旧内容\n+新内容' } };
+    completePresentation(session);
+    session.turns![0].startedAt = '2026-11-13T00:00:00Z'; session.turns![0].completedAt = '2026-11-13T00:00:23Z';
+    await page.goto('/');
+    const control = page.getByRole('button', { name: '已完成，用时 23 秒', exact: true });
+    await expect(control).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByText('先核对资料中的依据。', { exact: true })).toBeVisible();
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(page.locator('.process-group')).toBeHidden();
+    await page.screenshot({ path: testInfo.outputPath('b-completed-collapsed.png') });
+    await control.click(); await page.locator('.process-group > summary').click();
+    await page.locator('.tool-result > summary').click();
+    await expect(page.locator('.tool-diff')).toHaveText('-旧内容\n+新内容\n');
+    await page.screenshot({ path: testInfo.outputPath('b-completed-diff-expanded.png') });
+    await control.click(); await control.click();
+    await expect(page.locator('.process-group')).not.toHaveAttribute('open');
+    await page.reload(); await expect(control).toHaveAttribute('aria-expanded', 'false');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('B首批：用户补充禁止整轮跨越折叠，纯文本不生成空过程', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages.push({ id: 'steering', role: 'user', requestId: 'presentation', text: '只处理最新资料' });
+    completePresentation(session); await page.goto('/');
+    await expect(page.getByRole('button', { name: '已完成', exact: true })).toBeDisabled();
+    await expect(page.getByText('只处理最新资料', { exact: true })).toBeVisible();
+    session.messages = session.messages.filter(message => message.role !== 'tool');
+    await page.reload(); await expect(page.locator('.process-group')).toHaveCount(0);
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('B首批：结构化流替换旧delta，工具累积输出不重复且终态保持披露身份', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    await page.getByRole('textbox', { name: '发送消息' }).fill('慢速回复');
+    await page.getByRole('button', { name: '发送消息', exact: true }).click();
+    await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
+    const session = mock.sessions.get('A')!, requestId = session.active!.requestId;
+    const assistant = { id: `${requestId}:assistant:0`, presentationId: `${requestId}:assistant:0`, requestId, role: 'assistant' as const, text: '进度说明', content: [
+      { id: 'stream-thought', type: 'thinking' as const, text: '逐项核对\n详细依据' }, { id: 'stream-note', type: 'text' as const, text: '进度说明' },
+    ] };
+    mock.event('A', { type: 'assistant.updated', sessionId: 'A', requestId, message: assistant });
+    mock.event('A', { type: 'text.delta', sessionId: 'A', requestId, delta: '不应重复的正文' });
+    await expect(page.getByText('进度说明', { exact: true })).toBeVisible();
+    await expect(page.getByText('A 的回复', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('不应重复的正文', { exact: true })).toHaveCount(0);
+    await page.locator('.thinking-result > summary').click();
+    mock.event('A', { type: 'tool.started', sessionId: 'A', requestId, toolCallId: 'stream-bash', toolName: 'bash', toolInput: { command: 'echo report' } });
+    mock.event('A', { type: 'tool.updated', sessionId: 'A', requestId, toolCallId: 'stream-bash', toolName: 'bash', text: 'one' });
+    mock.event('A', { type: 'tool.updated', sessionId: 'A', requestId, toolCallId: 'stream-bash', toolName: 'bash', text: 'one\ntwo' });
+    const command = page.locator('.tool-result').filter({ hasText: 'echo report' }); await command.locator('summary').click();
+    await expect(command.locator('.tool-body pre').last()).toHaveText('one\ntwo');
+    session.messages = [session.messages[0], { ...assistant, id: 'persisted-assistant' }, { id: 'persisted-tool', requestId, role: 'tool', toolName: 'bash', toolCallId: 'stream-bash', toolStatus: 'completed', toolInput: { command: 'echo report' }, text: 'one\ntwo' }, { id: 'stream-final', requestId, role: 'assistant', text: '处理完成' }];
+    session.turns = [{ requestId, status: 'succeeded', finalMessageId: 'stream-final' }]; mock.finish('A');
+    await expect(page.locator('.thinking-result')).toHaveAttribute('open', '');
+    await expect(command).toHaveAttribute('open', '');
+    await expect(page.getByText('处理完成', { exact: true })).toBeVisible();
     expect(mock.counts.sends).toBe(1);
   } finally { await mock.close(); }
 });

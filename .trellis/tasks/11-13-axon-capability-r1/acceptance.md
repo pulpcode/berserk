@@ -1,10 +1,10 @@
 # R1 验收记录
 
-实际实施基线：`feat/chat-rendering-c` / `66d0cba3ad4420d74593f31ffd540b893ed41ae6`。实施分支 `codex/axon-r1-experts`。三份用户原文保存在 research/，source-manifest.json 核对文件字节和 SHA-256，未改写原文。未对真实业务数据执行迁移，也未提交或合并代码。
+实际实施基线：`feat/chat-rendering-c` / `66d0cba3ad4420d74593f31ffd540b893ed41ae6`。实施分支 `codex/axon-r1-experts`。三份用户原文保存在 research/，source-manifest.json 核对文件字节和 SHA-256，未改写原文。后续4316测试数据迁移、提交及合并记录见下文。
 
 ## 当前结论
 
-R1-1—R1-4 代码已实现，确定性验证、受影响浏览器回归和独立审查已完成。按用户指定的方舟配置，R1-5 已完成真实模型三轮任务和独立新进程的一轮续聊验证。真实 Docker 文件/确认验证现已在服务器独立环境通过，见 research/online-sandbox-acceptance.md。技术验收项已补齐，保留 in_progress 等待用户审阅与手动提交；尚未正式发布 R1。
+R1-1—R1-4 代码已实现，确定性验证、受影响浏览器回归和独立审查已完成。按用户指定的方舟配置，R1-5 已完成真实模型三轮任务和独立新进程的一轮续聊验证。真实 Docker 文件/确认验证现已在服务器独立环境通过，见 research/online-sandbox-acceptance.md。上述为既有技术检查证据，不记为 R1 验证完成。按用户要求，任务保留 in_progress，R1 用户验收未完成；已提交实现并继续合并聊天分支，随后重新回归及部署4316供用户查看。
 
 ## A01—A12
 
