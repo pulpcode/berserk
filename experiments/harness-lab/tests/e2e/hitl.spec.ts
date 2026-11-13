@@ -558,8 +558,8 @@ for (const kind of ['confirmation', 'question'] as const) test(`${kind} cards al
   const { a, state } = await fixture(page, item);
   a.messages.unshift({ id: 'previous-reply', role: 'assistant', text: '请核对以下内容后继续。' });
   await page.reload();
-  const card = page.locator('.message-list > .interaction-card');
-  const reply = page.locator('.message-list > .assistant .message-content > p');
+  const card = page.locator('.message-list .interaction-card');
+  const reply = page.locator('.message-list .assistant .message-content > p');
   for (const width of [1280, 800, 375]) {
     await page.setViewportSize({ width, height: 900 });
     await expect(card).toBeVisible();

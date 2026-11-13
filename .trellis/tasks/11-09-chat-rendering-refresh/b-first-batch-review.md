@@ -90,4 +90,4 @@
 
 - [DSH 官方过程与折叠规则](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-chat/src/client/conversation-nodes/README.md)：核对日期 2026-11-13。本批保留本项目更保守的成功终态与最终答复条件，不复制 DSH 的全部设置。
 - [Codex 官方执行事件](https://learn.chatgpt.com/docs/app-server)：命令、输出、修改和最终状态分开表达；[审阅交互](https://learn.chatgpt.com/docs/code-review?surface=app)：按需查看变更。未核实的 Codex App 自动折叠细节不作为依据。
-- 需求与验收编号：[prd.md](prd.md#b-轮首批需求与验收待审阅)；数据来源与兼容：[design.md](design.md#b-轮首批技术设计待审阅)；实施顺序与检查：[implement.md](implement.md#b-轮首批实施计划待审阅)。
+- 需求与验收编号：[prd.md](prd.md#b-轮首批需求与验收已批准)；数据来源与兼容：[design.md](design.md#b-轮首批技术设计已批准)；实施顺序与检查：[implement.md](implement.md#b-轮首批实施计划已批准)。

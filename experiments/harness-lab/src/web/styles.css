@@ -1366,3 +1366,21 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .confirmation-history-heading .confirmation-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 400; }
 .confirmation-outcome { flex-shrink: 0; font-size: 12px; }
 .confirmation-decision { font-size: 12px; }
+
+/* B first batch: live process rows and settled whole-turn disclosure. */
+.chat-presentation, .chat-block { display: contents; }
+.chat-block > .interaction-card { margin-left: var(--reply-inset); }
+.turn-process-control { display: flex; align-items: center; gap: 6px; margin: 4px 0 16px var(--reply-inset); padding: 6px 0; border: 0; background: transparent; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.turn-process-control:disabled { opacity: 1; cursor: default; }
+.turn-process-control svg { transform: rotate(-90deg); }
+.turn-process-control svg.expanded { transform: none; }
+.process-group.running > summary { display: none; }
+.process-group.running > .process-content { margin: 0; padding: 0; border: 0; }
+.tool-result > summary > .tool-subject, .tool-result > summary > .thinking-preview { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--muted); }
+.tool-result > summary > span:first-of-type { flex-shrink: 0; }
+.tool-body h4 { margin: 10px 0 4px; color: var(--muted); font-weight: 500; font-size: 12px; }
+.tool-body pre, .tool-body .tool-diff { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.tool-input-range, .tool-output-notice { color: var(--muted); font-size: 12px; }
+.thinking-body { padding: 8px 14px; border-left: 1px solid var(--line); color: var(--muted); font-size: 13px; max-height: 420px; overflow: auto; }
+.tool-diff .diff-add { color: #286044; background: #edf6ee; }
+.tool-diff .diff-remove { color: #963f3f; background: #fff0ef; }

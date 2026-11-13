@@ -232,7 +232,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       markVisibleRead();
     });
     return () => cancelAnimationFrame(frame);
-  }, [seatActive, scrollKey, view, loadingSession, chat.loading, messages.length, lastMessage?.text, busy, markVisibleRead]);
+  }, [seatActive, scrollKey, view, loadingSession, chat.loading, messages.length, lastMessage?.text, lastMessage?.content, busy, markVisibleRead]);
   useEffect(() => {
     const element=scroll.current;if(!element || view!=='chat')return;
     const observer=new ResizeObserver(()=>{
@@ -518,7 +518,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
             <button onClick={() => suggest('我想梳理一个问题，请先帮我明确目标和需要补充的信息。')}><MessageSquare size={19} aria-hidden="true" /><strong>一起梳理思路</strong><span>从一个问题开始讨论</span><ArrowUpRight size={15} aria-hidden="true" /></button>
             {currentResources?.sources[0] && <button onClick={() => suggest(`请读取《${currentResources?.sources[0]?.title}》，提炼要点，并说明信息依据。`)}><BookOpen size={19} aria-hidden="true" /><strong>从资料中找线索</strong><span>读取资料，提炼关键信息</span><ArrowUpRight size={15} aria-hidden="true" /></button>}
           </div>
-        </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && Boolean(scroll.current?.getClientRects().length) && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} />}{busy && !waiting && backgroundJob?.status !== 'queued' && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
+        </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && Boolean(scroll.current?.getClientRects().length) && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} />}{busy && !waiting && backgroundJob?.status !== 'queued' && (lastMessage?.role !== 'assistant' || (!lastMessage.text.trim() && !lastMessage.content?.some(block => block.text.trim())) || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
       <div className="composer-dock" onFocusCapture={() => { dockFocus.current = true; }} onBlurCapture={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) dockFocus.current = false; }}>

@@ -1,3 +1,4 @@
+import { assistantProjection, publicToolInput, publicToolDetails, publicResultText } from './chat-projection.js';
 import { commandTools, type ApprovedCommand } from './command-tools.js';
 import type { CommandRecord } from '../contracts/commands.js';
 import type { CommandService } from '../commands/service.js';
@@ -706,8 +707,10 @@ export class PiLab {
     const interrupted = new Map(unfinishedRequests(entries).filter(request => request.requestId !== record.active?.id).map(request => [request.requestId, request]));
     let requestId: string | undefined;
     const inputRequests = new Set<string>();
+    let assistantOrdinal = 0;
+    const toolInputs = new Map<string, { name: string; input: ReturnType<typeof publicToolInput> }>();
     for (const entry of entries) {
-      if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) requestId = (entry.data as { requestId: string }).requestId;
+      if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) { requestId = (entry.data as { requestId: string }).requestId; assistantOrdinal = 0; toolInputs.clear(); }
       if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) requestId = undefined;
       if (entry.type !== 'message') continue;
       const message = entry.message;
@@ -723,25 +726,36 @@ export class PiLab {
       let resourceResult = message.role === 'toolResult' ? extractResourceResult(message.details, message.toolName, message.isError, text) : undefined;
       if (message.role === 'toolResult' && message.toolName === 'task_resource_query' && ((message.details as {resourceRejected?: boolean} | undefined)?.resourceRejected || !message.isError && !resourceResult)) text = '资源结果未通过完整性校验，原始审计记录保留，不能继续使用该结果。';
       if (resourceResult) { try { this.authorizeResourceHistory(record, resourceResult); } catch { resourceResult = null; text = '当前身份无法读取此历史资源结果或其原始依据；原记录保留，未替换为新数据。'; } }
-      if (text || message.role === 'toolResult') messages.push({
-        id: entry.id, ...(requestId ? { requestId } : {}), role: message.role === 'toolResult' ? 'tool' : message.role, text,
-        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text), spatialResult, resourceResult, taskDiscovery } : {}),
+      const projected = message.role === 'assistant' ? assistantProjection(message.content, requestId ? `${requestId}:assistant:${assistantOrdinal++}` : entry.id) : undefined;
+      if (message.role === 'toolResult') {
+        const pendingIndex = messages.findIndex(item => item.role === 'tool' && item.toolStatus === 'running' && item.requestId === requestId && item.toolCallId === message.toolCallId);
+        if (pendingIndex >= 0) messages.splice(pendingIndex, 1);
+      }
+      if (text || projected?.content?.length || message.role === 'toolResult') messages.push({
+        id: entry.id, ...(requestId ? { requestId } : {}), role: message.role === 'toolResult' ? 'tool' : message.role, text, ...(projected ?? {}),
+        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, toolStatus: 'completed', toolInput: toolInputs.get(message.toolCallId)?.input, toolDetails: publicToolDetails(message.toolName, message.details, message.isError), isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text), spatialResult, resourceResult, taskDiscovery } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && selections.has(requestId) ? { selections: selections.get(requestId) } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
       });
       if (message.role === 'user' && requestId) inputRequests.add(requestId);
+      if (message.role === 'toolResult') toolInputs.delete(message.toolCallId);
       if (message.role === 'assistant' && requestId) for (const [index, block] of message.content.entries()) {
+        if (block.type === 'toolCall') {
+          const input = publicToolInput(block.name, block.arguments);
+          toolInputs.set(block.id, { name: block.name, input });
+          if (requestId === record.active?.id) messages.push({ id: block.id, requestId, role: 'tool', toolName: publicToolName(block.name), toolCallId: block.id, toolInput: input, toolStatus: 'running', text: '' });
+        }
         if (block.type === 'toolCall' && interrupted.get(requestId)?.pendingTools.has(block.id)) messages.push({
           id: `missing-${entry.id}-${index}`, requestId, role: 'tool', toolName: publicToolName(block.name),
-          toolCallId: block.id, resultMissing: true, text: '未收到执行结果，无法确认是否已执行。',
+          toolCallId: block.id, toolInput: toolInputs.get(block.id)?.input, resultMissing: true, text: '未收到执行结果，无法确认是否已执行。',
         });
       }
     }
     // The active partial is ephemeral; persisted entries remain the history authority.
     const partial = record.session?.agent.state.streamingMessage;
     if (partial?.role === 'assistant' && record.active) {
-      const text = partial.content.filter(block => block.type === 'text').map(block => block.text).join('');
-      if (text) messages.push({ id: `partial-${record.active.id}`, requestId: record.active.id, role: 'assistant', text });
+      const projected = assistantProjection(partial.content, `${record.active.id}:assistant:${assistantOrdinal}`);
+      if (projected.content?.length) messages.push({ id: projected.presentationId!, requestId: record.active.id, role: 'assistant', ...projected });
     }
     const subagents = new Map(subagentHistory(entries, record.workspaceId, id).summaries.map(child => [child.subagentId, child]));
     for (const childId of record.invalidChildren ?? []) {
@@ -1322,9 +1336,17 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       if (active.selections) await session.sendCustomMessage({ customType: composerInputType(active.selections), display: false,
         content: recordedComposerText({...active.selections,requestId:active.id}), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, ...active.selections } });
       if (!active.reason) {
+        let streamAssistantOrdinal = -1;
+        const liveToolInputs = new Map<string, ReturnType<typeof publicToolInput>>();
         unsubscribe = session.subscribe(event => {
           if (record.active !== active || active.reason) return;
-          if (event.type === 'compaction_start') {
+          if (event.type === 'message_start' && event.message.role === 'assistant') {
+            streamAssistantOrdinal++;
+          } else if ((event.type === 'message_update' || event.type === 'message_end') && event.message.role === 'assistant') {
+            if (event.type === 'message_update' && event.assistantMessageEvent.type === 'text_delta') emit({ ...base, type: 'text.delta', delta: event.assistantMessageEvent.delta });
+            const projected = assistantProjection(event.message.content, `${active.id}:assistant:${streamAssistantOrdinal}`);
+            emit({ ...base, type: 'assistant.updated', message: { id: projected.presentationId!, requestId: active.id, role: 'assistant', ...projected } });
+          } else if (event.type === 'compaction_start') {
             active.annotationState?.pause();
             active.compacting = true;
             active.compactionStartIds = new Set(record.manager.getEntries().map(entry => entry.id));
@@ -1355,12 +1377,15 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             child?.retry();
           } else if (event.type === 'auto_retry_end' && !event.success) {
             this.stop(record, active, 'failure', providerError(event.finalError || ''));
-          } else if (event.type === 'message_update' && event.assistantMessageEvent.type === 'text_delta') {
-            emit({ ...base, type: 'text.delta', delta: event.assistantMessageEvent.delta });
           } else if (event.type === 'tool_execution_start') {
             active.usage.toolCalls++;
             setPhase(record, active, event.toolName === 'subagent' ? 'subagent' : 'tool', publicToolName(event.toolName));
-            emit({ ...base, type: 'tool.started', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName) });
+            const toolInput = publicToolInput(event.toolName, event.args);
+            liveToolInputs.set(event.toolCallId, toolInput);
+            emit({ ...base, type: 'tool.started', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName), toolInput });
+          } else if (event.type === 'tool_execution_update' && event.toolName === 'bash') {
+            const result = event.partialResult as { details?: unknown };
+            emit({ ...base, type: 'tool.updated', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName), text: publicResultText(event.partialResult), toolDetails: publicToolDetails(event.toolName, result.details) });
           } else if (event.type === 'tool_execution_update' && event.toolName === 'subagent') {
             const child = (event.partialResult as { details?: { subagent?: SubagentSummary } })?.details?.subagent;
             if (child && active.subagents?.get(child.subagentId)?.toolCallId === event.toolCallId && child.parentRequestId === active.id) emit({ ...base, type: 'subagent.updated', subagent: child });
@@ -1375,7 +1400,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
               try { new TaskResourceService(this.annotations, this.context).authorize(resourceResult, { actor: active.annotationActor, sessionId: id, taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!, signal: active.controller.signal, check: () => {}, resolveMessage: () => { throw new Error('Event projection does not resolve reports.'); } }); }
               catch { resourceResult = null; text = '当前身份无法读取此资源结果的依据。'; }
             }
-            emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName), text, isError: event.isError,
+            emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName), text, isError: event.isError, toolInput: liveToolInputs.get(event.toolCallId), toolDetails: publicToolDetails(event.toolName, result.details, event.isError),
               taskDiscovery: extractTaskDiscovery(result.details, event.toolName, event.isError, text), annotationResult: extractAnnotationResult(result.details, event.toolName, event.isError, text), resourceResult,
               spatialResult: extractSpatialResult(result.details, event.toolName, event.isError, text) });
           }

@@ -1,6 +1,6 @@
 # 聊天页面渲染统一：分阶段实施计划
 
-状态：A/C 已实施；B 首批方案待审阅、未启动，详见本文末节。本批完成不代表 B 轮完成。
+状态：A/C 已实施；B 首批已实现并通过本地验证，待用户测试，详见本文末节。本批完成不代表 B 轮完成。
 
 ## 0. 开工门槛
 
@@ -61,7 +61,7 @@
 
 ## 5. B：依证据逐项设计后续能力
 
-本阶段尚未批准，以下为研究与拆分顺序，不是预定接口改造清单。
+以下为 B 轮整体候选，不表示全部获批；用户于 2026-11-13 仅批准本文末节首批范围。
 
 - [ ] 核实 Pi 原生 start/update/end 与已保存历史能否提供参数、结果 details、精确归属和时间，列出缺口。
 - [ ] 先评估已有字段可支持的 Agent/业务结果摘要，明确是否可独立交付。
@@ -152,9 +152,9 @@ npm run test:e2e -- tests/e2e/chat.spec.ts tests/e2e/message-queue.spec.ts tests
 - [x] typecheck、lint、build和相关聊天/恢复/交互浏览器回归，审阅桌面截图。
 - [x] 同步前端规范与验证记录；本次不部署4316。
 
-## B 轮首批实施计划（待审阅）
+## B 轮首批实施计划（已批准）
 
-审阅入口：[b-first-batch-review.md](b-first-batch-review.md)。本节仅规划，不代表批准开工。
+审阅入口：[b-first-batch-review.md](b-first-batch-review.md)。用户已批准本节对应首批范围，实施中。
 
 1. **开工核对**：用户批准最新首批方案后，再核对分支、未提交内容和 A/C 基线；按现有工作流激活实施。读取受影响规范，明确需要更新的思考投影与折叠限制，不预先调整执行/模型机制。
 2. **同源数据**：补齐思考内容块、首批工具公开参数、bash 累积输出、edit 原生 diff、整轮起止时间。同步公共类型、宿主校验、SSE 和快照；先验证所属请求、数据授权、旧字段缺失及重连回退。
@@ -172,3 +172,8 @@ npm run test:e2e -- tests/e2e/chat.spec.ts tests/e2e/message-queue.spec.ts tests
 - B1-04/B1-06：C 轮提问/确认、普通草稿、引用/Skill、固定文件、队列/停止、桌面宽窗口和地图窄面板；截图包含运行、完成折叠/展开、思考、命令、diff、失败。
 
 在 `experiments/harness-lab` 执行 `npm run typecheck`、`npm run lint`、`npm run build`，以及按实际改动确定的 `npm test -- <相关测试>`、`npm run test:e2e -- <相关浏览器用例>`；最终执行 `git diff --check`。实施前将具体用例路径写入本节，不沿用 A/C 的旧通过数字作为 B 验证结果。
+
+
+### B 首批本地验证结果（2026-11-13）
+
+上述首批 1–5 步实现与质量检查已完成，用户实测待进行。typecheck、lint、build 通过；后端6文件64项、独立相关单元33项及patch计数1项通过；6文件132项核心浏览器用例经首轮与顺序复验全部取得通过结果。过程与首次失败原因见 [b-first-batch-verification.md](b-first-batch-verification.md)。本批未部署，不归档整个B轮任务；后续候选继续开放。

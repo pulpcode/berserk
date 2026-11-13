@@ -441,6 +441,7 @@ export function useChat(enabled = true) {
     if ((draftsRef.current[id] || '').trim() === text) draft(id, '');
     let messages: PublicMessage[] = [...before.messages, { id: 'sending-user', role: 'user', text }];
     let assistantNumber = 0;
+    let structuredAssistant = false;
     put({ ...before, messages, lastResult: null });
     const receive = (event: StreamEvent) => {
       if (event.sessionId !== id || streams.current.get(id)?.token !== token || stream.terminal) return;
@@ -469,13 +470,22 @@ export function useChat(enabled = true) {
       if (event.type === 'input.consumed') {
         messages = [...messages, { id: event.submissionId, role: 'user', requestId: event.requestId, text: event.text }];
       }
-      if (event.type === 'text.delta') {
+      if (event.type === 'assistant.updated') {
+        structuredAssistant = true;
+        const incoming = event.message;
+        if (incoming.requestId !== event.requestId || incoming.role !== 'assistant') return;
+        messages = messages.filter(message => !message.id.startsWith('stream-assistant-'));
+        const position = messages.findIndex(message => message.id === incoming.id || Boolean(incoming.presentationId && message.presentationId === incoming.presentationId));
+        messages = position < 0 ? [...messages, incoming] : messages.map((message, index) => index === position ? incoming : message);
+      }
+      if (event.type === 'text.delta' && !structuredAssistant) {
         const last = messages.at(-1);
         if (last?.role === 'assistant') messages = [...messages.slice(0, -1), { ...last, text: last.text + event.delta }];
         else messages = [...messages, { id: `stream-assistant-${assistantNumber++}`, role: 'assistant', requestId: event.requestId, text: event.delta }];
       }
-      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, toolCallId: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
-      if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError, annotationResult: event.annotationResult, spatialResult: event.spatialResult, taskDiscovery: event.taskDiscovery, resourceResult: event.resourceResult } : message);
+      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, toolCallId: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, toolInput: event.toolInput, toolStatus: 'running', text: '' }];
+      if (event.type === 'tool.updated') messages = messages.map(message => message.requestId === event.requestId && message.toolCallId === event.toolCallId ? { ...message, text: event.text, toolDetails: event.toolDetails, toolStatus: 'running' } : message);
+      if (event.type === 'tool.completed') messages = messages.map(message => message.requestId === event.requestId && message.toolCallId === event.toolCallId ? { ...message, text: event.text, toolInput: event.toolInput || message.toolInput, toolDetails: event.toolDetails, toolStatus: 'completed', isError: event.isError, annotationResult: event.annotationResult, spatialResult: event.spatialResult, taskDiscovery: event.taskDiscovery, resourceResult: event.resourceResult } : message);
       let fileOutputs = current.fileOutputs;
       if (event.type === 'files.output') {
         if (event.file.workspaceId !== current.workspaceId || event.file.sessionId !== id || event.file.requestId !== event.requestId) return;
@@ -490,7 +500,7 @@ export function useChat(enabled = true) {
         subagents = [...(subagents || []).filter(item => item.subagentId !== child.subagentId), child];
       }
       const phase = event.type === 'subagent.updated' ? ['running', 'stopping'].includes(event.subagent.status) ? 'subagent' : 'preparing' : event.type === 'context.compaction_started'  ? 'compacting' : event.type === 'context.compaction_completed' ? 'generating' : ['response.started', 'resources.loaded', 'tool.completed'].includes(event.type) ? 'preparing' : event.type === 'tool.started' ? 'tool'
-        : event.type === 'text.delta' ? 'generating' : current.active?.phase;
+        : event.type === 'text.delta' || event.type === 'assistant.updated' ? 'generating' : current.active?.phase;
       put({ ...current, messages, ...(fileOutputs ? { fileOutputs } : {}), ...(subagents ? { subagents } : {}), ...(event.type === 'context.compaction_completed' ? { latestCompaction: event.compaction } : {}), active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding', phase,
         ...(phase === 'tool' ? { toolName: event.type === 'tool.started' ? event.toolName : current.active?.toolName } : {}) } });
     };

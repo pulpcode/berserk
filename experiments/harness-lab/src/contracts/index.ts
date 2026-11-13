@@ -10,7 +10,16 @@ import type { FileRef, FileOutput } from './files.js';
 export type * from './files.js';
 export type * from './collaboration.js';
 export interface SourceInfo { id: string; title: string; description: string; hash: string }
+export interface PublicAssistantContent { id: string; type: 'text' | 'thinking'; text: string }
+export interface PublicToolInput { path?: string; offset?: number; limit?: number; pattern?: string; command?: string }
+export interface PublicToolDetails { diff?: string; patch?: string; firstChangedLine?: number; truncated?: boolean; fullOutputPath?: string }
 export interface PublicMessage {
+  /** Stable presentation identity shared by live and persisted assistant blocks. */
+  presentationId?: string;
+  content?: PublicAssistantContent[];
+  toolInput?: PublicToolInput;
+  toolDetails?: PublicToolDetails;
+  toolStatus?: 'running' | 'completed';
   id: string;
   role: 'user' | 'assistant' | 'tool';
   text: string;
@@ -64,6 +73,8 @@ export interface ConversationTurn {
   requestId: string;
   status: RequestResult['status'];
   finalMessageId?: string;
+  startedAt?: string;
+  completedAt?: string;
 }
 export interface SessionSummary { id: string; workspaceId: string; workItemId?: string; title: string; updatedAt: string }
 /** Host queue projection only; never appended to native conversation history. */
@@ -172,8 +183,10 @@ export type StreamEvent = {
   | { type: 'resources.loaded'; resources: WorkspaceResources; selections?: LoadedComposerSelection; attachments?: FileRef[] }
   | { type: 'instructions.updated'; change: InstructionUpdate }
   | { type: 'text.delta'; delta: string }
-  | { type: 'tool.started'; toolCallId: string; toolName: string }
-  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null; taskDiscovery?: TaskDiscovery | null }
+  | { type: 'assistant.updated'; message: PublicMessage }
+  | { type: 'tool.started'; toolCallId: string; toolName: string; toolInput?: PublicToolInput }
+  | { type: 'tool.updated'; toolCallId: string; toolName: string; text: string; toolDetails?: PublicToolDetails }
+  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; toolInput?: PublicToolInput; toolDetails?: PublicToolDetails; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null; taskDiscovery?: TaskDiscovery | null }
   | { type: 'interaction.updated'; interaction: Interaction }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'files.output'; file: FileOutput }

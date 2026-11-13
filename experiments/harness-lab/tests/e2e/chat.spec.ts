@@ -1626,7 +1626,7 @@ for (const target of ['link', 'table'] as const) test(`流式说明保留在过�
   } finally { await mock.close(); }
 });
 
-test('尾部说明保持在过程之外且焦点稳定，手动收起的选择在完成时保留', async ({ page }) => {
+test('尾部说明保持在过程之外且焦点稳定，运行中手动查看详情在完成时保留', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     const session = mock.sessions.get('A')!; presentationSession(session);
@@ -1634,8 +1634,8 @@ test('尾部说明保持在过程之外且焦点稳定，手动收起的选择�
     await page.goto('/');
     const process = page.locator('.process-group').first();
     await expect(process).toHaveAttribute('open', '');
-    await process.locator(':scope > summary').click();
-    await expect(process).not.toHaveAttribute('open');
+    await expect(process.locator(':scope > summary')).toBeHidden();
+    await process.locator('.tool-result > summary').click();
     const link = page.getByRole('link', { name: '继续核对来源' }); await link.focus();
     session.messages.push({ id: 'last-read', requestId: 'presentation', role: 'tool', toolName: 'read', text: '核对结果' });
     completePresentation(session);
@@ -1643,6 +1643,9 @@ test('尾部说明保持在过程之外且焦点稳定，手动收起的选择�
     await expect(link).toBeFocused(); await expect(link).toBeVisible();
     expect(await link.evaluate(node => node.closest('.process-group'))).toBeNull();
     await expect(page.locator('.process-group')).toHaveCount(2);
+    await expect(process).toHaveAttribute('open', '');
+    await expect(process.locator('.tool-result')).toHaveAttribute('open', '');
+    await process.locator(':scope > summary').click();
     await expect(process).not.toHaveAttribute('open');
     await process.locator(':scope > summary').click();
     await expect(process).toHaveAttribute('open', ''); await expect(process.locator(':scope > summary')).toBeFocused();
@@ -1988,6 +1991,105 @@ test('地图聚焦时继续接收回复但不误标已读，返回对话保留�
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(1);
     await conversation.evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
+    expect(mock.counts.sends).toBe(1);
+  } finally { await mock.close(); }
+});
+
+test('B首批：思考和工具原序展示，真实累积输出更新且手动展开不被完成收起', async ({ page }, testInfo) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages[1] = { ...session.messages[1], content: [
+      { id: 'native-think', type: 'thinking', text: '先检查依据\n核对资料范围。' },
+      { id: 'native-note', type: 'text', text: '先核对资料中的依据。' },
+    ] };
+    session.messages[2] = { ...session.messages[2], toolName: 'bash', text: '第一行\n', toolStatus: 'running', toolInput: { command: 'python analyze.py' } };
+    await page.goto('/');
+    const thinking = page.locator('.thinking-result');
+    await expect(thinking).not.toHaveAttribute('open');
+    await expect(page.locator('.process-group.running > summary').first()).toBeHidden();
+    await thinking.locator('summary').click();
+    await expect(page.getByText('核对资料范围。', { exact: false })).toBeVisible();
+    const command = page.locator('.tool-result').filter({ hasText: 'python analyze.py' });
+    await command.locator('summary').click();
+    await expect(command).toContainText('正在执行命令');
+    session.messages[2].text = '第一行\n第二行';
+    await expect(command.locator('.tool-body pre').last()).toHaveText('第一行\n第二行');
+    await page.getByRole('textbox', { name: '发送消息' }).focus();
+    await page.screenshot({ path: testInfo.outputPath('b-live-thinking-command.png') });
+    session.messages[2].toolStatus = 'completed'; completePresentation(session);
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(thinking).toBeVisible(); await expect(command).toHaveAttribute('open', '');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('B首批：完成耗时入口收起过程但保留回复，展开查看原生diff且刷新保持内容', async ({ page }, testInfo) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages[2] = { ...session.messages[2], toolName: 'edit', toolInput: { path: '/workspace/brief.md' }, toolStatus: 'completed', toolDetails: { diff: '-旧内容\n+新内容' } };
+    completePresentation(session);
+    session.turns![0].startedAt = '2026-11-13T00:00:00Z'; session.turns![0].completedAt = '2026-11-13T00:00:23Z';
+    await page.goto('/');
+    const control = page.getByRole('button', { name: '已完成，用时 23 秒', exact: true });
+    await expect(control).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByText('先核对资料中的依据。', { exact: true })).toBeVisible();
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(page.locator('.process-group')).toBeHidden();
+    await page.screenshot({ path: testInfo.outputPath('b-completed-collapsed.png') });
+    await control.click(); await page.locator('.process-group > summary').click();
+    await page.locator('.tool-result > summary').click();
+    await expect(page.locator('.tool-diff')).toHaveText('-旧内容\n+新内容\n');
+    await page.screenshot({ path: testInfo.outputPath('b-completed-diff-expanded.png') });
+    await control.click(); await control.click();
+    await expect(page.locator('.process-group')).not.toHaveAttribute('open');
+    await page.reload(); await expect(control).toHaveAttribute('aria-expanded', 'false');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('B首批：用户补充禁止整轮跨越折叠，纯文本不生成空过程', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages.push({ id: 'steering', role: 'user', requestId: 'presentation', text: '只处理最新资料' });
+    completePresentation(session); await page.goto('/');
+    await expect(page.getByRole('button', { name: '已完成', exact: true })).toBeDisabled();
+    await expect(page.getByText('只处理最新资料', { exact: true })).toBeVisible();
+    session.messages = session.messages.filter(message => message.role !== 'tool');
+    await page.reload(); await expect(page.locator('.process-group')).toHaveCount(0);
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('B首批：结构化流替换旧delta，工具累积输出不重复且终态保持披露身份', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    await page.getByRole('textbox', { name: '发送消息' }).fill('慢速回复');
+    await page.getByRole('button', { name: '发送消息', exact: true }).click();
+    await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
+    const session = mock.sessions.get('A')!, requestId = session.active!.requestId;
+    const assistant = { id: `${requestId}:assistant:0`, presentationId: `${requestId}:assistant:0`, requestId, role: 'assistant' as const, text: '进度说明', content: [
+      { id: 'stream-thought', type: 'thinking' as const, text: '逐项核对\n详细依据' }, { id: 'stream-note', type: 'text' as const, text: '进度说明' },
+    ] };
+    mock.event('A', { type: 'assistant.updated', sessionId: 'A', requestId, message: assistant });
+    mock.event('A', { type: 'text.delta', sessionId: 'A', requestId, delta: '不应重复的正文' });
+    await expect(page.getByText('进度说明', { exact: true })).toBeVisible();
+    await expect(page.getByText('A 的回复', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('不应重复的正文', { exact: true })).toHaveCount(0);
+    await page.locator('.thinking-result > summary').click();
+    mock.event('A', { type: 'tool.started', sessionId: 'A', requestId, toolCallId: 'stream-bash', toolName: 'bash', toolInput: { command: 'echo report' } });
+    mock.event('A', { type: 'tool.updated', sessionId: 'A', requestId, toolCallId: 'stream-bash', toolName: 'bash', text: 'one' });
+    mock.event('A', { type: 'tool.updated', sessionId: 'A', requestId, toolCallId: 'stream-bash', toolName: 'bash', text: 'one\ntwo' });
+    const command = page.locator('.tool-result').filter({ hasText: 'echo report' }); await command.locator('summary').click();
+    await expect(command.locator('.tool-body pre').last()).toHaveText('one\ntwo');
+    session.messages = [session.messages[0], { ...assistant, id: 'persisted-assistant' }, { id: 'persisted-tool', requestId, role: 'tool', toolName: 'bash', toolCallId: 'stream-bash', toolStatus: 'completed', toolInput: { command: 'echo report' }, text: 'one\ntwo' }, { id: 'stream-final', requestId, role: 'assistant', text: '处理完成' }];
+    session.turns = [{ requestId, status: 'succeeded', finalMessageId: 'stream-final' }]; mock.finish('A');
+    await expect(page.locator('.thinking-result')).toHaveAttribute('open', '');
+    await expect(command).toHaveAttribute('open', '');
+    await expect(page.getByText('处理完成', { exact: true })).toBeVisible();
     expect(mock.counts.sends).toBe(1);
   } finally { await mock.close(); }
 });

@@ -1842,3 +1842,36 @@
 ### Next Steps
 
 - 待用户验收，按后续授权决定是否更新4316；保留C轮任务review，不归档。
+
+
+## Session 63: 实施B轮首批聊天展示优化
+
+**Date**: 2026-11-13
+**Task**: 实施B轮首批聊天展示优化
+**Branch**: `feat/chat-rendering-c`
+
+### Summary
+
+方案先提交，完成可见思考、工具详情与实时输出、原生diff、整轮耗时和折叠；本地验证通过，待用户测试。首批不代表B轮完成，未部署线上。
+
+### Main Changes
+
+- 保持Pi原生事件与历史同源，保护A/C交互、文件、引用和阅读位置。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `4f8f83f` | (see git log) |
+
+### Testing
+
+- [OK] typecheck、lint、build通过；后端64项及独立相关单元34项通过；132项浏览器分批验证通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户测试首批；B轮后续范围继续开放，不归档整体任务。

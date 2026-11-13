@@ -1,6 +1,6 @@
 # 聊天页面渲染统一与 DSH 对齐：需求草案
 
-版本：v1.1，2026-11-13。状态：A/C 已实施；B 首批方案待审阅、未启动，见 [b-first-batch-review.md](b-first-batch-review.md)。本批完成不代表 B 轮完成。总审阅入口为 [review.md](review.md)，C 轮方案为 [c-round-review.md](c-round-review.md)。
+版本：v1.1，2026-11-13。状态：A/C 已实施；B 首批已实现并通过本地验证，待用户测试，见 [b-first-batch-review.md](b-first-batch-review.md)。本批完成不代表 B 轮完成。总审阅入口为 [review.md](review.md)，C 轮方案为 [c-round-review.md](c-round-review.md)。
 
 参考 GitHub 仓库：[https://github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)。Web 应用入口：[apps/web](https://github.com/deepseek-ai/deepseek-harness/tree/master/apps/web)；聊天核心源码：[packages/client/ui-chat](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/client/ui-chat)。
 
@@ -88,7 +88,7 @@ B 中每一项先形成“已有原生字段 → 授权投影 → 公共类型 �
 
 ## 范围外
 
-侧边栏重构、登录/设置、工作总览、地图本体和业务侧栏；手机端专项工作；系统提示词、供应商未返回或不可展示的内部推理；执行/权限/模型/工具协议迁移；新执行状态库或持久聊天副本；未经确认的新主题、显示模式设置、批量历史迁移；部署、push 或生产验收。B 首批提议展示供应商经 Pi 实际返回的可见思考文本，边界以下文为准，尚未批准。
+侧边栏重构、登录/设置、工作总览、地图本体和业务侧栏；手机端专项工作；系统提示词、供应商未返回或不可展示的内部推理；执行/权限/模型/工具协议迁移；新执行状态库或持久聊天副本；未经确认的新主题、显示模式设置、批量历史迁移；部署、push 或生产验收。B 首批提议展示供应商经 Pi 实际返回的可见思考文本，边界以下文为准，已于 2026-11-13 获用户批准。
 
 ## 阶段决策状态
 
@@ -102,9 +102,9 @@ D1–D4 的首轮实施决策均已确认。C 的产品决策已在讨论中收�
 
 用户明确选择直接采用 DSH Web 交互，并在审阅 sidebar-status-dsh-review.md 后回复“开始实施”。本次需求、范围与验收以该审阅稿为准：移除分组计数、左侧会话状态、右侧时间/待交互标签、悬停与聚焦详情；不迁移其他侧栏功能，不部署。
 
-## B 轮首批需求与验收（待审阅）
+## B 轮首批需求与验收（已批准）
 
-用户于 2026-11-13 要求汇总讨论形成简洁方案，并明确「首批完成不代表 B 轮完成」。产品审阅入口为 [b-first-batch-review.md](b-first-batch-review.md)。本节为新增范围，待批准后才替代 A 阶段「不展示思考、不增加整轮折叠」的相应限制；A/C 其他既有行为继续保留。
+用户于 2026-11-13 要求汇总讨论形成简洁方案，并明确「首批完成不代表 B 轮完成」。产品审阅入口为 [b-first-batch-review.md](b-first-batch-review.md)。本节为新增范围，本批替代 A 阶段「不展示思考、不增加整轮折叠」的相应限制；A/C 其他既有行为继续保留。
 
 | 需求 | 首批要求 |
 | --- | --- |

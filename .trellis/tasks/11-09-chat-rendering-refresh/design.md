@@ -1,6 +1,6 @@
 # 聊天页面渲染统一：设计草案
 
-状态：A/C 已实施；B 首批技术设计待审阅，见本文末节及 [b-first-batch-review.md](b-first-batch-review.md)。D1–D4 保持原决策；未批准 B 实施。
+状态：A/C 已实施；B 首批技术设计已批准，见本文末节及 [b-first-batch-review.md](b-first-batch-review.md)。D1–D4 保持原决策；用户于 2026-11-13 批准 B 首批实施。
 
 ## 1. 现有结构与改动边界
 
@@ -133,7 +133,7 @@ B 可使用已有 `SubagentSummary` 的角色、描述、任务、状态和结�
 
 参考与边界见 sidebar-status-dsh-review.md。复用 SessionActivity、activityStatus 和现有未读判定，只修改 WorkspaceNavigation 与样式。会话行固定左侧16px状态位，右侧基于 updatedAt 格式化短时间，待交互文字优先。列表共用一个悬停所有者，首次800ms延迟，移动到其他行立即接续；浮层 portal 至 document.body，按视口约束位置。指针离开或失焦关闭，Escape、导航及外部滚动立即关闭，不增加请求或持久状态。
 
-## B 轮首批技术设计（待审阅）
+## B 轮首批技术设计（已批准）
 
 ### 数据来源与最小补齐
 
