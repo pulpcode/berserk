@@ -1776,3 +1776,36 @@
 ### Next Steps
 
 - 如需push或更新线上，等待用户后续明确指令。
+
+
+## Session 61: 修复流式回答期间引用与能力标签缺失
+
+**Date**: 2026-11-13
+**Task**: 修复流式回答期间引用与能力标签缺失
+**Branch**: `feat/chat-rendering-c`
+
+### Summary
+
+在 feat/chat-rendering-c 复用 resources.loaded 同步已加载的引用、Skill、Agents 和附件；用户气泡在回答中可见，后续增量、轮询与导航不会丢失。未新建任务、未部署、未推送。
+
+### Main Changes
+
+- 扩展既有资源加载事件并合并到受会话、请求、流令牌及终态保护的消息列表；同步前后端规范和当前分支修复记录。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d6ffb43` | (see git log) |
+
+### Testing
+
+- [OK] 修复前新增用例复现；修复后 169 项单元/集成、126 项浏览器回归、typecheck、lint、build、diff 检查通过；桌面截图已审阅。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 如需上线，可将本分支修复纳入 C 轮验收与后续合并。
