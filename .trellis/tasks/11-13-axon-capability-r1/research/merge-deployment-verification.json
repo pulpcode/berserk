@@ -1,0 +1,26 @@
+{
+  "commit": "7ffc7f7",
+  "r1UserAcceptance": "pending",
+  "checks": [
+    {
+      "seat": "overall",
+      "login": true,
+      "experts": true,
+      "readableSessions": 15
+    },
+    {
+      "seat": "intelligence",
+      "login": true,
+      "experts": true,
+      "readableSessions": 2
+    },
+    {
+      "asset": "/assets/index-D4C94RMW.js",
+      "sha256": "4a7ed849ac0cf76941e42f7fae745c1ec6bdc3d2c1c39fa76fcad633ebae2d50"
+    },
+    {
+      "asset": "/assets/index-Czb8QXiB.css",
+      "sha256": "c2dd234b5dc707c561ac40395a163c6d189c66556136e1ea998f009e9d53bc22"
+    }
+  ]
+}
