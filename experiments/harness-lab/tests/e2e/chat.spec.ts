@@ -745,6 +745,11 @@ test('DSH sidebar places one status before aligned titles, shows pending labels 
     expect(new Set(positions.map(box => box!.x)).size).toBe(1);
     const statusBox = (await running.locator('.session-status-slot').boundingBox())!;
     expect(statusBox.x + statusBox.width).toBeLessThan(positions[1]!.x);
+    for (const row of [running, waiting]) {
+      const title = (await row.locator('.session-title').boundingBox())!;
+      const marker = (await row.locator('.conversation-indicator > span, .conversation-indicator > svg').boundingBox())!;
+      expect(Math.abs(marker.y + marker.height / 2 - title.y - title.height / 2)).toBeLessThanOrEqual(1);
+    }
 
     await running.hover();
     await page.waitForTimeout(200); // The first card must not flash on incidental pointer movement.

@@ -294,7 +294,7 @@ input, select { font: inherit; }
 .group-sessions .session-item.selected { background: rgba(38, 49, 72, .06); }
 .group-sessions .sidebar-empty { margin: 2px 0; padding: 6px 8px 6px 32px; line-height: 20px; }
 .group-sessions .session-item > .session-title { flex: 1; min-width: 0; }
-.session-status-slot { flex: 0 0 16px; width: 16px; height: 16px; }
+.session-status-slot { flex: 0 0 16px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
 .session-status-slot .conversation-indicator { margin: 0; }
 .session-status-slot .conversation-indicator.running { color: var(--muted); }
 .session-update-time, .session-pending-label { flex-shrink: 0; font-size: 11px; line-height: 16px; white-space: nowrap; color: var(--muted); }
