@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 61
+- **Total Sessions**: 62
 - **Last Active**: 2026-11-13
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1811 | Active |
+| `journal-1.md` | ~1844 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 62 | 2026-11-13 | 采用DSH侧栏会话状态与悬停交互 | `8eb5a72` | `feat/chat-rendering-c` |
 | 61 | 2026-11-13 | 修复流式回答期间引用与能力标签缺失 | `d6ffb43` | `feat/chat-rendering-c` |
 | 60 | 2026-11-04 | 提交席位工作双视图与滚轮修复并归档 | `59f35fe` | `main` |
 | 59 | 2026-11-04 | 提交泳道图方案并实现席位工作双视图 | `a92dd7f` | `main` |
