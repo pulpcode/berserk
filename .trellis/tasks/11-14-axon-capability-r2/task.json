@@ -15,12 +15,12 @@
   "branch": "codex/axon-r2",
   "base_branch": "codex/axon-r1-experts",
   "worktree_path": "/Users/lau/.codex/worktrees/axon-r2/berserk",
-  "commit": null,
+  "commit": "927812a",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "最新三项管理员反馈已实施并更新4316：个人空间/新建对话、共用侧栏间距、admin与现有四业务测试账号同密码且旧登录失效。最终102单元/集成与22浏览器、类型/lint/build通过；真实方舟+Docker5调用完成个人文件双轮和隔离验证。线上统一密码/管理与个人API、43任务隔离、原四业务账号历史与新资源通过；账号ID/角色/业务席位任务不变，无schema迁移。完整备份和上版保留。未提交，R1后置UI及R2用户验收pending，保持in_progress。",
+  "notes": "最新三项管理员反馈已实施并更新4316：个人空间/新建对话、共用侧栏间距、admin与现有四业务测试账号同密码且旧登录失效。最终102单元/集成与22浏览器、类型/lint/build通过；真实方舟+Docker5调用完成个人文件双轮和隔离验证。线上统一密码/管理与个人API、43任务隔离、原四业务账号历史与新资源通过；账号ID/角色/业务席位任务不变，无schema迁移。完整备份和上版保留。未提交，R1后置UI及R2用户验收pending，保持in_progress。 用户要求已提交927812a并push，4315已更新相同版本，完整备份和两段显式迁移通过，原账号密码任务与历史保留，线上检查通过。",
   "meta": {}
 }

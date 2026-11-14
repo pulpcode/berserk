@@ -113,3 +113,10 @@ rollback-proof-r2.json使用真实干净R1基线程序创建合成会话，R2备
 线上下拉accountId+统一测试密码登录、管理API、个人空间/工作区/模型/会话准备API、四项技能元数据通过；43个既有公共或他人任务对管理员均404，业务context/workbench 403。登录和读取未生成草稿/任务/工作区，账号总数7、业务席位6；业务账号/密码、席位、角色和原任务与备份完全一致。原四账号保持非管理员且15/2/1/1会话历史可读。新JS/CSS HTTP内容与发布目录构建产物逐字节一致，4315与4316均健康200。详见admin-personal-online-deployment.json及admin-personal-online-4316.json。
 
 首次上线检查脚本将未提供给管理员的个人默认专家偏好API误列为必需200，实际403；修正检查范围后全项通过，未因此扩大权限或改动已冻结产品代码。4315未更新。Git未提交，R1/R2用户验收保持pending。
+
+
+## 2026-11-14 用户要求提交、推送及更新4315
+
+产品与既有验证记录已以中文提交927812a并推送origin/codex/axon-r2。4315已部署相同源包d3e6b9e807e87aa5b13973f4b7d1305291ff01b25a148b94c17da14ca8fa851b，发布目录/home/ubuntu/axon-r2-release-4315-20261114，PID2232768；保留原数据根/home/ubuntu/axon-scenario-release-68dded362074/data。停服380文件完整备份backup/before-admin-personal-space，摘要6402cdc4fc3bb5e8b6412205b17eb4f02460241b4f2032bc2729ffcc871b98f9。显式R2及管理员schema迁移dry-run/apply通过，版本24，迁移各自额外全备份保留；账户/席位/认证会话/任务及创建回执与迁移前逐行一致，外键有效。
+
+原四测试席位原密码登录、专家目录、任务和11/2/1/1条会话历史读取通过，均非管理员；4315保留6账户6业务席位，未复制4316管理员或修改密码。新JS/CSS HTTP字节与构建产物一致，4315/4316健康200，读取未创建草稿或工作区。详见research/online-4315-r2-{deployment,verification}.json。原R1发布目录保留；回退须与迁移前全备份配对，不直接用旧程序打开schema24。R1/R2用户验收仍pending，不归档。
