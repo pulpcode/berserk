@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:98043) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:98045) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:98044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:98042) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/capability-admin.test.ts (3 tests | 1 failed) 3769ms
+     × grants an account only by an explicit operation and leaves all business/account values intact 11ms
+ ❯ tests/access.test.ts (16 tests | 1 failed) 36940ms
+     × publishes only enabled seat labels and authenticates the selected seat with its own password 3134ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/access.test.ts > authenticated task scopes > publishes only enabled seat labels and authenticates the selected seat with its own password
+AssertionError: expected { code: 'INVALID_CREDENTIALS', …(1) } to deeply equal { code: 'INVALID_CREDENTIALS', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "INVALID_CREDENTIALS",
+-   "message": "席位或密码不正确。",
++   "message": "账号、席位或密码不正确。",
+  }
+
+ ❯ tests/access.test.ts:61:113
+     59|     const attempt=(payload:object)=>app.inject({url:'/api/auth/login',…
+     60|     for(const payload of [{seatId:'missing',password:'test-password-12…
+     61|       const response=await attempt(payload);expect(response.statusCode…
+       |                                                                                                                 ^
+     62|     }
+     63|     expect((await attempt({seatId:'seat-d',username:'a',password:'test…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/capability-admin.test.ts > explicit account capability administrator > grants an account only by an explicit operation and leaves all business/account values intact
+Error: no such table: auth_sessions
+ ❯ SystemRoles.revoke src/access/system-roles.ts:74:13
+
+ ❯ tests/capability-admin.test.ts:58:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  2 failed | 21 passed (23)
+   Start at  15:53:34
+   Duration  41.78s (transform 6.07s, setup 0ms, import 18.42s, tests 53.45s, environment 1ms)
+

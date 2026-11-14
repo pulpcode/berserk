@@ -1,0 +1,18 @@
+{
+  "passed": false,
+  "failure": "子 Agent 角色配置错误：请检查目录和文件格式；文件须为有效 UTF-8，且每份不超过 64 KiB。\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n",
+  "dataDir": "/tmp/axon-r2-live-M4V4Qt",
+  "elapsedMs": 2857,
+  "model": {
+    "provider": "volcengine-agent-plan",
+    "id": "deepseek-v4.1-flash"
+  },
+  "attempts": 0,
+  "checks": [
+    "独立管理员账号无业务席位，业务API拒绝访问",
+    "普通账号管理写入403"
+  ],
+  "calls": [],
+  "records": [],
+  "limits": "最多40次模型调用、每请求180秒、总计15分钟；无任务重试或自动交互批准。真实外部业务、在途普通停用收尾和完整升级回退由独立验收覆盖。"
+}

@@ -166,7 +166,7 @@ export class BackgroundStore {
       if (!actual.has('inbox_handling')) db.exec(`CREATE TABLE inbox_handling(delivery_id TEXT PRIMARY KEY REFERENCES background_deliveries(id), state TEXT NOT NULL CHECK(state IN ('pending','completed','legacy')), revision INTEGER NOT NULL CHECK(revision>0), updated_at TEXT NOT NULL, updated_by_user_id TEXT REFERENCES accounts(id));
         INSERT INTO inbox_handling SELECT id,'legacy',1,json_extract(data,'$.updatedAt'),NULL FROM background_deliveries WHERE status='delivered';`);
       this.validateIntegrity(true,true); this.validateHandling();
-      db.exec(`PRAGMA user_version=${scenarioSchemaVersion(version >= 11 ? version : version >= 9 ? 10 : 8)}`);
+      db.exec(`PRAGMA user_version=${scenarioSchemaVersion(version >= 11 ? version : version >= 9 ? 10 : 8, storedVersion)}`);
     });
     migrateContinuous(db);
   }

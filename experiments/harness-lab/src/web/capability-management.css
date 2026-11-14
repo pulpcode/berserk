@@ -1,0 +1,72 @@
+.resource-panel.capability-management-panel { width: min(1180px, calc(100vw - 64px)); max-width: none; }
+.capability-management-panel .panel-body { min-height: 0; }
+.management-topline, .management-expert-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.management-topline > p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.management-topline button, .management-expert-heading button, .management-sidebar > button { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.management-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.management-tabs button { border-color: transparent; background: transparent; }
+.management-tabs button[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+.management-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 24px; }
+.management-sidebar { min-width: 0; border-right: 1px solid var(--line); padding-right: 18px; }
+.management-sidebar > button { width: 100%; justify-content: center; }
+.management-sidebar nav { display: grid; gap: 8px; margin-top: 16px; }
+.management-sidebar nav button { display: grid; text-align: left; gap: 6px; width: 100%; padding: 12px; }
+.management-sidebar nav button[aria-current="page"] { background: var(--accent-soft); border-color: var(--accent); }
+.management-sidebar nav strong { font-size: 13px; overflow-wrap: anywhere; }
+.management-sidebar nav span { font-size: 12px; color: var(--muted); }
+.management-detail { min-width: 0; }
+.management-expert-heading h3 { margin: 0 0 6px; font-size: 19px; }
+.management-expert-heading p { margin: 0; color: var(--muted); font-size: 12px; }
+.management-detail h4, .management-seat-default h3 { margin: 20px 0 10px; }
+.management-detail p, .expert-default-settings p { font-size: 13px; line-height: 1.8; }
+.management-info { padding: 12px 14px; border-radius: 8px; background: var(--faint); font-size: 13px; line-height: 1.8; }
+.management-detail label:not(.management-check), .expert-default-settings label, .management-seat-default > label { display: grid; gap: 8px; margin: 14px 0; font-size: 13px; }
+.management-detail :is(input:not([type="checkbox"]), textarea, select), .expert-default-settings select, .management-seat-default select { width: 100%; min-width: 0; min-height: var(--control-height); padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--control-radius); background: var(--surface); color: var(--text); font: inherit; font-size: 13px; }
+.management-detail textarea { resize: vertical; line-height: 1.7; }
+.expert-editor > fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.expert-editor fieldset fieldset, .expert-policy fieldset { border: 1px solid var(--line); padding: 12px; margin: 18px 0; border-radius: 8px; min-width: 0; }
+.management-detail legend { padding: 0 6px; font-size: 13px; font-weight: 600; }
+.management-check { display: flex; align-items: flex-start; gap: 9px; margin: 10px 0; font-size: 13px; line-height: 1.7; }
+.management-check input { flex-shrink: 0; margin-top: 5px; accent-color: var(--accent); }
+.management-check strong { display: block; font-weight: 500; }
+.management-check small { display: block; color: var(--muted); font-size: 12px; }
+.management-tool-group { margin-top: 18px; }
+.management-tool-group h4 { margin: 0 0 8px; font-size: 13px; }
+.management-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0; }
+.management-actions > span { color: var(--muted); font-size: 12px; }
+.management-compare { margin-top: 20px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
+.management-compare pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; line-height: 1.8; margin: 10px 0; }
+.management-diff { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.management-diff > div { min-width: 0; }
+.management-diff strong { font-size: 12px; color: var(--muted); }
+.expert-history article { padding: 0 0 16px; border-bottom: 1px solid var(--line); }
+.expert-history article button { display: block; margin-top: 10px; }
+.expert-history small { color: var(--muted); }
+.management-audit { list-style: none; padding: 0; }
+.management-audit li { display: flex; gap: 14px; justify-content: space-between; padding: 10px 0; font-size: 12px; border-bottom: 1px solid var(--line); }
+.management-audit span { color: var(--muted); }
+.expert-publish, .expert-trial, .expert-lifecycle { margin-top: 24px; padding-top: 4px; border-top: 1px solid var(--line); }
+.management-impact { margin-top: 14px; background: var(--faint); border-radius: 8px; padding: 12px 14px; }
+.trial-synthetic-file { margin: 16px 0; }
+.trial-synthetic-file > summary { cursor: pointer; font-size: 13px; }
+.trial-report { margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
+.trial-conversation { max-height: 440px; overflow: auto; margin: 16px 0; padding: 12px; background: var(--faint); }
+.trial-conversation .message { max-width: 100%; }
+.trial-report dl { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 9px; font-size: 12px; }
+.trial-report dt { color: var(--muted); }
+.trial-report dd { margin: 0; overflow-wrap: anywhere; }
+.expert-default-settings { max-width: 640px; }
+.expert-default-settings h3 { margin: 0 0 10px; font-size: 17px; }
+.expert-default-latest { padding: 12px; border: 1px solid var(--line); border-radius: 8px; margin-top: 14px; }
+.management-seat-default { max-width: 680px; }
+@media (max-width: 1100px) { .management-layout { grid-template-columns: 190px minmax(0, 1fr); gap: 16px; } .management-sidebar { padding-right: 12px; } .management-expert-heading { flex-wrap: wrap; } }
+
+.expert-default-origin { flex-shrink: 0; font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+.management-audit li { flex-wrap: wrap; }
+.management-audit .audit-reason { flex-basis: 100%; color: var(--text); }
+
+.resource-panel.capability-management-panel[open] { display: flex; flex-direction: column; height: min(88vh, 900px); overflow: hidden; }
+.capability-management-panel > .panel-header { flex-shrink: 0; }
+.capability-management-panel > .panel-body { overflow: auto; min-height: 0; }
+.management-sidebar { position: sticky; top: 0; align-self: start; max-height: calc(88vh - 180px); overflow: auto; }

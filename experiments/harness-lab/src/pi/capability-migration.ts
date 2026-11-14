@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { cp, lstat, mkdir, readFile, readdir, realpath } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { CapabilityRoles } from '../access/capability-roles.js';
+import { SystemRoles } from '../access/system-roles.js';
 import { CapabilityService } from '../capabilities/service.js';
 import { RequestError } from '../contracts/errors.js';
 import { atomicWrite, checkDirectory, hashContent, parseJsonStrict, readControlled, stateError } from '../resources/files.js';
@@ -170,7 +170,7 @@ export async function migrateCapabilities(options: CapabilityMigrationOptions) {
         db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL');
         if (db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='accounts'").get()) {
           authStage(db, report.inputDigest, 'prepared');
-          CapabilityRoles.migrate(db);
+          SystemRoles.migrate(db);
         }
       } finally { db.close(); }
     }

@@ -131,6 +131,7 @@ function SessionHoverCard({ id, session, workspace, unread, anchor, keep, leave 
 
 interface NavigationProps {
   taskMode?: boolean;
+  personalOnly?: boolean;
   readOnly?: boolean;
   taskMeta?: Record<string,{visibility:'public'|'private';state:'active'|'archived'}>;
   createTask?: (visibility:'public'|'private') => void;
@@ -151,7 +152,7 @@ interface NavigationProps {
   showActivity?: () => void;
 }
 
-export function WorkspaceNavigation({ readOnly=false,taskMode,taskMeta,createTask,createWorkspace,publicAllowed,informationTaskId,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession }: NavigationProps) {
+export function WorkspaceNavigation({ readOnly=false,taskMode,personalOnly=false,taskMeta,createTask,createWorkspace,publicAllowed,informationTaskId,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession }: NavigationProps) {
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [catalogCollapsed, setCatalogCollapsed] = useState<Record<string, boolean>>({});
@@ -160,7 +161,7 @@ export function WorkspaceNavigation({ readOnly=false,taskMode,taskMeta,createTas
   return <>
     <nav className="workspace-groups" aria-label="会话列表">
       {loading && !workspaces.length && <LoadingIndicator label="正在加载项目…" />}
-      {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=>{
+      {(taskMode ? personalOnly ? ['private'] as const : ['public','private'] as const : ['legacy'] as const).map(group=>{
         const label=group==='public'?'任务空间':group==='private'?'个人空间':'项目';
         const folded=!!catalogCollapsed[group];
         const WorkspaceIcon=group==='public'?RiFolderCloudLine:Folder;
@@ -179,7 +180,7 @@ export function WorkspaceNavigation({ readOnly=false,taskMode,taskMeta,createTas
         return <section className={`workspace-group${(informationTaskId ? informationTaskId === workspace.taskSpaceId : workspaceId === workspace.id) ? ' current' : ''}`} key={workspace.id} aria-label={workspace.name}>
           <div className="workspace-group-heading">
             <button className="group-toggle" aria-label={`${collapsed[workspace.id] ? '展开' : '折叠'}项目：${workspace.name}`} aria-expanded={!collapsed[workspace.id]} aria-controls={`workspace-sessions-${workspace.id}`} onClick={() => setCollapsed(previous => ({ ...previous, [workspace.id]: !previous[workspace.id] }))}><WorkspaceIcon className="workspace-folder-icon" size={16} aria-hidden="true" /><ChevronDown className="workspace-disclosure-icon" size={16} aria-hidden="true" /></button>
-            <button className="workspace-entry" aria-label={`进入项目：${workspace.name}`} aria-current={(taskMode ? informationTaskId === workspace.taskSpaceId : !activityView && workspaceId === workspace.id) ? 'page' : undefined} title={workspace.name} onClick={() => enterWorkspace(workspace.id)}><WorkspaceIcon className="workspace-rail-icon" size={20} aria-hidden="true" /><span>{workspace.name}</span></button>
+            <button className="workspace-entry" aria-label={`进入项目：${workspace.name}`} aria-current={(taskMode && !personalOnly ? informationTaskId === workspace.taskSpaceId : !activityView && workspaceId === workspace.id) ? 'page' : undefined} title={workspace.name} onClick={() => enterWorkspace(workspace.id)}><WorkspaceIcon className="workspace-rail-icon" size={20} aria-hidden="true" /><span>{workspace.name}</span></button>
             {!readOnly&&<button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading || taskMeta?.[workspace.id]?.state==='archived'} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>}
           </div>
           <div id={`workspace-sessions-${workspace.id}`} hidden={collapsed[workspace.id]} className="group-sessions">

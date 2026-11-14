@@ -22,6 +22,7 @@ function setup() {
   db.exec(`PRAGMA foreign_keys=ON;
     CREATE TABLE seats(id TEXT PRIMARY KEY,name TEXT,manage_model INTEGER,create_public INTEGER);
     CREATE TABLE accounts(id TEXT PRIMARY KEY,username TEXT,display_name TEXT,seat_id TEXT REFERENCES seats(id),enabled INTEGER);
+    CREATE TABLE auth_sessions(id TEXT PRIMARY KEY,user_id TEXT,expires INTEGER,data TEXT);
     PRAGMA user_version=18;`);
   const adminName = randomUUID(), ordinary = randomUUID();
   db.prepare('INSERT INTO seats VALUES(?,?,?,?)').run('admin-seat', '管理员', 1, 1);

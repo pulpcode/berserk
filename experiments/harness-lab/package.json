@@ -43,7 +43,9 @@
     "probe:agent-framework": "tsx --env-file-if-exists=.env.local scripts/probe-agent-framework.ts",
     "capabilities:admin": "tsx scripts/capabilities-admin.ts",
     "migrate:capabilities": "tsx scripts/migrate-capabilities.ts",
-    "probe:capabilities": "tsx --env-file-if-exists=.env.local scripts/probe-capabilities.ts"
+    "probe:capabilities": "tsx --env-file-if-exists=.env.local scripts/probe-capabilities.ts",
+    "migrate:capabilities:r2": "tsx scripts/migrate-capabilities-r2.ts",
+    "migrate:access:administrators": "tsx scripts/migrate-administrators.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",

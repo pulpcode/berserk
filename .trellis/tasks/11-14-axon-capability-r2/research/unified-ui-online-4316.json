@@ -1,0 +1,54 @@
+{
+  "verifiedAt": "2026-11-14T09:02:53.601735+00:00",
+  "release": "/home/ubuntu/axon-r2-unified-4316-20261114",
+  "sourceArchiveSha256": "15d14d892c8b41909bbbaf5f8310bf4d6b0683209119dab00e770509b54369cf",
+  "adminDropdownChoice": true,
+  "adminLoginBySelectedAccountAndOriginalPassword": true,
+  "adminManagementApi": true,
+  "adminBusinessApiDenied": true,
+  "readonlySkillCount": 4,
+  "noDraftCreatedByLoginOrReads": true,
+  "accountSeatRolesAndTasksUnchanged": true,
+  "schemaVersion": 24,
+  "businessChecks": [
+    {
+      "seat": "seat-overall",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true
+    },
+    {
+      "seat": "seat-intelligence",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true
+    },
+    {
+      "seat": "seat-planning",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true
+    },
+    {
+      "seat": "seat-situation",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true
+    }
+  ],
+  "assets": [
+    {
+      "asset": "/assets/index-CPa1VA4L.js",
+      "sha256": "3f51481340744221a60dbb52647b23e82cb10b786b0999b9bca4e08ef8f476dd"
+    },
+    {
+      "asset": "/assets/index-Cy63HFoM.css",
+      "sha256": "4c0c3900305036c1a3b2c9fb598df5c1e77e088ab6c69e5d66f21b073ecbb2f3"
+    }
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "r2UserAcceptance": "pending"
+}

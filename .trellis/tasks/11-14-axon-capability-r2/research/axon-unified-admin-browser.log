@@ -1,0 +1,52 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/administrator.spec.ts --workers=1 --output=/private/tmp/axon-unified-admin-results
+
+[WebServer] (node:12165) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:12136) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:12191) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12191) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/administrator.spec.ts:54:1 › independent administrator manages experts without mounting a seat workbench (30.4s)
+(node:12300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12300) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  2 tests/e2e/administrator.spec.ts:103:1 › revoking an independent administrator returns to login and overall remains a business seat (9.4s)
+
+
+  1) tests/e2e/administrator.spec.ts:54:1 › independent administrator manages experts without mounting a seat workbench 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog').filter({ has: getByLabel('专家名称', { exact: true }) }).getByRole('button', { name: '检查配置', exact: true })
+
+
+      72 |     await expect(management.getByRole('button', { name: '保存草稿', exact: true })).toBeDisabled();
+      73 |     await management.getByRole('button', { name: '检查与试用', exact: true }).click();
+    > 74 |     await management.getByRole('button', { name: '检查配置', exact: true }).click();
+         |                                                                         ^
+      75 |     await expect(management.getByRole('heading', { name: '检查通过', exact: true })).toBeVisible();
+      76 |     expect(env.fake.calls).toHaveLength(0);
+      77 |     await page.reload();
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/administrator.spec.ts:74:73
+
+    Error Context: ../../../../../../../../private/tmp/axon-unified-admin-results/administrator-independent--99030-t-mounting-a-seat-workbench/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-unified-admin-results/administrator-independent--99030-t-mounting-a-seat-workbench/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-unified-admin-results/administrator-independent--99030-t-mounting-a-seat-workbench/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/administrator.spec.ts:54:1 › independent administrator manages experts without mounting a seat workbench 
+  1 passed (1.2m)

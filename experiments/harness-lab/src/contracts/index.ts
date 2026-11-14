@@ -105,6 +105,7 @@ export interface InputAction {
 export interface InputResult { receipt: InputReceipt | null; queue: InputQueueState }
 export interface SessionSnapshot extends SessionSummary {
   expert?: SessionExpert;
+  expertDefaultSource?: 'explicit' | 'task' | 'personal' | 'seat' | 'general';
   inputQueue?: InputQueueState;
   modelId?: string;
   backgroundJob?: BackgroundJobReservation;

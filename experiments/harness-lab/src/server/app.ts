@@ -1,5 +1,8 @@
-import { CapabilityRoles } from '../access/capability-roles.js';
-import type { ExpertSessionSelection } from '../contracts/capabilities.js';
+import type { CapabilityTrialsOptions } from '../pi/capability-trials.js';
+import { capabilityManagementRoutes } from './capability-management-routes.js';
+import { SystemRoles } from '../access/system-roles.js';
+import type { CapabilityLibrary, ExpertSessionSelection } from '../contracts/capabilities.js';
+import { controlledSkillIds, loadControlledSkills } from '../resources/service.js';
 import { CommandService } from '../commands/service.js';
 import { commandRoutes } from './command-routes.js';
 import { continuousRoutes } from './continuous-routes.js';
@@ -18,7 +21,7 @@ import type { BackgroundExecutor } from '../background/executor.js';
 import { backgroundRoutes } from './background-routes.js';
 import { taskInformationRoutes } from './task-information-routes.js';
 import { randomUUID } from 'node:crypto';
-import { registerAuth, identityOf } from './auth.js';
+import { registerAuth, identityOf, accountIdentityOf, workspaceIdentityOf } from './auth.js';
 import { taskRoutes } from './task-routes.js';
 import Fastify, { type FastifyError, type FastifyInstance, type FastifyRequest } from 'fastify';
 import fastifyStatic from '@fastify/static';
@@ -32,7 +35,12 @@ import { apiScope } from './seat-scope.js';
 import { collaborationRoutes } from './collaboration-routes.js';
 import { baseSchemaVersion } from '../access/schema.js';
 
-export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?: {config: BackgroundConfig; executor?: BackgroundExecutor; env?: NodeJS.ProcessEnv}, contextOptions?: {config: ContextConfig; env?: NodeJS.ProcessEnv}) {
+async function capabilityLibrary(): Promise<CapabilityLibrary> {
+  const skills = await loadControlledSkills(controlledSkillIds);
+  return {skills:skills.map(({id,name,description})=>({id,name,description}))};
+}
+
+export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?: {config: BackgroundConfig; executor?: BackgroundExecutor; env?: NodeJS.ProcessEnv}, contextOptions?: {config: ContextConfig; env?: NodeJS.ProcessEnv}, capabilityOptions?: Pick<CapabilityTrialsOptions, 'runtimeFactory' | 'executionFactory'>) {
   if (!lab.context) {
     try {
       const config = contextOptions?.config ?? await loadContextConfig();
@@ -80,6 +88,18 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   if (background) await taskInformationRoutes(app,background);
   app.get('/api/health',async()=>({ok:true}));
   app.get('/api/info', async () => lab.info());
+  if (lab.access && !lab.config.testSeats) {
+    const settingsQuery = {type:'object',additionalProperties:false};
+    const adminAccess = (request: FastifyRequest) => ({administrator:new SystemRoles(lab.access!.db).has(accountIdentityOf(request).userId)});
+    app.get('/api/admin/access',{schema:{querystring:settingsQuery}},adminAccess);
+    app.get('/api/capabilities/access',{schema:{querystring:settingsQuery}},adminAccess);
+    app.get('/api/capabilities/library',{schema:{querystring:settingsQuery}},capabilityLibrary);
+    app.get('/api/admin/capabilities/summary',{schema:{querystring:settingsQuery}},request=>{
+      new SystemRoles(lab.access!.db).requireAdministrator(accountIdentityOf(request).userId);
+      return lab.capabilities.adminSummary();
+    });
+    await capabilityManagementRoutes(app,lab,capabilityOptions);
+  }
   await app.register(async scoped => {
     const scope = apiScope(lab.config);
     scoped.addHook('onRequest', async request => { scope.seat(request); });
@@ -95,7 +115,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
-    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation','/scenario-director','/capabilities']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
+    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation','/scenario-director','/capabilities','/admin']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
     app.get('/tasks/:taskId/information',(_request,reply)=>reply.sendFile('index.html'));
   }
   return app;
@@ -110,19 +130,18 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
     return lab.context?.catalog(scope.seat(request)) ?? {systems: []};
   });
   const settingsQuery = { type: 'object', additionalProperties: false };
-  const principal = (request: FastifyRequest) => lab.access ? identityOf(request).userId : `seat:${scope.seat(request)}`;
-  app.get(`${scope.base}/capabilities/experts`, { schema: { querystring: settingsQuery } }, request => lab.capabilities.list(principal(request)));
+  const principal = (request: FastifyRequest) => lab.access ? workspaceIdentityOf(request).userId : `seat:${scope.seat(request)}`;
+  app.get(`${scope.base}/capabilities/experts`, { schema: { querystring: settingsQuery } }, request => lab.access && !lab.access.canUseWorkspace(scope.seat(request)) ? [] : lab.capabilities.list(principal(request), scope.seat(request)));
   app.get<{ Params: { expertId: string } }>(`${scope.base}/capabilities/experts/:expertId`, { schema: {
     params: scope.params({ expertId: { type: 'string', pattern: '^[a-z][a-z0-9_-]{0,127}$' } }), querystring: settingsQuery,
-  } }, request => lab.capabilities.detail(request.params.expertId, principal(request)));
-  app.get(`${scope.base}/capabilities/access`, { schema: { querystring: settingsQuery } }, request => ({
-    administrator: !!lab.access && new CapabilityRoles(lab.access.db).has(identityOf(request).userId),
-  }));
-  app.get(`${scope.base}/admin/capabilities/summary`, { schema: { querystring: settingsQuery } }, request => {
-    if (!lab.access) throw new RequestError('FORBIDDEN', '当前账号无权管理能力。', 403);
-    new CapabilityRoles(lab.access.db).requireAdministrator(identityOf(request).userId);
-    return lab.capabilities.adminSummary();
-  });
+  } }, request => { if (lab.access && !lab.access.canUseWorkspace(scope.seat(request))) throw new RequestError('EXPERT_NOT_FOUND','专家不存在或不可用。',404); return lab.capabilities.detail(request.params.expertId, principal(request), scope.seat(request)); });
+  if (!lab.access || lab.config.testSeats) {
+    app.get(`${scope.base}/capabilities/library`, {schema:{querystring:settingsQuery}},capabilityLibrary);
+    app.get(`${scope.base}/capabilities/access`, {schema:{querystring:settingsQuery}},()=>({administrator:false}));
+    app.get(`${scope.base}/admin/capabilities/summary`, {schema:{querystring:settingsQuery}},()=>{
+      throw new RequestError('FORBIDDEN','此环境未启用账号管理。',403);
+    });
+  }
   const requireModelSettings = async (request: FastifyRequest) => {
     if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN', '当前席位无权管理模型配置。', 403);
   };
@@ -148,7 +167,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   app.get(`${scope.base}/workspaces`, async request => lab.workspaces.list(scope.seat(request)));
   app.get(`${scope.base}/activity`, { schema: { querystring: { type: 'object', additionalProperties: false } } }, async request => lab.activity(scope.seat(request)));
   app.post<{ Body: { name: string } }>(`${scope.base}/workspaces`, { schema: { body: { type: 'object', properties: { name: { type: 'string', minLength: 1, maxLength: 60 } }, required: ['name'], additionalProperties: false } } }, async (request, reply) => {
-    if (lab.access) { const actor=identityOf(request); const task=lab.access.create(actor,{title:request.body.name,goal:'',visibility:'private',clientActionId:randomUUID()}); return reply.code(201).send(await lab.workspaces.ensureWorkspace(task.id,actor.seatId,task.title)); }
+    if (lab.access) { const actor=workspaceIdentityOf(request); const task=lab.access.create(actor,{title:request.body.name,goal:'',visibility:'private',clientActionId:randomUUID()}); return reply.code(201).send(await lab.workspaces.ensureWorkspace(task.id,actor.seatId,task.title)); }
     return reply.code(201).send(await lab.workspaces.create(request.body.name, undefined, scope.seat(request)));
   });
   app.get<{ Querystring: { workspaceId?: string } }>(`${scope.base}/sessions`, { schema: { querystring: workspaceBody } }, async request => lab.list(request.query.workspaceId, scope.seat(request)));
@@ -160,7 +179,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
     }, dependencies: { expertRef: ['expectedDigest'], expectedDigest: ['expertRef'] },
   } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId, undefined, request.body.modelId,
     { expertRef: request.body.expertRef, expectedDigest: request.body.expectedDigest, clientActionId: request.body.clientActionId,
-      ...(lab.access ? { userId: identityOf(request).userId } : {}) }));
+      ...(lab.access ? { userId: workspaceIdentityOf(request).userId } : {}) }));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => lab.resources.info(request.params.id, scope.seat(request)));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/agents`, { schema: { params, querystring: settingsQuery } }, async request => lab.agents(request.params.id, scope.seat(request)));
   const resourceParams = (key: string) => scope.params({ id: uuid, [key]: { type: 'string', minLength: 1, maxLength: 80 } });
@@ -186,7 +205,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       required: ['submissionId', 'expectedRequestId', 'mode', 'text'], properties: {
         submissionId: uuid, expectedRequestId: uuid, mode: {enum: ['steer', 'followUp']}, text: {type: 'string', minLength: 1, maxLength: 16000},
       }},
-  }}, async request => lab.submitInput(request.params.id, request.body, scope.seat(request), lab.access ? identityOf(request).userId : undefined));
+  }}, async request => lab.submitInput(request.params.id, request.body, scope.seat(request), lab.access ? workspaceIdentityOf(request).userId : undefined));
   app.get<{Params: {id: string; submissionId: string}}>(`${scope.base}/sessions/:id/inputs/:submissionId`, {schema: {
     params: scope.params({id: uuid, submissionId: uuid}), querystring: settingsQuery,
   }}, async request => lab.inputReceipt(request.params.id, request.params.submissionId, scope.seat(request)));
@@ -208,7 +227,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }, async (request, reply) => {
     const text = request.body.text.trim();
     if (!text) throw new RequestError('EMPTY_MESSAGE', '请输入消息。');
-    const execution = lab.start(request.params.id, text, { annotationRefs: request.body.annotationRefs, contextRefs: request.body.contextRefs, uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request), undefined, lab.access ? identityOf(request).userId : undefined);
+    const execution = lab.start(request.params.id, text, { annotationRefs: request.body.annotationRefs, contextRefs: request.body.contextRefs, uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request), undefined, lab.access ? workspaceIdentityOf(request).userId : undefined);
     reply.hijack();
     const stream = reply.raw;
     stream.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' });

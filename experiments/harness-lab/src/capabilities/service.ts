@@ -37,10 +37,10 @@ export interface ExpertDefinition {
 }
 export interface CreationIntent {
   principalId: string; clientActionId: string; inputDigest: string; sessionId: string;
-  expertRef: ExpertRef; digest: string; state: 'prepared' | 'completed' | 'blocked'; createdAt: string;
+  expertRef: ExpertRef; digest: string; selectionSource?: 'explicit' | 'task' | 'personal' | 'seat' | 'general'; state: 'prepared' | 'completed' | 'blocked'; createdAt: string;
 }
 export interface LegacySession { sessionId: string; workspaceId: string; seatId: string }
-interface AcceptedRequest { ref: ExpertRef; principalId?: string; cancel: () => void; skills: SkillRevision[] }
+interface AcceptedRequest { ref: ExpertRef; principalId?: string; seatId?: string; cancel: () => void; skills: SkillRevision[] }
 
 export function skillRevision(value: ControlledSkill): SkillRevision {
   if (!idPattern.test(value.id) || !value.name.trim() || !value.description.trim() || !value.version.trim()
@@ -49,7 +49,7 @@ export function skillRevision(value: ControlledSkill): SkillRevision {
   const digest = capabilityDigest(body);
   return { ...body, revisionId: `skill-${digest}`, digest };
 }
-function expertRevision(value: ExpertDefinition): ExpertRevision {
+export function expertRevision(value: ExpertDefinition): ExpertRevision {
   if (!idPattern.test(value.expertId) || !value.releaseVersion.trim() || !value.name.trim() || !value.description.trim()
     || typeof value.instructions !== 'string' || Buffer.byteLength(value.instructions) > 65536
     || !value.modes.length || value.modes.some(mode => !['interactive', 'delegated', 'background', 'trial'].includes(mode))
@@ -88,7 +88,7 @@ export class CapabilityService {
   private readonly accepted = new Map<string, AcceptedRequest>();
   private closed = false;
   private readonly measurements = { hits: 0, misses: 0, loadMs: [] as number[] };
-  private constructor(directory: string, db: DatabaseSync, private readonly maxCacheBytes: number) { this.directory = directory; this.db = db; }
+  private constructor(directory: string, db: DatabaseSync, private readonly maxCacheBytes: number, readonly createdNew = false) { this.directory = directory; this.db = db; }
 
   static async open(dataDir: string, options: { allowPrepared?: boolean; maxCacheBytes?: number } = {}): Promise<CapabilityService> {
     const directory = join(dataDir, 'capabilities');
@@ -110,11 +110,11 @@ export class CapabilityService {
         CREATE TABLE legacy_sessions (session_id TEXT PRIMARY KEY, workspace_id TEXT NOT NULL, seat_id TEXT NOT NULL);
         CREATE TABLE migration (id INTEGER PRIMARY KEY CHECK(id=1), input_digest TEXT NOT NULL, state TEXT NOT NULL CHECK(state IN ('prepared','completed')));
         PRAGMA user_version=1; COMMIT;`);
-      if (Number(db.prepare('PRAGMA user_version').get()?.user_version) !== 1 || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw invalid();
+      if (![1, 2].includes(Number(db.prepare('PRAGMA user_version').get()?.user_version)) || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw invalid();
       // Checking expected tables also detects an interrupted or forged schema without recreating it.
       for (const table of ['experts', 'revisions', 'skills', 'states', 'access_rules', 'creation_intents', 'legacy_sessions', 'migration']) db.prepare(`SELECT 1 FROM ${table} LIMIT 1`).get();
       await chmod(path, 0o600);
-      const service = new CapabilityService(directory, db, options.maxCacheBytes ?? 4 * 1024 * 1024);
+      const service = new CapabilityService(directory, db, options.maxCacheBytes ?? 4 * 1024 * 1024, !stat);
       if (!options.allowPrepared && service.migrationStatus().state === 'prepared') throw new RequestError('CAPABILITY_MIGRATION_REQUIRED', '能力迁移尚未完成，请停服后使用原参数继续迁移。', 409);
       return service;
     } catch (error) { db.close(); throw error instanceof RequestError ? error : invalid(); }
@@ -131,7 +131,11 @@ export class CapabilityService {
         allowedTools: ['source_list', 'source_read', 'instructions_read', 'skill_read', 'read', 'ls', 'find', 'subagent', 'ask_user'], skills: methods },
     ];
     const result: ExpertRevision[] = [];
-    for (const definition of definitions) result.push(await this.registerExpert(definition));
+    for (const definition of definitions) {
+      const prior = this.db.prepare('SELECT system FROM experts WHERE expert_id=?').get(definition.expertId);
+      if (prior && !prior.system) throw invalid();
+      result.push(await this.registerExpert(definition));
+    }
     result.push(...await this.registerRoles(input.roles));
     return result;
   }
@@ -144,7 +148,7 @@ export class CapabilityService {
     return revisions;
   }
 
-  async registerExpert(definition: ExpertDefinition): Promise<ExpertRevision> {
+  async registerExpert(definition: ExpertDefinition, commit?: (revision: ExpertRevision) => void): Promise<ExpertRevision> {
     const revision = expertRevision(definition);
     return this.lock.run(async () => {
       // Content must be durable and verified before SQL references become visible.
@@ -162,6 +166,7 @@ export class CapabilityService {
         this.db.prepare('INSERT OR IGNORE INTO revisions VALUES(?,?,?)').run(revision.revisionId, revision.expertId, revision.digest);
         this.db.prepare('INSERT INTO experts VALUES(?,?,?,?) ON CONFLICT(expert_id) DO UPDATE SET current_revision=excluded.current_revision,selectable=excluded.selectable,system=excluded.system')
           .run(revision.expertId, revision.revisionId, Number(revision.selectable), Number(revision.system));
+        commit?.(revision);
         this.db.exec('COMMIT');
       } catch (error) { this.db.exec('ROLLBACK'); throw error; }
       return structuredClone(revision);
@@ -219,21 +224,23 @@ export class CapabilityService {
     this.recordLoad(performance.now() - start);
     return structuredClone(revision);
   }
-  private availabilityFor(assetId: string, revisionId: string, principalId?: string): CapabilityAvailability {
+  private availabilityFor(assetId: string, revisionId: string, principalId?: string, seatId?: string): CapabilityAvailability {
     const states = this.db.prepare('SELECT state,reason FROM states WHERE asset_id=? AND (revision_id=\'\' OR revision_id=?)').all(assetId, revisionId);
     const state = states.find(row => row.state === 'banned') ?? states.find(row => row.state === 'disabled');
     const denied = principalId && this.db.prepare('SELECT allowed FROM access_rules WHERE principal_id=? AND expert_id=?').get(principalId, assetId)?.allowed === 0;
     if (denied) return { available: false, state: 'banned', reason: '当前账号的能力使用授权已撤销。' };
+    if (!this.canUseSeat(assetId, seatId)) return { available: false, state: 'banned', reason: '当前席位未获准使用此专家。' };
+    if (this.isArchived(assetId) && !state) return { available: false, state: 'disabled', reason: '此专家已归档，历史内容仍可查看。' };
     return state ? { available: false, state: state.state as CapabilityState, reason: String(state.reason || (state.state === 'banned' ? '此能力已紧急封禁。' : '此能力已停用。')) }
       : { available: true, state: 'enabled' };
   }
-  availability(ref: ExpertRef, principalId?: string): CapabilityAvailability {
+  availability(ref: ExpertRef, principalId?: string, seatId?: string): CapabilityAvailability {
     validRef(ref);
     if (!this.db.prepare('SELECT 1 FROM revisions WHERE expert_id=? AND revision_id=?').get(ref.expertId, ref.revisionId)) return { available: false, state: 'banned', reason: '绑定的专家修订已缺失，请联系管理员核对。' };
-    return this.availabilityFor(ref.expertId, ref.revisionId, principalId);
+    return this.availabilityFor(ref.expertId, ref.revisionId, principalId, seatId);
   }
-  private summary(revision: ExpertRevision, principalId?: string): ExpertSummary {
-    let availability = this.availability(revision, principalId);
+  private summary(revision: ExpertRevision, principalId?: string, seatId?: string): ExpertSummary {
+    let availability = this.availability(revision, principalId, seatId);
     for (const skill of revision.skills) {
       const state = this.availabilityFor(skill.id, skill.revisionId, principalId);
       if (!state.available && (availability.available || state.state === 'banned')) availability = { ...state, reason: `依赖技能「${skill.name}」不可用：${state.reason}` };
@@ -242,32 +249,32 @@ export class CapabilityService {
       releaseVersion: revision.releaseVersion, digest: revision.digest, modes: [...revision.modes],
       dependencies: revision.skills.map(skill => ({ id: skill.id, name: skill.name, revisionId: skill.revisionId, releaseVersion: skill.version, digest: skill.digest })), availability };
   }
-  async list(principalId?: string): Promise<ExpertSummary[]> {
+  async list(principalId?: string, seatId?: string): Promise<ExpertSummary[]> {
     const rows = this.db.prepare('SELECT expert_id,current_revision FROM experts WHERE selectable=1 ORDER BY expert_id').all();
-    return Promise.all(rows.map(async row => this.summary(await this.resolve({ expertId: String(row.expert_id), revisionId: String(row.current_revision) }), principalId)));
+    return Promise.all(rows.filter(row => this.canUseSeat(String(row.expert_id), seatId) && !this.isArchived(String(row.expert_id))).map(async row => this.summary(await this.resolve({ expertId: String(row.expert_id), revisionId: String(row.current_revision) }), principalId, seatId)));
   }
-  async detail(expertId: string, principalId?: string): Promise<ExpertDetail> {
+  async detail(expertId: string, principalId?: string, seatId?: string): Promise<ExpertDetail> {
     const revision = await this.current(expertId);
-    if (!revision.selectable) throw new RequestError('EXPERT_NOT_FOUND', '专家不存在或不可用。', 404);
-    return { ...this.summary(revision, principalId), instructions: revision.instructions, allowedTools: revision.allowedTools };
+    if (!revision.selectable || !this.canUseSeat(expertId, seatId) || this.isArchived(expertId)) throw new RequestError('EXPERT_NOT_FOUND', '专家不存在或不可用。', 404);
+    return { ...this.summary(revision, principalId, seatId), instructions: revision.instructions, allowedTools: revision.allowedTools };
   }
-  sessionExpert(revision: ExpertRevision, principalId?: string): SessionExpert {
+  sessionExpert(revision: ExpertRevision, principalId?: string, seatId?: string): SessionExpert {
     const current = this.db.prepare('SELECT current_revision FROM experts WHERE expert_id=?').get(revision.expertId);
     const currentRevisionId = String(current?.current_revision ?? revision.revisionId);
-    return { ...this.summary(revision, principalId), currentRevisionId, updateAvailable: currentRevisionId !== revision.revisionId };
+    return { ...this.summary(revision, principalId, seatId), currentRevisionId, updateAvailable: currentRevisionId !== revision.revisionId };
   }
-  assertAdmission(ref: ExpertRef, principalId?: string): void {
-    const availability = this.availability(ref, principalId);
+  assertAdmission(ref: ExpertRef, principalId?: string, seatId?: string): void {
+    const availability = this.availability(ref, principalId, seatId);
     if (!availability.available) throw new RequestError('EXPERT_UNAVAILABLE', availability.reason!, 409);
   }
-  acceptRequest(input: { requestId: string; ref: ExpertRef; principalId?: string; cancel: () => void; skills?: SkillRevision[] }): () => void {
+  acceptRequest(input: { requestId: string; ref: ExpertRef; principalId?: string; seatId?: string; cancel: () => void; skills?: SkillRevision[] }): () => void {
     if (this.accepted.has(input.requestId)) throw invalid();
-    this.assertAdmission(input.ref, input.principalId);
+    this.assertAdmission(input.ref, input.principalId, input.seatId);
     for (const skill of input.skills ?? []) {
       const state = this.availabilityFor(skill.id, skill.revisionId, input.principalId);
       if (!state.available) throw new RequestError('EXPERT_UNAVAILABLE', state.reason!, 409);
     }
-    this.accepted.set(input.requestId, { ref: structuredClone(input.ref), principalId: input.principalId,
+    this.accepted.set(input.requestId, { ref: structuredClone(input.ref), principalId: input.principalId, seatId: input.seatId,
       cancel: input.cancel, skills: structuredClone(input.skills ?? []) });
     return () => { this.accepted.delete(input.requestId); };
   }
@@ -289,7 +296,7 @@ export class CapabilityService {
   assertCall(requestId: string): void {
     const request = this.accepted.get(requestId);
     if (!request) throw new RequestError('CAPABILITY_REQUEST_CLOSED', '该请求已结束或未获能力准入。', 409);
-    const states = [this.availability(request.ref, request.principalId), ...request.skills.map(skill => this.availabilityFor(skill.id, skill.revisionId, request.principalId))];
+    const states = [this.availability(request.ref, request.principalId, request.seatId), ...request.skills.map(skill => this.availabilityFor(skill.id, skill.revisionId, request.principalId))];
     const denied = states.find(state => state.state === 'banned');
     if (denied) throw new RequestError('EXPERT_UNAVAILABLE', denied.reason!, 409);
   }
@@ -305,6 +312,29 @@ export class CapabilityService {
     this.db.prepare('INSERT INTO access_rules VALUES(?,?,?) ON CONFLICT(principal_id,expert_id) DO UPDATE SET allowed=excluded.allowed').run(principalId, expertId, Number(allowed));
     if (!allowed) this.cancelDenied();
   }
+  canUseSeat(expertId: string, seatId?: string): boolean {
+    if (!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='r2_experts'").get()) return true;
+    const managed = this.db.prepare('SELECT archived FROM r2_experts WHERE expert_id=?').get(expertId);
+    if (!managed) return true; // R1 assets retain their original use behavior.
+    const row = this.db.prepare('SELECT data FROM r2_policies WHERE expert_id=?').get(expertId);
+    if (!row || !seatId) return false;
+    const policy = JSON.parse(String(row.data)) as { mode: string; seatIds: string[] };
+    return policy.mode === 'all' || policy.mode === 'seats' && policy.seatIds.includes(seatId);
+  }
+  private isArchived(expertId: string): boolean {
+    if (!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='r2_experts'").get()) return false;
+    return !!this.db.prepare('SELECT archived FROM r2_experts WHERE expert_id=?').get(expertId)?.archived;
+  }
+  assetAvailability(assetId: string, revisionId: string, principalId?: string) { return this.availabilityFor(assetId, revisionId, principalId); }
+  sourceForSession(sessionId: string): CreationIntent['selectionSource'] | undefined {
+    const rows = this.db.prepare("SELECT data FROM creation_intents WHERE json_extract(data,'$.sessionId')=?").all(sessionId);
+    if (rows.length > 1) throw invalid();
+    if (!rows.length) return undefined;
+    const value = JSON.parse(String(rows[0].data)) as CreationIntent;
+    return value.selectionSource;
+  }
+  activeRequestCount(expertId: string): number { return [...this.accepted.values()].filter(item => item.ref.expertId === expertId).length; }
+  refreshAccessGuards(): void { this.cancelDenied(); }
   private cancelDenied() {
     for (const [requestId, request] of this.accepted) {
       try { this.assertCall(requestId); } catch { request.cancel(); }
@@ -316,9 +346,10 @@ export class CapabilityService {
     let intent: CreationIntent;
     try {
       const value = parseJsonStrict(String(row.data));
-      if (!object(value) || !exactKeys(value, ['principalId', 'clientActionId', 'inputDigest', 'sessionId', 'expertRef', 'digest', 'state', 'createdAt'])
+      if (!object(value) || !exactKeys(value, ['principalId', 'clientActionId', 'inputDigest', 'sessionId', 'expertRef', 'digest', 'selectionSource', 'state', 'createdAt'])
         || value.principalId !== principalId || value.clientActionId !== clientActionId || !uuidPattern.test(String(value.sessionId))
         || !digestPattern.test(String(value.inputDigest)) || !digestPattern.test(String(value.digest))
+        || (value.selectionSource !== undefined && !['explicit','task','personal','seat','general'].includes(String(value.selectionSource)))
         || !['prepared', 'completed', 'blocked'].includes(String(value.state)) || typeof value.createdAt !== 'string'
         || !Number.isFinite(Date.parse(value.createdAt)) || !object(value.expertRef)
         || !exactKeys(value.expertRef, ['expertId', 'revisionId'])) throw invalid();
@@ -328,7 +359,7 @@ export class CapabilityService {
     if (input !== undefined && intent.inputDigest !== capabilityDigest(input)) throw new RequestError('SESSION_CREATION_CONFLICT', '此创建操作的参数已变化，请重新发起。', 409);
     return structuredClone(intent);
   }
-  async reserveCreation(input: { principalId: string; clientActionId: string; input: unknown; expertRef?: ExpertRef; expectedDigest?: string; sessionId?: string }): Promise<CreationIntent> {
+  async reserveCreation(input: { principalId: string; clientActionId: string; input: unknown; expertRef?: ExpertRef; expectedDigest?: string; sessionId?: string; seatId?: string; allowUnselectable?: boolean; resolveDefault?: () => Promise<{ expertRef: ExpertRef; digest: string; source?: 'task'|'personal'|'seat'|'general' }> }): Promise<CreationIntent> {
     if (!input.principalId || !uuidPattern.test(input.clientActionId)) throw new RequestError('INVALID_INPUT', '创建操作标识无效。');
     if (input.sessionId !== undefined && !uuidPattern.test(input.sessionId)) throw new RequestError('INVALID_INPUT', '会话标识无效。');
     return this.lock.run(async () => {
@@ -337,18 +368,19 @@ export class CapabilityService {
         if (input.sessionId !== undefined && existing.sessionId !== input.sessionId) throw new RequestError('SESSION_CREATION_CONFLICT', '此创建操作已固定其他会话标识。', 409);
         return existing;
       }
-      let revision: ExpertRevision;
+      let revision: ExpertRevision; let selectionSource: CreationIntent['selectionSource'] = 'explicit';
       if (input.expertRef) {
         revision = await this.current(input.expertRef.expertId);
-        if (!revision.selectable || revision.revisionId !== input.expertRef.revisionId || revision.digest !== input.expectedDigest) throw changed();
+        if ((!revision.selectable && !input.allowUnselectable) || revision.revisionId !== input.expertRef.revisionId || revision.digest !== input.expectedDigest) throw changed();
       } else {
         if (input.expectedDigest !== undefined) throw new RequestError('INVALID_INPUT', '内容摘要必须与所选专家一起提供。');
-        revision = await this.current();
+        const resolved = await input.resolveDefault?.(); selectionSource = resolved?.source ?? 'general';
+        revision = resolved ? await this.resolve(resolved.expertRef, resolved.digest) : await this.current();
       }
-      this.assertAdmission(revision, input.principalId);
+      this.assertAdmission(revision, input.principalId, input.seatId);
       const intent: CreationIntent = { principalId: input.principalId, clientActionId: input.clientActionId, inputDigest: capabilityDigest(input.input),
         sessionId: input.sessionId ?? randomUUID(), expertRef: { expertId: revision.expertId, revisionId: revision.revisionId }, digest: revision.digest,
-        state: 'prepared', createdAt: new Date().toISOString() };
+        selectionSource, state: 'prepared', createdAt: new Date().toISOString() };
       this.db.prepare('INSERT INTO creation_intents VALUES(?,?,?)').run(intent.principalId, intent.clientActionId, JSON.stringify(intent));
       return intent;
     });

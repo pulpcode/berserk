@@ -1,0 +1,279 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/administrator.spec.ts tests/e2e/access.spec.ts tests/e2e/capability-management.spec.ts --workers=2
+
+[WebServer] (node:9796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:9765) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 2 workers
+
+(node:10042) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10041) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10042) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:10041) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   2 tests/e2e/access.spec.ts:50:1 › empty seat choices cannot submit a login (11.8s)
+  ✘   1 tests/e2e/access.spec.ts:23:1 › seat login supports password visibility, errors, clearing and a narrow viewport (31.3s)
+(node:10562) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   3 tests/e2e/access.spec.ts:80:1 › login, public/private task navigation, lazy workspace, archive and two independent seats (31.8s)
+(node:10582) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10562) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:10582) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘   4 tests/e2e/access.spec.ts:92:1 › same-browser logout and identity change clear private drafts in both tabs (32.2s)
+(node:11094) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11094) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘   5 tests/e2e/access.spec.ts:100:1 › login reads the current CSRF token after another tab replaces the anonymous cookie (30.7s)
+(node:11222) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11222) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘   6 tests/e2e/access.spec.ts:115:1 › catalog managers maintain all work tasks while every seat owns its personal spaces (31.8s)
+(node:11801) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11801) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘   7 tests/e2e/access.spec.ts:227:1 › task catalog groups preserve disclosure and hide all space entries in the desktop rail (32.3s)
+(node:11930) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11930) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   8 tests/e2e/access.spec.ts:323:1 › directory outages show one content status, preserve navigation and drafts, and recover without writes (28.7s)
+  ✘  10 tests/e2e/access.spec.ts:380:1 › basemap preference survives logout and stays isolated between accounts (3.5s)
+  ✘   9 tests/e2e/access.spec.ts:359:1 › task read errors remain scoped instead of reporting a disconnected service (13.1s)
+
+
+  1) tests/e2e/access.spec.ts:23:1 › seat login supports password visibility, errors, clearing and a narrow viewport 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected: "席位或密码不正确。"
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" getByRole('alert') with timeout 5000ms
+      - waiting for getByRole('alert')
+      - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+
+
+      38 |     await page.getByRole('button',{name:'显示密码',exact:true}).click();
+      39 |     await submit.click();
+    > 40 |     await expect(page.getByRole('alert')).toHaveText('席位或密码不正确。');await expect(seat).toHaveValue('a');
+         |                                           ^
+      41 |     await seat.selectOption('b');await expect(password).toHaveValue('');await expect(page.getByRole('alert')).toHaveCount(0);
+      42 |     await expect(password).toHaveAttribute('type','password');
+      43 |     await expect(page.getByRole('button',{name:'显示密码',exact:true})).toBeVisible();
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:40:43
+
+    Error Context: test-results/access-seat-login-supports-280e6-aring-and-a-narrow-viewport/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-seat-login-supports-280e6-aring-and-a-narrow-viewport/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-seat-login-supports-280e6-aring-and-a-narrow-viewport/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/access.spec.ts:80:1 › login, public/private task navigation, lazy workspace, archive and two independent seats 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.goto: Test ended.
+    Call log:
+      - navigating to "about:blank", waiting until "load"
+
+
+      19 |     await route.fulfill({status:response.statusCode,headers:Object.fromEntries(Object.entries(response.headers).filter(([,v])=>v!==undefined).map(([k,v])=>[k,String(v)])),body:response.rawPayload});
+      20 |   });};
+    > 21 |   return {lab,attach,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
+         |                                                                                              ^
+      22 | }
+      23 | test('seat login supports password visibility, errors, clearing and a narrow viewport', async ({ page }) => {
+      24 |   const env=await setup();await env.attach(page);
+        at Object.close (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:21:94)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:90:24
+
+    Error Context: test-results/access-login-public-privat-2ccb5-e-and-two-independent-seats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-login-public-privat-2ccb5-e-and-two-independent-seats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-login-public-privat-2ccb5-e-and-two-independent-seats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/e2e/access.spec.ts:92:1 › same-browser logout and identity change clear private drafts in both tabs 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.route: Target page, context or browser has been closed
+
+      14 |   db.close();const config=testConfig(dir,{seatId:'a',auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});
+      15 |   const fake=await fakeRuntime(config,()=>({text:'当前任务处理完成'}));const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab);const pages:Page[]=[];
+    > 16 |   const attach=async(page:Page)=>{pages.push(page);await page.route('**/api/**',async route=>{
+         |                                                               ^
+      17 |     const req=route.request(),url=new URL(req.url());
+      18 |     const response=await app.inject({method:req.method() as 'GET'|'POST'|'PUT'|'DELETE',url:url.pathname+url.search,headers:{...await req.allHeaders(),host:'127.0.0.1',origin:'http://localhost:4310'},...(req.postDataBuffer()?{payload:req.postDataBuffer()!}:{})});
+      19 |     await route.fulfill({status:response.statusCode,headers:Object.fromEntries(Object.entries(response.headers).filter(([,v])=>v!==undefined).map(([k,v])=>[k,String(v)])),body:response.rawPayload});
+        at Object.attach (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:16:63)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:93:37
+
+    Error Context: test-results/access-same-browser-logout-c2122-private-drafts-in-both-tabs/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-same-browser-logout-c2122-private-drafts-in-both-tabs/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-same-browser-logout-c2122-private-drafts-in-both-tabs/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/e2e/access.spec.ts:100:1 › login reads the current CSRF token after another tab replaces the anonymous cookie 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '设置', exact: true })
+        - locator resolved to <button title="设置" aria-label="设置" aria-expanded="false" aria-haspopup="dialog" class="settings-trigger">…</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+
+
+      57 | }
+      58 | async function expectAccount(page: Page, name: string) {
+    > 59 |   await page.getByRole('button', { name: '设置', exact: true }).click();
+         |                                                               ^
+      60 |   await page.getByRole('navigation', { name: '设置分类' }).getByRole('button', { name: '账户', exact: true }).click();
+      61 |   const account = page.locator('.account-settings-content');
+      62 |   await expect(account).toContainText(`用户 ${name}`);
+        at expectAccount (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:59:63)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:110:11
+
+    Error Context: test-results/access-login-reads-the-cur-3843a-places-the-anonymous-cookie/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-login-reads-the-cur-3843a-places-the-anonymous-cookie/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-login-reads-the-cur-3843a-places-the-anonymous-cookie/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) tests/e2e/access.spec.ts:115:1 › catalog managers maintain all work tasks while every seat owns its personal spaces 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '设置', exact: true })
+    Expected: visible
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '设置', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '设置', exact: true })
+      - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+
+
+      54 | });
+      55 | async function login(page:Page,name:string) {
+    > 56 |   await page.goto('/');await page.getByLabel('席位', { exact: true }).selectOption(name);await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'登录',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'设置',exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                                                                                                                                                                    ^
+      57 | }
+      58 | async function expectAccount(page: Page, name: string) {
+      59 |   await page.getByRole('button', { name: '设置', exact: true }).click();
+        at login (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:56:356)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:130:5
+
+    Error Context: test-results/access-catalog-managers-ma-255b4-at-owns-its-personal-spaces/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-catalog-managers-ma-255b4-at-owns-its-personal-spaces/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-catalog-managers-ma-255b4-at-owns-its-personal-spaces/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) tests/e2e/access.spec.ts:227:1 › task catalog groups preserve disclosure and hide all space entries in the desktop rail 
+
+    Test timeout of 30000ms exceeded.
+
+    Error Context: test-results/access-task-catalog-groups-1be30-entries-in-the-desktop-rail/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-task-catalog-groups-1be30-entries-in-the-desktop-rail/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-task-catalog-groups-1be30-entries-in-the-desktop-rail/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) tests/e2e/access.spec.ts:359:1 › task read errors remain scoped instead of reporting a disconnected service 
+
+    Test was interrupted.
+
+    Error: locator.fill: Target page, context or browser has been closed
+
+      76 |   const create = page.getByRole('button',{name:visibility==='public'?'新建任务空间':'新建个人空间',exact:true});
+      77 |   await page.locator('.catalog-heading').filter({has:create}).hover();
+    > 78 |   await create.click();await page.getByLabel(visibility==='public'?'任务名称':'空间名称',{exact:true}).fill(title);await page.getByLabel('目标与说明',{exact:true}).fill('综合资料编制计划');await page.getByRole('button',{name:visibility==='public'?'创建任务空间':'创建个人空间',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();
+         |                                                                                                ^
+      79 | }
+      80 | test('login, public/private task navigation, lazy workspace, archive and two independent seats',async({page,browser})=>{
+      81 |   const env=await setup();const second=await browser.newContext();const b=await second.newPage();await env.attach(page);await env.attach(b);
+        at createTask (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:78:96)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:365:5
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-task-read-errors-re-2dc56-ting-a-disconnected-service/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-task-read-errors-re-2dc56-ting-a-disconnected-service/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) tests/e2e/access.spec.ts:380:1 › basemap preference survives logout and stays isolated between accounts 
+
+    Test was interrupted.
+
+    Error: page.route: Target page, context or browser has been closed
+
+      14 |   db.close();const config=testConfig(dir,{seatId:'a',auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});
+      15 |   const fake=await fakeRuntime(config,()=>({text:'当前任务处理完成'}));const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab);const pages:Page[]=[];
+    > 16 |   const attach=async(page:Page)=>{pages.push(page);await page.route('**/api/**',async route=>{
+         |                                                               ^
+      17 |     const req=route.request(),url=new URL(req.url());
+      18 |     const response=await app.inject({method:req.method() as 'GET'|'POST'|'PUT'|'DELETE',url:url.pathname+url.search,headers:{...await req.allHeaders(),host:'127.0.0.1',origin:'http://localhost:4310'},...(req.postDataBuffer()?{payload:req.postDataBuffer()!}:{})});
+      19 |     await route.fulfill({status:response.statusCode,headers:Object.fromEntries(Object.entries(response.headers).filter(([,v])=>v!==undefined).map(([k,v])=>[k,String(v)])),body:response.rawPayload});
+        at Object.attach (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:16:63)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/access.spec.ts:381:37
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/access-basemap-preference--eb9c8-s-isolated-between-accounts/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/access-basemap-preference--eb9c8-s-isolated-between-accounts/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    tests/e2e/access.spec.ts:23:1 › seat login supports password visibility, errors, clearing and a narrow viewport 
+    tests/e2e/access.spec.ts:80:1 › login, public/private task navigation, lazy workspace, archive and two independent seats 
+    tests/e2e/access.spec.ts:92:1 › same-browser logout and identity change clear private drafts in both tabs 
+    tests/e2e/access.spec.ts:100:1 › login reads the current CSRF token after another tab replaces the anonymous cookie 
+    tests/e2e/access.spec.ts:115:1 › catalog managers maintain all work tasks while every seat owns its personal spaces 
+    tests/e2e/access.spec.ts:227:1 › task catalog groups preserve disclosure and hide all space entries in the desktop rail 
+  2 interrupted
+    tests/e2e/access.spec.ts:359:1 › task read errors remain scoped instead of reporting a disconnected service 
+    tests/e2e/access.spec.ts:380:1 › basemap preference survives logout and stays isolated between accounts 
+  5 did not run
+  2 passed (5.2m)

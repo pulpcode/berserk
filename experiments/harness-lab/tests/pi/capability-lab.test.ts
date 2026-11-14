@@ -1,3 +1,4 @@
+import { migrateCapabilityManagement } from '../../src/capabilities/management-migration.js';
 import { randomUUID } from 'node:crypto';
 import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -205,6 +206,8 @@ describe('expert capability integration through real Pi sessions', () => {
     const before = await readFile(file, 'utf8'); const config = testConfig(dataDir); const fake = await fakeRuntime(config, () => ({ text: '未来明确请求完成' }));
     await expect(PiLab.create(config, fake.runtime)).rejects.toMatchObject({ code: 'CAPABILITY_MIGRATION_REQUIRED' });
     await migrateCapabilities({ dataDir, backupDir: join(root, 'backup'), apply: true, serviceStopped: true });
+    await expect(PiLab.create(config, fake.runtime)).rejects.toMatchObject({code:'CAPABILITY_R2_MIGRATION_REQUIRED'});
+    await migrateCapabilityManagement({dataDir,backupDir:join(root,'backup-r2'),apply:true,serviceStopped:true});
     const lab = await PiLab.create(config, fake.runtime); cleanup.push(() => lab.close());
     const snapshot = lab.get(manager.getSessionId()); expect(snapshot.expert?.legacy).toBe(true);
     expect(await readFile(file, 'utf8')).toBe(before); expect(fake.calls).toEqual([]);

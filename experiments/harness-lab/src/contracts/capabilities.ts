@@ -24,6 +24,8 @@ export interface ExpertSummary extends ExpertRef {
   availability: CapabilityAvailability;
 }
 export interface ExpertDetail extends ExpertSummary { instructions: string; allowedTools: string[] | null }
+/** Browseable controlled methods; no workspace content or management authority. */
+export interface CapabilityLibrary { skills: Array<{ id: string; name: string; description: string }> }
 export interface ExpertBinding {
   schemaVersion: 1; sessionId: string; workspaceId: string; seatId: string;
   expertRef: ExpertRef; digest: string; boundAt: string; userId?: string; legacy?: true;

@@ -1,7 +1,7 @@
 import { lstat } from 'node:fs/promises';
 import { isAbsolute, join, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { CapabilityRoles } from '../src/access/capability-roles.js';
+import { SystemRoles } from '../src/access/system-roles.js';
 import { checkDirectory } from '../src/resources/files.js';
 import { CapabilityService } from '../src/capabilities/service.js';
 import { controlledSkillIds, loadControlledSkills } from '../src/resources/service.js';
@@ -31,12 +31,12 @@ try {
   const db = new DatabaseSync(path, command === 'list' ? { readOnly: true } : {});
   try {
     db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL');
-    const roles = new CapabilityRoles(db);
+    const roles = new SystemRoles(db);
     if (command === 'list') console.info(JSON.stringify({ administrators: roles.list() }, null, 2));
     else {
       const username = value('--username'); if (!username) throw new Error('需要 --username 指定已有账号。');
       if (command === 'grant') console.info(JSON.stringify({ administrator: roles.grant(username) }, null, 2));
-      else { roles.revoke(username); console.info('账号的能力中心管理员角色已撤销；业务权限保持原值。'); }
+      else { roles.revoke(username); console.info('账号的管理员角色已撤销；业务权限保持原值。'); }
     }
   } finally { db.close(); }
   }

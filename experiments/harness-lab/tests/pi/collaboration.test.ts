@@ -1,3 +1,4 @@
+import { migrateCapabilityManagement } from '../../src/capabilities/management-migration.js';
 import { migrateCapabilities } from '../../src/pi/capability-migration.js';
 import { mkdtemp, rm, writeFile, readFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -366,6 +367,8 @@ describe('Pi collaboration tools and native HITL', () => {
     await rm(join(config.dataDir, 'capabilities'), { recursive: true });
     const backupDir = `${config.dataDir}-before-capabilities`; cleanup.push(() => rm(backupDir, { recursive: true, force: true }));
     await migrateCapabilities({ dataDir: config.dataDir, backupDir, apply: true, serviceStopped: true });
+    const r2Backup=`${backupDir}-r2`;cleanup.push(()=>rm(r2Backup,{recursive:true,force:true}));
+    await migrateCapabilityManagement({dataDir:config.dataDir,backupDir:r2Backup,apply:true,serviceStopped:true});
     const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
     expect(restored.get(session.id).interactions?.[0]).toMatchObject(boundary === 'completed' ? { status: 'approved', execution: 'succeeded' } : boundary === 'waiting' ? { status: 'expired' } : { status: 'approved', execution: 'unknown' });
     expect(restored.get(session.id).recoveryWarning).toBeUndefined(); expect(await readFile(path, 'utf8')).toBe(original);

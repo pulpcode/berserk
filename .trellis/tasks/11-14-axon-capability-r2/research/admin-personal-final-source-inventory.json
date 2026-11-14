@@ -1,0 +1,1707 @@
+{
+  "verifiedAt": "2026-11-14T11:08:03.093644+00:00",
+  "sourceArchiveSha256": "d3e6b9e807e87aa5b13973f4b7d1305291ff01b25a148b94c17da14ca8fa851b",
+  "matchesCurrentFiles": true,
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/spatial/validation.ts",
+      "sha256": "57bb3b7293c24bafe1ac41014275a78bc224fe363682bab17eb6865a871df89a"
+    },
+    {
+      "path": "experiments/harness-lab/src/spatial/geometry.ts",
+      "sha256": "1c91f60b3d7258b109148559440c610bda9adb6cd25291685494fd1d3d3e19a1"
+    },
+    {
+      "path": "experiments/harness-lab/src/spatial/inputs.ts",
+      "sha256": "86b307fd27f889f280dfe81e34ab85464a86a4592afe827c65a947ea62603273"
+    },
+    {
+      "path": "experiments/harness-lab/src/spatial/calculation.ts",
+      "sha256": "d77c74a3343fd0c9c5168f3048dee76719eea200d26e66599091ca940b3dea9d"
+    },
+    {
+      "path": "experiments/harness-lab/src/spatial/service.ts",
+      "sha256": "3e86495618f4b9e16d2d3796ec163fd9f85a4c2f92ef5ec4842cbd2d7edb08e0"
+    },
+    {
+      "path": "experiments/harness-lab/src/spatial/worker.ts",
+      "sha256": "ea6ba3053929388f0c2059e6d2ad9d7c7125c383b165e12255eaa8e5a8c0b051"
+    },
+    {
+      "path": "experiments/harness-lab/src/commands/validation.ts",
+      "sha256": "0b96c5104ade16f69c857a1ab1e56b4132096dc701da4fa5514727a006c9269c"
+    },
+    {
+      "path": "experiments/harness-lab/src/commands/service.ts",
+      "sha256": "62d5a41874f47bbf5449d17d69491aaf15a7018bf871dcce6bcf6ff49c64d1fe"
+    },
+    {
+      "path": "experiments/harness-lab/src/files/safe-fs.py",
+      "sha256": "72a8a9de57681e7190ab95c7bcdff35e5579a8345f8d88d2322090ce2ab12a6e"
+    },
+    {
+      "path": "experiments/harness-lab/src/files/service.ts",
+      "sha256": "e3a5966b7d53b3c4c47174ae1ffe4db7a00d30e077b9e0e5b0d89f31fbcbe682"
+    },
+    {
+      "path": "experiments/harness-lab/src/files/__pycache__/safe-fs.cpython-314.pyc",
+      "sha256": "28b94239d49d31c618376ad94dd0e029dcf93f4dfca95e8438be6e4ea28f55a4"
+    },
+    {
+      "path": "experiments/harness-lab/src/execution/docker.ts",
+      "sha256": "6f685d75ab2123f4798b0c4ce9a592339f0e3c043b8b9ed0dc13e458226770d2"
+    },
+    {
+      "path": "experiments/harness-lab/src/execution/command-policy.ts",
+      "sha256": "3d73855ac2c54dbaa13f4782d89df9ca7e39fa19c7f25944a98d4079b15b6ee0"
+    },
+    {
+      "path": "experiments/harness-lab/src/workbench/service.ts",
+      "sha256": "5eebb7ecd6a92f116c199b69959b502838fa5fa6787d69c094b3eade299fe3c5"
+    },
+    {
+      "path": "experiments/harness-lab/src/scenario/scope.ts",
+      "sha256": "56cd82cd1689ba2dedb053f498d03c4c466f52250811a0ebeb96bf66109c6bd9"
+    },
+    {
+      "path": "experiments/harness-lab/src/scenario/task-definitions.ts",
+      "sha256": "59fc36e9096e1c1f812ba969f7e94582a08947fa9ceca9cee1026d5523d33cbe"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/file-history.ts",
+      "sha256": "5aeca6a82350be66f25ecb135f43e3ab48d5f349802dcfee7f7bf667382e5e42"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/controlled-stream.ts",
+      "sha256": "5c57cdd18e96b4c4735362bf0ae6aaf7728a8a3f8d5fbf217cf6a3d91aba7e71"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/spatial-results.ts",
+      "sha256": "262cef164ea28bfd5bb6100f87756bcbddfad0a5df30494cecc0a04c5cbc8852"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/validation.ts",
+      "sha256": "ddd93c971804beee4bb92d71b4cc993ca84f817c72772a76cccad8e8c90d4b81"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/collaboration-tools.ts",
+      "sha256": "95a0d7bc4a0d18145dd1d1b9a1fffbda47be58d47a5b39ccddae82d08d05442d"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/lab.ts",
+      "sha256": "c1ddc8229102b52b68ffa53100d97d1b54ffeacab56fe4c29eacd22ff13f4cad"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/spatial-tools.ts",
+      "sha256": "032b38f65aab293778104d93742b701c3c15db79c10cf8f75f1d4983a2ffbfdd"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/model-runtime.ts",
+      "sha256": "204ece3c21d8eca849b8aec24201f348c415ecf532a61995e0039ec959bce5d2"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/chat-projection.ts",
+      "sha256": "765280b1fdacffd56f1030decdcf073194a00f596052ac044af4b04a0a43fba3"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/continuous-files.ts",
+      "sha256": "0f5fd4a400e1eb0ea8783dabdcefbb23339e7b0cceb21d4704e62d2ad7970fa7"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/annotation-input.ts",
+      "sha256": "e314d487e0f34108fd9c9cfe24b1a4bc6c1bf0d4b5453cc436bec538356e265b"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/file-tools.ts",
+      "sha256": "9dc379f8e470e6a7cbe3037df8cd1ae257dc03d235234990786da37831d448ac"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/continuous-completion.ts",
+      "sha256": "bfc0d93e73b7a2aecfb9a2e893de0a7d97329898cff348b25d78c0c038709338"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/migration.ts",
+      "sha256": "3c6f7cc84a47bf4c6eca361d935ab72d1e0e25e017d8121d46886f8c5d4bdb23"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/capability-migration.ts",
+      "sha256": "0731da2038aa901c853bcc26a8dea69cc4397c0b34a1627a221259a7e7b63a39"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/task-information-tools.ts",
+      "sha256": "0f06cae4be9453758e47038dca31c6ee6235e2e6b4d6cf046b83a630845f6ae3"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/interactions.ts",
+      "sha256": "6b82023d4d947dc05b5a0b5ac8abd4cb95e48bed21edd6ba68185a7232b63d23"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/history-evidence.ts",
+      "sha256": "7d2e89afe984d2917952ca216a3abbb0fe48d415896db6d9d21164ebd9c94535"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/subagent-history.ts",
+      "sha256": "c90ac7f3aea074d3051d10cbd3082d7f6ea77e27c5989255471327f785fee3f8"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/capability-history.ts",
+      "sha256": "67a5e390603b4aae2537c405048c9a974e74a043360f1c46968a5a80b014a832"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/background-runner.ts",
+      "sha256": "f58d067138b1c1e6aa8bde0a53658c4b0f732051630e90d8daaa7a30eff9194d"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/annotation-state.ts",
+      "sha256": "aa87cc09bf18d4ad6b077cfd00553d6044e605f5be88e549688731fae7af291a"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/continuous-tools.ts",
+      "sha256": "1b3564be9b10582aa201ff5397b1841536d688a3b03058363229c55b87352959"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/composer-input.ts",
+      "sha256": "116d6cc1d8cf0e747c3b5dc6ecf26688e5174994da3b531775ed2ad3e56765ce"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/model-selection.ts",
+      "sha256": "e1148ff9b2d9239ce78a1259dea421f42f34b72a09388acc14df5fd06e7f6b93"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/analysis-calculation.ts",
+      "sha256": "6238c3af2b9c7f3ca0e1932e972c16aca71c032a0e4d0de064e0e4d96d3e088d"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/task-resource-results.ts",
+      "sha256": "e38e64b37ed5a522c103d0fb8ee6ca1b7d59577df3912e2e06809aead25654f1"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/capability-trials.ts",
+      "sha256": "405380a78f812c347e67617e291e72c1480cd1110a0624db9d38dbfb67f8d246"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/skill-metadata.ts",
+      "sha256": "c78f0e758018d07f3c1e21a79d900c19f0a1eb052867db33f3f9eed9d7a93340"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/native-completion.ts",
+      "sha256": "5c0c683b4e6f82335131e716fb642fb6c0af8d153c6d2082f74d6907bf17129d"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/roles.ts",
+      "sha256": "804afed21e944dbae607c52a0ee2b6fd274f1d1c1cf0b2c1fe1a928e37a55a93"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/command-tools.ts",
+      "sha256": "db327ba155403b5c3ae1e75cc714c8e9527f69b998c6cfbb0d7459bcc9b06c42"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/recipient-tools.ts",
+      "sha256": "afab809a084547823b0610efbbe8ab77cacc4afd250d745dda35e2aacfc72dd6"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/message-intake.ts",
+      "sha256": "a29e5eba5418cf7c325ae9488c5ac0cb1c934455fa9a9324feaba7c6c4d960a0"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/task-resource-tools.ts",
+      "sha256": "a58bed61c9b56f85116e267a260c7ca46f16b506e479d9f4a5b1c0fee8ad31f9"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/skill-method-advice.ts",
+      "sha256": "6a469f8d38ad13b76925bc440c61f4c700b7d2ddb4882c3de775ba34194bc49b"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/annotation-results.ts",
+      "sha256": "2bab2614c0da23bd739e3f81bec014ecf32239b115c56dccebfd9270204a9678"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/trial-tools.ts",
+      "sha256": "73a852757d5653cd26a085a82912dffa916c6732fc63f6f3661b7bc5471971db"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/annotation-tools.ts",
+      "sha256": "725736eda036badbc704d5d512df08ce58aeedab76582e3237ea4e71a68f533f"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/compaction-history.ts",
+      "sha256": "683d631f1fe94be928dd70f22150bfc516a5cbabb55b3e7d2af425ea1fb5aa8b"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/context-tools.ts",
+      "sha256": "5c1768442392dbb1da46a779bdefaf32113548f37ae1e72e2756bd5eac61a00b"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/resource-tools.ts",
+      "sha256": "3e39ad74e6a0c922213537aaecdbe45bbc35be4b946ebedf7d407bedb4bc2cfd"
+    },
+    {
+      "path": "experiments/harness-lab/src/annotations/validation.ts",
+      "sha256": "851f46bd06e6b44ee569d67a1b8b2f8353e9bb04e1a632223bcfdb5cfe4afbad"
+    },
+    {
+      "path": "experiments/harness-lab/src/annotations/errors.ts",
+      "sha256": "c024b2bfb3aec5f22a767eb698f99768195a128ddf780fac2def34e917f31fef"
+    },
+    {
+      "path": "experiments/harness-lab/src/annotations/service.ts",
+      "sha256": "ec2a971858b86f6cb9c0e1afd0574b6c3ecdcc20c5b0cd4ba5cb5416bc568938"
+    },
+    {
+      "path": "experiments/harness-lab/src/annotations/store.ts",
+      "sha256": "884c6d394a5491e93bbfbd94da00aca28c78f21efc292e456c37de4bb1433695"
+    },
+    {
+      "path": "experiments/harness-lab/src/workspaces/seat-migration.ts",
+      "sha256": "14f1cda6be5abe99140ba4645d5350321b8a2cbfb9b98575948476929e9cf5d3"
+    },
+    {
+      "path": "experiments/harness-lab/src/workspaces/store.ts",
+      "sha256": "671e81ffbf159f1b7a98b969ddef08f65b10ba9ce84e255a277f93512f1f59e4"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/model-settings.ts",
+      "sha256": "accb811891da594cabfe405f5c41af8e6b0c061de806119a421c3cc2e85ed0d3"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/context-routes.ts",
+      "sha256": "68fa28f218a07e336abe4adefe3bc159e21ccd599c45984333c82542f2a94ccb"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/collaboration-routes.ts",
+      "sha256": "ac25136602b234484d25eb065e2cb6f111bfafd12521ba7587d4cc719796581c"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/main.ts",
+      "sha256": "547261ff763868d8fbe291dbce324303fae44d55b6dfdfc808b1296bcfc42832"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/scenario-routes.ts",
+      "sha256": "ce3e3a0a1bd61162d8b56545564dfd05854fa3cfb1956836f2795aaebc5c9afd"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/app.ts",
+      "sha256": "d196fe488183134789bcc6f0d292d34d2eaf1740aa602dbc791fc795326fc43f"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/command-routes.ts",
+      "sha256": "1b38af6799f06be44fbfe1d9ceb833d5f5519c30fbec1e0fb6ee6e35cf81f65c"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/task-routes.ts",
+      "sha256": "d5b920b466b27d41ffc7111dd0777802aa49f872451721eb2139cc74dce276fd"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/annotation-routes.ts",
+      "sha256": "54ccd339226a61915edbb61274fec1fe95d9062b52043969e31a8c5d5453a5cb"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/workbench-routes.ts",
+      "sha256": "84ed37d384b869f397e9ca1d0941835dd06af26177390388a0c4355318048858"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/scenario-tasks.ts",
+      "sha256": "4d75ce28f83289dc7d9e45afd93d4d48aeff7d605ee01b565423a23cb05e0985"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/capability-management-routes.ts",
+      "sha256": "5fd55c4c3858e8e20a79f36a56a48d759f6456cd2651a2f1ca2e5782dffa5c0f"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/seat-scope.ts",
+      "sha256": "2b7724edc1a37d98885a0f0e299176e34383560a25a8fa9cd882bb5fbf897a55"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/background-routes.ts",
+      "sha256": "d97626e173a6f1afedcc77e815ac37520ab3b90002022719e8ddc61f44d1dde7"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/continuous-routes.ts",
+      "sha256": "c5d4fb9ca24ac45ebad93a17e3bf6c1e5353bcaeaa80e156f2471d36650a6c39"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/file-response.ts",
+      "sha256": "edbe403a99dc7849d666c63275b686fc19b835a413f34f57b2b7f1681baa3038"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/capability-authorization.ts",
+      "sha256": "06bfd39ab637acb466af487d5d224fa90ba2396c174cf5c3f7fc44c63c1f9165"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/config.ts",
+      "sha256": "f5001d991259e5f78ee8d9f8da081cd5963068f78e31d62aacd7e21f185e9ba2"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/task-information-routes.ts",
+      "sha256": "1ccbf675b1c31df7597a6699802c89ef78ad8748c64b90bb71b1cc63d2303f6d"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/file-routes.ts",
+      "sha256": "ee3e6f730081584e0ce30fce075f8aaf33164caf9e1cbd43b5d40480366c89f6"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/file-preview.ts",
+      "sha256": "93c014e051f528028ef7b8784e4d59498dfed8cc84ae8c1a81a5cd5e7cfd6a10"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/auth.ts",
+      "sha256": "8d5459a7b7391190bc8a0f5b4ba3e52ae12e5881fe5fff6ac1d535217e02a1a5"
+    },
+    {
+      "path": "experiments/harness-lab/src/resources/files.ts",
+      "sha256": "dd3ad1cfc676534ad9ff852bc94c7d5872f641c83b35f69a5b2b46c906b16aaf"
+    },
+    {
+      "path": "experiments/harness-lab/src/resources/service.ts",
+      "sha256": "201d70f023372c49eef4d21007e22d1401b6a32a310bd7cefce10f19b072f2eb"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/annotation-geometry.ts",
+      "sha256": "965fc73cb198477c3c5309c7412fe8c3f0195237bb084fef3296fda72cb7530b"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/commands.ts",
+      "sha256": "6294049ae6b9102f2ee07e5ecdb6645227436e0521716ec71ee0ea41cdd8aba6"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/annotations.ts",
+      "sha256": "6b10a90a43c82998a194940e39f65c597bfeca5ac2631175fb53cea84910e8fb"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/continuous.ts",
+      "sha256": "6983810cde7055914a1f8a55f8678f63dc99985f0e1d504065e6650fe0758ba2"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/interactions.ts",
+      "sha256": "41aee017ab114ac2016b4e242728ff73da49c7167102b3e517a901ec1f6eee2d"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/errors.ts",
+      "sha256": "022ac80d1cd3d67214c2857e2bc7d5dafc5c9d64b4cbd5a21dde058789168996"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/resource-results.ts",
+      "sha256": "3925aec8bb5291c2aed21991ee4f0e35f6bc04f9168f8ea490d06b3fa2589e26"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/collaboration.ts",
+      "sha256": "2fa63f9a7430a728558cf83486b36d470df4a509f4b23b0413ecba48af360634"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/capability-management.ts",
+      "sha256": "e5232ef4f822242423246326972dc6f3a121f1b7224554858ee99c63e0875eb6"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/context.ts",
+      "sha256": "6eb61f0304cdc95c70648d191a3dc18437f08a4c77b871993f1c89335aa37df0"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/capabilities.ts",
+      "sha256": "53d213b700b653d0112b7a6a0bf628218e80197f7bde5a162769ee2d9852a76d"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/capability-trials.ts",
+      "sha256": "0ca964e4c9360e5573dcc37cb8dc0945107123a5452f7adef2178cddc6245288"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/task-resources.ts",
+      "sha256": "0834274f484ea8da87d090bf6fbf6f63490506365c6e8ec472b2a2a55bf701f4"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/map.ts",
+      "sha256": "072be934579031cd4fc8e45eda2398c95c70796060044c20c8726725a08dcd89"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/workbench.ts",
+      "sha256": "c667e4e1e3d412f371213a9e8f93edcb9b733beebae4a9199b75592492d558b7"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/spatial.ts",
+      "sha256": "3291340bac7e29f3d6745e2d6ae169463f22175f87df621859e693e4d551c055"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/task-information.ts",
+      "sha256": "3254b9dbb531733b78d20adc32ccf47bb1c4ccd8e9a271e8b53e6e861efe0444"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/background.ts",
+      "sha256": "b37776d8f28f05a79e14450743e9ebe6d47504d7900add1545f0392204220cde"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/access.ts",
+      "sha256": "a9a4692f440b971f6aa4941d8661fe361a6bdfb177fb0439e640ed178445b062"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/map-symbols.ts",
+      "sha256": "78629d00c473b7800aa93230b530ef2977348d0f8fd840d0587014c2b54b7362"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/assessment-render.ts",
+      "sha256": "efc5f6402ab883c03a11535effe69f6975b5dd0676fcfc7575ee3506f43d4098"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/resource-summary-v1.ts",
+      "sha256": "ec2dcd4c525da2f5c059a25a3df82ce9f5ef5df0df0cd36b815e704fd69e1e35"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/index.ts",
+      "sha256": "74517149163348cdfaa2d9d6ca7f37da8e3fa8e6ec8126b2fd1a48b722701b64"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/annotation-results.ts",
+      "sha256": "843e83c347672fe083e7ec6733a18d12d7a9d4a986c2a682e9b882f4b38393a8"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/files.ts",
+      "sha256": "a5fcdfc012e7bbbb026797b3e6bc79fd7f8c225935d48ee6876daaff6f15b493"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/resource-summary.ts",
+      "sha256": "82405e5f3c08b7f543879ae6ebe59c81bad8a97754113f7fc266bc7f5d4bff66"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/resource-explanations.ts",
+      "sha256": "0f777a7b22c365ee06d0eb17b8056cde272e53be349f37c07268b3c5e4fe46de"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/simulation.ts",
+      "sha256": "957d8298085652a89dd8a965bd130168caf8b5438a02610c1aaa620b7170f63e"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/scenarios.ts",
+      "sha256": "888d13c76b467d74e7631467cafdc14bd0c35babcec1d07d5375596b36aaa837"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/Settings.tsx",
+      "sha256": "596bc6b8961bfe12c7e7a57c788595aa228f57e852b4016203debf0250401f2a"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/InputQueue.tsx",
+      "sha256": "f6f891b216021b33f645d6205e0d6be2aa4c5021bab3783cb5a831bfdec5ebe8"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/scenario-director.css",
+      "sha256": "d7d8d8babf98b20873b609ec8d2cf5ac16a3bb7b0dfcd79b3b53d27a18e7f104"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/random-uuid.ts",
+      "sha256": "df20d56a11e0d406cb2b930a1f0ddab8f41285f7e257dbed96389e8868eead09"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useChat.ts",
+      "sha256": "c45f6e540f33176d05ceb393286f6db0047b647d75d6539ba98b9c62c1da55fb"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "sha256": "6d7e9fb81d0ca2af3a2c7f37549ce9019a8b83606ce189c45a6080752c961d26"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/DirectorRecords.tsx",
+      "sha256": "fffdfd9f14894f25f3bc3d09e105b5d93704e953ac98d06274fdb21e35a9f2f3"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/WorkOverview.tsx",
+      "sha256": "95b2c96ad30dcdfd3a98e88fd4ef1aa6a93ccd73d78e817a3fe466af046a6011"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CapabilityManagement.tsx",
+      "sha256": "7a2d1ede820bc8a5526ee5c766e1f2350adda644250ff6d4e9b18ab2d6f18ee7"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useInstructions.ts",
+      "sha256": "ff7c78672f2cbfb02c1240fc86d91e62622b5e653dde6809239cf26e29e0c4aa"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/DirectorPopover.tsx",
+      "sha256": "26376e9c81791fea2eae263c7ea158d46b0d3b6082757a0d2908397c4fcad322"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/loading-indicator.css",
+      "sha256": "adb0a9eed26ed2b0114b104a0b63aebe2558acc0cbcc4b45ff6db39cfe4bf2c4"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/LoadingIndicator.tsx",
+      "sha256": "eb78b0ff5fae74219ab5de929488ae7ad0c79ccc260831311fe638fc002e5f16"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ComposerReferences.tsx",
+      "sha256": "caf7a8b23c91382e45f1ff2a492a8f8b9cc2c3764845b4135f3a67e1197408c8"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/SubagentCard.tsx",
+      "sha256": "c49345dd03377e0510a5407981f49124992280112df82a08317e44cbaf8f187d"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/styles.css",
+      "sha256": "34709b8970f9007bdc5b2ff8343a68a66f49805ca49e82f31e056a5bfca8d3e2"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/model-settings.css",
+      "sha256": "75fb674e04284a9c2a43e70de709abf99f1c4ca2f76bac355cb2aa95732be647"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ContinuousRules.tsx",
+      "sha256": "d7fbde73b1387f929c8d67d91a3d32aa7177e2b2a8349cba5a72e7171e71a38a"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/capabilities.css",
+      "sha256": "f77eb1ea695e36cf8417557ab300b9e05eb9372d7b38e854517719dba066ebc5"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/WorkspaceNavigation.tsx",
+      "sha256": "0dabe5c6e8e925b61f5fc25660e98d1baa10d7090eb469df2f8f06496b92c7be"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/TaskProgress.tsx",
+      "sha256": "0ae4b2d5de34fd76fda0947871e6df27e7be8e365b1a2c572bf94150d99ee4dc"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/MapReferenceChips.tsx",
+      "sha256": "e56cc7ccbe0a28108e3413525991527e4171776345794828ad7f2d65835cd46e"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/capability-management.css",
+      "sha256": "ec19455f317b99229243dc32e1b4c07cef4b1131677e9a13cc8801db77e5ec51"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/InformationContinuation.tsx",
+      "sha256": "a1a034c8d71c71382653c136b166c16c1352609aea80ed73d39a232ab3643ae9"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/DirectoryStatus.tsx",
+      "sha256": "c0d3d637e36f28fa749716d27c977367b6eee6c3d7f974b35745fd17a4dcdf40"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/Seats.tsx",
+      "sha256": "df52604fce20946e64265f20cbed26da5fc57eaf060f9a26c503664d4911bdaa"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/Inbox.tsx",
+      "sha256": "5adab98a212f7c24c2dd6f7d8dad61edd720dfbe11464fc587f6b6792068c2ff"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/Files.tsx",
+      "sha256": "880ddd3f123c13774fb8cf572bd9685aa0359750145672ebc3f1d716027e9497"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useDirectorReplay.ts",
+      "sha256": "01c8755e9010cef520a24d601e8ead8f39c1e6d69d2ebf1b9369c868c7004159"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/InformationCenter.tsx",
+      "sha256": "3e4133b5f58054f0cd80dcca14ebad7ba9ec160422b8c057e1c53693716d4bde"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ModelPicker.tsx",
+      "sha256": "9540c3f2d170133ef38a1e1e19d1d1d6c1d2b18d50f42361d520c62146840575"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ContinuousAssessments.tsx",
+      "sha256": "9a5b47e658ffd8cfa3f2425758b8b7d9eb63b07f518694129727d37ddb1f81fe"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/Tasks.tsx",
+      "sha256": "daeafc8fa52014c46931938d8643b38a2dd721a7fd4cd48d481f842087768570"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/api.ts",
+      "sha256": "da5fdaf25551ccc5badc24cf1b7e964de3c62de867e528f5065810d706816bfc"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ChatPresentation.tsx",
+      "sha256": "3ab3942e57c65cbea76f5380005ba96885ed5914b2ca7443ae18e41191fde333"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/DeliveryReviews.tsx",
+      "sha256": "0e17900ff583ace98056dc9c9e1de84cede6f1de17475d19222c98a107397205"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/TaskHome.tsx",
+      "sha256": "25d556c3a9b4b44d008ec925196e0bc9d519c5b91b45156c438149f6b7380b41"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ApplicationSidebar.tsx",
+      "sha256": "8acf05055a3047fe671d9f5dcc3ac811a7b7b3669658d8f5830a020e43886a97"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/TaskInformation.tsx",
+      "sha256": "d606604f3ccb826f87e375486ed392d67ea99406eaf44308166ba898fd5a3fd7"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/NewSession.tsx",
+      "sha256": "c5f8dbecf4d59cdebced7ba9e43c2132d0a051f93c4d59db3ffe47966b0f40e7"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/Resources.tsx",
+      "sha256": "d15d67da93c104c4892e8ff30e3a2c9eac68201daf4a7b79fd02ce834bf753ed"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ModelSettings.tsx",
+      "sha256": "33cd8a0b7a1593d6b33b212675faadb4d0404de83666c34d815ec6be83412c89"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/session-action.ts",
+      "sha256": "16d17d9d80dc8c0330f99368f5287955c9bd6630689bc1cf4cace72e62deb014"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/Workbench.tsx",
+      "sha256": "7db82c907e1805d5b77b9a9ca8bef92e1ca7184d46842a320128b570b954349b"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/work-overview-layout.ts",
+      "sha256": "03be59f1eeb98f40c707379b6997edff436a3800d20afc494982ec3c99acee59"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ResourceResultCard.tsx",
+      "sha256": "398532e5f714fac6278378eef297116223ae57143dc6fb8522f36e57225fffcf"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/resource-result.css",
+      "sha256": "a71fa1165365491f28f80f61f63c2da12a24d12733c950081a46f59107c2bdaf"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ModelCatalogSettings.tsx",
+      "sha256": "beb46cfeaf49fde17b01ed1050df6fe9b33781bef74d185357923009f0d483a3"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/HandoffFiles.tsx",
+      "sha256": "b6d0da25225b6cb246ed7c82ee1b32c2de330e1dbb21f7800265777bec1656c6"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/InformationJobs.tsx",
+      "sha256": "e22ef7438cd9f72fa07bffaa4cec2a590f198d77e7de58e296c04c0d85e45afa"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/WorkOverviewSwimlane.tsx",
+      "sha256": "de053ff541a44afd1c817c295f1991a8387cee4637f01b5100ee69d979b666a4"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ContextEvidence.tsx",
+      "sha256": "2a020fdd09bc52a74ffb84fc549b6c78d878506d0c7dfee899d310613af0eda6"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/processGroups.ts",
+      "sha256": "1abc0a18b2e5ce8d0fa95ebea9009ba8784a3c7f3dc0d1040766152731f424f1"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useComposerSelections.ts",
+      "sha256": "e5669e7906aa225703abe1c7f9c8d372c0da61ca8e2e495892493de700b39bda"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/DirectorEventTasks.tsx",
+      "sha256": "a588760816a4e42c0b847559c2aba689887eeb4cfdf3b80e729cc1ca3991c169"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ExpertDefaults.tsx",
+      "sha256": "47d6d2290b26038aab8fc8ef0c5876b4f1286fc13991cc9aa8e8cac6e946afd4"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CapabilityCenter.tsx",
+      "sha256": "9893b0695de27c624f383f7dd3fcbd690530c462f9ff7bbe4ebdc784b0ccb48b"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useAttachments.ts",
+      "sha256": "b3be58b0ce1a94a034bd92aa06807f7403a76988819e746e4bc976680be79994"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/TaskAssociations.tsx",
+      "sha256": "355c04d71cc67a3a4d3df69db99d6f688bb64d357a03ebd3830fb57196f19397"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/InteractionCard.tsx",
+      "sha256": "ed06217a43a20f02305bbfff09b66114253cb8ea944955c69635b6282c0e4063"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useDirectorDelivery.ts",
+      "sha256": "ff78ad0531833c54b6eadaf75c23cb5f5038f0ecb09bd4d5ad2c5aefe8065d63"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useInputQueue.ts",
+      "sha256": "a2d08fe86d0b4847424a7d2c1044996c9f4cca02e46ed17c05c2d858234532e6"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/TaskCommands.tsx",
+      "sha256": "d95ed459e192ed65166a458c894d34507cef8109a5d953ba4eb574e5a221d975"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ChatMessage.tsx",
+      "sha256": "80ce50071b58366601ac7dbff4b432359becde476f7d8a1761081c5f27b661a2"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/TaskContextEditor.tsx",
+      "sha256": "d5975fb166cde006a449f891fba154f3d7fdeed34f577d1409d5946b0c488952"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CommandExecution.tsx",
+      "sha256": "b662af8f50e2b7a7a0da7eac3d8fd41f85776fcbddadc1ac6473520c707420da"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ExpertTrial.tsx",
+      "sha256": "a8b0ad4ce173f8936f46918cd1accb624c57c49b3f0b1deab6ba237c7e762262"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/WorkInbox.tsx",
+      "sha256": "9a3a38c8a04190405e74a398fda8b0c67078e393a72cfbbb5f7bad69992679c3"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useChatItemFocus.ts",
+      "sha256": "1aada99d79da90e1c94a8a066664b203fcc8a80a265a78b5d692b0cdf2a641c6"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ScenarioDirector.tsx",
+      "sha256": "65b1856f6d83c7a9f377b9fa6a1c5fa0f93c6657a323b93525c5ef88ee7fd865"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/information-ui.tsx",
+      "sha256": "e702061bd23aff3aa068d118c4e782131fb147793e353a6b093575fc3f0f237a"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/InformationRules.tsx",
+      "sha256": "36342f891e871836d02bf8d98c3248ede1b21fe586b7d9b7d2c8aab738d81251"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/SourceImport.tsx",
+      "sha256": "17dad2a127ae140051cfd0f11c290f7220449a98209ee8f2eb92bf498e2afbdb"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/rotation-handle.ts",
+      "sha256": "eeaf1034ff5f60d4a05542db4fc1e9a6cbc84a18de473b8434d7f270625591ed"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/helpers.ts",
+      "sha256": "3a7d7d1588ca679bb9164a6246cf46ae5699c223bee6bdd5c9b9f169a0485043"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/FeatureEditor.tsx",
+      "sha256": "a4c18a612538456a7f40d461e702e3a9aebc8d88820ad7d54b76e720beb075d5"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/EditComparison.tsx",
+      "sha256": "e1d9b0836df4506d44783cd648af551c03991063cc17f703d7df28259bd98f25"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/AnnotationWorkspace.tsx",
+      "sha256": "7472d88de42bdba4e89b9e90f32610b0c6b048fc9c1fff3e8b209c8a4c0a68db"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/map-runtime.ts",
+      "sha256": "86744b9d7e675ff242aa1917939097a8dd500281722fb84fbdf3f035d3fcd014"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/annotations.css",
+      "sha256": "08751492f819b40848b403b93e1727e3cb463419f702bdd794ad766e04d8bf85"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/ResourceFacts.tsx",
+      "sha256": "944303a1eaeabba25afd8556792e3be7a037a137e1ed7018086555bcb44f3973"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/useAnnotations.ts",
+      "sha256": "b63ce0c0debf4a6c5de54d61b0a6fbc9a03775a8ea744841c2cb35623a2cbde6"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/LayerTree.tsx",
+      "sha256": "92b8164271179efe9d1f5c3f66812d98d64d6f834b1baba2170b8e9b9d3d1f8b"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/edit-changes.ts",
+      "sha256": "23427ef3761dcad0ff19e5a25edbe544999964bcbd6ee64fc9cd1c95a858a1cd"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/pausable-adapter.ts",
+      "sha256": "a3b39f0bcf7edfa00cf2db9bce98f1040aa8993c546e87fa0adad5caf62715f2"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/ResourceFields.tsx",
+      "sha256": "821b55b3d6e26296db584c619844808febcccfb46320529fde27e037de624197"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/SymbolPicker.tsx",
+      "sha256": "ce6f43066e7dab0839eacfc15da145d3c2b7dda04c8f51b3d0984cccc8d100f3"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/layer-tree.css",
+      "sha256": "77d3d7c20f4ac04296115a3a11e20961c247e982c1cded92fa963f2272162dde"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/provenance.json",
+      "sha256": "3f5f29dba7de8e0a000265a7c569eba8dbe4d301233b3fdecd7bf2b1ebfb2442"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/README.md",
+      "sha256": "4e53c83586513c6f44b58fd5f19cce1fa325b117e16afd5d284a8351b3de3289"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/index.ts",
+      "sha256": "415eb4d12ddff376364ae652bcacfe200b2b2d8a2d2acbb731568a7702fad953"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.5.svg",
+      "sha256": "523bf956fdefbcb5b0626d876275365993ca6b1c1988ba6ebdc4fd56177243a5"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.1.svg",
+      "sha256": "11e0a3cbae8495d38bab18ff20f82701b9d1d9e06054a54d2fdcfaeda2a40056"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.2.svg",
+      "sha256": "b0caf88f38f219ba791cbc2ca17491183d30ef785f177656c931ddba1d60620e"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.35.svg",
+      "sha256": "21d18f85ac874ad827948c3726001943c2723e1722ac69ce23a8a91b121aa518"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.36.svg",
+      "sha256": "689a3fd7f9a74a8da9ceb4c37f6c8a62cf9858ca1c8ff0dd26a8986a077276b8"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.37.svg",
+      "sha256": "172c63f0286837d73d71001faf99f900561ace38dc61835a48ac463d80caefda"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.23.svg",
+      "sha256": "027f302253ca9e2170adc6b27baf0330f8f2e596848742541c872b7f6b972d9d"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/app.rescue-vessel.svg",
+      "sha256": "2adf6a274d36dd22fa1f8bcc237f0cd9b061782dfdbf033d84eb35bb499bf039"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.30.svg",
+      "sha256": "2246920b57125d59321bddb2f9e5eea0510c2f689d43a5f34ecdee87c70813f9"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.18.svg",
+      "sha256": "ae1d10b417e10a7fdfe785c734bd46c4923d529de6e2f929c49ece9f480218d3"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.14.svg",
+      "sha256": "d02d7b576f1127cca5a9ff5ecf84cc3ffbe32a5247e3c9de724ffd731147583b"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.15.svg",
+      "sha256": "929240f8b3beffcd044dcf9d90cfdf39add80ecbd006e32a24ee643fcaffd16a"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/app.rescue-inflatable-boat.svg",
+      "sha256": "277fbf507c76dcd4a5ebdb28c84c505ac3dc17245f3207f59825993678d2a734"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.17.svg",
+      "sha256": "358a4d526392006957fe65c0dead98728d3cd652b3b3c5e27d77324de8983a8b"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.16.svg",
+      "sha256": "272461bae2012351a34e32ece3ca329f533ec12aea3e2055a3c48f118a6e8026"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.12.svg",
+      "sha256": "c44a22f343ee06bb15b7eefbffd5d512ea7853d7a75d09d5adfdacac2db06226"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.13.svg",
+      "sha256": "190227dda8c9aec019aefcb1acdadbca19488dd64e12f48dce18fa88b6361a67"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.11.svg",
+      "sha256": "5d18dc6cf12892d492ac36891287224bb5eaaed8fe5a9826c49b92c5e268ff03"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.10.svg",
+      "sha256": "be389e1f354d4c0ff9c4196002467a3b0a81f22e337228a63ba3594c8b69f885"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.1.27.svg",
+      "sha256": "599930ecbc0aa6746499e434db3e60624f1ea90cbe82044b23bf148ac84d2134"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.1.21.svg",
+      "sha256": "886da718dd6693d8558b1af1dab260afef49598b8492bb501369408197b5d906"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/map-symbols/assets/xf3013-2020.6.2.8.svg",
+      "sha256": "ccd62b3618e467f07e2d76d67bdcbf3f1209de1e773194961fa9a02316bcc8ef"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/useVehicleMotion.ts",
+      "sha256": "d2f416ec9eb63e30095ef74598dc708d5bc566e76d8a08ee6a13d6049e3027ae"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/Simulation.tsx",
+      "sha256": "ac60db26af215478c658d8c143fe82b27b481e72447ff88e5274a87f81299098"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/evidence.ts",
+      "sha256": "b26a74c6ed48b82e1858a8517844c1c972886251df5aca955ef5e10efaba45b4"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/source-labels.ts",
+      "sha256": "8804d30aa85b5a2fb98eb7a7c77f68ca0dd19523ac56836337d174f7533cb878"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/source-symbols.ts",
+      "sha256": "905bd2ee00cdb25f8b68f89da152cf48742575bd3e060c9961fe2e3138715422"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/situation.css",
+      "sha256": "bc034a7f4421f77920b0238f02bcc4449401e6241c025bf8d09f870e55622c46"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/analysis-runtime.ts",
+      "sha256": "3cc51cc65cd5e4315ba38d8141d45cf0ce0102720f19e9f6c717c9c405aea8fe"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/MapContext.tsx",
+      "sha256": "d83fbcdee9e44c9a5330fee87b4c8f3a54be3aab910fa04bd5a9acfa993c29d2"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/SourceTree.tsx",
+      "sha256": "f2ac8680ea78f8f66ae134b44427a584c0b4ce3f1248779b0570709b5d199081"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/basemap-style.ts",
+      "sha256": "05d43b1350155ccf956fb2d611d51b3ae1755cadeeed4f48801e9e70b7ad2bbb"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/canvas-workspace.css",
+      "sha256": "69994f0f2eb70f02abbb2a8fb880618fe26a21f584285c32790896e062b867f5"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/map-data.ts",
+      "sha256": "2c198c671a19376f344852ace1720fa1a6884a5f82a4c4d12d40e1ece67f2952"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/MapCanvas.tsx",
+      "sha256": "f674e5ea6014f0f3161f1ebc1036060c03c54bbba9cb4a8ec62ec4cf2c2f46f2"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/AnalysisPanel.tsx",
+      "sha256": "19522ba681a08b1f8925bb41f4aa74f638a7267fb972eec94fd4de61dcc10814"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/SourceResourceDetails.tsx",
+      "sha256": "1e59de1fe4de1c332419d2b232119f18713ec14c2fa6a330a740409193a1d690"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/SituationView.tsx",
+      "sha256": "bd03dd1aff20d3575d48caf05cc9973f2b25ab784c10098f5127e9bb8a7da6fc"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/basemap-runtime.ts",
+      "sha256": "fbb29845af387a02e66e803fe57484bb6b5d85a8f11e0c886ad2447f56e4be8f"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/source-symbol-assets/hydrant.svg",
+      "sha256": "4b769f042c9b56ea9ba0044add751d7cc8dc6f9fc4a8f1b48beb33a7d0110b9a"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/source-symbol-assets/vehicle.svg",
+      "sha256": "9791d98ac0117f5b7121406138a962e5fc86bda052501a1c933d5905847e68f6"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/source-symbol-assets/resource.svg",
+      "sha256": "0529d37a4761b2ba934c5afac601822affb2d8360a5ee2827ea3ed5da3034ac7"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/source-symbol-assets/location.svg",
+      "sha256": "b8b7d5b4eb674c44bd46e3d343147fce96553b8310b09614237254de3515b124"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/schema.ts",
+      "sha256": "3b9735d540626861fcf750f6ee30795f1968226ccbef04ab46e44f17b973f51c"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/administrator-schema.ts",
+      "sha256": "4be98277207b6e0a23bf16bf76b05c65494d2be29059bf8f88f6d63508f7c82c"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/administrator-migration.ts",
+      "sha256": "1b340b5e99299e5a888737270e6df0a755470b170bd72faf3ebd67adc685b540"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/capability-roles.ts",
+      "sha256": "7e5eb0e216b17f6967ee1bdb2dff23a0d944c74d69df7ca088834bc8e76597e5"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/system-roles.ts",
+      "sha256": "8939cad6aaeeed142c65251aac58b50faaf9ee43fe24462edc19a58d8a3732a8"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/context.ts",
+      "sha256": "d760710bd46f96a8a513fbc6d76ac56161e3f617f358c09fe96eaf83e64faba4"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/database.ts",
+      "sha256": "da2b1b5350b317c4691b598c4d3cfff919336919765805605ddf40fc07eca46f"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/personal-scope.ts",
+      "sha256": "7ea8d56a450149b758df0ad5d5f0f16d2673c1ad0711cc1702e2af7dcfa2a6bf"
+    },
+    {
+      "path": "experiments/harness-lab/src/access/store.ts",
+      "sha256": "5a5a683150c86ab87f6ef8e55413e92330cf12fd96a2bb3087132007d29b154a"
+    },
+    {
+      "path": "experiments/harness-lab/src/capabilities/management-migration.ts",
+      "sha256": "ad16012cac0f80e78c0a4df3ee513946c928a9088ead652bfb2d2ad687ab2e32"
+    },
+    {
+      "path": "experiments/harness-lab/src/capabilities/management.ts",
+      "sha256": "9c31b8694c74b1a7c16811c02254f8a777d8b5ed49f218afabbae02fbae5ccec"
+    },
+    {
+      "path": "experiments/harness-lab/src/capabilities/service.ts",
+      "sha256": "c562bc20607944171edeb3fd5503ece75f8e92ef19267af64570acfdbdc093d8"
+    },
+    {
+      "path": "experiments/harness-lab/src/capabilities/catalog.ts",
+      "sha256": "dab4d9f44825deb234c1bb8e78860d2c55d3850a4f743e841b6f9a9d66c7420e"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/validation.ts",
+      "sha256": "b40c7331dbb1f79221fcb98088611101d95ea844e2bc1fe62ff67dbf9d549feb"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/map-references.ts",
+      "sha256": "f5177dc5e5a8a8c0a131bd8e236cc2bb444cbfedb19333d6d77c59a93a853200"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/http.ts",
+      "sha256": "46c151461f429b1e31bc39c4204bb08636054d96e31fc663c40a094ddc69c97a"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/task-query.ts",
+      "sha256": "b759e06db50a0b7719d954c76a0229b5e8712f4307a4f1468dc1e3448210a2c9"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/task-resources.ts",
+      "sha256": "6681896e468968437e120532602b270227a1d42c90bbf6cb49bc5341fdc1d636"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/composer.ts",
+      "sha256": "c5b4d77bace346d509890fd1e5b2c441f85f9ae4679dc99ab7830edaada4fe7b"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/config.ts",
+      "sha256": "c51df208e87d5bd0471b07017dbc82abc6b1f8943a3de9c9f5f08da92c76d741"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/map-motion.ts",
+      "sha256": "415f4d38dacd8ca50f85535930da8b2611c1f9b7fa6ab2bcbe9767d9d07e2126"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/service.ts",
+      "sha256": "d905c86990d5ac8ff121f3d43a98e0279be6d2a93783d61149894457c5b49287"
+    },
+    {
+      "path": "experiments/harness-lab/src/tools/sources.ts",
+      "sha256": "cd978937250b804b25b5dfd0fc27f565ac51e910d61beb79c4aa32efcb9c49c1"
+    },
+    {
+      "path": "experiments/harness-lab/src/collaboration/safe-import.py",
+      "sha256": "c03ea0decb2b860e465d03b5b766e61cd45bf0ee233bb13ef8468898a28c86fe"
+    },
+    {
+      "path": "experiments/harness-lab/src/collaboration/files.ts",
+      "sha256": "74eda546024c86c529f35941c3ef6d55388f22f03bc2c5bca81a4a467a89df8c"
+    },
+    {
+      "path": "experiments/harness-lab/src/collaboration/service.ts",
+      "sha256": "74f7970dd640a08f6dd3b00d5c25226a052f1401eea6f73103adf09b390713d5"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/continuous-store.ts",
+      "sha256": "16043931ca46ba891ad01e32db70f476c49b3e3a241397f9b3a6114780b35071"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/executor.ts",
+      "sha256": "cdb25e7a0f422f8567c493a9ecb02bdcc2f8c6ee95eb7a6f2d019e9ee14e54a1"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/continuous-service.ts",
+      "sha256": "e378afe8bd89a72337af31227ff7690d94467299d7bf0cdc8cf9ade15274b691"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/task-links.ts",
+      "sha256": "6e99ed6ac4f198cd452ac5e69b5522044bfbaa0ae83abced202571dcd74459d6"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/model-permits.ts",
+      "sha256": "96749915559173f71683e40ffb5b754e8f3f35b6c2b14d3d11200269941238d5"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/context-evidence.ts",
+      "sha256": "3db319385b4fad918a4c0848901b6dcd4bc441fc9acc5c8113ed1c370fbd546b"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/task-assessment-evidence.ts",
+      "sha256": "993dea9216ebb2c21b010d181d36db39322bc34fd0dada7c6114ed6db5933ff5"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/assessment-quality.ts",
+      "sha256": "31fb2a076669e8dcfe01f6f300049b4f4c4580210ada779c2fd50bde9c89fcc8"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/continuous-schema.ts",
+      "sha256": "ae4fa1960ccd1d0871d608509e7883884ae3a3ac14bf3e16955878b5d9ab04b1"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/config.ts",
+      "sha256": "8f3cd3a253f7d5ba5c4fd118513ec88eecf64c3ac37192e49ac2007af95ba2df"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/files.ts",
+      "sha256": "da1e0e8bc6194500d28acfcfa66ed95f692a7d3fb8c0be9fc1e178974277424d"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/service.ts",
+      "sha256": "b4d0aeb00c5e3db841d558cd48c73873bca3e9987a203f6e9fa5356719e46b7a"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/store.ts",
+      "sha256": "420f7619bcb1948233d82932d5fef5449ca4356e80a29c1ceeed7cf3f44de5c3"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/recipient-evidence.ts",
+      "sha256": "5f1d06abeb4ca25075688467a320000d8cf300b97a1bddf2e47ba04ddf1bb914"
+    },
+    {
+      "path": "experiments/harness-lab/src/background/task-discovery.ts",
+      "sha256": "d1edfb2b229dcc1f3070fd916cf4e746ae0e60daae76e3cccb48ebc14861ce4d"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-compaction.ts",
+      "sha256": "e867f36d2540ea58ee1287350f58a6e4aaab6b55438268bb636ba0a68c26d021"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-workspace.ts",
+      "sha256": "534bc1c3a3e49b60e64c5269b3a13328236a4634ddc60ab6d50d37c7a7325148"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-capabilities-r2.ts",
+      "sha256": "b18aca032d6f8d767845973324aaa358b54fe6c409e2e4cf52bed9112141979a"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-spatial-cases.ts",
+      "sha256": "e66eb7dc5ece3668ef889f23ced6033824a3eadc5885d4c43f837538b0c678df"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-map-query-scope.ts",
+      "sha256": "2e80faada108a1153e3294b8f1fbed1432f760ed51a601361363995ae63ad1ca"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-scenario-execution.ts",
+      "sha256": "b8186adc05ac3aa8998db738dea11d3bcfe20cfe0360087ce872643f9bff24a8"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-live.ts",
+      "sha256": "5d0772088d742890cdeab83f4c7065932a673db99b2c28adbadd0ad6b38f57dd"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-continuous-spatial.ts",
+      "sha256": "3a1b279b0ee2ce1311c369b91b74e1b8c71b2dbef7db8b839f852b3dd035efbb"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-spatial-report.ts",
+      "sha256": "fdb4de8914e47bd5eac59dd314def1956770fc4e048afdcb595a877857ba993f"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-spatial-batch.ts",
+      "sha256": "73dbdeaeddb1635624bd1404aca5f1d5e68f40c21ffd936f95332df7d1f28eaf"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-spatial-evaluation.ts",
+      "sha256": "c6e6d8603b3a2f4a06f9317d392de2f9388517d56544a8a3221bb7126e9aeb32"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-agent-framework-observations.ts",
+      "sha256": "e3bcd4e8848a4748c31f6bbd0c02e93c0d0818127d31cfe14f710143929dde2f"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/migrate-capabilities-r2.ts",
+      "sha256": "e2166a5716d83172e8c72c905c54b749ba879eea40d71e7b719b6b5278249ad9"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/check-boundaries.mjs",
+      "sha256": "aae96394efa6408b83888818f55d0b3d26e1335d0c977de48133c60d01dbadc0"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-scenario-business.ts",
+      "sha256": "28e2cca2c2bdb27bf48fc71103a6431e0f0a3c57d66d4eaa70e6184852fdc99d"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-spatial-replay.ts",
+      "sha256": "41931827e94afb08de7a62bd628c45c16fa84c1fe534edc0e2cee0d0af0dd081"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-map-result-projection.ts",
+      "sha256": "e974e691905cf88cd7ec588c608e80a4ef2c63106219fcc4f5f168432b062275"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-pi-recovery.ts",
+      "sha256": "826baeb393b70786c9711091ac609b6dd6b6e20f95205b56d655fd315676dc16"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-spatial-evidence.ts",
+      "sha256": "a5f7a61cab4399326f5648ae74a2108960a3d863f66b5c23acf4ae0615490d0f"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-scenario-budget.ts",
+      "sha256": "d10568d9b298988d7d0ea69cde11cf7ef8be8c3e194ac8ecb99881fc5d561121"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-continuous-multitask.ts",
+      "sha256": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/migrate-workspace.ts",
+      "sha256": "d2b1fc2337f4bf7676bf69dce321cbec39fbc84976d4053cdcb16215ff64eaa8"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-desktop-map.README.md",
+      "sha256": "d0804c14286dee4bb3bb9f66f645e40461aa8fa33b43a4c98e34a9a515a14f1f"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-agent-framework.ts",
+      "sha256": "3796ff13e6089626232b9e560c4fcc68b95a019adeee6a685fcf189205983dd4"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-task-plan.ts",
+      "sha256": "82dc7713f739ac5ff13adf3a495a05bb03ccd75159be42b1355914b2c15e34d9"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-continuous.ts",
+      "sha256": "7e448e87201fe1c53d7b2566d35ce53cf358b062fb2929a5e96d29f1c47c9736"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-map-workflow.README.md",
+      "sha256": "70b97ce6c95849e01847dd46a9ff4ae14085fcf089d59232fe0ee33dca37fa12"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-handoff.ts",
+      "sha256": "345761909018f5d79ce939614d2f3fd268933a2f180cfc310ca90f7326a53209"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-spatial-remediation.ts",
+      "sha256": "a37724c08bf1fb93864a286daebd31137bc558db13aa9e5aee82782c955198e7"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-source-annotations.ts",
+      "sha256": "72d7b72a77410da3a18d430178e8bdd55febf66f6ca9bd231bc6aa6de86a2245"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-files-continuation.ts",
+      "sha256": "ce1e7487e83fca7997320f47cdd8a37b3b20944971aecf4a633a1c85b6570574"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-session-recovery.ts",
+      "sha256": "44dc986c23c529fc1e3ec3f43a399a2871ec22b32fd27cd0c542586a344f956f"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-references.ts",
+      "sha256": "2db455bdbf09831576f7cca40c3e55f8b5e5db87478d564bbd9910c59d9ebfe8"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-map-query-cases.ts",
+      "sha256": "e51be69abf1d19e1ef9dc32bd95324beaaec2707950d4ac973a1b1cd2fafeb14"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/migrate-administrators.ts",
+      "sha256": "dea8c442e20eca1cca73d35aba857591495763c6accf6bb51a9144f5514b74ec"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-source-annotations.README.md",
+      "sha256": "140d6be46b0cae6edbb825562e563aac48c0cd70a889bf8f64fc9015a06628ab"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-desktop-map.ts",
+      "sha256": "1120e673506ae7fbc7b1b92d8896565f35b7b7246c04c22042fa4907b00a9432"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-hitl.ts",
+      "sha256": "b2f48c654c6c29fc62960de6fdf5b65d98493db4d0640097a04ab6d9a7439996"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/capabilities-admin.ts",
+      "sha256": "5c8fcacf39b8e8c88d41c73feba2bb4858ee7700a104a9c3516368f515704d32"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-context.ts",
+      "sha256": "6cd539b7c409d4f985fe978aa41e483c82b836fbcf111b8c63f0b4917ad710cd"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-basemaps.ts",
+      "sha256": "4c57e50465394b6b59a6fd348debfed0fe18466f1d7c85eee8c3b59464bdd67c"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-capabilities.ts",
+      "sha256": "10ae68766d238d7327188817ac1a3626fabc4e88eed8436c610065e72afc60b4"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/access-admin.ts",
+      "sha256": "1fc5ac987b1de0cf6ee34d2cbe9f0581053d4ff647c96075b4d04f5f539e5d73"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-annotations.ts",
+      "sha256": "1b1da6cc6b68a63b0527973448e397dd4784ae0107912e9392405a56e5215b50"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/migrate-capabilities.ts",
+      "sha256": "1c1453273a6fdd107302b2f41152bc39c65710caa70473b898ef35ddeb8624aa"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/continuous-spatial-source.ts",
+      "sha256": "edde7058c1458b08ab6d6ca44299d8aa02672192fb5cc9d37f62dba9da66151a"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-background.ts",
+      "sha256": "2a753baf6d78aadb757df68eca15b8f8243609a45591de3b7cb71eecb1308f15"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-admin-personal.ts",
+      "sha256": "a5350f4c2150a5bbd6f0f6e79ff84e3f5a03caddb41f3d9ff8eb22b4f8f7156b"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/measure-capabilities-r2.ts",
+      "sha256": "be81b78fef1322e08f730d5a8b68ce2bf2cefbabeb9f66c06ad95c6210abd550"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-map-workflow.ts",
+      "sha256": "98b92fdeda954d396d11d57736f15a99ae49aec80a9651ddcfe03060cf910b72"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-files.ts",
+      "sha256": "a422e604a6e9f63c0dee43f2921899d898227b706e2a621bac9ab335a8a83567"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-capabilities-r2-rollback.ts",
+      "sha256": "f0ea795dc52431558f456af6b834df2c6d19529f72eac4b390ffb74150fd87bd"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-execution.ts",
+      "sha256": "c70ece5712dbbb0d109a594a47affec84c0221c55ded914a65f7327c928b456a"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-situation-map.ts",
+      "sha256": "ac862b321e0cf531a400e516461c1be352a90f700bf416b33ca374050aa45650"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-access.ts",
+      "sha256": "c774b4050bfd32b415f3abb680818fa3cc93394113fb86cbfcc5a314685112a4"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/migrate-seats.ts",
+      "sha256": "8e0044362c5b5932d0e88d3fdf52f72c52ee3ddea81ef20efd9beb0244f5914c"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-subagent.ts",
+      "sha256": "3eea084b5ef062c9a6357f0e23ff0ce3b8921526a6658f1e55bafc7157656966"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/background-admin.ts",
+      "sha256": "79834233d3a70281899fbf17cc91e3d95dbbf410d32299ce2cb92b5a0e2ad2bc"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-recipients.ts",
+      "sha256": "deafe7a3ad18242f70d502b08c4f177593e50538626e281fc6a988324cda7b65"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/fixtures.ts",
+      "sha256": "5ec83e61954819ebd8a8a91504f17bd351a9ce8b3e88693da4b38d79e17e2cc2"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/main.ts",
+      "sha256": "784af63b5a975b5efa36ac4eab0ec33cf2b0d4ec737c37e76e1378b3d8319420"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/map-fixtures.ts",
+      "sha256": "f712189f589a4875e0e73e8a8e27d8862e0de038eddff534f00055f001b0e100"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/README.md",
+      "sha256": "3eb16eebb120c53213e7f3f68ffaa8ae43b83cb240400704886b5f685b935d38"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/control-api.ts",
+      "sha256": "6db23697efea3d79fe040a118690958b6049e616e68f8a0a4540d30539a47238"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/control.ts",
+      "sha256": "7f0d7f92bcb42d0d34a92381c2e64b6d1135df327ea8f2ea7cb680fd25c8cadc"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/persistence.ts",
+      "sha256": "d6d41b297c6ec42499ddeb672b45daa909866c7789c4c3cb283e3aa4815b6c22"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/server.ts",
+      "sha256": "e71660e07fb71a5dee72883357c3bf15a234c6b3f0e6a2dcedf0ee74879f24f2"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/data.ts",
+      "sha256": "db5731296af2d866cc5b63bbf18b3c06bb9c3cc2d6a6dd346c3298f6971e7e84"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/commands.ts",
+      "sha256": "364fbcb7711bb89d2b9892cc2c5c59ec71b4eb1be865c796e3c289a0699e8941"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/motion-path.ts",
+      "sha256": "0f99a8ddd69a8d70a9d1933eada6788f39cfe47dc02e77263270fce908c8b9e1"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/routing.ts",
+      "sha256": "4c369c453aebd3adfac25b851a6d2f47ed6801f56a6c299b9c89602e5d853b0c"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/README.md",
+      "sha256": "f173b69f85bc93540c1a2533d2c58ae2ebe9d000efc1f4868f3618d58f7ab674"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/control.ts",
+      "sha256": "a7e0ac630dad3a80273019d80ddb615d4e020e1ba349c8e0b1b29735a27753ea"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/index.ts",
+      "sha256": "6e7de22d09d823ca5fafa03fff6c2e73af50f1e6248e8c33518c8df7889600cc"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/query.ts",
+      "sha256": "2c7b5ca0f28615d1b18a39b58ec49d70be74144a0045a7e8bead873386b2ed14"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/geography.ts",
+      "sha256": "d1a54674db5a762aaa43bc9533339642bb87e7f567ec5eb85e7bfdf8a250e4f3"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/execution.ts",
+      "sha256": "a137e6349768b28fdeb6470fca67584674e9cb7e1cafbc87883738f634954348"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/mock-context/scenarios/store.ts",
+      "sha256": "910915e37d223ca51adc53797b5107b836b086475037f406922395a9def1b3d8"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/context-seat-routing.example.json",
+      "sha256": "eb21c6822ff7bc851d20bf9295af9c635437f94820bc52238c7141819bc62b43"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/background-seat-routing.example.json",
+      "sha256": "2df2f0dde56616f7b4e0c9c7b8561a738108db39c9d6b59b1b58d0c2366b174f"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/resource-brief.md",
+      "sha256": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/context-config.example.json",
+      "sha256": "3e62b828058d68daa5013fd136eaef1e953241bffb601803f4fc160372eedf5e"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/meeting-notes.md",
+      "sha256": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/background-context.example.json",
+      "sha256": "4d8102d695942434063199cbbba86f1e550c8b7641c1f22c042348cfbf1c1486"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/task-plan-validation/\u64cd\u4f5c\u793a\u4f8b.md",
+      "sha256": "69c71b69cd1361ce3f9af059f75f3529a6981c33a61f14f71eac17d9e7041d9d"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/task-plan-validation/\u8865\u7ed9\u65b9\u6848_\u521d\u7a3f.md",
+      "sha256": "1a96e5fe52e38ed360231a90ccad60a72a703ad87778f4616da9579bd7ad822a"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/seat-responsibilities/planning.md",
+      "sha256": "4248c096bea0c7b91369a5617a185c561f408a42a8b3f8a3f6f1beb299426fef"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/seat-responsibilities/situation.md",
+      "sha256": "ccf9ef363b4e49774e4d157479a4da039425a80d30836e8714637c1554340149"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/seat-responsibilities/intelligence.md",
+      "sha256": "76b21450c053635eba2d7ad68acec892d03fb9da55db4af1353fdf4b1e3f62a0"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/seat-responsibilities/overall.md",
+      "sha256": "09f73269596a12ecefc6a9474ddff39bc5eaef2314e0f656071df0df557426ba"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/manual-handoff-retest/\u8d44\u6599\u5f52\u6863\u8bf4\u660e_\u4fee\u8ba2\u8981\u6c42.md",
+      "sha256": "e315ae421b85ba210120fe5abf18d08aca256f63b682e2b74bf2ef73116df46f"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/manual-handoff-retest/\u8d44\u6599\u5f52\u6863\u8bf4\u660e_\u521d\u7a3f.md",
+      "sha256": "66f31b387fde3594c1cd5f6c6f6a1d34ce80f9d2ae718e296a41f30ebb5d2098"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/manual-handoff-retest/\u4f1a\u8bae\u5ba4\u7eff\u690d\u8bb0\u5f55.txt",
+      "sha256": "5cce9e94d50f3667ae8db0c4f7d6a67b9f52a4adcef58b42f040b4ebb08ef373"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/task-resources-v1/expected.json",
+      "sha256": "2ed32bdcb1fc6fb47f855cfa6ad614a77d4669436b3633fe6b4a3bb13ad87b68"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/task-resources-v1/README.md",
+      "sha256": "bc136a16c10505549488c03257cd2b7deb30ef152bc61a3c1a89396b5b942eb5"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/task-resources-v1/inputs.json",
+      "sha256": "855d74074f34604cce0494074687a48840cfbec4dffd95c966dafbbdf2b932b2"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md",
+      "sha256": "6d5bbfd01e41858ab5ed6ce039b3e7d642e02fc0db8f4019e5a64a8836581fe0"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/review/SKILL.md",
+      "sha256": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md",
+      "sha256": "f947a59341898f1d89eccbb122b6518d1f174fa65f928b27721b564afe83bede"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/synthesis/SKILL.md",
+      "sha256": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/common/AGENTS.md",
+      "sha256": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/agents/reviewer.md",
+      "sha256": "926bc47c5b8a6cb711f37f19b8a1d2e757a2fc57d1627188dceb1eb5f077fb7f"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/agents/analyst.md",
+      "sha256": "ed8850eed792095e373dfcf568f100ff04e034321f9d7d807d033d911d263250"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/agent-framework/review-checklist.md",
+      "sha256": "80c8f3fa8841e1cbf33145250324cdba26426c5b1a7eb531b90258319f1e93a1"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/agent-framework/\u521d\u7a3f.md",
+      "sha256": "55c9e478ecb129c0df76f19c7b6f4dade664a1fdb80bb3fb3b06216d9a63c213"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/agent-framework/README.md",
+      "sha256": "c9a12e8b56a87f9e36a3f7a74dc9aac905f209ad17d1ef10ef2eccd57b5305ff"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/scenario-demo/background.example.json",
+      "sha256": "ccebdd0e64e7f07e314f3fcb86475163c693812fc8d4b7d10226b31495fe95ab"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/scenario-demo/notifications.example.json",
+      "sha256": "ae2e0f15b2b6d2ed25dd7703ab01810f6b1326f4b8b19c50a2a87ed23f6949f6"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/scenario-demo/rules.example.json",
+      "sha256": "f21f749931656d7de4425266e240231d84c64bc36f399ae82537c95d579bc2b2"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/scenario-demo/context.example.json",
+      "sha256": "26633876741d0ea960a126064911c3bcc9e1913ca461ac0dddf0846a861e33b9"
+    },
+    {
+      "path": "experiments/harness-lab/dist/favicon.ico",
+      "sha256": "70cfed088307c6feb4b1a0fb83cd82814752200dc98882880ed41e6341b309af"
+    },
+    {
+      "path": "experiments/harness-lab/dist/index.html",
+      "sha256": "7e72ea88989e394bffe887371ca6267c7e95456e94a252c863f57165288ae250"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/maplibre-gl-worker-B8OLt8TZ.js",
+      "sha256": "ebbe01c8ccfa71f92e93248bc846a2e0d3dd871146e85691c20cf56d7ae08957"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/xf3013-2020.6.2.18-Cqk6x_Qf.svg",
+      "sha256": "ae1d10b417e10a7fdfe785c734bd46c4923d529de6e2f929c49ece9f480218d3"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/map-data-CoMkNwJp.js",
+      "sha256": "4dd2e9da5525a74d8393c587b273d33e2121447be6bc45f8317fda17ced70380"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/Simulation-7uL6eFQF.js",
+      "sha256": "2b23dc220368067e3d26960e6707deab4e4ce65d79ca998a5c274bcda05c2d24"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/LayerTree-vP5_fA6G.js",
+      "sha256": "f80b614c414d17e169f18254103fe58c2266ffa0b4ef33f69877ec56ec526b00"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/ScenarioDirector-Cz3pcHkI.css",
+      "sha256": "1d4467751b43fda3d3a93988e081e64f97d542b3f1aee9f5825e810b727cdef3"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/ScenarioDirector-DWwYXTCO.js",
+      "sha256": "4c4caca9ca56af8787da8ff65e67ebb22b134cfa9fea644677f6a849322cfb4f"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/MapCanvas-JR8eJ17e.css",
+      "sha256": "448eaf0d47a4e154ca8da64bcaa05d8e5617fb1106012e28316e80d2316bed85"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/SituationView-DK5tusa6.css",
+      "sha256": "02e97c922751a146c8c7e735bd576709a709ab65794ee8a1a2c88c5a1c929c53"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/index-BI2_IHui.js",
+      "sha256": "50cd280bcf960e7b31aa13b65840682eaf6cc1d100a93016cb5ca12200b312d7"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/MapCanvas-CQzMIrpa.js",
+      "sha256": "028254e26d5deb894e07147c8dc59d2e12fa3efb831682deb11db7e2c9cf762e"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/AnnotationWorkspace-DRAPBiF_.js",
+      "sha256": "481501505e1b9d1421de7633eff5332f547107d67167a2180ea3e3298d32c64a"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/LayerTree-pVb4gqth.css",
+      "sha256": "a61a03137ca63a8d93341dba949ac050fdd70ac48d9bfaf9defb7827135a5dcb"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/AnnotationWorkspace-P-HeVHZn.css",
+      "sha256": "673c2e275bbb62024957167b8d84e4d3937509044ede948a02943f293e66dbf1"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/index-Cy63HFoM.css",
+      "sha256": "4c0c3900305036c1a3b2c9fb598df5c1e77e088ab6c69e5d66f21b073ecbb2f3"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/SituationView-CtQaQmpU.js",
+      "sha256": "accba1ae05c3c4ea67b2d85c15126c8aa3e15b7f2f03b114c16e3b4cb8b8c8c5"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/index-D9-Zx310.js",
+      "sha256": "e796c171658753f63efe0cb3b3ef1be222e932af5efde5ef20efcac498eee072"
+    },
+    {
+      "path": "experiments/harness-lab/dist/brand/axon-wordmark.svg",
+      "sha256": "0daebb73e677c43bab0abc732a4994193fb719c270807d6bd4aa93acc09a5ccf"
+    },
+    {
+      "path": "experiments/harness-lab/dist/brand/axon-app-icon.svg",
+      "sha256": "2f4c6cf11781919a97a66ff94552b59dc6d867cb94333af5a4d2098132e3f3dd"
+    },
+    {
+      "path": "experiments/harness-lab/package.json",
+      "sha256": "102f734f900c4ea0bb6b5b457af8b6889e40a07c45835cd622e1fb42109f4d4f"
+    },
+    {
+      "path": "experiments/harness-lab/package-lock.json",
+      "sha256": "3a3b34a34c3353b4a3a30f161fcbaeab8779a28828b0a8040eb3f9711859f224"
+    }
+  ]
+}

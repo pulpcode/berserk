@@ -9,7 +9,7 @@ import { openDatabase } from '../src/access/database.js';
 import { AccessStore } from '../src/access/store.js';
 import { BackgroundStore } from '../src/background/store.js';
 import { parseBackgroundConfig } from '../src/background/config.js';
-import type { AuthSession, TaskSpace } from '../src/contracts/access.js';
+import { isBusinessIdentity, type AuthSession, type TaskSpace } from '../src/contracts/access.js';
 import type { ScenarioAction, ScenarioDefinitions, ScenarioInstanceDetail, ScenarioInstances, ScenarioMutationResult, ScenarioPreview, ScenarioTaskInitialization } from '../src/contracts/scenarios.js';
 import type { ContextConfig } from '../src/context/config.js';
 import { PiLab } from '../src/pi/lab.js';
@@ -100,6 +100,7 @@ describe('scenario director authorization and host/source integration',()=>{
     const reopened = new ScenarioTasks(f.config.dataDir, f.lab.access!);
     await reopened.prepare();
     const actor = f.director.auth.identity!;
+    if (!isBusinessIdentity(actor)) throw new Error('场景导演测试必须使用业务席位身份。');
     expect(await reopened.read(actor, id, prepared.taskBootstrap, detail.taskDefinitions)).toEqual(prepared);
     await expect(reopened.read(actor, id, { ...prepared.taskBootstrap!, definitionVersion: '4' }, detail.taskDefinitions)).rejects.toMatchObject({ code: 'SCENARIO_HOST_CONFLICT' });
     expect(await readFile(savedPath, 'utf8')).toBe(bytes);

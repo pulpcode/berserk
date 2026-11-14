@@ -38,7 +38,9 @@ export class CollaborationService {
   private closed = false;
   private constructor(readonly workspaces: WorkspaceStore, private readonly options: CollaborationOptions, private readonly db: DatabaseSync, private readonly files: HandoffFiles) {}
   static async open(workspaces: WorkspaceStore, options: CollaborationOptions, database?: DatabaseSync): Promise<CollaborationService> {
-    if (!options.seatIds.length || new Set(options.seatIds).size !== options.seatIds.length || options.seatIds.some(id => !/^[a-zA-Z0-9_-]{1,64}$/.test(id))) throw stateError();
+    // An administrator-only formal installation has no business participants yet.
+    // Existing stored work still validates against the real historical seat set.
+    if ((!options.seatIds.length && !workspaces.access) || new Set(options.seatIds).size !== options.seatIds.length || options.seatIds.some(id => !/^[a-zA-Z0-9_-]{1,64}$/.test(id))) throw stateError();
     const db = database ?? await openDatabase(workspaces.dataDir);
     const directory = join(workspaces.dataDir, 'collaboration');
     try {

@@ -1,0 +1,14 @@
+{
+  "verifiedAt": "2026-11-14T08:21:30.786815+00:00",
+  "username": "admin",
+  "administratorLogin": true,
+  "managementApi": true,
+  "businessApiDenied": true,
+  "noBusinessSeat": true,
+  "existingAccountsAndSeatsUnchanged": true,
+  "uiChanged": false,
+  "health": {
+    "4315": 200,
+    "4316": 200
+  }
+}

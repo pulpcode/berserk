@@ -1,0 +1,16 @@
+[WebServer] (node:27483) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:27451) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:27489) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27489) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/administrator.spec.ts:69:1 › independent administrator manages experts without mounting a seat workbench (7.6s)
+  ✓  2 tests/e2e/administrator.spec.ts:123:1 › an administrator creates personal spaces and resumes ordinary two-turn chat without business access (12.7s)
+  ✓  3 tests/e2e/administrator.spec.ts:214:1 › revoking an independent administrator returns to login and overall remains a business seat (4.5s)
+  ✓  4 tests/e2e/administrator.spec.ts:234:1 › an administrator card opens the selected expert configuration without creating another draft (4.0s)
+
+  4 passed (38.2s)

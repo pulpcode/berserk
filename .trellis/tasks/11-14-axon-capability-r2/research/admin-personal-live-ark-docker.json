@@ -1,0 +1,480 @@
+{
+  "passed": true,
+  "dataDir": "/tmp/axon-admin-personal-live-kkqg5D",
+  "elapsedMs": 12295,
+  "attempts": 5,
+  "model": {
+    "provider": "volcengine-agent-plan",
+    "id": "deepseek-v4.1-flash"
+  },
+  "checks": [
+    "无业务席位的管理员可显式创建个人空间和空会话，公共任务与他人私有空间隔离",
+    "真实方舟模型与Docker完成管理员个人文件上传、读写和下载",
+    "原会话真实第二轮及重新读取历史通过，其他管理员与业务用户不能读取会话/文件",
+    "个人请求未注册业务工具，业务API仍被拒绝"
+  ],
+  "tools": [
+    [
+      "source_list",
+      "source_read",
+      "instructions_read",
+      "instructions_update",
+      "skill_read",
+      "read",
+      "ls",
+      "find",
+      "write",
+      "edit",
+      "bash",
+      "file_output",
+      "subagent",
+      "ask_user"
+    ],
+    [
+      "source_list",
+      "source_read",
+      "instructions_read",
+      "instructions_update",
+      "skill_read",
+      "read",
+      "ls",
+      "find",
+      "write",
+      "edit",
+      "bash",
+      "file_output",
+      "subagent",
+      "ask_user"
+    ],
+    [
+      "source_list",
+      "source_read",
+      "instructions_read",
+      "instructions_update",
+      "skill_read",
+      "read",
+      "ls",
+      "find",
+      "write",
+      "edit",
+      "bash",
+      "file_output",
+      "subagent",
+      "ask_user"
+    ],
+    [
+      "source_list",
+      "source_read",
+      "instructions_read",
+      "instructions_update",
+      "skill_read",
+      "read",
+      "ls",
+      "find",
+      "write",
+      "edit",
+      "bash",
+      "file_output",
+      "subagent",
+      "ask_user"
+    ],
+    [
+      "source_list",
+      "source_read",
+      "instructions_read",
+      "instructions_update",
+      "skill_read",
+      "read",
+      "ls",
+      "find",
+      "write",
+      "edit",
+      "bash",
+      "file_output",
+      "subagent",
+      "ask_user"
+    ]
+  ],
+  "records": [
+    {
+      "id": "789df435-4e22-41b4-94a7-1cb0c5e98a05",
+      "workspaceId": "976f5206-5f44-4e31-8df9-6ee4d0daa883",
+      "title": "这是明确提供的合成CSV。请使用read读取本条上传文件，按数量求和，必须用wr",
+      "updatedAt": "2026-11-14T10:53:05.026Z",
+      "expertDefaultSource": "general",
+      "expert": {
+        "expertId": "axon-general",
+        "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+        "name": "Axon 通用助手",
+        "description": "帮助处理通用任务，保留工作台现有能力。",
+        "releaseVersion": "1.0.0",
+        "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+        "modes": [
+          "interactive"
+        ],
+        "dependencies": [],
+        "availability": {
+          "available": true,
+          "state": "enabled"
+        },
+        "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+        "updateAvailable": false
+      },
+      "modelId": "default",
+      "inputQueue": {
+        "revision": 2,
+        "available": false,
+        "reason": "当前回复已结束。",
+        "items": []
+      },
+      "messages": [
+        {
+          "id": "916d1058",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "user",
+          "text": "这是明确提供的合成CSV。请使用read读取本条上传文件，按数量求和，必须用write生成summary.md，写入“总数量：30”，再用file_output交付。不要用bash，不查询业务资料，不修改工作区约定。",
+          "attachments": [
+            {
+              "path": "sample.csv",
+              "name": "sample.csv",
+              "size": 34,
+              "hash": "61929330a5d72d2985f2eed8b3ac33a1fe0c750bcd493e75d78eb61c7cd33928"
+            }
+          ]
+        },
+        {
+          "id": "37e3225d",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "assistant",
+          "text": "",
+          "presentationId": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:0",
+          "content": [
+            {
+              "id": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:0:content:0",
+              "type": "thinking",
+              "text": "The user wants me to read sample.csv, sum quantities, write summary.md with \"总数量：30\", then file_output.\n\nNote: user says result must be 30, but I should verify actual sum. Let me read the file.\n\nLet me read the file first."
+            }
+          ]
+        },
+        {
+          "id": "8944c633",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "tool",
+          "text": "项目,数量\n苹果,10\n香蕉,20\n",
+          "toolName": "read",
+          "toolCallId": "call_00_h5rvf2afkyuwrczpp335hhvl",
+          "toolStatus": "completed",
+          "toolInput": {
+            "path": "/workspace/sample.csv"
+          },
+          "isError": false
+        },
+        {
+          "id": "b9139619",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "assistant",
+          "text": "",
+          "presentationId": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:1",
+          "content": [
+            {
+              "id": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:1:content:0",
+              "type": "thinking",
+              "text": "Sum = 10+20 = 30. Matches. Write summary.md."
+            }
+          ]
+        },
+        {
+          "id": "571af404",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "tool",
+          "text": "Successfully wrote to /workspace/summary.md",
+          "toolName": "write",
+          "toolCallId": "call_00_is6ljpalfg1wpm1faqk5yrwh",
+          "toolStatus": "completed",
+          "toolInput": {
+            "path": "/workspace/summary.md"
+          },
+          "isError": false
+        },
+        {
+          "id": "b13bb060",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "tool",
+          "text": "文件已提供下载：summary.md（25 字节）。",
+          "toolName": "file_output",
+          "toolCallId": "call_00_xxcjtzpjyw3kcqs9cbgwg4qg",
+          "toolStatus": "completed",
+          "toolInput": {
+            "path": "/workspace/summary.md"
+          },
+          "isError": false
+        },
+        {
+          "id": "ac15267f",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "assistant",
+          "text": "已按要求完成：\n\n- 已人工读取 `/workspace/sample.csv`，文件中包含表头「项目,数量」，下面两条记录：苹果 10、香蕉 20。\n- 按数量求和：10 + 20 = 30，与你要求写入的值一致。\n- 已用 `write` 生成 `/workspace/summary.md`，内容为「总数量：30」。\n- 已用 `file_output` 交付该文件，下载卡已展示。\n\n我没有使用 bash 命令，没有查询业务资料，也没有改动工作区约定。",
+          "presentationId": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:3",
+          "content": [
+            {
+              "id": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:3:content:0",
+              "type": "text",
+              "text": "已按要求完成：\n\n- 已人工读取 `/workspace/sample.csv`，文件中包含表头「项目,数量」，下面两条记录：苹果 10、香蕉 20。\n- 按数量求和：10 + 20 = 30，与你要求写入的值一致。\n- 已用 `write` 生成 `/workspace/summary.md`，内容为「总数量：30」。\n- 已用 `file_output` 交付该文件，下载卡已展示。\n\n我没有使用 bash 命令，没有查询业务资料，也没有改动工作区约定。"
+            }
+          ]
+        }
+      ],
+      "active": null,
+      "turns": [
+        {
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "status": "succeeded",
+          "startedAt": "2026-11-14T10:52:57.701Z",
+          "completedAt": "2026-11-14T10:53:05.026Z",
+          "finalMessageId": "ac15267f"
+        }
+      ],
+      "interactions": [],
+      "fileOutputs": [
+        {
+          "downloadId": "90aec065-edda-469b-8cb2-ca7f4ba4deb8",
+          "workspaceId": "976f5206-5f44-4e31-8df9-6ee4d0daa883",
+          "sessionId": "789df435-4e22-41b4-94a7-1cb0c5e98a05",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "toolCallId": "call_00_xxcjtzpjyw3kcqs9cbgwg4qg",
+          "createdAt": "2026-11-14T10:53:03.197Z",
+          "path": "summary.md",
+          "name": "summary.md",
+          "size": 25,
+          "hash": "d638b5480f52fe9f62cb5a2658cfbc4323067e774dcc38e62632d35eb0336fb3"
+        }
+      ],
+      "lastResult": {
+        "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+        "status": "succeeded",
+        "compactionIds": [],
+        "compactions": [],
+        "usageSummary": {
+          "modelAttempts": 4,
+          "replyAttempts": 4,
+          "compactionAttempts": 0,
+          "toolCalls": 3,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 4436,
+            "output": 347,
+            "cacheRead": 11904,
+            "cacheWrite": 0,
+            "totalTokens": 16687
+          }
+        }
+      }
+    },
+    {
+      "id": "789df435-4e22-41b4-94a7-1cb0c5e98a05",
+      "workspaceId": "976f5206-5f44-4e31-8df9-6ee4d0daa883",
+      "title": "这是明确提供的合成CSV。请使用read读取本条上传文件，按数量求和，必须用wr",
+      "updatedAt": "2026-11-14T10:53:06.465Z",
+      "expertDefaultSource": "general",
+      "expert": {
+        "expertId": "axon-general",
+        "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+        "name": "Axon 通用助手",
+        "description": "帮助处理通用任务，保留工作台现有能力。",
+        "releaseVersion": "1.0.0",
+        "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+        "modes": [
+          "interactive"
+        ],
+        "dependencies": [],
+        "availability": {
+          "available": true,
+          "state": "enabled"
+        },
+        "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+        "updateAvailable": false
+      },
+      "modelId": "default",
+      "inputQueue": {
+        "revision": 4,
+        "available": false,
+        "reason": "当前回复已结束。",
+        "items": []
+      },
+      "messages": [
+        {
+          "id": "916d1058",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "user",
+          "text": "这是明确提供的合成CSV。请使用read读取本条上传文件，按数量求和，必须用write生成summary.md，写入“总数量：30”，再用file_output交付。不要用bash，不查询业务资料，不修改工作区约定。",
+          "attachments": [
+            {
+              "path": "sample.csv",
+              "name": "sample.csv",
+              "size": 34,
+              "hash": "61929330a5d72d2985f2eed8b3ac33a1fe0c750bcd493e75d78eb61c7cd33928"
+            }
+          ]
+        },
+        {
+          "id": "37e3225d",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "assistant",
+          "text": "",
+          "presentationId": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:0",
+          "content": [
+            {
+              "id": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:0:content:0",
+              "type": "thinking",
+              "text": "The user wants me to read sample.csv, sum quantities, write summary.md with \"总数量：30\", then file_output.\n\nNote: user says result must be 30, but I should verify actual sum. Let me read the file.\n\nLet me read the file first."
+            }
+          ]
+        },
+        {
+          "id": "8944c633",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "tool",
+          "text": "项目,数量\n苹果,10\n香蕉,20\n",
+          "toolName": "read",
+          "toolCallId": "call_00_h5rvf2afkyuwrczpp335hhvl",
+          "toolStatus": "completed",
+          "toolInput": {
+            "path": "/workspace/sample.csv"
+          },
+          "isError": false
+        },
+        {
+          "id": "b9139619",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "assistant",
+          "text": "",
+          "presentationId": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:1",
+          "content": [
+            {
+              "id": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:1:content:0",
+              "type": "thinking",
+              "text": "Sum = 10+20 = 30. Matches. Write summary.md."
+            }
+          ]
+        },
+        {
+          "id": "571af404",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "tool",
+          "text": "Successfully wrote to /workspace/summary.md",
+          "toolName": "write",
+          "toolCallId": "call_00_is6ljpalfg1wpm1faqk5yrwh",
+          "toolStatus": "completed",
+          "toolInput": {
+            "path": "/workspace/summary.md"
+          },
+          "isError": false
+        },
+        {
+          "id": "b13bb060",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "tool",
+          "text": "文件已提供下载：summary.md（25 字节）。",
+          "toolName": "file_output",
+          "toolCallId": "call_00_xxcjtzpjyw3kcqs9cbgwg4qg",
+          "toolStatus": "completed",
+          "toolInput": {
+            "path": "/workspace/summary.md"
+          },
+          "isError": false
+        },
+        {
+          "id": "ac15267f",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "role": "assistant",
+          "text": "已按要求完成：\n\n- 已人工读取 `/workspace/sample.csv`，文件中包含表头「项目,数量」，下面两条记录：苹果 10、香蕉 20。\n- 按数量求和：10 + 20 = 30，与你要求写入的值一致。\n- 已用 `write` 生成 `/workspace/summary.md`，内容为「总数量：30」。\n- 已用 `file_output` 交付该文件，下载卡已展示。\n\n我没有使用 bash 命令，没有查询业务资料，也没有改动工作区约定。",
+          "presentationId": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:3",
+          "content": [
+            {
+              "id": "e133a751-ce63-4925-86b4-774559b4d4b8:assistant:3:content:0",
+              "type": "text",
+              "text": "已按要求完成：\n\n- 已人工读取 `/workspace/sample.csv`，文件中包含表头「项目,数量」，下面两条记录：苹果 10、香蕉 20。\n- 按数量求和：10 + 20 = 30，与你要求写入的值一致。\n- 已用 `write` 生成 `/workspace/summary.md`，内容为「总数量：30」。\n- 已用 `file_output` 交付该文件，下载卡已展示。\n\n我没有使用 bash 命令，没有查询业务资料，也没有改动工作区约定。"
+            }
+          ]
+        },
+        {
+          "id": "33e14608",
+          "requestId": "4be025c5-e698-4c15-a95a-2caf0b2096b0",
+          "role": "user",
+          "text": "延续刚才的合成数字，若增加5件，总数量是多少？不用工具，用阿拉伯数字回答。"
+        },
+        {
+          "id": "4a557b3b",
+          "requestId": "4be025c5-e698-4c15-a95a-2caf0b2096b0",
+          "role": "assistant",
+          "text": "35",
+          "presentationId": "4be025c5-e698-4c15-a95a-2caf0b2096b0:assistant:0",
+          "content": [
+            {
+              "id": "4be025c5-e698-4c15-a95a-2caf0b2096b0:assistant:0:content:0",
+              "type": "thinking",
+              "text": "30 + 5 = 35."
+            },
+            {
+              "id": "4be025c5-e698-4c15-a95a-2caf0b2096b0:assistant:0:content:1",
+              "type": "text",
+              "text": "35"
+            }
+          ]
+        }
+      ],
+      "active": null,
+      "turns": [
+        {
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "status": "succeeded",
+          "startedAt": "2026-11-14T10:52:57.701Z",
+          "completedAt": "2026-11-14T10:53:05.026Z",
+          "finalMessageId": "ac15267f"
+        },
+        {
+          "requestId": "4be025c5-e698-4c15-a95a-2caf0b2096b0",
+          "status": "succeeded",
+          "startedAt": "2026-11-14T10:53:05.069Z",
+          "completedAt": "2026-11-14T10:53:06.465Z",
+          "finalMessageId": "4a557b3b"
+        }
+      ],
+      "interactions": [],
+      "fileOutputs": [
+        {
+          "downloadId": "90aec065-edda-469b-8cb2-ca7f4ba4deb8",
+          "workspaceId": "976f5206-5f44-4e31-8df9-6ee4d0daa883",
+          "sessionId": "789df435-4e22-41b4-94a7-1cb0c5e98a05",
+          "requestId": "e133a751-ce63-4925-86b4-774559b4d4b8",
+          "toolCallId": "call_00_xxcjtzpjyw3kcqs9cbgwg4qg",
+          "createdAt": "2026-11-14T10:53:03.197Z",
+          "path": "summary.md",
+          "name": "summary.md",
+          "size": 25,
+          "hash": "d638b5480f52fe9f62cb5a2658cfbc4323067e774dcc38e62632d35eb0336fb3"
+        }
+      ],
+      "lastResult": {
+        "requestId": "4be025c5-e698-4c15-a95a-2caf0b2096b0",
+        "status": "succeeded",
+        "compactionIds": [],
+        "compactions": [],
+        "usageSummary": {
+          "modelAttempts": 1,
+          "replyAttempts": 1,
+          "compactionAttempts": 0,
+          "toolCalls": 0,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 2319,
+            "output": 10,
+            "cacheRead": 2048,
+            "cacheWrite": 0,
+            "totalTokens": 4377
+          }
+        }
+      }
+    }
+  ]
+}

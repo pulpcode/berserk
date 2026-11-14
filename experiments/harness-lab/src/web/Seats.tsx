@@ -1,12 +1,13 @@
 import { LoadingIndicator } from './LoadingIndicator';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import type { AuthSession, Identity } from '../contracts/access';
+import type { AccountIdentity, AuthSession } from '../contracts/access';
+import { isBusinessIdentity } from '../contracts/access';
 import type { AppInfo } from '../contracts/index';
 import { api, ApiContext, createApiClient } from './api';
 
 export interface TestSeat { id: string; name: string }
-export interface SeatView { identity?: Identity; logout?: () => void; logoutError?: string; active: boolean; seatId?: string; seats: TestSeat[]; switchSeat: (id: string) => void }
+export interface SeatView { identity?: AccountIdentity; logout?: () => void; logoutError?: string; active: boolean; seatId?: string; seats: TestSeat[]; switchSeat: (id: string) => void }
 
 function Connecting({ error, retry }: { error: string; retry: () => void }) {
   return <main className="bootstrap-message">
@@ -49,7 +50,7 @@ function clearPrivateState() {
 export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
   const [state,setState]=useState<AuthSession>(); const [error,setError]=useState('');
   const [reload,setReload]=useState(0); const [busy,setBusy]=useState(false);
-  const [seatId,setSeatId]=useState(''); const [password,setPassword]=useState(''); const [show,setShow]=useState(false);
+  const [loginChoice,setLoginChoice]=useState(''); const [password,setPassword]=useState(''); const [show,setShow]=useState(false);
   const [channel]=useState(()=>typeof BroadcastChannel==='undefined' ? undefined : new BroadcastChannel('axon-login'));
   useEffect(()=>{
     let current=true;
@@ -63,46 +64,53 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
     return ()=>channel.removeEventListener('message',changed);
   },[channel]);
   const client=useMemo(()=>state?.identity ? createApiClient(state.identity.seatId,state,()=>{clearPrivateState();setState(undefined);setPassword('');setReload(x=>x+1);}) : undefined,[state]);
+  const selectedUser=state?.loginUsers?.find(user=>`account:${user.id}`===loginChoice);
+  const selectedSeat=state?.loginSeats?.find(seat=>seat.id===loginChoice);
+  const hasChoices=Boolean(state?.loginSeats?.length || state?.loginUsers?.length);
   useEffect(()=>()=>client?.dispose(),[client]);
   useEffect(()=>{
     if(!state?.identity)return;
-    const verify=()=>{void client!.api('/api/info').catch(()=>{});};
+    const path=isBusinessIdentity(state.identity) ? '/api/info' : '/api/admin/access';
+    const verify=()=>{void client!.api(path).catch(()=>{});};
     window.addEventListener('focus',verify); return ()=>window.removeEventListener('focus',verify);
   },[client,state?.identity]);
   async function login() {
-    if(!state?.csrf || busy || !state.loginSeats?.some(seat=>seat.id===seatId))return;setBusy(true);setError('');
+    if(!state?.csrf || busy || (!selectedSeat && !selectedUser))return;
+    const selector=selectedUser ? {accountId:selectedUser.id} : {seatId:selectedSeat!.id};
+    setBusy(true);setError('');
     try {
       // Another tab can replace the anonymous cookie while this form is open.
       // Read the CSRF token paired with the current cookie for this explicit submit.
       const current=await api<AuthSession>('/api/auth/session');
       if(!current.csrf)throw new Error('无法读取登录凭证，请重试。');
-      const response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':current.csrf},body:JSON.stringify({seatId,password})});
+      const response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':current.csrf},body:JSON.stringify({...selector,password})});
       const body=await response.json(); if(!response.ok)throw new Error(body.error?.message || '登录未完成。');
       const signedIn=body as AuthSession;
       const directorPath=location.pathname==='/scenario-director' || signedIn.identity?.controlScenarios===true;
       clearPrivateState();setPassword('');setState(signedIn);channel?.postMessage('changed');
-      history.replaceState(null,'',directorPath?'/scenario-director':'/');
+      history.replaceState(null,'',signedIn.identity && !isBusinessIdentity(signedIn.identity) ? '/capabilities' : directorPath?'/scenario-director':'/');
     } catch(error){setError(error instanceof Error ? error.message : '连接失败，请重试。');} finally{setBusy(false);}
   }
   async function logout() {
-    if(!window.confirm('退出登录？本页尚未发送的文字和附件引用会清除，已保存的内容不受影响。'))return;
+    if(!window.confirm(state?.identity && !isBusinessIdentity(state.identity) ? '退出登录？尚未保存的配置修改会清除，已保存的内容不受影响。' : '退出登录？本页尚未发送的文字和附件引用会清除，已保存的内容不受影响。'))return;
     try {const anonymous=await client!.api<AuthSession>('/api/auth/logout',{});client!.dispose();clearPrivateState();setPassword('');setState(anonymous);channel?.postMessage('changed');}
     catch(error){setError(error instanceof Error ? error.message : '退出失败，请重试。');}
   }
   if (!state) return <Connecting error={error} retry={() => { setError(''); setReload(value => value + 1); }} />;
   if(state.mode==='test')return <TestSeats>{children}</TestSeats>;
-  if(state?.identity && client)return <ApiContext.Provider key={state.viewId} value={client}>{children({active:true,identity:state.identity,seatId:state.identity.seatId,seats:state.seats || [],switchSeat:()=>{},logout:()=>void logout(),logoutError:error})}</ApiContext.Provider>;
+  if(state.identity && client)return <ApiContext.Provider key={state.viewId} value={client}>{children({active:true,identity:state.identity,seatId:state.identity.seatId,seats:state.seats || [],switchSeat:()=>{},logout:()=>void logout(),logoutError:error})}</ApiContext.Provider>;
   return <main className="login-page"><form className="login-card" onSubmit={e=>{e.preventDefault();void login();}}>
     <img src="/brand/axon-app-icon.svg" width="52" height="52" alt=""/><h1>登录 Axon</h1>
-    <label htmlFor="login-seat">席位</label><select id="login-seat" name="seatId" autoComplete="username" value={seatId} onChange={e=>{setSeatId(e.target.value);setPassword('');setShow(false);setError('');}} disabled={busy || !state?.loginSeats?.length} required>
-      <option value="" disabled>{state.loginSeats?.length?'请选择席位':'暂无可用席位'}</option>
+    <label htmlFor="login-seat">席位</label><select id="login-seat" name="loginIdentity" autoComplete="username" value={loginChoice} onChange={e=>{setLoginChoice(e.target.value);setPassword('');setShow(false);setError('');}} disabled={busy || !hasChoices} required>
+      <option value="" disabled>{hasChoices?'请选择席位':'暂无可用席位'}</option>
       {state?.loginSeats?.map(seat=><option key={seat.id} value={seat.id}>{seat.name}</option>)}
+      {state?.loginUsers?.map(user=><option key={`account:${user.id}`} value={`account:${user.id}`}>{user.name}</option>)}
     </select>
-    {state && !state.loginSeats?.length && <p role="status">暂无可用席位，请联系管理员。</p>}
+    {!hasChoices && <p role="status">暂无可用席位，请联系管理员。</p>}
     <label htmlFor="login-password">密码</label><div className="login-password"><input id="login-password" name="password" type={show?'text':'password'} autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={256} disabled={busy} required/>
       <button type="button" className="icon-button" aria-label={show?'隐藏密码':'显示密码'} title={show?'隐藏密码':'显示密码'} aria-controls="login-password" disabled={busy} onClick={()=>setShow(value=>!value)}>{show?<EyeOff size={18} aria-hidden="true"/>:<Eye size={18} aria-hidden="true"/>}</button>
     </div>
     {error && <p role="alert" className="resource-error">{error}</p>}
-    <button className="primary-action" disabled={busy || !state?.loginSeats?.some(seat=>seat.id===seatId) || !password} type="submit">{busy?'正在登录…':'登录'}</button>
+    <button className="primary-action" disabled={busy || (!selectedSeat && !selectedUser) || !password} type="submit">{busy?'正在登录…':'登录'}</button>
   </form></main>;
 }

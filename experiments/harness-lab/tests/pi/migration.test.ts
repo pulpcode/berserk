@@ -1,3 +1,4 @@
+import { migrateCapabilityManagement } from '../../src/capabilities/management-migration.js';
 import { migrateCapabilities } from '../../src/pi/capability-migration.js';
 import { mkdtemp, rm, mkdir, writeFile, readFile, readdir, rename } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -45,6 +46,8 @@ describe('explicit stopped-service migration', () => {
     // The old migration explicitly skipped this corrupt, unbound file. Preserve it outside the active session inventory.
     await mkdir(join(dataDir, 'quarantine')); await rename(join(dataDir, 'sessions/corrupt.jsonl'), join(dataDir, 'quarantine/corrupt.jsonl'));
     await migrateCapabilities({ dataDir, backupDir: `${backupDir}-capabilities`, apply: true, serviceStopped: true });
+    cleanup.push(()=>rm(`${backupDir}-capabilities-r2`,{recursive:true,force:true}));
+    await migrateCapabilityManagement({dataDir,backupDir:`${backupDir}-capabilities-r2`,apply:true,serviceStopped:true});
     const lab = await PiLab.create(config, fake.runtime); cleanup.push(() => lab.close());
     expect(lab.list()).toHaveLength(3);
     expect(lab.get(sessions.find(item => item.kind === 'incomplete')!.id).recoveryWarning).toBeTruthy();

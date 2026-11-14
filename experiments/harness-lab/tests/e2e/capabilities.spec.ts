@@ -43,15 +43,16 @@ test('professional expert creation is empty, cancelable and retains existing con
     await expect(center.getByRole('heading', { name: /^资料综合专家/ })).toBeVisible();
     await expect(center.getByRole('navigation', { name: '专业专家列表' })).not.toContainText('Axon 通用助手');
     await expect(center.getByRole('navigation', { name: '专业专家列表' })).not.toContainText('analyst');
-    await expect(center).toContainText('资料综合写作');
-    await center.getByRole('button', { name: '与专家协作', exact: true }).click();
+    await center.getByRole('button', { name: '查看资料综合专家（示范）', exact: true }).click();
+    await expect(page.getByRole('dialog')).toContainText('资料综合写作');
+    await page.getByRole('button', { name: '与专家协作', exact: true }).click();
     const dialog = page.getByRole('dialog', { name: /^与资料综合专家.*协作$/ });
     await expect(dialog.getByRole('button', { name: '创建专家会话' })).toBeDisabled();
     await page.keyboard.press('Escape');
     await expect(dialog).toHaveCount(0);
     expect(await env.lab.list()).toHaveLength(1);
     expect(env.fake.calls).toHaveLength(0);
-    await center.getByRole('button', { name: '与专家协作', exact: true }).click();
+    await page.getByRole('button', { name: '与专家协作', exact: true }).click();
     const workspaces = env.lab.workspaces.list().workspaces;
     await page.getByLabel('工作空间', { exact: true }).selectOption(workspaces[0].id);
     await page.getByRole('button', { name: '创建专家会话', exact: true }).click();
@@ -81,6 +82,7 @@ test('a lost creation response is retried with the same action and does not crea
   const env = await setup(page);
   try {
     await page.goto('/capabilities');
+    await page.getByRole('button', { name: /^查看资料综合专家/ }).click();
     await page.getByRole('button', { name: '与专家协作', exact: true }).click();
     await page.getByLabel('工作空间', { exact: true }).selectOption(env.lab.workspaces.list().workspaces[0].id);
     env.loseCreationResponse();
@@ -88,6 +90,7 @@ test('a lost creation response is retried with the same action and does not crea
     await expect(page.getByRole('dialog').getByRole('alert')).toContainText('暂时无法连接服务');
     expect(await env.lab.list()).toHaveLength(1);
     await page.reload();
+    await page.getByRole('button', { name: /^查看资料综合专家/ }).click();
     await page.getByRole('button', { name: '与专家协作', exact: true }).click();
     await page.getByLabel('工作空间', { exact: true }).selectOption(env.lab.workspaces.list().workspaces[0].id);
     await page.getByRole('button', { name: '创建专家会话', exact: true }).click();
@@ -118,6 +121,7 @@ test('a disabled expert retains its conversation and draft while sending is bloc
   const env = await setup(page);
   try {
     await page.goto('/capabilities');
+    await page.getByRole('button', { name: /^查看资料综合专家/ }).click();
     await page.getByRole('button', { name: '与专家协作', exact: true }).click();
     await page.getByLabel('工作空间', { exact: true }).selectOption(env.lab.workspaces.list().workspaces[0].id);
     await page.getByRole('button', { name: '创建专家会话', exact: true }).click();
@@ -133,5 +137,50 @@ test('a disabled expert retains its conversation and draft while sending is bloc
     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('保留这段待发送内容');
     expect(await env.lab.list()).toHaveLength(1);
     expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); }
+});
+
+test('capability tabs share searchable cards and real read-only skills without creating work', async ({ page }) => {
+  const env = await setup(page);
+  try {
+    await page.goto('/capabilities');
+    const center = page.locator('.capability-center');
+    await expect(center.getByRole('heading', { name: '资料综合专家（示范）', exact: true })).toBeVisible();
+    await expect(center.getByRole('button', { name: '创建专家', exact: true })).toHaveCount(0);
+    await expect(center.locator('.expert-list')).not.toContainText(/版本|修订|rev-/);
+    await center.getByRole('searchbox', { name: '搜索专家', exact: true }).fill('没有匹配的内容');
+    await expect(center.getByRole('heading', { name: '没有找到相关专家', exact: true })).toBeVisible();
+    await center.getByRole('tab', { name: '技能', exact: true }).click();
+    await expect(center.locator('.capability-skill-list')).toContainText('资料综合写作');
+    await page.screenshot({ path: test.info().outputPath('capability-skills-desktop-wide.png') });
+    await center.getByRole('searchbox', { name: '搜索技能', exact: true }).fill('资料综合');
+    await expect(center.locator('.skill-card')).toHaveCount(1);
+    await center.getByRole('button', { name: '查看技能资料综合写作', exact: true }).click();
+    await expect(page.getByRole('dialog', { name: '资料综合写作', exact: true })).toBeVisible();
+    await page.getByRole('dialog').getByRole('button', { name: '关闭面板', exact: true }).click();
+    await center.getByRole('tab', { name: '技能', exact: true }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(center.getByRole('tab', { name: '连接器', exact: true })).toBeFocused();
+    await expect(center.getByRole('heading', { name: '暂无连接器', exact: true })).toBeVisible();
+    await expect(center.getByRole('button', { name: /连接$|安装|添加技能/ })).toHaveCount(0);
+    await center.getByRole('tab', { name: '专家', exact: true }).click();
+    const selectedTab = center.getByRole('tab', { name: '专家', exact: true });
+    await selectedTab.hover();
+    const contrast = await selectedTab.evaluate(element => {
+      const style = getComputedStyle(element);
+      const luminance = (color: string) => { const rgb = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map(value => { const component = value / 255; return component <= .04045 ? component / 12.92 : ((component + .055) / 1.055) ** 2.4; }); return .2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2]; };
+      const foreground = luminance(style.color), background = luminance(style.backgroundColor);
+      return (Math.max(foreground, background) + .05) / (Math.min(foreground, background) + .05);
+    });
+    expect(contrast).toBeGreaterThanOrEqual(4.5);
+    await page.screenshot({ path: test.info().outputPath('capability-grid-desktop-wide.png') });
+    await page.setViewportSize({ width: 1060, height: 800 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(await center.locator('.capability-grid').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(2);
+    await page.screenshot({ path: test.info().outputPath('capability-grid-desktop-narrow.png') });
+    await center.getByRole('tab', { name: '技能', exact: true }).click();
+    await expect(center.locator('.skill-card').first()).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath('capability-skills-desktop-narrow.png') });
+    expect(env.creationBodies).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
   } finally { await env.close(); }
 });

@@ -1,0 +1,19 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/capability-management.spec.ts --workers=1
+
+[WebServer] (node:80038) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:80006) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:80124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:80124) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/capability-management.spec.ts:54:1 › admin creates and checks a draft without calling a model; shared conflicts preserve local edits (9.7s)
+  ✓  2 tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate (9.3s)
+  ✓  3 tests/e2e/capability-management.spec.ts:149:1 › ordinary user cannot see expert management and can explicitly choose general as personal default (4.5s)
+
+  3 passed (31.8s)
