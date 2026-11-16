@@ -37,8 +37,8 @@ export function SelectionHistory({ selections }: { selections?: LoadedComposerSe
   </div>{open && selections.skill && <Panel title={`本次使用的 Skill · ${selections.skill.name}`} close={() => setOpen(false)}><p>{selections.skill.description}</p><pre className="skill-content">{selections.skill.content}</pre></Panel>}</>;
 }
 
-export function ComposerReferences({ control, scope, workspaceId, enabled, fileEnabled, text, textarea, selection, setText, select, reference, upload }: {
-  control: Ref<ComposerReferenceHandle>; scope: string; workspaceId: string; enabled: boolean; fileEnabled: boolean;
+export function ComposerReferences({ control, scope, workspaceId, enabled, fileEnabled, text, textarea, selection, setText, select, reference, upload, managementSkills = [] }: {
+  managementSkills?: SkillInfo[]; control: Ref<ComposerReferenceHandle>; scope: string; workspaceId: string; enabled: boolean; fileEnabled: boolean;
   text: string; textarea: RefObject<HTMLTextAreaElement | null>; selection: DraftSelection;
   setText: (value: string) => void; select: (kind: 'skill' | 'agent', value?: SkillInfo | AgentInfo) => void;
   reference: (file: FileEntry) => boolean; upload: () => void;
@@ -80,19 +80,19 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
     const files = fileEnabled && mode === 'files';
     void Promise.all([
       files ? api<FileList>(`${base}/files?${new URLSearchParams({ path, search, offset: String(offset), limit: '20' })}`) : undefined,
-      mode === 'agents' ? api<AgentInfo[]>(`${base}/agents`) : undefined,
-      mode === 'skills' ? api<WorkspaceResources>(`${base}/resources`) : undefined,
+      mode === 'agents' && workspaceId ? api<AgentInfo[]>(`${base}/agents`) : undefined,
+      mode === 'skills' && workspaceId ? api<WorkspaceResources>(`${base}/resources`) : undefined,
     ]).then(([fileList, agents, resources]) => {
       if (!live) return;
       const items: Option[] = [
         ...(fileList?.entries || []).map(file => ({ kind: 'file' as const, file })),
         ...(agents || []).filter(agent => `${agent.name} ${agent.description}`.toLocaleLowerCase().includes(query)).map(agent => ({ kind: 'agent' as const, agent })),
-        ...(resources?.skills || []).filter(skill => `${skill.id} ${skill.name} ${skill.description}`.toLocaleLowerCase().includes(query)).map(skill => ({ kind: 'skill' as const, skill })),
+        ...(mode === 'skills' ? [...new Map([...(resources?.skills || []), ...managementSkills].map(skill => [skill.id, skill])).values()] : []).filter(skill => `${skill.id} ${skill.name} ${skill.description}`.toLocaleLowerCase().includes(query)).map(skill => ({ kind: 'skill' as const, skill })),
       ];
       setResult({ key: queryKey, options: items, files: fileList });
     }).catch((error: unknown) => { if (live) setResult({ key: queryKey, options: [], error: failure(error) }); });
     return () => { live = false; };
-  }, [api, fileEnabled, queryKey, workspaceId]);
+  }, [api, fileEnabled, managementSkills, queryKey, workspaceId]);
   // Close on outside pointer/focus without changing the unselected trigger text.
   useEffect(() => {
     if (!picker) return;
@@ -176,7 +176,8 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
   async function viewSkill(skill: SkillInfo) {
     const token = ++detailRequest.current.value;
     try {
-      const file = await api<SkillFile>(`/api/workspaces/${encodeURIComponent(workspaceId)}/skills/${encodeURIComponent(skill.id)}`);
+      const path = managementSkills.some(item => item.id === skill.id) ? `/api/admin/capabilities/authoring-skills/${encodeURIComponent(skill.id)}` : `/api/workspaces/${encodeURIComponent(workspaceId)}/skills/${encodeURIComponent(skill.id)}`;
+      const file = await api<SkillFile>(path);
       if (token !== detailRequest.current.value) return;
       if (file.hash !== skill.hash || skill.packageDigest && file.packageDigest !== skill.packageDigest || skill.revisionId && file.revisionId !== skill.revisionId) throw new Error('Skill 已更新，请重新选择后查看。');
       setDetail({ scope, file }); setDetailError(undefined);
@@ -184,14 +185,14 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
   }
   return <div ref={root} className="composer-references">
     {(selection.skill || selection.agent) && <div className="selection-chips" aria-label="本轮选择">
-      {selection.skill && <span className="selection-chip"><button type="button" title="查看 Skill 内容" aria-label={`查看 Skill：${selection.skill.name}`} onClick={() => void viewSkill(selection.skill!)}><BookOpen size={15} aria-hidden="true" />{selection.skill.name}</button><button type="button" aria-label="移除 Skill" onClick={() => select('skill')}><X size={14} /></button></span>}
-      {selection.agent && <span className="selection-chip" aria-label={`Agents：${selection.agent.name}`} title={selection.agent.description}><Bot size={15} aria-hidden="true" />{selection.agent.name}<button type="button" aria-label="移除 Agents" onClick={() => select('agent')}><X size={14} /></button></span>}
+      {selection.skill && <span className="selection-chip"><button type="button" title="查看 Skill 内容" aria-label={`查看 Skill：${selection.skill.name}`} onClick={() => void viewSkill(selection.skill!)}><BookOpen size={15} aria-hidden="true" />{selection.skill.name}</button><button type="button" aria-label="移除 Skill" disabled={!enabled} onClick={() => select('skill')}><X size={14} /></button></span>}
+      {selection.agent && <span className="selection-chip" aria-label={`Agents：${selection.agent.name}`} title={selection.agent.description}><Bot size={15} aria-hidden="true" />{selection.agent.name}<button type="button" aria-label="移除 Agents" disabled={!enabled} onClick={() => select('agent')}><X size={14} /></button></span>}
     </div>}
     {detailError?.scope === scope && <p className="attachment-notice" role="alert">{detailError.message}</p>}
     {picker && <div className={`reference-popover${picker.mode === 'categories' ? ' reference-categories' : ''}`} aria-label="选择引用" onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); setState(undefined); textarea.current?.focus(); } }}>
       {picker.mode === 'menu' ? <div className="reference-menu">
         {fileEnabled && <><button type="button" onClick={() => { setState(undefined); upload(); }}><Upload size={16} aria-hidden="true" />上传文件</button><button type="button" onClick={() => open('files')}><Folder size={16} aria-hidden="true" />引用文件</button></>}
-        <button type="button" onClick={() => open('skills')}><BookOpen size={16} aria-hidden="true" />使用 Skill</button><button type="button" onClick={() => open('agents')}><Bot size={16} aria-hidden="true" />Agents</button>
+        <button type="button" onClick={() => open('skills')}><BookOpen size={16} aria-hidden="true" />使用 Skill</button><button type="button" disabled={!workspaceId} onClick={() => open('agents')}><Bot size={16} aria-hidden="true" />Agents</button>
       </div> : <>
         {picker.mode !== 'categories' && <div className="reference-heading">
           <div className="reference-title">{picker.fragment?.text.startsWith('@') && <button type="button" className="icon-button" aria-label="返回类别" title="返回类别" onClick={backToCategories}><ArrowLeft size={16} /></button>}<strong>{picker.mode === 'skills' ? 'Skill' : picker.mode === 'agents' ? 'Agents' : '项目文件'}</strong>{picker.mode === 'agents' && <span className="reference-readonly">只读</span>}</div>

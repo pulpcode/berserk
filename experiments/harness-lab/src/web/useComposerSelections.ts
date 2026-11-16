@@ -27,7 +27,7 @@ function load(key: string): SelectionMap {
 }
 function save(key: string, value: SelectionMap) { try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* Keep in-memory editing usable. */ } }
 export function selectionInput(value: DraftSelection): ComposerSelection {
-  return { ...(value.authoring ? { authoring: value.authoring } : {}), ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash, ...(value.skill.revisionId ? { revisionId: value.skill.revisionId, packageDigest: value.skill.packageDigest } : {}) } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
+  return { ...(value.authoring?.targetId && value.skill?.id === (value.authoring.kind === 'expert' ? 'expert-manager' : 'skill-creator') ? { authoring: value.authoring } : {}), ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash, ...(value.skill.revisionId ? { revisionId: value.skill.revisionId, packageDigest: value.skill.packageDigest } : {}) } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
 }
 export function useComposerSelections() {
   const { storageKey } = useApi();
@@ -43,7 +43,7 @@ export function useComposerSelections() {
     current.current = fn(current.current); setAll(current.current); save(key, current.current);
   }, [key, setAll]);
   const set = useCallback((owner: string, kind: 'skill' | 'agent', value?: SkillInfo | AgentInfo) => {
-    update(old => ({ ...old, [owner]: { ...old[owner], [kind]: value } }));
+    update(old => ({ ...old, [owner]: { ...old[owner], [kind]: value, ...(kind === 'skill' ? { authoring: undefined } : {}) } }));
   }, [update]);
   const setAuthoring = useCallback((owner: string, authoring?: AuthoringIntent) => update(old => ({ ...old, [owner]: { ...old[owner], authoring } })), [update]);
   const setContextRefs = useCallback((owner: string, refs: ContextRef[]) => update(old => ({...old,[owner]:{...old[owner],contextRefs:[...new Map(refs.map(ref=>[refKey(ref),ref])).values()].slice(0,20)}})),[update]);

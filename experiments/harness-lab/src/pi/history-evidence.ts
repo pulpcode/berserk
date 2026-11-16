@@ -1,6 +1,7 @@
+import { managementSkillKind } from '../authoring/management-skills.js';
 import { EXPERT_BINDING, EXECUTION_MANIFEST, decodeExpertBinding, decodeExecutionManifest } from './capability-history.js';
 import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7, COMPOSER_INPUT_V8, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
 import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { ConversationTurn, PublicMessage, InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
@@ -24,11 +25,12 @@ function change(value: unknown): value is InstructionUpdate {
   return object(value) && keys(value, ['fileId', 'status', 'previousHash', 'hash', 'effectiveFrom']) && value.fileId === 'workspace' && ['updated', 'unchanged'].includes(String(value.status)) && (value.previousHash === null || hash(value.previousHash)) && hash(value.hash) && value.effectiveFrom === 'next_request';
 }
 export function decodeResourceRecord(value: unknown, workspaceId: string, readonly = false): Extract<RequestResourcesRecord, { status: 'available' }> {
+  if (readonly && object(value) && value.schemaVersion === 3) throw stateError();
   const instructionsReadonly = readonly || (object(value) && JSON.stringify(value.editableFileIds) === '[]');
-  if (!object(value) || value.status !== 'available' || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || value.workspaceId !== workspaceId || !Array.isArray(value.instructions) || value.instructions.length !== 2 || !value.instructions.every(item => instruction(item, instructionsReadonly)) || new Set(value.instructions.map(file => file.fileId)).size !== 2 || !Array.isArray(value.skills) || value.skills.length > (value.schemaVersion === 2 ? 256 : controlledSkillIds.length) || !value.skills.every(item => skill(item, false, value.schemaVersion === 2)) || new Set(value.skills.map(item => item.id)).size !== value.skills.length || !Array.isArray(value.readSkills) || !value.readSkills.every(item => skill(item, true, value.schemaVersion === 2)) || JSON.stringify(value.editableFileIds) !== (instructionsReadonly ? '[]' : '["workspace"]')) throw stateError();
+  if (!object(value) || value.status !== 'available' || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || value.workspaceId !== workspaceId || !Array.isArray(value.instructions) || value.instructions.length !== 2 || !value.instructions.every(item => instruction(item, instructionsReadonly)) || new Set(value.instructions.map(file => file.fileId)).size !== 2 || !Array.isArray(value.skills) || value.skills.length > ([2,3].includes(Number(value.schemaVersion)) ? 256 : controlledSkillIds.length) || !value.skills.every(item => skill(item, false, value.schemaVersion === 2 || value.schemaVersion === 3, value.schemaVersion === 3)) || new Set(value.skills.map(item => item.id)).size !== value.skills.length || !Array.isArray(value.readSkills) || !value.readSkills.every(item => skill(item, true, value.schemaVersion === 2 || value.schemaVersion === 3, value.schemaVersion === 3)) || JSON.stringify(value.editableFileIds) !== (instructionsReadonly ? '[]' : '["workspace"]')) throw stateError();
   if (!keys(value, ['schemaVersion', 'task', 'status', 'requestId', 'workspaceId', 'instructions', 'skills', 'readSkills', 'editableFileIds'])) throw stateError();
   if (value.task !== undefined && (!object(value.task) || !keys(value.task,['id','title','goal','visibility']) || typeof value.task.id !== 'string' || !UUID.test(value.task.id) || typeof value.task.title !== 'string' || typeof value.task.goal !== 'string' || !['public','private'].includes(String(value.task.visibility)))) throw stateError();
-  if (value.schemaVersion !== undefined && value.schemaVersion !== 2) throw stateError();
+  if (value.schemaVersion !== undefined && value.schemaVersion !== 2 && value.schemaVersion !== 3 || value.schemaVersion === 3 && !(value.skills as Array<{id:string}>).some(skill => managementSkillKind(skill.id))) throw stateError();
   const record = structuredClone(value) as Extract<RequestResourcesRecord, { status: 'available' }>;
   if (!record.readSkills.every(read => record.skills.some(allowed => allowed.id === read.id && allowed.hash === read.hash && allowed.version === read.version && allowed.packageDigest === read.packageDigest && allowed.revisionId === read.revisionId))) throw stateError();
   return record;
@@ -135,11 +137,11 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       } else if (currentRequest && !message.isError) throw stateError();
     }
     if (entry.type === 'custom_message' && entry.customType.startsWith('berserk.')) {
-      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7].includes(entry.customType)) {
+      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7, COMPOSER_INPUT_V8].includes(entry.customType)) {
         const input = decodeComposerInput(entry.details, workspaceId, parentSessionId, entry.customType);
         const resources = requests.get(input.requestId);
         if (currentRequestHasUser || currentRequest !== input.requestId || composerInputs.has(input.requestId) || entry.display !== false
-          || entry.content !== recordedComposerText(input, entry.customType) || (readonly && (input.agent || input.annotationContext || input.annotationRefs))
+          || entry.content !== recordedComposerText(input, entry.customType) || (readonly && (input.agent || input.annotationContext || input.annotationRefs || input.skill && managementSkillKind(input.skill.id)))
           || (input.skill && !resources?.skills.some(skill => skill.id === input.skill!.id && skill.hash === input.skill!.hash && skill.version === input.skill!.version
             && skill.name === input.skill!.name && skill.description === input.skill!.description && skill.packageDigest === input.skill!.packageDigest && skill.revisionId === input.skill!.revisionId))) throw stateError();
         composerInputs.add(input.requestId);
@@ -208,7 +210,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       fileOutputs.set(key, output); outputDownloads.add(output.downloadId);
     } else if (entry.customType === SKILL_ENTRY) {
       const request = requests.get(data.requestId);
-      if (!keys(data, ['requestId', 'skill']) || currentRequest !== data.requestId || !request || !skill(data.skill, true, request?.schemaVersion === 2) || !object(data.skill) || !request.skills.some(item => item.id === (data.skill as Record<string, unknown>).id && item.hash === (data.skill as Record<string, unknown>).hash && item.version === (data.skill as Record<string, unknown>).version && item.packageDigest === (data.skill as Record<string,unknown>).packageDigest && item.revisionId === (data.skill as Record<string,unknown>).revisionId)) throw stateError();
+      if (!keys(data, ['requestId', 'skill']) || currentRequest !== data.requestId || !request || !skill(data.skill, true, request?.schemaVersion === 2 || request?.schemaVersion === 3, request?.schemaVersion === 3) || !object(data.skill) || !request.skills.some(item => item.id === (data.skill as Record<string, unknown>).id && item.hash === (data.skill as Record<string, unknown>).hash && item.version === (data.skill as Record<string, unknown>).version && item.packageDigest === (data.skill as Record<string,unknown>).packageDigest && item.revisionId === (data.skill as Record<string,unknown>).revisionId)) throw stateError();
     } else if (entry.customType === CHANGE_ENTRY) {
       if (readonly || !keys(data, ['requestId', 'change']) || currentRequest !== data.requestId || !requests.has(data.requestId) || !change(data.change)) throw stateError();
     } else if (entry.customType === INTERACTION_REQUESTED || entry.customType === INTERACTION_RESOLVED || entry.customType === COMMAND_POLICY) {

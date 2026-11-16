@@ -1,0 +1,37 @@
+{
+  "baselineDir": "/private/tmp/axon-space-grouping-baseline",
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/web/NewSession.tsx",
+      "sha256": "3cc8798e355f9cead86541e529c5a7bf1192a0f18977ce46d1276e1466378b08"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "sha256": "33967f29f5d95a8e11f608341dbb45e6fdc0be6412555730498c7ffc902aed62"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/styles.css",
+      "sha256": "58b8fbc88eb0faa9603fc8da56bfa7b04f30e0b8d2c10564c1627ba2952058c0"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/authoring.spec.ts",
+      "sha256": "92cd2881eed6e0e5cf738ea4c934b4968f55b4fb718f4ccbe72b244308a1246f"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/administrator.spec.ts",
+      "sha256": "7d4f560c8f75c42166bddc4ba830a66f0ce8c3e66e12e16ddb77ecef96cc7939"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/access.spec.ts",
+      "sha256": "981b5cd5c28e5627a04c6d0d7083b8b9fff806bf35ad87f2493b321ab096a5eb"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/chat.spec.ts",
+      "sha256": "a01f92da61c2e9cdb33fb87b2096d6744b9190b134291ac148ea7ae0ab2fc859"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/files.spec.ts",
+      "sha256": "23b8cd4ffbc1f4047fe0511ef82c884e9c8b1aa883764204a2801010683998f8"
+    }
+  ]
+}

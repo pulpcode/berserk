@@ -1370,3 +1370,20 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .thinking-body { padding: 8px 14px; border-left: 1px solid var(--line); color: var(--muted); font-size: 13px; max-height: 420px; overflow: auto; }
 .tool-diff .diff-add { color: #286044; background: #edf6ee; }
 .tool-diff .diff-remove { color: #963f3f; background: #fff0ef; }
+
+.new-chat-space { position: relative; display: flex; padding: 0 4px 12px; }
+.new-chat-space-trigger { display: inline-flex; align-items: center; gap: 8px; max-width: min(360px, 100%); min-height: 34px; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-size: 14px; text-align: left; }
+.new-chat-space-name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.new-chat-space-type { flex-shrink: 0; border-radius: 4px; background: #e9efeb; color: #426050; padding: 1px 5px; font-size: 11px; line-height: 18px; }
+.new-chat-space-trigger > svg { flex-shrink: 0; }
+.new-chat-space-trigger:hover:not(:disabled) { background: #eef3ef; color: #2d4a3c; }
+.new-chat-space-trigger:focus-visible, .new-chat-space-menu button:focus-visible { outline: 2px solid var(--control-focus); outline-offset: -2px; }
+.new-chat-space-menu { position: absolute; bottom: calc(100% - 4px); left: 4px; z-index: 12; width: min(320px, calc(100vw - 64px)); padding: 5px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: 0 8px 28px #18221c1c, 0 2px 6px #18221c0a; }
+.new-chat-space-group-title { padding: 8px 10px 4px; color: var(--muted); font-size: 11px; font-weight: 500; }
+.new-chat-space-options { max-height: min(280px, 35dvh); overflow-y: auto; }
+.new-chat-space-menu button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 38px; padding: 9px 10px; border: 0; border-radius: 7px; background: transparent; color: inherit; font-size: 13px; text-align: left; }
+.new-chat-space-menu button > span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.new-chat-space-menu button > svg { flex-shrink: 0; color: var(--muted); }
+.new-chat-space-menu button:hover, .new-chat-space-menu button:focus-visible { background: #eef3ef; }
+.new-chat-space-menu button[aria-checked="true"] { color: #2d4a3c; }
+.new-chat-space-divider { height: 1px; margin: 5px; background: var(--line); }

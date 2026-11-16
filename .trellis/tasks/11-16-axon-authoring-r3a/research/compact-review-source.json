@@ -1,0 +1,67 @@
+{
+  "scope": "空间菜单、辅助创建文案与普通目标提示；仅compact-baseline之后的bounded delta",
+  "baseline": {
+    "manifest": "compact-baseline.json",
+    "verifiedFiles": {
+      "src/web/NewSession.tsx": "2fb5a0315fe1b4ebdbe7197c10d143c223f6d2ea35d9b673eeb1dd8d05f25012",
+      "src/web/CreationMethodDialog.tsx": "0a737093240e5ab6039b2c8d875ae233b3853ae754c7229ad275ba097186f411",
+      "src/web/main.tsx": "41acd82b528354f9c50be34890dc4f959698ab0d8668e92552243eb57b00ee83",
+      "src/web/styles.css": "799adbd4623dc061f844d33e7b2d3057a78ac7fbcc561a5d3d2971fe5d562602"
+    }
+  },
+  "files": {
+    "src/web/CreationMethodDialog.tsx": "c9f466e56e89cbf11fb9f01ac551e3b887e483472df066ef3ea47ef2d0cb5625",
+    "src/web/NewSession.tsx": "3cc8798e355f9cead86541e529c5a7bf1192a0f18977ce46d1276e1466378b08",
+    "src/web/main.tsx": "33967f29f5d95a8e11f608341dbb45e6fdc0be6412555730498c7ffc902aed62",
+    "src/web/styles.css": "58b8fbc88eb0faa9603fc8da56bfa7b04f30e0b8d2c10564c1627ba2952058c0",
+    "tests/e2e/access.spec.ts": "981b5cd5c28e5627a04c6d0d7083b8b9fff806bf35ad87f2493b321ab096a5eb",
+    "tests/e2e/administrator.spec.ts": "7d4f560c8f75c42166bddc4ba830a66f0ce8c3e66e12e16ddb77ecef96cc7939",
+    "tests/e2e/authoring.spec.ts": "92cd2881eed6e0e5cf738ea4c934b4968f55b4fb718f4ccbe72b244308a1246f",
+    "tests/e2e/chat.spec.ts": "a01f92da61c2e9cdb33fb87b2096d6744b9190b134291ac148ea7ae0ab2fc859",
+    "tests/e2e/files.spec.ts": "23b8cd4ffbc1f4047fe0511ef82c884e9c8b1aa883764204a2801010683998f8"
+  },
+  "reviewedFilesDigest": "5faf7cad41928d4d40353df9c91a389bd7e487215f8bd014dd19eec8183ffd71",
+  "findings": {
+    "fixed": [],
+    "notFixed": []
+  },
+  "verification": {
+    "scopedEslint": "pass",
+    "diffCheck": "pass",
+    "browser": {
+      "passed": 9,
+      "durationMinutes": 1.1,
+      "singleWorker": true,
+      "port": 5193,
+      "log": "compact-browser.log",
+      "runner": "web owner"
+    },
+    "typecheck": {
+      "runner": "root",
+      "exitCode": 0,
+      "log": "/private/tmp/axon-r3a-compact-typecheck.log"
+    },
+    "lint": {
+      "runner": "root",
+      "exitCode": 0,
+      "existingWarnings": 2,
+      "boundaryCheck": "passed",
+      "log": "/private/tmp/axon-r3a-compact-lint.log"
+    },
+    "build": {
+      "runner": "root",
+      "exitCode": 0,
+      "durationSeconds": 9.37,
+      "existingLargeChunkWarning": true,
+      "log": "/private/tmp/axon-r3a-compact-build.log"
+    },
+    "screenshotsReviewed": [
+      1060,
+      1440
+    ]
+  },
+  "userAcceptance": "pending",
+  "commit": false,
+  "push": false,
+  "deployment": false
+}

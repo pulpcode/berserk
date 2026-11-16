@@ -1,0 +1,23 @@
+{
+  "files": {
+    "src/authoring/management-skills.ts": "c6a7d3b78b287f879a73584d415652898b7a3fd95ca888ffd947af3c0a0c1748",
+    "fixtures/skills/expert-manager/SKILL.md": "83bc0550d86c68a477b11a188657fc38b14164807a83d7113ee82e6d31512ef3",
+    "fixtures/skills/skill-creator/SKILL.md": "d713e008fd26359342b9349c17250d7e1d227361e814db8ed2911858abcdc1df",
+    "src/contracts/index.ts": "2766774932c252924e2b739614c666a8b33ab59e78c5d0b3651bf7d056f4452b",
+    "src/pi/authoring-tools.ts": "67a8780806677f5a0c77642d320d966f52983351af5639d4657a727d7ce43d31",
+    "src/pi/composer-input.ts": "9cfa9cc9c8ba1313bd59d76d5086a689b0a70aa20b9a1e18666df2e4e2cc5475",
+    "src/pi/history-evidence.ts": "2deb8dc68bfe7b3874dcc8f98a896a2a7bb88ff36f02e979ca884422bf4c62bd",
+    "src/pi/resource-tools.ts": "22027060016e6136d526d3aa495eb68f917990758efe4bbba61a4b225c17c6cd",
+    "src/pi/lab.ts": "d52d69d5dcfc475a52f0d7cc388a0765d6d05d1f38423a56841abd80ac905b8e",
+    "src/server/app.ts": "9eb034de7a618423b753cbd57ed9965de7adb493ff6f51a9923e238b53959cff",
+    "src/server/capability-management-routes.ts": "239c96c85f10124b3aa23ff0adffd3b9ca6873ab4f5dc376d2acaec1a150e421",
+    "tests/pi/management-skills.test.ts": "6a8cd164d28898e500bd2087cac38510508a23649b7fe1e9386313af0a29d762"
+  },
+  "tests": {
+    "files": 4,
+    "passed": 51,
+    "durationSeconds": 23.49
+  },
+  "deployment": false,
+  "commit": false
+}

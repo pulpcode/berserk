@@ -1,3 +1,4 @@
+import { CreationMethodDialog } from './CreationMethodDialog';
 import type { AuthoringIntent } from '../contracts/authoring';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, BookOpen, CircleAlert, Layers, Link, Plus, RefreshCw, Search, Settings2, Sparkles } from 'lucide-react';
@@ -51,6 +52,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
   const [administrator, setAdministrator] = useState(administration);
   const [adminOpen, setAdminOpen] = useState<{ id?: string }>();
   const [creating, setCreating] = useState(false);
+  const [createChoice, setCreateChoice] = useState(false);
   const pending = useRef(false);
   const detail = loadedDetail?.id === selected && loadedDetail.reload === reload ? loadedDetail.value : undefined;
   const detailError = loadedDetail?.id === selected && loadedDetail.reload === reload ? loadedDetail.error : undefined;
@@ -96,7 +98,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
         if (next < 0) return; event.preventDefault(); chooseTab(libraryTabs[next].id); document.getElementById(domId(`capability-tab-${libraryTabs[next].id}`))?.focus();
       }}><Icon size={18} aria-hidden="true" />{name}</button>)}</div>
       <div className="capability-toolbar-actions"><label className="capability-search"><Search size={17} aria-hidden="true" /><input type="search" aria-label={`搜索${libraryTabs.find(item => item.id === tab)!.name}`} placeholder={`搜索${libraryTabs.find(item => item.id === tab)!.name}名称或描述`} value={query} onChange={event => setQuery(event.target.value)} /></label>
-        {tab === 'experts' && administrator && <><button type="button" onClick={() => setAdminOpen({})}><Settings2 size={16} aria-hidden="true" />专家管理</button><button type="button" disabled={creating} onClick={() => void createExpert()}>手动创建</button><button type="button" className="primary-action" disabled={creating || !authoring} onClick={() => authoring?.({ kind: 'expert' })}><Plus size={17} aria-hidden="true" />创建专家</button></>}
+        {tab === 'experts' && administrator && <><button type="button" onClick={() => setAdminOpen({})}><Settings2 size={16} aria-hidden="true" />专家管理</button><button type="button" className="primary-action" disabled={creating} onClick={() => setCreateChoice(true)}><Plus size={17} aria-hidden="true" />创建专家</button></>}
         <button type="button" className="icon-button" onClick={() => setReload(value => value + 1)} aria-label="刷新能力目录" title="刷新能力目录"><RefreshCw size={17} aria-hidden="true" /></button>
       </div>
     </div>
@@ -122,6 +124,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
     </>}</div></Panel>}
     {collaborating && detail && <ExpertCollaboration expert={detail} workspaces={workspaces} fixedWorkspaceId={fixedWorkspaceId} create={create} close={() => setCollaborating(false)} refresh={() => { setCollaborating(false); setReload(value => value + 1); }} />}
 
+    {createChoice && <CreationMethodDialog kind="expert" close={() => setCreateChoice(false)} manual={() => { setCreateChoice(false); void createExpert(); }} assisted={authoring ? () => { setCreateChoice(false); authoring({ kind: 'expert' }); } : undefined} />}
     {adminOpen && <CapabilityManagement authoring={authoring} key={adminOpen.id || 'directory'} initialExpertId={adminOpen.id} close={() => setAdminOpen(undefined)} changed={() => setReload(value => value + 1)} />}
   </section>;
 }

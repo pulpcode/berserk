@@ -82,7 +82,7 @@ test('independent administrator manages experts without mounting a seat workbenc
     await expectSidebarSpacing(page);
     await expect(page.getByText('任务空间', { exact: true })).toHaveCount(0);
     expect(env.writes.filter(path => path === '/api/admin/capabilities/experts')).toHaveLength(0);
-    await page.getByRole('button', { name: '手动创建', exact: true }).click();
+    await page.getByRole('button', { name: '创建专家', exact: true }).click(); await page.getByRole('dialog', { name: '创建专家', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click();
     const management = page.getByRole('dialog', { name: '专家管理', exact: true });
     await management.getByLabel('专家名称', { exact: true }).fill('独立管理员创建专家');
     expect(env.writes.filter(path => path === '/api/admin/capabilities/experts')).toHaveLength(1);
@@ -126,27 +126,27 @@ test('an administrator creates personal spaces and resumes ordinary two-turn cha
     await login(page);
     expect(env.writes.filter(path => /^\/api\/(tasks|workspaces|sessions)(\/|$)/.test(path))).toEqual([]);
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await expect(page.getByLabel('对话保存位置', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: '对话保存位置', exact: true }).click(); await page.getByRole('menuitem', { name: '新建个人空间', exact: true }).click();
     const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });
     await expect(space).toContainText('先创建个人空间，再开始对话');
     await page.keyboard.press('Escape');
     await expect(space).toBeHidden();
     expect(env.writes.filter(path => /^\/api\/(tasks|workspaces|sessions)(\/|$)/.test(path))).toEqual([]);
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await page.getByRole('button', { name: '对话保存位置', exact: true }).click(); await page.getByRole('menuitem', { name: '新建个人空间', exact: true }).click();
     await space.getByLabel('空间名称', { exact: true }).fill('管理员个人资料');
     await space.getByLabel('目标与说明', { exact: true }).fill('用于个人整理与对话。');
     await expect(space.getByText('任务范围', { exact: true })).toHaveCount(0);
     await space.getByRole('button', { name: '创建并开始对话', exact: true }).click();
     await expect(space).toBeHidden();
-    await expect(page).toHaveURL(/\/\?session=/);
+    await expect(page).toHaveURL(/\/\?new/);
     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeEnabled();
-    expect(env.writes.filter(path => path === '/api/sessions')).toHaveLength(1);
-    const sessionUrl = page.url();
+    expect(env.writes.filter(path => path === '/api/sessions')).toHaveLength(0);
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
-    const conversation = page.getByRole('dialog', { name: '新建对话', exact: true });
-    await expect(conversation.getByLabel('选择项目', { exact: true }).locator('option')).toHaveText(['管理员个人资料']);
-    await page.keyboard.press('Escape');
-    await expect(conversation).toBeHidden();
-    expect(env.writes.filter(path => path === '/api/sessions')).toHaveLength(1);
+    await expect(page.locator('.new-chat-space-type')).toHaveText('个人'); await page.getByLabel('对话保存位置', { exact: true }).click(); const spaceMenu = page.getByRole('menu', { name: '选择空间', exact: true }); await expect(spaceMenu.getByRole('group', { name: '个人空间', exact: true })).toBeVisible(); await expect(spaceMenu.getByRole('group', { name: '任务空间', exact: true })).toHaveCount(0); await expect(page.getByRole('menuitemradio')).toHaveText(['管理员个人资料']); await expect(page.getByRole('menuitem', { name: '新建任务空间', exact: true })).toHaveCount(0); await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog', { name: '新建对话', exact: true })).toHaveCount(0);
+    expect(env.writes.filter(path => path === '/api/sessions')).toHaveLength(0);
     const input = page.getByRole('textbox', { name: '发送消息', exact: true });
     for (const [index, message] of ['请整理我的个人资料。', '继续概括为三个要点。'].entries()) {
       await input.fill(message);
@@ -155,6 +155,8 @@ test('an administrator creates personal spaces and resumes ordinary two-turn cha
       await expect(input).toBeEnabled();
     }
     expect(env.fake.calls).toHaveLength(2);
+    const sessionUrl = page.url();
+    expect(env.writes.filter(path => path === '/api/sessions')).toHaveLength(1);
     await page.reload();
     await expect(page.getByText('请整理我的个人资料。', { exact: true })).toBeVisible();
     await expect(page.getByText('继续概括为三个要点。', { exact: true })).toBeVisible();

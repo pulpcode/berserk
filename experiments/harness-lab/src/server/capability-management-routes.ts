@@ -43,6 +43,13 @@ export async function capabilityManagementRoutes(app: FastifyInstance, lab: PiLa
     },
   });
   app.addHook('onClose',async()=>trials.close());
+  app.get('/api/admin/capabilities/authoring-skills', {schema:{querystring:empty}}, async request => {
+    const who = admin(request); return (await lab.managementSkills(who.userId)).map(({content: _content, ...metadata}) => { void _content; return metadata; });
+  });
+  app.get<{Params:{skillId:string}}>('/api/admin/capabilities/authoring-skills/:skillId', {schema:{params:body({skillId:id}),querystring:empty}}, async request => {
+    const who=admin(request);const selected=(await lab.managementSkills(who.userId)).find(skill=>skill.id===request.params.skillId);
+    if(!selected)throw new RequestError('RESOURCE_NOT_FOUND','管理 Skill 不存在。',404);return selected;
+  });
   const root='/api/admin/capabilities/experts';
   app.get(root,{schema:{querystring:empty}},request=>{admin(request);return management.list();});
   app.get('/api/admin/capabilities/catalog',{schema:{querystring:empty}},request=>{admin(request);return management.catalog();});

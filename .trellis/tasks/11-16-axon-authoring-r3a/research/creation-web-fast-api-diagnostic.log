@@ -1,0 +1,37 @@
+[WebServer] (node:78554) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:78521) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:78566) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78566) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+DEBUG selection berserk.selections {"cc813467-59e4-4e7c-933b-bce8fc2fb3d5":""} Error
+    at Storage.setItem (<anonymous>:5:84)
+    at persist (http://127.0.0.1:5196/src/web/useChat.ts:20:20)
+    at http://127.0.0.1:5196/src/web/useChat.ts:130:5
+    at http://127.0.0.1:5196/src/web/useChat.ts:326:13
+DEBUG selection berserk.selections {"cc813467-59e4-4e7c-933b-bce8fc2fb3d5":""} Error
+    at Storage.setItem (<anonymous>:5:84)
+    at persist (http://127.0.0.1:5196/src/web/useChat.ts:20:20)
+    at http://127.0.0.1:5196/src/web/useChat.ts:130:5
+    at Object.beginNew (http://127.0.0.1:5196/src/web/useChat.ts:143:5)
+    at newChat (http://127.0.0.1:5196/src/web/main.tsx:656:10)
+    at onClick (http://127.0.0.1:5196/src/web/main.tsx:924:215)
+    at executeDispatch (http://127.0.0.1:5196/node_modules/.vite/deps/react-dom_client.js?v=dc15d2c8:14740:11)
+    at runWithFiberInDEV (http://127.0.0.1:5196/node_modules/.vite/deps/react-dom_client.js?v=dc15d2c8:1133:72)
+    at processDispatchQueue (http://127.0.0.1:5196/node_modules/.vite/deps/react-dom_client.js?v=dc15d2c8:14776:37)
+    at http://127.0.0.1:5196/node_modules/.vite/deps/react-dom_client.js?v=dc15d2c8:15170:11
+DEBUG push /?new&workspace=cc813467-59e4-4e7c-933b-bce8fc2fb3d5
+DEBUG selection berserk.selections {"cc813467-59e4-4e7c-933b-bce8fc2fb3d5":"b66d8599-99c4-4f01-a383-4b30637cd08b"} Error
+    at Storage.setItem (<anonymous>:5:84)
+    at persist (http://127.0.0.1:5196/src/web/useChat.ts:20:20)
+    at http://127.0.0.1:5196/src/web/useChat.ts:130:5
+    at http://127.0.0.1:5196/src/web/useChat.ts:461:9
+    at async Object.send (http://127.0.0.1:5196/src/web/useChat.ts:496:47)
+DEBUG replace /?session=b66d8599-99c4-4f01-a383-4b30637cd08b
+  ✓  1 tests/e2e/creation-debug.spec.ts:35:1 › ordinary new conversation keeps the general assistant and uses an action ID (4.2s)
+
+  1 passed (17.2s)

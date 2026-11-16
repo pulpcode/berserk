@@ -1,0 +1,58 @@
+{
+  "source": "creation-deploy-source.json",
+  "baselineDir": "/private/tmp/axon-r3a-compact-baseline",
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/web/NewSession.tsx",
+      "sha256": "2fb5a0315fe1b4ebdbe7197c10d143c223f6d2ea35d9b673eeb1dd8d05f25012"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CreationMethodDialog.tsx",
+      "sha256": "0a737093240e5ab6039b2c8d875ae233b3853ae754c7229ad275ba097186f411"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "sha256": "41acd82b528354f9c50be34890dc4f959698ab0d8668e92552243eb57b00ee83"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/styles.css",
+      "sha256": "799adbd4623dc061f844d33e7b2d3057a78ac7fbcc561a5d3d2971fe5d562602"
+    }
+  ],
+  "scope": "本轮创建文案、空间菜单和普通目标提示；上一轮部署源码仅作为比较，不恢复覆盖当前改动。",
+  "userAcceptance": "pending",
+  "testFiles": [
+    {
+      "path": "experiments/harness-lab/tests/e2e/access.spec.ts",
+      "sha256": "4f2086bbc01890ae0a3f38a529cadf2643bdbd2c3d28615fe9605bf893840aa5"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/administrator.spec.ts",
+      "sha256": "fc8555234f9661ce25d7de2115f9072ce06e6b0ae925546d95603f1a9bb3cca7"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/authoring.spec.ts",
+      "sha256": "44fbadac154064150f8a0149c6635168c01fcd5f2b9a4bac1b3856477eb083fd"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/capabilities.spec.ts",
+      "sha256": "9a1fbc47541cdc8e51c0fc0651d9f3714459e963294301e094c6aa3d645d9e1b"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/chat.spec.ts",
+      "sha256": "efd55e00454ec32d1ab2914c2c4c1b3b0eb41864893606f87ec07d4a57541d12"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/files.spec.ts",
+      "sha256": "ef06157ad5617821c7f21df061e5f9d7634979de2f120ac950b632c79347b75a"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/skills.spec.ts",
+      "sha256": "8e97074f090117ead966f6454e9f6065884c6a7e33a2096937d99146a0141068"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/workbench.spec.ts",
+      "sha256": "e7dfe2313a05e14875e2cb9d75d0c0ddfc15cd012e0949daed984f4f178a939b"
+    }
+  ]
+}

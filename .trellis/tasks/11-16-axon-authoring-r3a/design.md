@@ -13,3 +13,20 @@
 已确认复用r2_actions/r3_skill_actions，无新表或schema迁移。候选仅当前请求内Map、原Pi工具/确认历史存证，结束release；重启不恢复待确认。原服务saveAuthoring将完整草稿、审计、回执一次事务提交，稳定proposalId作为动作ID，回执可后续只读核对。没有跨连接事务、第二资产/聊天库或待办中心。
 
 无需schema迁移不代表旧程序可读新authoring历史：未来发布回退须保留R3A活动根并配对升级前完整停服备份，不用旧程序直接打开有新确认字段的活动历史。当前独立探针仅使用合成临时数据，未升级生产服务。
+
+## 本次最小变更边界
+
+差距实际位于web/main新建会话导航、能力中心创建按钮与ComposerReferences选择，以及Pi管理方法/原composer历史映射。统一创建方式选择弹窗；原聊天新建草稿页拥有空间选择，显式选择/新建空间后复用原workspace创建和发送，不改已有session绑定，不加新聊天API。
+
+管理方法改为服务端固定只读Skill注册，使用expert-manager/skill-creator真实方法内容及hash；统一原Skill picker/chip，明确注册身份与用户上传包分离。原管理工具白名单、候选/确认/原子回执不变。必要新原生输入版本保持旧v1—v7可读，不改旧历史。管理方法并非可授予业务权限的用户包，不要求管理员安装/发布。
+
+预计文件：web/main/useChat/NewSession/ComposerReferences/useComposerSelections及能力中心/SkillLibrary的入口；backend部署方法注册、resource/请求选择映射与composer input/history；共享契约与定向测试；没有后端wizard状态、资产schema或新存储。实现者先协调method metadata/lookup与intent target/baseline的映射，避免双重状态。所有实际保存仍走已验证服务。
+
+### 空间菜单与文案的最小调整
+
+本次行为缺口在CreationMethodDialog文案、NewSession空间选择的外置新建按钮及main的普通目标提示。修改这三个原UI组件与对应CSS，复用choose/createPersonal/createTask回调和原TaskPanel；菜单只拥有显示/焦点的临时状态，不增加新的空间或会话存储。原输入保护、管理Skill、权限与首发幂等保持。按变更适配现有浏览器交互断言，检查键盘、点击外部/Escape、创建取消/零空间及桌面1060/1440。没有后端或历史格式变更，不重跑真实模型或整个后端测试集。
+
+
+## 空间类型区分反馈
+
+最小边界：NewSession和样式负责分组/图标/类型标签，main传递已有可信taskMeta.visibility；不从名称、ID或新建权限推断空间类型。没有任务元数据的旧非认证模式保留普通空间展示。复用选择、取消、准备期保护和原会话/草稿。仅适配受影响浏览器断言及真实分组权限/切换回归，无后端改动，不重跑真实模型。

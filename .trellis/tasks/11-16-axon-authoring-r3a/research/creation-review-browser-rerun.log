@@ -1,0 +1,18 @@
+[WebServer] (node:82308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+(node:82279) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:82316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:82316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+
+[1/3] tests/e2e/access.spec.ts:81:1 › login, public/private task navigation, lazy workspace, archive and two independent seats
+[2/3] tests/e2e/access.spec.ts:93:1 › same-browser logout and identity change clear private drafts in both tabs
+[3/3] tests/e2e/access.spec.ts:116:1 › catalog managers maintain all work tasks while every seat owns its personal spaces
+  3 passed (38.4s)

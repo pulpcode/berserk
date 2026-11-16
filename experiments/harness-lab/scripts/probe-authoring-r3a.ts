@@ -16,7 +16,7 @@ import {SystemRoles} from '../src/access/system-roles.js';
 import {packageMethod} from '../src/resources/skill-package.js';
 import type {AuthSession} from '../src/contracts/access.js';
 import type {AuthoringIntent,AuthoringProposal} from '../src/contracts/authoring.js';
-import type {SessionSnapshot,StreamEvent} from '../src/contracts/index.js';
+import type {SessionSnapshot,StreamEvent,WorkspaceResources} from '../src/contracts/index.js';
 import type {ExpertValidation,ExpertPublication} from '../src/contracts/capability-management.js';
 import type {ExpertTrialRunView} from '../src/contracts/capability-trials.js';
 
@@ -48,7 +48,11 @@ try{
   const actor={userId:adminId,assertAdministrator:()=>new SystemRoles(lab!.access!.db).requireAdministrator(adminId)};
   const run=async(text:string,intent?:AuthoringIntent,selection:Parameters<PiLab['start']>[2]={})=>{
     const events:StreamEvent[]=[];let approvals=0,confirmationError:unknown;
-    const request=lab!.start(session.id,text,{...selection,...(intent?{authoring:intent}:{})},scope,undefined,adminId);
+    const selectedMethodId=intent ? intent.kind==='expert' ? 'expert-manager' : 'skill-creator' : undefined;
+    const available=intent ? await ok<WorkspaceResources>(`/api/workspaces/${workspace.id}/resources`) : undefined;
+    const selectedMethod=available?.skills.find(skill=>skill.id===selectedMethodId);
+    if(intent)assert.ok(selectedMethod,'真实管理Skill未出现在当前管理员个人空间目录。');
+    const request=lab!.start(session.id,text,{...selection,...(selectedMethod?{skill:{id:selectedMethod.id,hash:selectedMethod.hash}}:{}),...(intent?.targetId?{authoring:intent}:{})},scope,undefined,adminId);
     await request.run(event=>{events.push(event);if(event.type==='interaction.updated'&&event.interaction.status==='pending'){
       try{
         const i=event.interaction;assert.equal(i.kind,'confirmation');if(i.kind!=='confirmation')throw Error('出现未预期问答。');
@@ -60,7 +64,9 @@ try{
       }catch(error){confirmationError=error;lab!.cancel(session.id,request.requestId);}
     }});
     if(confirmationError)throw confirmationError;
-    const saved=lab!.get(session.id,scope);records.push({text,intent,approvals,events,snapshot:saved});assert.equal(saved.lastResult?.status,'succeeded',saved.lastResult?.message);if(intent)assert.equal(approvals,1,'每次候选只确认一次。');return saved;
+    const saved=lab!.get(session.id,scope);
+    if(selectedMethod){const ownInput=saved.messages.find(message=>message.role==='user'&&message.requestId===request.requestId);assert.equal(ownInput?.selections?.skill?.id,selectedMethod.id);assert.equal(ownInput?.selections?.skill?.hash,selectedMethod.hash);assert.ok(ownInput?.selections?.skill?.content);}
+    records.push({text,intent,selectedMethodId,approvals,events,snapshot:saved});assert.equal(saved.lastResult?.status,'succeeded',saved.lastResult?.message);if(intent)assert.equal(approvals,1,'每次候选只确认一次。');return saved;
   };
   await run('请创建一个专家草稿，名称为“R3A资料核对专家”，简介为“核对明确输入并保留未知项”。专业指令为“只根据用户给出的内容核对资料；未知就说明未知；回答末尾加 R3A_EXPERT_READY。”工具范围为空数组、旧技能引用为空数组、新技能引用为空数组。需求已明确，无需问答；请按管理方法提出完整候选并请求网页确认保存，不发布、不改范围。',{kind:'expert'});
   const experts=(await lab.management!.list()).filter(e=>e.name==='R3A资料核对专家');assert.equal(experts.length,1);const expertId=experts[0].expertId;

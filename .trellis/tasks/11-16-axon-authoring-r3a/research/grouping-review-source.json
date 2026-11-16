@@ -1,0 +1,183 @@
+{
+  "reviewedAtUtc": "2026-11-16T09:32:40.709379+00:00",
+  "scope": "Grouping iteration only, compared to explicit pre-iteration baseline; prior R3A changes relative to Git HEAD are excluded.",
+  "baselineManifest": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-baseline.json",
+  "baselineDir": "/private/tmp/axon-space-grouping-baseline",
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/web/NewSession.tsx",
+      "baselineSha256": "3cc8798e355f9cead86541e529c5a7bf1192a0f18977ce46d1276e1466378b08",
+      "reviewedSha256": "5b04d9652bb600fbbc76ad397c590b90a668ca57bc3fe30f4fca2419780142bc",
+      "changed": true,
+      "addedLines": 10,
+      "removedLines": 5
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "baselineSha256": "33967f29f5d95a8e11f608341dbb45e6fdc0be6412555730498c7ffc902aed62",
+      "reviewedSha256": "8a2ebb4737f916dc3fb559659475f146c9bd6779867d2780e02a61b4b3c64542",
+      "changed": true,
+      "addedLines": 1,
+      "removedLines": 1
+    },
+    {
+      "path": "experiments/harness-lab/src/web/styles.css",
+      "baselineSha256": "58b8fbc88eb0faa9603fc8da56bfa7b04f30e0b8d2c10564c1627ba2952058c0",
+      "reviewedSha256": "34e667d32fd3eb2cbc2b45003289fbb861a17fcd219a27c9f8da828199f230cc",
+      "changed": true,
+      "addedLines": 3,
+      "removedLines": 1
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/authoring.spec.ts",
+      "baselineSha256": "92cd2881eed6e0e5cf738ea4c934b4968f55b4fb718f4ccbe72b244308a1246f",
+      "reviewedSha256": "de29a3751225af5525d225cb97dcbf2792943e215daa4b93a32a08bafbceb122",
+      "changed": true,
+      "addedLines": 4,
+      "removedLines": 4
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/administrator.spec.ts",
+      "baselineSha256": "7d4f560c8f75c42166bddc4ba830a66f0ce8c3e66e12e16ddb77ecef96cc7939",
+      "reviewedSha256": "c99f0eaa8bd5d41214e63955e03a0346b4f2fc28cf257b9e2ac1ef80a57f7424",
+      "changed": true,
+      "addedLines": 1,
+      "removedLines": 1
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/access.spec.ts",
+      "baselineSha256": "981b5cd5c28e5627a04c6d0d7083b8b9fff806bf35ad87f2493b321ab096a5eb",
+      "reviewedSha256": "ff05e266a43e9099ec01c5f14574fecd407a1814305516dfa219039ddc99fef8",
+      "changed": true,
+      "addedLines": 13,
+      "removedLines": 1
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/chat.spec.ts",
+      "baselineSha256": "a01f92da61c2e9cdb33fb87b2096d6744b9190b134291ac148ea7ae0ab2fc859",
+      "reviewedSha256": "a01f92da61c2e9cdb33fb87b2096d6744b9190b134291ac148ea7ae0ab2fc859",
+      "changed": false,
+      "addedLines": 0,
+      "removedLines": 0
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/files.spec.ts",
+      "baselineSha256": "23b8cd4ffbc1f4047fe0511ef82c884e9c8b1aa883764204a2801010683998f8",
+      "reviewedSha256": "23b8cd4ffbc1f4047fe0511ef82c884e9c8b1aa883764204a2801010683998f8",
+      "changed": false,
+      "addedLines": 0,
+      "removedLines": 0
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-mixed-menu-1060.png",
+      "sha256": "aff5153790af00a239b5a3addc41e2ad5709a2cd473c0b25a10c38b61643a01b",
+      "visuallyReviewed": true
+    },
+    {
+      "path": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-mixed-menu-1440.png",
+      "sha256": "af2158e46f87f0dccdf7c4a2d5865099ddd3b36eceedeead46ba5fea87df4ffd",
+      "visuallyReviewed": true
+    },
+    {
+      "path": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-personal-menu-1060.png",
+      "sha256": "b59bf587f9454ddeb794bd84e1400ca514cf47f5cbba4f9ee41730dadc83fc2b",
+      "visuallyReviewed": true
+    },
+    {
+      "path": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-personal-menu-1440.png",
+      "sha256": "80554fa822eaa9e8f155637c0c925f5cc2b2c2db570d2db2f82fd43af2b5378b",
+      "visuallyReviewed": true
+    }
+  ],
+  "findings": {
+    "fixed": [],
+    "notFixed": [
+      {
+        "path": "experiments/harness-lab/src/web/InteractionCard.tsx",
+        "line": 209,
+        "issue": "Two pre-existing ref cleanup lint warnings, outside bounded iteration.",
+        "disposition": "Left unchanged outside scope; global lint and boundaries pass."
+      }
+    ]
+  },
+  "productEditsByReviewer": false,
+  "footerDecision": "Parent confirmed task creation before personal creation matches the user-approved preview; keep original location, callbacks and authorization.",
+  "verification": {
+    "browser": {
+      "status": "pass",
+      "tests": 9,
+      "workers": 1,
+      "duration": "1.2m",
+      "log": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-browser.log",
+      "executedBy": "grouping_finish",
+      "rerunByReviewer": false,
+      "logSha256": "b40266842d0da60308b50cf28570f58262641b1bd21fc23983bd0626bfa14200"
+    },
+    "scopedEslint": {
+      "status": "pass",
+      "log": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-eslint.log",
+      "executedBy": "grouping_finish",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "typecheck": {
+      "status": "pass",
+      "exitCode": 0,
+      "command": "npm run typecheck",
+      "log": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-final-typecheck.log",
+      "logSha256": "515d7aee3d780805e83e8ed5f9c9e16f57d4fa9c768b393b9370731773e90131",
+      "executedBy": "root",
+      "consumedByReviewer": true,
+      "rerunByReviewer": false
+    },
+    "globalLint": {
+      "status": "pass",
+      "exitCode": 0,
+      "command": "npm run lint",
+      "log": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-final-lint.log",
+      "logSha256": "293defc373fd1f247b87c2a9a46d47e2d37244fc308bdce2d2d7ea0475d7c3be",
+      "executedBy": "root",
+      "consumedByReviewer": true,
+      "rerunByReviewer": false,
+      "existingWarnings": [
+        {
+          "path": "experiments/harness-lab/src/web/InteractionCard.tsx",
+          "line": 209,
+          "rule": "react-hooks/exhaustive-deps",
+          "refs": [
+            "focusScope.current",
+            "composerInput.current"
+          ],
+          "count": 2,
+          "disposition": "Outside grouping iteration; unchanged."
+        }
+      ]
+    },
+    "build": {
+      "status": "pass",
+      "exitCode": 0,
+      "command": "npm run build",
+      "log": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-final-build.log",
+      "logSha256": "b3f3710e73ed590003911219c583bb4dea526d24d80f2552b9871fe6d35ce7ff",
+      "executedBy": "root",
+      "consumedByReviewer": true,
+      "rerunByReviewer": false,
+      "duration": "9.25s",
+      "existingAdvisory": "Some chunks exceed 500 kB after minification."
+    },
+    "unitBackendModelAndFullBrowser": "Not rerun for this presentation-only iteration, per dispatch; no backend, contracts, schema, API or storage changes.",
+    "diffCheck": {
+      "status": "pass",
+      "exitCode": 0,
+      "executedBy": "grouping_review",
+      "scope": "Six changed files in bounded baseline."
+    },
+    "finalProof": ".trellis/tasks/11-16-axon-authoring-r3a/research/grouping-final-proof.json"
+  },
+  "userAcceptance": "pending",
+  "commit": false,
+  "push": false,
+  "deployment": false,
+  "finalVerification": "pass; no new defects found in grouping iteration"
+}

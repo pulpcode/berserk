@@ -1,0 +1,29 @@
+[WebServer] (node:77572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:77532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 17 tests using 1 worker
+
+(node:77655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77655) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/administrator.spec.ts:69:1 › independent administrator manages experts without mounting a seat workbench (12.7s)
+  ✓   2 tests/e2e/administrator.spec.ts:123:1 › an administrator creates personal spaces and resumes ordinary two-turn chat without business access (16.0s)
+  ✓   3 tests/e2e/administrator.spec.ts:216:1 › revoking an independent administrator returns to login and overall remains a business seat (5.3s)
+  ✓   4 tests/e2e/administrator.spec.ts:236:1 › an administrator card opens the selected expert configuration without creating another draft (4.3s)
+  ✓   5 tests/e2e/skills.spec.ts:30:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate (5.0s)
+  ✓   6 tests/e2e/skills.spec.ts:49:1 › ordinary user can stage a published skill into an existing conversation without sending or changing its draft (5.0s)
+  ✓   7 tests/e2e/skills.spec.ts:63:1 › policy and publication saves retain their viewed baselines across background detail refreshes (7.4s)
+  ✓   8 tests/e2e/skills.spec.ts:102:1 › administrator stages a published skill in a personal conversation without business scope or automatic sending (6.2s)
+  ✓   9 tests/e2e/skills.spec.ts:137:1 › creation starts with an empty local form, cancel writes nothing, and invalid submission keeps the input (5.9s)
+  ✓  10 tests/e2e/skills.spec.ts:169:1 › a lost create response retries the same complete draft instead of creating another asset (4.6s)
+  ✓  11 tests/e2e/skills.spec.ts:184:1 › form and source editing share the same draft and preserve imported extensions and other files (4.9s)
+  ✓  12 tests/e2e/skills.spec.ts:210:1 › creation respects Unicode code-point limits without truncating supplementary-plane input (5.2s)
+  ✓  13 tests/e2e/skills.spec.ts:227:1 › creation advances through saved scope and validation to explicit publication and completion (5.3s)
+  ✓  14 tests/e2e/skills.spec.ts:255:1 › a conflicting draft save retains edited fields and the content step even after reading latest data (4.6s)
+  ✓  15 tests/e2e/skills.spec.ts:273:1 › scope stays saved when automatic validation fails and the checks step offers a safe retry (4.8s)
+  ✓  16 tests/e2e/skills.spec.ts:289:1 › the skill heading shares one row with actions and only archived records are folded away (4.8s)
+  ✓  17 tests/e2e/skills.spec.ts:310:1 › a retried creation reviews content changed after the original receipt before advancing (4.8s)
+
+  17 passed (2.0m)

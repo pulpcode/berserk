@@ -1,3 +1,4 @@
+import { managementSkillKind } from '../authoring/management-skills.js';
 import { Type } from 'typebox';
 import { defineTool, type SessionManager } from '@earendil-works/pi-coding-agent';
 import type { InstructionUpdate, RequestResourcesRecord } from '../contracts/index.js';
@@ -11,7 +12,7 @@ export const CHANGE_ENTRY = 'berserk.instructions-updated.v1';
 export const toolNames = ['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read'] as const;
 export const publicToolName = (name: string) => (toolNames as readonly string[]).includes(name) ? name.replace('_', '.') : name;
 export function requestRecord(requestId: string, snapshot: ResourceSnapshot, readonly = false): Extract<RequestResourcesRecord, { status: 'available' }> {
-  return { ...(snapshot.skills.some(skill => skill.schemaVersion === 2) ? {schemaVersion:2 as const} : {}), ...(snapshot.task ? { task: snapshot.task } : {}), status: 'available', requestId, workspaceId: snapshot.workspaceId, instructions: readonly ? snapshot.instructions.map(file => ({ ...file, editable: false })) : snapshot.instructions,
+  return { ...(snapshot.skills.some(skill => managementSkillKind(skill.id)) ? {schemaVersion:3 as const} : snapshot.skills.some(skill => skill.schemaVersion === 2) ? {schemaVersion:2 as const} : {}), ...(snapshot.task ? { task: snapshot.task } : {}), status: 'available', requestId, workspaceId: snapshot.workspaceId, instructions: readonly ? snapshot.instructions.map(file => ({ ...file, editable: false })) : snapshot.instructions,
     skills: resourceInfo(snapshot).skills, readSkills: [], editableFileIds: readonly ? [] : ['workspace'] };
 }
 export function resourceTools(snapshot: ResourceSnapshot, resources: ResourceService, manager: SessionManager, requestId: string, controller: AbortController,

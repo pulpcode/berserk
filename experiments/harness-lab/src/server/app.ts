@@ -1,3 +1,4 @@
+import { managementSkillKind } from '../authoring/management-skills.js';
 import { skillUseDetail } from '../skills/view.js';
 import type { CapabilityTrialsOptions } from '../pi/capability-trials.js';
 import { skillRoutes } from './skill-routes.js';
@@ -188,14 +189,27 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId, undefined, request.body.modelId,
     { expertRef: request.body.expertRef, expectedDigest: request.body.expectedDigest, clientActionId: request.body.clientActionId,
       ...(lab.access ? { userId: workspaceIdentityOf(request).userId } : {}) }));
-  app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => lab.resources.info(request.params.id, scope.seat(request), lab.access ? workspaceIdentityOf(request).userId : undefined));
+  app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => {
+    const seatId = scope.seat(request), userId = lab.access ? workspaceIdentityOf(request).userId : undefined;
+    const resources = await lab.resources.info(request.params.id, seatId, userId);
+    const current = userId ? lab.access?.accountIdentity(userId) : undefined;
+    if (current?.role === 'administrator' && current.personalScopeId === seatId) {
+      const methods = await lab.managementSkills(userId, request.params.id, seatId);
+      resources.skills.push(...methods.map(({content: _content, ...metadata}) => { void _content; return metadata; }));
+    }
+    return resources;
+  });
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/agents`, { schema: { params, querystring: settingsQuery } }, async request => lab.agents(request.params.id, scope.seat(request)));
   const resourceParams = (key: string) => scope.params({ id: uuid, [key]: { type: 'string', minLength: 1, maxLength: 80 } });
   app.get<{ Params: { id: string; fileId: string } }>(`${scope.base}/workspaces/:id/instructions/:fileId`, { schema: { params: resourceParams('fileId') } }, async request => lab.resources.readInstruction(request.params.id, request.params.fileId, scope.seat(request)));
   app.put<{ Params: { id: string; fileId: string }; Body: { content: string; expectedHash: string | null } }>(`${scope.base}/workspaces/:id/instructions/:fileId`, {
     schema: { params: resourceParams('fileId'), body: { type: 'object', properties: { content: { type: 'string' }, expectedHash: { anyOf: [{ type: 'string', pattern: '^[0-9a-f]{64}$' }, { type: 'null' }] } }, required: ['content', 'expectedHash'], additionalProperties: false } },
   }, async request => lab.resources.updateInstruction(request.params.id, request.params.fileId, request.body.content, request.body.expectedHash, undefined, scope.seat(request)));
-  app.get<{ Params: { id: string; skillId: string } }>(`${scope.base}/workspaces/:id/skills/:skillId`, { schema: { params: resourceParams('skillId') } }, async request => lab.resources.readSkill(request.params.id, request.params.skillId, scope.seat(request), lab.access ? workspaceIdentityOf(request).userId : undefined));
+  app.get<{ Params: { id: string; skillId: string } }>(`${scope.base}/workspaces/:id/skills/:skillId`, { schema: { params: resourceParams('skillId') } }, async request => {
+    const seatId = scope.seat(request), userId = lab.access ? workspaceIdentityOf(request).userId : undefined;
+    if (managementSkillKind(request.params.skillId)) return (await lab.managementSkills(userId, request.params.id, seatId)).find(skill => skill.id === request.params.skillId)!;
+    return lab.resources.readSkill(request.params.id, request.params.skillId, seatId, userId);
+  });
   app.get<{ Params: { id: string; requestId: string } }>(`${scope.base}/sessions/:id/requests/:requestId/resources`, { schema: { params: scope.params({ id: uuid, requestId: uuid }) } }, async request => lab.getRequestResources(request.params.id, request.params.requestId, scope.seat(request)));
   app.get<{ Params: { id: string; compactionId: string } }>(`${scope.base}/sessions/:id/compactions/:compactionId`, { schema: { querystring: settingsQuery, params: resourceParams('compactionId') } }, async request => lab.getCompaction(request.params.id, request.params.compactionId, scope.seat(request)));
   app.get<{ Params: { id: string } }>(`${scope.base}/sessions/:id`, { schema: { params } }, async request => lab.get(request.params.id, scope.seat(request)));

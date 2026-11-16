@@ -1,3 +1,4 @@
+import { CreationMethodDialog } from './CreationMethodDialog';
 import type { AuthoringIntent } from '../contracts/authoring';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Copy, FilePlus, Plus, Sparkles, Upload } from 'lucide-react';
@@ -30,6 +31,7 @@ export function SkillLibrary({ administrator, query, refresh, workspaces, applyS
   const [reload, setReload] = useState(0);
   const [preview, setPreview] = useState<SkillImportPreview>();
   const [creating, setCreating] = useState(false);
+  const [createChoice, setCreateChoice] = useState(false);
   const [viewing, setViewing] = useState<SkillSummary>();
   const upload = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -62,12 +64,13 @@ export function SkillLibrary({ administrator, query, refresh, workspaces, applyS
   const archived = matching?.filter(skill => skill.archived);
   const card = (skill: SkillSummary) => <article className="expert-card skill-card" key={skill.skillId}><div className="expert-card-heading"><span className="expert-card-icon"><Sparkles size={23} aria-hidden="true" /></span><h3>{skill.name || '未命名技能'}</h3></div><p>{skill.description || '编辑方法与文件后发布。'}</p><div className="expert-card-footer"><span>{stateLabel(skill)}</span>{administrator && applySkill && skill.available && !skill.archived && <button type="button" aria-label={`使用技能${skill.name}`} onClick={() => setViewing(skill)}>用于对话<ArrowRight size={15} aria-hidden="true" /></button>}<button type="button" aria-label={`查看技能${skill.name}`} onClick={() => administrator ? setSelected({ id: skill.skillId, initialTab: 'files' }) : setViewing(skill)}>查看详情<ArrowRight size={15} aria-hidden="true" /></button></div></article>;
   return <div className="skill-library">
-    <header className="skill-library-heading"><h2>可用技能</h2>{administrator && <div className="skill-library-actions"><input ref={upload} hidden type="file" accept=".md,.zip" onChange={event => void importPreview(event.target.files?.[0])} /><button type="button" disabled={busy} onClick={() => upload.current?.click()}><Upload size={16} aria-hidden="true" />导入技能</button><button type="button" disabled={busy} onClick={() => setCreating(true)}>手动创建</button><button type="button" className="primary-action" disabled={busy || !authoring} onClick={() => authoring?.({ kind: 'skill' })}><Plus size={16} aria-hidden="true" />创建技能</button></div>}</header>
+    <header className="skill-library-heading"><h2>可用技能</h2>{administrator && <div className="skill-library-actions"><input ref={upload} hidden type="file" accept=".md,.zip" onChange={event => void importPreview(event.target.files?.[0])} /><button type="button" disabled={busy} onClick={() => upload.current?.click()}><Upload size={16} aria-hidden="true" />导入技能</button><button type="button" className="primary-action" disabled={busy} onClick={() => setCreateChoice(true)}><Plus size={16} aria-hidden="true" />创建技能</button></div>}</header>
     {error && <p className="resource-error" role="alert">{error}<button type="button" onClick={() => setReload(n => n + 1)}>重新读取</button></p>}
     {!skills && !error && <LoadingIndicator label="正在读取技能目录…" />}
     {visible?.length === 0 && <p className="capability-empty">{query ? '没有找到相关技能。' : '暂无可用技能。'}</p>}
     <div className="capability-grid capability-skill-list">{visible?.map(card)}</div>
     {administrator && !!archived?.length && <details className="skill-archive"><summary>已归档（{archived.length}）</summary><div className="capability-grid skill-archived-list">{archived.map(card)}</div></details>}
+    {createChoice && <CreationMethodDialog kind="skill" close={() => setCreateChoice(false)} manual={() => { setCreateChoice(false); setCreating(true); }} assisted={authoring ? () => { setCreateChoice(false); authoring({ kind: 'skill' }); } : undefined} />}
     {creating && <SkillCreation close={() => setCreating(false)} created={value => { setCreating(false); setSelected({ id: value.skill.skillId, initialTab: 'policy', expectedDraftDigest: value.draft?.packageDigest }); setReload(n => n + 1); }} />}
     {selected && <SkillManagement authoring={authoring} key={selected.id} skillId={selected.id} initialTab={selected.initialTab} expectedDraftDigest={selected.expectedDraftDigest} close={() => setSelected(undefined)} changed={() => setReload(n => n + 1)} copy={id => { setSelected(undefined); void create(id); }} />}
     {viewing && <SkillUsePanel skill={viewing} workspaces={workspaces} applySkill={applySkill} close={() => setViewing(undefined)} />}

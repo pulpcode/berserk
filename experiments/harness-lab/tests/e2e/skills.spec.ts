@@ -139,7 +139,7 @@ test('creation starts with an empty local form, cancel writes nothing, and inval
   try {
     await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click();
     const before = env.lab.skills.list().length;
-    await page.getByRole('button', { name: '手动创建', exact: true }).click();
+    await page.getByRole('button', { name: '创建技能', exact: true }).click(); await page.getByRole('dialog', { name: '创建技能', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click();
     let form = page.getByRole('dialog', { name: '创建技能', exact: true });
     await expect(form.getByLabel('技能名称', { exact: true })).toBeFocused();
     await form.getByLabel('技能名称', { exact: true }).fill('资料摘要'); await form.getByLabel('技能简介', { exact: true }).fill('汇总资料中的重点与待办。'); await form.getByLabel('使用说明', { exact: true }).fill('先核对资料，再归纳要点。');
@@ -147,7 +147,7 @@ test('creation starts with an empty local form, cancel writes nothing, and inval
     await page.screenshot({ path: testInfo.outputPath('skill-create-1440.png') }); await page.setViewportSize({ width: 1060, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await page.screenshot({ path: testInfo.outputPath('skill-create-1060.png') });
     await form.getByRole('button', { name: '取消', exact: true }).click(); expect(env.lab.skills.list()).toHaveLength(before); expect(env.createRequests).toHaveLength(0);
-    await page.getByRole('button', { name: '手动创建', exact: true }).click(); form = page.getByRole('dialog', { name: '创建技能', exact: true });
+    await page.getByRole('button', { name: '创建技能', exact: true }).click(); await page.getByRole('dialog', { name: '创建技能', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click(); form = page.getByRole('dialog', { name: '创建技能', exact: true });
     await expect(form.getByLabel('技能名称', { exact: true })).toHaveValue('');
     await form.getByLabel('技能名称', { exact: true }).fill('Invalid Name'); await form.getByLabel('技能简介', { exact: true }).fill('稍后补充使用说明。');
     await form.getByRole('button', { name: '创建草稿', exact: true }).click(); await expect(form.getByRole('alert')).toContainText('技能名称');
@@ -171,7 +171,7 @@ test('a lost create response retries the same complete draft instead of creating
   try {
     await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click();
     const before = env.lab.skills.list().length; env.dropNextCreate();
-    await page.getByRole('button', { name: '手动创建', exact: true }).click(); const form = page.getByRole('dialog', { name: '创建技能', exact: true });
+    await page.getByRole('button', { name: '创建技能', exact: true }).click(); await page.getByRole('dialog', { name: '创建技能', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click(); const form = page.getByRole('dialog', { name: '创建技能', exact: true });
     await form.getByLabel('技能名称', { exact: true }).fill('retry-method'); await form.getByLabel('技能简介', { exact: true }).fill('完整草稿重试'); await form.getByLabel('使用说明', { exact: true }).fill('保留我的处理步骤。');
     await form.getByRole('button', { name: '创建草稿', exact: true }).click(); await expect(form.getByRole('alert')).toBeVisible();
     expect(env.lab.skills.list()).toHaveLength(before + 1); await expect(form.getByLabel('使用说明', { exact: true })).toHaveValue('保留我的处理步骤。');
@@ -210,7 +210,7 @@ test('form and source editing share the same draft and preserve imported extensi
 test('creation respects Unicode code-point limits without truncating supplementary-plane input', async ({ page }) => {
   const env = await setup(page);
   try {
-    await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click(); await page.getByRole('button', { name: '手动创建', exact: true }).click();
+    await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click(); await page.getByRole('button', { name: '创建技能', exact: true }).click(); await page.getByRole('dialog', { name: '创建技能', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click();
     const before = env.lab.skills.list().length, letter = String.fromCodePoint(0x10428), emoji = String.fromCodePoint(0x1f600);
     const form = page.getByRole('dialog', { name: '创建技能', exact: true }), name = form.getByLabel('技能名称', { exact: true }), description = form.getByLabel('技能简介', { exact: true });
     await name.fill(letter.repeat(65)); await description.fill(emoji.repeat(1024)); await expect(name).toHaveValue(letter.repeat(65));
@@ -228,7 +228,7 @@ test('creation advances through saved scope and validation to explicit publicati
   const env = await setup(page);
   try {
     await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click();
-    await page.getByRole('button', { name: '手动创建', exact: true }).click();
+    await page.getByRole('button', { name: '创建技能', exact: true }).click(); await page.getByRole('dialog', { name: '创建技能', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click();
     const form = page.getByRole('dialog', { name: '创建技能', exact: true });
     await form.getByLabel('技能名称', { exact: true }).fill('guided-summary'); await form.getByLabel('技能简介', { exact: true }).fill('按明确步骤核对并汇总资料。'); await form.getByLabel('使用说明', { exact: true }).fill('先核对输入，再整理摘要与待办。');
     await form.getByRole('button', { name: '创建草稿', exact: true }).click();
@@ -273,7 +273,7 @@ test('a conflicting draft save retains edited fields and the content step even a
 test('scope stays saved when automatic validation fails and the checks step offers a safe retry', async ({ page }) => {
   const env = await setup(page);
   try {
-    await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click(); await page.getByRole('button', { name: '手动创建', exact: true }).click();
+    await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click(); await page.getByRole('button', { name: '创建技能', exact: true }).click(); await page.getByRole('dialog', { name: '创建技能', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click();
     const form = page.getByRole('dialog', { name: '创建技能', exact: true }); await form.getByLabel('技能名称', { exact: true }).fill('validation-retry'); await form.getByLabel('技能简介', { exact: true }).fill('验证范围与检查失败分别反馈。'); await form.getByRole('button', { name: '创建草稿', exact: true }).click();
     const manager = page.locator('dialog.skill-management-panel'); await expect(manager.getByRole('button', { name: '使用范围', exact: true })).toHaveAttribute('aria-current', 'page'); const skill = env.lab.skills.list().find(item => item.name === 'validation-retry')!;
     let fail = true;
@@ -311,7 +311,7 @@ test('a retried creation reviews content changed after the original receipt befo
   const env = await setup(page);
   try {
     await login(page, '系统管理员'); await page.getByRole('tab', { name: '技能', exact: true }).click(); env.dropNextCreate();
-    await page.getByRole('button', { name: '手动创建', exact: true }).click(); const form = page.getByRole('dialog', { name: '创建技能', exact: true });
+    await page.getByRole('button', { name: '创建技能', exact: true }).click(); await page.getByRole('dialog', { name: '创建技能', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click(); const form = page.getByRole('dialog', { name: '创建技能', exact: true });
     await form.getByLabel('技能名称', { exact: true }).fill('review-after-retry'); await form.getByLabel('技能简介', { exact: true }).fill('创建时的简介'); await form.getByLabel('使用说明', { exact: true }).fill('我确认的原始步骤。');
     await form.getByRole('button', { name: '创建草稿', exact: true }).click(); await expect(form.getByRole('alert')).toBeVisible();
     const created = env.lab.skills.list().find(skill => skill.name === 'review-after-retry')!;

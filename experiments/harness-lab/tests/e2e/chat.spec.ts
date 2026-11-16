@@ -293,9 +293,8 @@ test('中文输入、独立草稿、多轮消息与刷新不重发', async ({ pa
     await expect(page.getByText('其他请求的迟到消息')).toHaveCount(0);
     await expect(page.getByText('其他会话的迟到消息')).toHaveCount(0);
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
-    await page.getByRole('button', { name: '创建对话', exact: true }).click();
     await expect(page.locator('.header-title')).toHaveText('新对话');
-    expect(mock.counts.creates).toBe(1);
+    expect(mock.counts.creates).toBe(0);
   } finally { await mock.close(); }
 });
 
@@ -971,41 +970,43 @@ test('刷新后摘要先于正文到达，停止按钮等待同一请求的正�
   } finally { await mock.close(); }
 });
 
-test('新建对话先选项目，取消不创建，折叠项目加号直接创建且不抢回后续导航', async ({ page }) => {
+test('新建对话页内选空间，离开不创建，项目加号同页且首次发送不抢回后续导航', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     await page.goto('/');
-    const newChat = page.getByRole('button', { name: '新建对话', exact: true });
-    await newChat.click();
-    await expect(page.getByLabel('选择项目')).toHaveValue('w1');
+    const input = page.getByRole('textbox', { name: '发送消息' });
+    await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await expect(page.getByLabel('对话保存位置')).toHaveText('默认工作区');
+    await expect(page.getByRole('dialog')).toHaveCount(0); expect(mock.counts.creates).toBe(0);
+    await page.getByRole('button', { name: '会话 A', exact: true }).click();
     expect(mock.counts.creates).toBe(0);
-    await page.getByRole('button', { name: '取消', exact: true }).click();
-    await expect(newChat).toBeFocused();
-    expect(mock.counts.creates).toBe(0);
-    await newChat.click();
-    await page.getByLabel('选择项目').selectOption('w2');
-    await page.getByRole('button', { name: '创建对话', exact: true }).click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await page.getByLabel('对话保存位置').click(); await page.getByRole('menuitemradio', { name: '另一工作区', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
+    expect(mock.counts.creates).toBe(0);
+    await input.fill('另一空间首次发送'); await input.press('Enter');
+    await expect(page.getByText('new-1 的回复', { exact: true })).toBeVisible();
     expect(mock.sessions.get('new-1')?.workspaceId).toBe('w2');
     await page.getByRole('button', { name: '折叠项目：默认工作区' }).click();
-    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 默认工作区 中新建对话', exact: true }) }).hover(); await page.getByRole('button', { name: '在项目 默认工作区 中新建对话', exact: true }).click();
-    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('默认工作区');
-    expect(mock.sessions.get('new-2')?.workspaceId).toBe('w1');
-    expect(mock.counts.creates).toBe(2);
-    await page.getByRole('textbox', { name: '发送消息' }).fill('保留在默认项目的草稿');
+    const first = page.getByRole('button', { name: '在项目 默认工作区 中新建对话', exact: true });
+    await first.locator('..').hover(); await first.click();
+    await expect(page.getByLabel('对话保存位置')).toHaveText('默认工作区');
+    expect(mock.counts.creates).toBe(1);
+    await input.fill('保留在默认项目的草稿');
     mock.faults.holdCreate = true;
-    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true }).click();
+    const second = page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true });
+    await second.locator('..').hover(); await second.click();
+    await input.fill('延迟创建时的提交'); await input.press('Enter');
     await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
     await page.getByRole('button', { name: '会话 D', exact: true }).click();
-    await page.getByRole('textbox', { name: '发送消息' }).fill('D 的独立草稿');
-    mock.faults.releaseCreate!();
-    await expect(page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true })).toBeEnabled();
+    await input.fill('D 的独立草稿'); mock.faults.releaseCreate!();
+    await expect.poll(() => mock.counts.sends).toBe(2);
     await expect(page.locator('.header-title')).toHaveText('会话 D');
-    await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('D 的独立草稿');
-    expect(mock.sessions.get('new-3')?.workspaceId).toBe('w2');
-    expect(mock.counts.creates).toBe(3);
-    expect(mock.counts.sends).toBe(0);
+    await expect(input).toHaveValue('D 的独立草稿');
+    expect(mock.sessions.get('new-2')?.workspaceId).toBe('w2');
+    expect(mock.counts.creates).toBe(2);
+    await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
+    await expect(input).toHaveValue('保留在默认项目的草稿');
   } finally { await mock.close(); }
 });
 
@@ -1099,11 +1100,13 @@ test('跨项目创建失败可见，切换会话保护后续选择，手机新�
     await page.goto('/');
     mock.faults.create = true;
     await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
-    await expect(page.getByRole('alert')).toContainText('在「另一工作区」中创建对话未完成');
-    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('默认工作区');
+    await page.getByRole('textbox', { name: '发送消息' }).fill('首次发送失败'); await page.getByRole('textbox', { name: '发送消息' }).press('Enter');
+    await expect(page.getByRole('alert')).toContainText('会话创建失败');
+    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
     mock.faults.create = false;
     mock.faults.holdCreate = true;
     await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
+    await page.getByRole('textbox', { name: '发送消息' }).press('Enter');
     await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
     await page.getByRole('button', { name: '会话 B', exact: true }).click();
     mock.faults.releaseCreate!();
@@ -1114,7 +1117,6 @@ test('跨项目创建失败可见，切换会话保护后续选择，手机新�
     await page.setViewportSize({ width: 375, height: 812 });
     await page.getByRole('button', { name: '打开会话列表' }).click();
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
-    await page.getByRole('button', { name: '创建对话', exact: true }).click();
     const input = page.getByRole('textbox', { name: '发送消息' });
     await expect(input).toBeFocused();
     await input.fill('慢速回复'); await input.press('Enter');
@@ -1134,7 +1136,7 @@ test('跨项目创建失败可见，切换会话保护后续选择，手机新�
     // Reading requires a visible foreground document; element focus alone is insufficient.
     await page.bringToFront();
     await expect.poll(() => page.evaluate(() => document.hasFocus() && document.visibilityState === 'visible')).toBe(true);
-    await expect.poll(async () => page.evaluate(() => JSON.parse(sessionStorage.getItem('berserk.read-results') || '{}')['new-2'])).toBe('request-1');
+    await expect.poll(async () => page.evaluate(() => JSON.parse(sessionStorage.getItem('berserk.read-results') || '{}')['new-2'])).toBe('request-2');
     expect(mock.counts.creates).toBe(2);
   } finally { await mock.close(); }
 });
@@ -1843,8 +1845,8 @@ test('折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿',
     await page.keyboard.press('Escape');
     await expect(resources).toBeFocused();
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
-    await expect(page.getByRole('dialog', { name: '新建对话' })).toBeVisible();
-    await page.getByRole('button', { name: '取消', exact: true }).click();
+    await expect(page.getByLabel('对话保存位置')).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(mock.counts.creates).toBe(0);
     await expect(page.getByRole('button', { name: '全部动态', exact: true })).toHaveCount(0);
     await expect(resources).toBeVisible();
@@ -1856,6 +1858,8 @@ test('折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿',
     await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
     await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
+    await expect(input).toHaveValue('');
+    await page.getByRole('button', { name: '会话 A', exact: true }).click();
     await expect(input).toHaveValue('图标导航保留草稿');
     await expect(page.getByRole('button', { name: '折叠侧边栏', exact: true })).toBeVisible();
     expect(mock.counts.sends).toBe(0);
@@ -1904,9 +1908,8 @@ for (const action of ['create', 'workspace'] as const) {
       await page.getByRole('textbox', { name: '发送消息' }).fill('A 的原草稿');
       if (action === 'create') {
         await page.getByRole('button', { name: '新建对话', exact: true }).click();
-        await page.getByLabel('选择项目').selectOption('w2');
-        await page.getByRole('button', { name: '创建对话', exact: true }).click();
-        await expect(page).toHaveURL(/\?session=new-1$/);
+        await page.getByLabel('对话保存位置').click(); await page.getByRole('menuitemradio', { name: '另一工作区', exact: true }).click();
+            await expect(page).toHaveURL(/\?new(?:&|$)/);
         await expect(page.getByRole('dialog')).toHaveCount(0);
       } else {
         await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
@@ -1920,7 +1923,7 @@ for (const action of ['create', 'workspace'] as const) {
       await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('A 的原草稿');
       if (action === 'create') {
         await page.goBack();
-        await expect(page).toHaveURL(/\?session=new-1$/);
+        await expect(page).toHaveURL(/\?new(?:&|$)/);
         await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
         await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('另一项目的新草稿');
         await page.goForward();
@@ -1928,7 +1931,7 @@ for (const action of ['create', 'workspace'] as const) {
         await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('A 的原草稿');
       }
       expect(mock.counts.sends).toBe(0);
-      expect(mock.counts.creates).toBe(action === 'create' ? 1 : 0);
+      expect(mock.counts.creates).toBe(0);
     } finally { await mock.close(); }
   });
 }

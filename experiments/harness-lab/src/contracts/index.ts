@@ -217,7 +217,7 @@ export interface LoadedComposerSelection { annotationContext?: AnnotationContext
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
 export type RequestResourcesRecord = { task?: {id:string;title:string;goal:string;visibility:'public'|'private'}; compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
   status: 'available'; requestId: string; workspaceId: string; instructions: InstructionFile[];
-  schemaVersion?: 2; skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
+  schemaVersion?: 2 | 3; skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
 } | { status: 'unavailable'; requestId: string; message: string });
 
 export type CompactionReason = 'threshold' | 'overflow' | 'unknown';

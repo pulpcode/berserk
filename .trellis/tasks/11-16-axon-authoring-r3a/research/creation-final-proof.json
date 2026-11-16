@@ -1,0 +1,245 @@
+{
+  "createdAt": "2026-11-16T07:51:40.876560+00:00",
+  "branch": "codex/axon-r3a",
+  "baseCommit": "1e99845",
+  "status": "technical_checks_passed_user_feedback_pending",
+  "userAcceptance": "pending",
+  "commit": false,
+  "push": false,
+  "deployment": false,
+  "sources": [
+    {
+      "path": "experiments/harness-lab/README.md",
+      "sha256": "58932d366d0c1886ed1a93a7f3cae76bf65d16f73b92f79b2ef0b00a04567829"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/expert-manager/SKILL.md",
+      "sha256": "83bc0550d86c68a477b11a188657fc38b14164807a83d7113ee82e6d31512ef3"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/skill-creator/SKILL.md",
+      "sha256": "d713e008fd26359342b9349c17250d7e1d227361e814db8ed2911858abcdc1df"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-authoring-r3a.ts",
+      "sha256": "67f912ff0391a113ae0413d0f5ae84eeb78027a4015b59cc1ff10b5a99c9956d"
+    },
+    {
+      "path": "experiments/harness-lab/src/authoring/management-skills.ts",
+      "sha256": "c6a7d3b78b287f879a73584d415652898b7a3fd95ca888ffd947af3c0a0c1748"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/index.ts",
+      "sha256": "2766774932c252924e2b739614c666a8b33ab59e78c5d0b3651bf7d056f4452b"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/authoring-tools.ts",
+      "sha256": "67a8780806677f5a0c77642d320d966f52983351af5639d4657a727d7ce43d31"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/composer-input.ts",
+      "sha256": "9cfa9cc9c8ba1313bd59d76d5086a689b0a70aa20b9a1e18666df2e4e2cc5475"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/history-evidence.ts",
+      "sha256": "2deb8dc68bfe7b3874dcc8f98a896a2a7bb88ff36f02e979ca884422bf4c62bd"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/lab.ts",
+      "sha256": "d52d69d5dcfc475a52f0d7cc388a0765d6d05d1f38423a56841abd80ac905b8e"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/resource-tools.ts",
+      "sha256": "22027060016e6136d526d3aa495eb68f917990758efe4bbba61a4b225c17c6cd"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/app.ts",
+      "sha256": "9eb034de7a618423b753cbd57ed9965de7adb493ff6f51a9923e238b53959cff"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/capability-management-routes.ts",
+      "sha256": "239c96c85f10124b3aa23ff0adffd3b9ca6873ab4f5dc376d2acaec1a150e421"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CapabilityCenter.tsx",
+      "sha256": "b237d681e183196970d356cc1ed5c135a766ec5c1d68b2d2c25cb108bc459d92"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ComposerReferences.tsx",
+      "sha256": "01a8403940f9312f7aa960c7db3c0ba93946fb12d1ecb1fbdc28693093a31c38"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CreationMethodDialog.tsx",
+      "sha256": "0a737093240e5ab6039b2c8d875ae233b3853ae754c7229ad275ba097186f411"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/NewSession.tsx",
+      "sha256": "2fb5a0315fe1b4ebdbe7197c10d143c223f6d2ea35d9b673eeb1dd8d05f25012"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/SkillLibrary.tsx",
+      "sha256": "2d00240ab8982415f69e8d0acde6cae6ea18632a93d84af34294f48d41f5518c"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/capabilities.css",
+      "sha256": "551f730a65bd1c036c224f4278cef8fbdfc16b689a4d602370768d36b153a49a"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "sha256": "41acd82b528354f9c50be34890dc4f959698ab0d8668e92552243eb57b00ee83"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/styles.css",
+      "sha256": "799adbd4623dc061f844d33e7b2d3057a78ac7fbcc561a5d3d2971fe5d562602"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useChat.ts",
+      "sha256": "cf6bf0a0be40bdc3fd51cf88820a6f13c60704af23df279a02e86b2626d93c98"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useComposerSelections.ts",
+      "sha256": "2f4ce1daa0f34a1e6b115c68f4976b8f620c98478ab4a406c8105c1f8b2587b3"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/access.spec.ts",
+      "sha256": "4f2086bbc01890ae0a3f38a529cadf2643bdbd2c3d28615fe9605bf893840aa5"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/administrator.spec.ts",
+      "sha256": "fc8555234f9661ce25d7de2115f9072ce06e6b0ae925546d95603f1a9bb3cca7"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/authoring.spec.ts",
+      "sha256": "44fbadac154064150f8a0149c6635168c01fcd5f2b9a4bac1b3856477eb083fd"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/capabilities.spec.ts",
+      "sha256": "9a1fbc47541cdc8e51c0fc0651d9f3714459e963294301e094c6aa3d645d9e1b"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/chat.spec.ts",
+      "sha256": "efd55e00454ec32d1ab2914c2c4c1b3b0eb41864893606f87ec07d4a57541d12"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/files.spec.ts",
+      "sha256": "ef06157ad5617821c7f21df061e5f9d7634979de2f120ac950b632c79347b75a"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/skills.spec.ts",
+      "sha256": "8e97074f090117ead966f6454e9f6065884c6a7e33a2096937d99146a0141068"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/workbench.spec.ts",
+      "sha256": "e7dfe2313a05e14875e2cb9d75d0c0ddfc15cd012e0949daed984f4f178a939b"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/management-skill-review.test.ts",
+      "sha256": "41cab0e718d03684aaadeb7852337337fa9336611c8de1bc447277c112774d8b"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/management-skills.test.ts",
+      "sha256": "6a8cd164d28898e500bd2087cac38510508a23649b7fe1e9386313af0a29d762"
+    }
+  ],
+  "live": {
+    "manifest": "creation-live-source.json",
+    "packageSha256": "2d2cf4b9991eca4b0247c42da4b91062310631509a2458038365a15f6059e10c",
+    "files": 457,
+    "summary": "creation-live-ark-summary.json",
+    "calls": 24,
+    "elapsedMs": 104000,
+    "changedSinceLive": [
+      {
+        "path": "experiments/harness-lab/src/web/ComposerReferences.tsx",
+        "liveSha256": "6b60367e0eecfa844857266a01f707b74c2b87e90e6649776e41626f5d4256a3",
+        "finalSha256": "01a8403940f9312f7aa960c7db3c0ba93946fb12d1ecb1fbdc28693093a31c38"
+      },
+      {
+        "path": "experiments/harness-lab/src/web/main.tsx",
+        "liveSha256": "2aca2f5f094c344f0f5f6ca31a27585156d0ace2a4641c48fd0b8d1c2a258599",
+        "finalSha256": "41acd82b528354f9c50be34890dc4f959698ab0d8668e92552243eb57b00ee83"
+      }
+    ],
+    "backendMethodsProbeMatch": true
+  },
+  "checks": {
+    "frozenTypecheck": {
+      "exit": 0,
+      "log": "creation-final-typecheck.log"
+    },
+    "frozenLintAndBoundaries": {
+      "exit": 0,
+      "warnings": "InteractionCard两条既有ref cleanup警告",
+      "log": "creation-final-lint.log"
+    },
+    "frozenBuild": {
+      "exit": 0,
+      "warnings": "既有大chunk提示",
+      "log": "creation-final-build.log"
+    },
+    "unit": {
+      "first": {
+        "filesPassed": 180,
+        "filesTotal": 185,
+        "testsPassed": 1847,
+        "testsTotal": 1852,
+        "log": "creation-full-unit-first.log",
+        "failures": "4项超时、1项task-discovery geometry断言失败"
+      },
+      "unchangedFailedFilesRerun": {
+        "filesPassed": 5,
+        "testsPassed": 37,
+        "durationSeconds": 48.3,
+        "log": "creation-full-unit-failed-files-rerun.log"
+      },
+      "note": "所有用例有通过证据；不是一次完整185文件零失败运行。"
+    },
+    "browser": {
+      "frozenAuthoring": {
+        "passed": 3,
+        "durationSeconds": 26.8,
+        "log": "creation-web-final-browser.log"
+      },
+      "capabilitiesAndReferences": {
+        "passed": 16,
+        "log": "creation-capabilities-references-final.log"
+      },
+      "navigation": {
+        "passed": 5,
+        "log": "creation-navigation-final.log"
+      },
+      "chatFilesReferencesFirst": {
+        "passed": 74,
+        "total": 76,
+        "log": "creation-chat-files-refs-first.log",
+        "failedItemsCoveredByFinalNavigationAndReferences": true
+      },
+      "administratorAndSkills": {
+        "passed": 17,
+        "note": "最终路由和准备期收紧之前；最终authoring另覆盖最新变化"
+      },
+      "accessAndWorkbench": {
+        "firstPassed": 19,
+        "total": 22,
+        "failedRerunPassed": 3,
+        "rerunSeconds": 38.4,
+        "report": "creation-review.md"
+      }
+    },
+    "visual": {
+      "desktopWidths": [
+        1060,
+        1440
+      ],
+      "parentViewed": [
+        "authoring-composer-1060.png",
+        "authoring-composer-1440.png",
+        "authoring-confirmation-1060.png"
+      ],
+      "directory": "creation-web-screenshots"
+    },
+    "diffCheck": {
+      "exit": 0
+    }
+  }
+}

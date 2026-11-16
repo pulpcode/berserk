@@ -276,9 +276,10 @@ test('partial workbench reads preserve failed-section rows and do not claim comp
 test('formal root workbench remains in browser history when entering an existing conversation', async ({ page }) => {
   const env = await setup(); await env.attach(page);
   try {
+    const workspace = await env.lab.workspaces.ensureWorkspace(env.task.id, env.actor.seatId, env.task.title);
+    await env.lab.createSession(workspace.id, env.actor.seatId, undefined, undefined, undefined, { userId: env.actor.userId });
     await login(page);
-    const create = page.getByRole('button', { name: `在项目 ${env.task.title} 中新建对话`, exact: true });
-    await page.locator('.workspace-group-heading').filter({ has: create }).hover(); await create.click();
+    await page.locator('.session-item').first().click();
     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('项目对话未发送草稿');
     await page.goto('/');
     await expect(page.getByRole('heading', { name: '工作待办', exact: true })).toBeVisible();

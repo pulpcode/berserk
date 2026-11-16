@@ -1,0 +1,58 @@
+{
+  "baseCommit": "1e99845e91b62f30c966baa25d9bf9de3756808b",
+  "reviewedFileCount": 26,
+  "files": {
+    "fixtures/skills/expert-manager/SKILL.md": "83bc0550d86c68a477b11a188657fc38b14164807a83d7113ee82e6d31512ef3",
+    "fixtures/skills/skill-creator/SKILL.md": "d713e008fd26359342b9349c17250d7e1d227361e814db8ed2911858abcdc1df",
+    "src/authoring/management-skills.ts": "c6a7d3b78b287f879a73584d415652898b7a3fd95ca888ffd947af3c0a0c1748",
+    "src/contracts/index.ts": "2766774932c252924e2b739614c666a8b33ab59e78c5d0b3651bf7d056f4452b",
+    "src/pi/authoring-tools.ts": "67a8780806677f5a0c77642d320d966f52983351af5639d4657a727d7ce43d31",
+    "src/pi/composer-input.ts": "9cfa9cc9c8ba1313bd59d76d5086a689b0a70aa20b9a1e18666df2e4e2cc5475",
+    "src/pi/history-evidence.ts": "2deb8dc68bfe7b3874dcc8f98a896a2a7bb88ff36f02e979ca884422bf4c62bd",
+    "src/pi/lab.ts": "d52d69d5dcfc475a52f0d7cc388a0765d6d05d1f38423a56841abd80ac905b8e",
+    "src/pi/resource-tools.ts": "22027060016e6136d526d3aa495eb68f917990758efe4bbba61a4b225c17c6cd",
+    "src/server/app.ts": "9eb034de7a618423b753cbd57ed9965de7adb493ff6f51a9923e238b53959cff",
+    "src/server/capability-management-routes.ts": "239c96c85f10124b3aa23ff0adffd3b9ca6873ab4f5dc376d2acaec1a150e421",
+    "src/web/CapabilityCenter.tsx": "b237d681e183196970d356cc1ed5c135a766ec5c1d68b2d2c25cb108bc459d92",
+    "src/web/ComposerReferences.tsx": "01a8403940f9312f7aa960c7db3c0ba93946fb12d1ecb1fbdc28693093a31c38",
+    "src/web/CreationMethodDialog.tsx": "0a737093240e5ab6039b2c8d875ae233b3853ae754c7229ad275ba097186f411",
+    "src/web/NewSession.tsx": "2fb5a0315fe1b4ebdbe7197c10d143c223f6d2ea35d9b673eeb1dd8d05f25012",
+    "src/web/SkillLibrary.tsx": "2d00240ab8982415f69e8d0acde6cae6ea18632a93d84af34294f48d41f5518c",
+    "src/web/capabilities.css": "551f730a65bd1c036c224f4278cef8fbdfc16b689a4d602370768d36b153a49a",
+    "src/web/main.tsx": "41acd82b528354f9c50be34890dc4f959698ab0d8668e92552243eb57b00ee83",
+    "src/web/styles.css": "799adbd4623dc061f844d33e7b2d3057a78ac7fbcc561a5d3d2971fe5d562602",
+    "src/web/useChat.ts": "cf6bf0a0be40bdc3fd51cf88820a6f13c60704af23df279a02e86b2626d93c98",
+    "src/web/useComposerSelections.ts": "2f4ce1daa0f34a1e6b115c68f4976b8f620c98478ab4a406c8105c1f8b2587b3",
+    "tests/e2e/access.spec.ts": "4f2086bbc01890ae0a3f38a529cadf2643bdbd2c3d28615fe9605bf893840aa5",
+    "tests/e2e/authoring.spec.ts": "44fbadac154064150f8a0149c6635168c01fcd5f2b9a4bac1b3856477eb083fd",
+    "tests/e2e/workbench.spec.ts": "e7dfe2313a05e14875e2cb9d75d0c0ddfc15cd012e0949daed984f4f178a939b",
+    "tests/pi/management-skill-review.test.ts": "41cab0e718d03684aaadeb7852337337fa9336611c8de1bc447277c112774d8b",
+    "tests/pi/management-skills.test.ts": "6a8cd164d28898e500bd2087cac38510508a23649b7fe1e9386313af0a29d762"
+  },
+  "reviewedFilesDigest": "66b474aa500caf1eddaaadaf2bc3021e408960063b548fc3c126f0013b50d3d4",
+  "verification": {
+    "independentUnitTestsPassed": 2,
+    "unitDurationSeconds": 31.44,
+    "browserFirstRun": {
+      "passed": 19,
+      "timedOut": 3,
+      "durationMinutes": 7.3
+    },
+    "browserRerun": {
+      "passed": 3,
+      "durationSeconds": 38.4
+    },
+    "typecheck": "independent pass before preparation guards; root confirmed final frozen-source typecheck pass",
+    "scopedEslint": "passed",
+    "finalDeltaEslint": "passed",
+    "ownerFinalAuthoringBrowser": {
+      "passed": 3,
+      "durationSeconds": 26.8,
+      "sameFrozenMainHash": true
+    }
+  },
+  "userAcceptance": "pending",
+  "commit": false,
+  "push": false,
+  "deployment": false
+}

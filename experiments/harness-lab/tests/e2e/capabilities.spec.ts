@@ -109,11 +109,15 @@ test('ordinary new conversation keeps the general assistant and uses an action I
     await page.setViewportSize({ width: 1100, height: 800 });
     await page.goto('/');
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
-    await page.getByRole('button', { name: '创建对话', exact: true }).click();
+    await expect(page.getByLabel('对话保存位置')).toBeVisible();
+    expect(env.creationBodies).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
+    await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('普通新会话');
+    await page.getByRole('button', { name: '发送消息', exact: true }).click();
+    await expect(page.getByText('资料综合完成。', { exact: true })).toBeVisible();
     await expect(page.locator('.session-expert-identity')).toContainText('Axon 通用助手');
     expect(env.creationBodies[0]).toMatchObject({ clientActionId: expect.any(String) });
     expect(env.creationBodies[0].expertRef).toBeUndefined();
-    expect(env.fake.calls).toHaveLength(0);
+    expect(env.fake.calls).toHaveLength(1);
   } finally { await env.close(); }
 });
 

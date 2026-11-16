@@ -127,6 +127,7 @@ export function useChat(enabled = true) {
     try { sessionStorage.setItem(storageKey('berserk.workspace'), id); } catch { /* Keep selection in memory. */ }
     return selectionsRef.current[id] || '';
   }, [noteNavigation, storageKey]);
+  const beginNew = useCallback((id = workspaceRef.current) => { selectForWorkspace(id, ''); selectWorkspace(id); }, [selectForWorkspace, selectWorkspace]);
   const [drafts, setDrafts] = useState(() => stored(DRAFT_KEY));
   const draftsRef = useRef(drafts);
   const movedDrafts = useRef(new Map<string, string>());
@@ -307,7 +308,7 @@ export function useChat(enabled = true) {
           const selectedId = selectionsRef.current[owner.id];
           // A creation may appear in polling before POST returns and transfers
           // its workspace draft. Keep that composer owner until create settles.
-          if (!selectedId && creatingRef.current === owner.id) continue;
+          if (!selectedId && (creatingRef.current === owner.id || Object.hasOwn(selectionsRef.current, owner.id))) continue;
           if (!activitiesRef.current.some(item => item.id === selectedId && item.workspaceId === owner.id)) {
             selectForWorkspace(owner.id, activitiesRef.current.find(item => item.workspaceId === owner.id)?.id || '');
           }
@@ -418,7 +419,7 @@ export function useChat(enabled = true) {
       if (!options && navigationRevision.current === navigation) {
         selectForWorkspace(targetWorkspaceId, snapshot.id);
         selectWorkspace(targetWorkspaceId);
-      } else if (!options && !selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
+      } else if (!options && !Object.hasOwn(selectionsRef.current, targetWorkspaceId)) selectForWorkspace(targetWorkspaceId, snapshot.id);
       if (!options) movedDrafts.current.set(key, snapshot.id);
       if (draftModelsRef.current[key]) {
         const next = { ...draftModelsRef.current }; delete next[key];
@@ -565,7 +566,8 @@ export function useChat(enabled = true) {
       const owner = activitiesRef.current.find(item => item.id === id)?.workspaceId;
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
     }, workspaces, workspaceId,
-    workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, selectedForWorkspace: (id: string) => selectionsRef.current[id] || '', createWorkspace,
+    workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace,
+    beginNew, selectedForWorkspace: (id: string) => selectionsRef.current[id] || '', createWorkspace,
     loading, creating, create, send, cancel, draftKey, attachments, composerSelections, inputQueue,
     resolveDraftOwner: () => movedDrafts.current.get(draftKey) || draftKey,
     setComposerSelection: (kind: 'skill' | 'agent', value?: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(movedDrafts.current.get(draftKey) || draftKey, kind, value),

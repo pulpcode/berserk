@@ -1,3 +1,4 @@
+import { loadManagementSkills } from '../authoring/management-skills.js';
 import { Type } from 'typebox';
 import { Check } from 'typebox/value';
 import { defineTool } from '@earendil-works/pi-coding-agent';
@@ -27,18 +28,15 @@ export const validAuthoringIntent = (value: unknown): value is AuthoringIntent =
 export const authoringSaveSchema = Type.Object({ proposalId }, strict);
 export const authoringToolNames = ['capability_authoring_catalog', 'capability_authoring_read', 'capability_authoring_propose', 'capability_authoring_save', 'capability_authoring_report', 'capability_authoring_method'] as const;
 
-const methods = {
-  expert: `# 专家管理方法\n先明确用户要创建的职责、输入和输出；已有对象先查询真实目录并读取当前草稿，目标不明确先用 ask_user 询问。仅修改要求的名称、简介、专业指令、工具范围与固定技能引用；其他字段保留。引用必须来自目录，组织技能使用完整skillId/revisionId/packageDigest，旧skillIds保留原义。创建候选需要完整content；编辑提交基线与局部content字段。先propose校验完整候选，再save请求网页操作确认；普通回答“确认”、ask_user回答及模型声明不授权。只有真实保存回执可称已保存，保存后留在对话并提供详情入口。试用、发布、范围、默认与启停由原管理界面显式操作。不要调用Shell、本地注册脚本、安装、头像或专家团流程。`,
-  skill: `# 方法技能管理方法\n从真实使用例子明确用途、触发条件、步骤、输入输出与边界。SKILL.md保留标准name/description及原有扩展元数据、注释和引用；资料按需放references/，输出模板放assets/，不要重复大段内容。创建时提交完整SKILL.md及必要文本；已有对象必须先读取当前草稿与基线。只修改SKILL.md正文时必须传methodBody，不提交整个SKILL.md或重建frontmatter；完整文件修改用files，与methodBody互斥。仅提交用户要求的文本文件补丁，删除明确列入removePaths。未改字段/文件保持原样，不为适配对话删除脚本或二进制；含此类文件的包转原手动维护。不得生成执行脚本或安装配置。propose返回实际完整候选，save仅发起网页操作确认。只有真实回执表示草稿已保存。扫描报告解释实际内容摘要，未执行试用不可称通过；不自动试用、发布或开放范围。`,
-};
+
 /** A narrow direct-request convenience only; quoted documents, attachments and history never activate authority. */
 export function requestedAuthoring(text: string): AuthoringIntent | undefined {
   if (text.includes('```') || /^[\s>"“]/.test(text)) return undefined;
   const match = /^(?:请帮我|帮我|我想|我要|我需要|请|麻烦)?(?:创建|新建|修改|编辑|调整)(?:一个|一位|这个|这份)?(专家|技能|skill)(?:\s|[，。,:：]|$)/i.exec(text);
   return match ? { kind: match[1].toLowerCase() === '专家' ? 'expert' : 'skill' } : undefined;
 }
-export function authoringPrompt(intent: AuthoringIntent): string {
-  return `\n当前是管理员本人发起的${intent.kind === 'expert' ? '专家' : '方法型技能'}草稿管理请求${intent.targetId ? `，明确目标ID=${intent.targetId}` : ''}${intent.baseline ? `，进入对话时的草稿基线=${JSON.stringify(intent.baseline)}` : ''}。使用受控 capability_authoring_* 工具；先按需读取 capability_authoring_method，再查询真实目录/草稿。名称不明先问，不凭名称猜ID。一次候选只对应一个明确目标；同会话可以顺序处理不同目标。propose不会写草稿，save会等待网页操作确认，不能把普通文字或问答当批准。发布、授权、默认、Shell、业务操作和子Agent在本请求不提供；普通聊天下一请求仍沿用原权限。保存后留在对话，用真实回执说明效果，不自动跳转。`;
+export function authoringPrompt(intent: AuthoringIntent, methodLoaded = false): string {
+  return `\n当前是管理员本人发起的${intent.kind === 'expert' ? '专家' : '方法型技能'}草稿管理请求${intent.targetId ? `，明确目标ID=${intent.targetId}` : ''}${intent.baseline ? `，进入对话时的草稿基线=${JSON.stringify(intent.baseline)}` : ''}。使用受控 capability_authoring_* 工具；${methodLoaded ? '所选管理Skill正文已加载，不要重复读取方法；' : '先按需读取 capability_authoring_method；'}再查询真实目录/草稿。名称不明先问，不凭名称猜ID。一次候选只对应一个明确目标；同会话可以顺序处理不同目标。propose不会写草稿，save会等待网页操作确认，不能把普通文字或问答当批准。发布、授权、默认、Shell、业务操作和子Agent在本请求不提供；普通聊天下一请求仍沿用原权限。保存后留在对话，用真实回执说明效果，不自动跳转。`;
 }
 
 export function authoringTools(service: AuthoringService, context: AuthoringContext, intent: AuthoringIntent, options: {
@@ -56,7 +54,7 @@ export function authoringTools(service: AuthoringService, context: AuthoringCont
     return item;
   }) }], details: value });
   return [
-    defineTool({ name: 'capability_authoring_method', label: '读取管理方法', description: '按需读取宿主维护的专家或方法型技能管理方法，不安装或执行上传包。', parameters: Type.Object({}, strict), executionMode: 'sequential', execute: async () => { options.check(); return result({ method: intent.kind === 'expert' ? 'expert-manager' : 'skill-manager', content: methods[intent.kind] }); } }),
+    defineTool({ name: 'capability_authoring_method', label: '读取管理方法', description: '按需读取宿主维护的专家或方法型技能管理方法，不安装或执行上传包。', parameters: Type.Object({}, strict), executionMode: 'sequential', execute: async () => { options.check(); const skill = (await loadManagementSkills([intent.kind === 'expert' ? 'expert-manager' : 'skill-creator']))[0]; options.check(); return result({ method: skill.id, content: skill.content, hash: skill.hash }); } }),
     defineTool({ name: 'capability_authoring_catalog', label: '查询能力管理目录', description: '读取可管理对象与真实工具和技能引用目录，不读取他人对话或私有试用资料。', parameters: Type.Object({}, strict), executionMode: 'sequential', execute: async () => { options.check(); return result(await service.catalog(context)); } }),
     defineTool({ name: 'capability_authoring_read', label: '读取管理草稿与回执', description: '编辑前读取明确对象当前草稿和基线；提供proposalId只查询原保存回执，不重放保存。', parameters: Type.Object({ kind, targetId: Type.Optional(targetId), proposalId: Type.Optional(proposalId) }, strict), executionMode: 'sequential', execute: async (_id, params) => {
       checkTarget({ ...params, targetId: params.targetId ?? (params.proposalId ? intent.targetId : undefined) });
