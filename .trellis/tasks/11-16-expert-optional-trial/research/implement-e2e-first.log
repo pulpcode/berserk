@@ -1,0 +1,48 @@
+[WebServer] (node:91046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:91017) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:91142) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91142) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/capability-management.spec.ts:54:1 › admin creates and checks a draft without calling a model; shared conflicts preserve local edits (7.6s)
+  ✘  2 tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate (1.0m)
+Testing stopped early after 1 maximum allowed failures.
+
+
+  1) tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.check: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog', { name: '专家管理', exact: true }).getByRole('checkbox', { name: '我已核对配置、试用结果和使用范围，确认发布。', exact: true })
+
+
+      103 |     await expect(dialog.getByText('管理员已确认本次试用。发布时仍会核对当前草稿与依赖。', { exact: true })).toBeVisible();
+      104 |     await dialog.getByLabel('发布说明', { exact: true }).fill('首个经过隔离试用的配置。');
+    > 105 |     await dialog.getByRole('checkbox', { name: '我已核对配置、试用结果和使用范围，确认发布。', exact: true }).check();
+          |                                                                                         ^
+      106 |     await dialog.getByRole('button', { name: '发布新版本', exact: true }).click();
+      107 |     await expect(dialog).toContainText('版本 1.0.0');
+      108 |     await page.screenshot({ path: test.info().outputPath('r2-published-expert-desktop.png') });
+        at /Users/lau/.codex/worktrees/expert-optional-trial/berserk/experiments/harness-lab/tests/e2e/capability-management.spec.ts:105:89
+
+    Error Context: test-results/capability-management-repr-8ad5e-al-defaults-remain-separate/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/capability-management-repr-8ad5e-al-defaults-remain-separate/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/capability-management-repr-8ad5e-al-defaults-remain-separate/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate
+  1 did not run
+  1 passed (1.4m)
+  1 error was not a part of any test, see above for details

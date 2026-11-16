@@ -20,11 +20,11 @@ test('authenticated management trial/publication and five-level defaults preserv
   const dataDir=await mkdtemp(join(tmpdir(),'axon-r2-api-'));const db=await openDatabase(dataDir);const access=new AccessStore(db);
   for(const username of ['owner','user'])await access.saveAccount({username,displayName:username,seatId:username,seatName:username,password:'test-password-123',createPublicTask:username==='owner',manageModelSettings:false});
   migrateAdministratorAccounts(db);
-  await access.saveAdministratorAccount({username:'admin',displayName:'系统管理员',password:'test-password-123'});db.close();
+  await access.saveAdministratorAccount({username:'admin',displayName:'系统管理员',password:'test-password-123'});await access.saveAdministratorAccount({username:'other-admin',displayName:'另一管理员',password:'test-password-123'});db.close();
   const config=testConfig(dataDir,{auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});const fake=await fakeRuntime(config,()=>({text:'合成输入的代表性试用完成。'}));const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab,false,undefined,undefined,{runtimeFactory:async()=>fake.runtime});
   try {
     const login=async(username:string)=>{const first=await app.inject('/api/auth/session');const a=first.json<AuthSession>();const r=await app.inject({method:'POST',url:'/api/auth/login',headers:{cookie:first.cookies.map(c=>`${c.name}=${c.value}`).join('; '),origin:'http://localhost:4310','x-csrf-token':a.csrf!},payload:{username,password:'test-password-123'}});expect(r.statusCode,r.body).toBe(200);const auth=r.json<AuthSession>();return {headers:{cookie:r.cookies.map(c=>`${c.name}=${c.value}`).join('; '),origin:'http://localhost:4310','x-csrf-token':auth.csrf!,'x-axon-view':auth.viewId!},identity:auth.identity!};};
-    const admin=await login('admin'),owner=await login('owner'),user=await login('user');
+    const admin=await login('admin'),owner=await login('owner'),user=await login('user'),otherAdmin=await login('other-admin');
     const call=(who:typeof admin,url:string,payload?:object,method?:'GET'|'POST'|'PUT')=>app.inject({url,method:method??(payload?'POST':'GET'),headers:who.headers,...(payload?{payload}:{})});
     const ok=async<T>(who:typeof admin,url:string,payload?:object,method?:'GET'|'POST'|'PUT')=>{const r=await call(who,url,payload,method);expect(r.statusCode,r.body).toBe(200);return r.json<T>();};
     const root='/api/admin/capabilities/experts';
@@ -55,9 +55,32 @@ test('authenticated management trial/publication and five-level defaults preserv
     const draft=await ok<ExpertDraft>(admin,`${url}/draft`,{expectedDraftRevision:1,content:{name:'组织核对专家',description:'合成资料核对',instructions:'仅根据输入事实回答。',skillIds:[],allowedTools:[]}},'PUT');
     await ok(admin,`${url}/policy`,{expectedRevision:0,mode:'seats',seatIds:['owner','user'],clientActionId:randomUUID()},'PUT');
     const validation=await ok<ExpertValidation>(admin,`${url}/validate`,{expectedDraftRevision:draft.draftRevision});expect(validation.valid).toBe(true);expect(fake.calls).toHaveLength(0);
+    const untried = await ok<ManagedExpertDetail>(admin, root, { clientActionId: randomUUID() });
+    const untriedUrl = `${root}/${untried.expert.expertId}`;
+    const untriedDraft = await ok<ExpertDraft>(admin, `${untriedUrl}/draft`, { expectedDraftRevision: 1, content: { name: '无需试用发布', description: '只检查配置即可发布', instructions: '仅根据输入事实回答。', skillIds: [], allowedTools: [] } }, 'PUT');
+    const untriedValidation = await ok<ExpertValidation>(admin, `${untriedUrl}/validate`, { expectedDraftRevision: untriedDraft.draftRevision });
+    const untriedInput = { expectedDraftRevision: untriedDraft.draftRevision, expectedCurrentRevisionId: null, validationId: untriedValidation.validationId, releaseNotes: '不调用模型的发布', acceptedRiskCodes: [], clientActionId: randomUUID() };
+    expect((await call(admin, `${untriedUrl}/publish`, untriedInput)).statusCode).toBe(409);
+    await ok(admin, `${untriedUrl}/policy`, { expectedRevision: 0, mode: 'all', seatIds: [], clientActionId: randomUUID() }, 'PUT');
+    for (const trialId of [null, '', 'invalid']) expect((await call(admin, `${untriedUrl}/publish`, { ...untriedInput, trialId })).statusCode).toBe(400);
+    const { validationId: omittedValidation, ...withoutValidation } = untriedInput; void omittedValidation;
+    expect((await call(admin, `${untriedUrl}/publish`, withoutValidation)).statusCode).toBe(400);
+    expect((await call(user, `${untriedUrl}/publish`, untriedInput)).statusCode).toBe(403);
+    expect((await call(admin, `${untriedUrl}/publish`, { ...untriedInput, releaseNotes: '' })).statusCode).toBe(400);
+    expect((await call(admin, `${untriedUrl}/publish`, { ...untriedInput, trialId: randomUUID() })).statusCode).toBe(404);
+    const untriedPublication = await ok<ExpertPublication>(admin, `${untriedUrl}/publish`, untriedInput);
+    expect(untriedPublication).not.toHaveProperty('trialId');
+    expect(await ok<ExpertPublication>(admin, `${untriedUrl}/publish`, untriedInput)).toEqual(untriedPublication);
+    const untriedDetail = await ok<ManagedExpertDetail>(admin, untriedUrl);
+    expect(untriedDetail.trials).toEqual([]); expect(untriedDetail.publications).toEqual([untriedPublication]);
+    expect(fake.calls).toHaveLength(0);
     const trial=await ok<ExpertTrialRunView>(admin,`${url}/trials`,{expectedDraftRevision:draft.draftRevision,validationId:validation.validationId,input:'计划10件完成8件，请归纳。',clientActionId:randomUUID()});
     await vi.waitFor(async()=>{const view=await ok<ExpertTrialRunView>(admin,`${url}/trials/${trial.trial.trialId}`);expect(view.trial.status,view.trial.evidence?.summary).toBe('succeeded');},{timeout:10000});
     await ok(admin,`${url}/trials/${trial.trial.trialId}/confirm`,{approved:true,reason:'核对合成样例结果。',clientActionId:randomUUID()});
+    expect((await ok<ManagedExpertDetail>(admin, url)).trials.map(item => item.trialId)).toEqual([trial.trial.trialId]);
+    expect((await ok<ManagedExpertDetail>(otherAdmin, url)).trials).toEqual([]);
+    expect((await call(otherAdmin, `${url}/trials/${trial.trial.trialId}`)).statusCode).toBe(404);
+    expect((await call(otherAdmin, `${url}/publish`, { expectedDraftRevision: draft.draftRevision, expectedCurrentRevisionId: null, validationId: validation.validationId, trialId: trial.trial.trialId, releaseNotes: '不能关联其他管理员试用', acceptedRiskCodes: [], clientActionId: randomUUID() })).statusCode).toBe(404);
     const pub=await ok<ExpertPublication>(admin,`${url}/publish`,{expectedDraftRevision:draft.draftRevision,expectedCurrentRevisionId:null,validationId:validation.validationId,trialId:trial.trial.trialId,releaseNotes:'首次发布',acceptedRiskCodes:[],clientActionId:randomUUID()});
     // Managing a seat default does not require granting the administrator that seat's expert.
     await ok(admin,'/api/admin/seats/user/expert-default',{expectedRevision:0,choice:{mode:'expert',expertId:id},clientActionId:randomUUID()},'PUT');

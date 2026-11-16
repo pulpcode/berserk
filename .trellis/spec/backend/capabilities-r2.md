@@ -8,7 +8,7 @@ R2 extends the existing capability store with organization drafts, validation, i
 
 `capabilities/management.ts` owns R2 tables in capabilities.sqlite schema2; `capabilities/service.ts` still owns immutable schema1 expert content, cache, admission and creation intents. Keep original revisionId/digest and all R1 duplicate release labels. A draft CAS conflict preserves client input. Validation binds draftDigest, skills and selected tool policy metadata; changes invalidate prior evidence.
 
-Organization experts start with empty use policy and no published pointer. Builtins are read-only; copy creates an independent organization ID. Startup cannot overwrite organization publications. Publish requires current successful trial plus a distinct administrator decision and individually acknowledged risk codes. The core writes durable blobs before an SQLite transaction commits revision/current pointer/publication/audit/action receipt. Same principal+action+input returns one result; changed input conflicts. Recheck authority after mutex acquisition and after awaited blob writes. New releases are1.0.0 then PATCH; unchanged content does not manufacture releases.
+Organization experts start with empty use policy and no published pointer. Builtins are read-only; copy creates an independent organization ID. Startup cannot overwrite organization publications. Publish requires valid current configuration, explicit use scope, release notes, human publication intent and individually acknowledged risk codes. Isolated trials and their separate administrator result confirmation are optional; no trial status or file-environment trial evidence is a publication gate. The core writes durable blobs before an SQLite transaction commits revision/current pointer/publication/audit/action receipt. Same principal+action+input returns one result; changed input conflicts. Recheck authority after mutex acquisition and after awaited blob writes. New releases are1.0.0 then PATCH; unchanged content does not manufacture releases.
 
 Ordinary disable and archive block future work while accepted work drains; archive hides catalog entries but retains history. Restore only clears disabled, never bans or account denial. Policy withdrawal remains an immediate guard and cancellation source. Lifecycle requires current publication ID plus stateRevision CAS; initial stateRevision is0.
 
@@ -33,3 +33,41 @@ Only a newly created capability database auto-initializes R2. Every existing R1 
 ## Verification
 
 Run management/core/security/API/trial/synchronization tests and existing capability/migration/handoff regression. Browser tests use real auth/API/Pi and fake only provider transport. Typecheck, lint/boundaries and build are required. Keep first-run failures and exact rerun coverage; real Ark/Docker, synthetic adapters, storage timings and user acceptance are separate evidence categories.
+
+## Optional expert trials
+
+### 1. Scope / Trigger
+
+Publication now treats expert trials as optional effect verification, matching Skills. This changes management request/record contracts only, not Pi execution, admission, sandboxing or trial isolation.
+
+### 2. Signatures
+
+`POST /api/admin/capabilities/experts/:expertId/publish` accepts `PublishExpertInput` with optional `trialId?: string`; all other required fields remain required. `ExpertPublication.trialId?: string` stores an actual qualified reference only. Both remain in their original JSON records/tables; no schema version or migration is added.
+
+### 3. Contracts
+
+Omitting trialId allows publication regardless of whether trials are absent, running, failed, cancelled, interrupted or awaiting confirmation. Never invent a passing trial or change an existing result. Explicit trialId retains UUID validation, private owner/expert checks, matching draftDigest and validationId, succeeded status, real success evidence and administrator confirmation; recheck its confirmation at the original async commit boundary. Existing requests with qualified references and their action receipts remain compatible. File-environment trial success is no longer a publication gate even for file tools; current tool risk acknowledgement and execution-time environment/permission checks remain effective. The administrator expert-detail GET projects only the current actor's trial records so automatic UI association cannot select another owner's otherwise matching success; shared publication metadata stays readable. Trial execution and optional result confirmation retain their existing authorization/isolation contracts.
+
+### 4. Validation & Error Matrix
+
+| Condition | Result |
+|---|---|
+| No trialId; other publication conditions satisfied | Publish without a trial reference or model call |
+| Explicit malformed trialId | HTTP 400 schema validation |
+| Other owner or nonexistent explicit trial | Existing not-found response; no private evidence exposure |
+| Explicit cross-expert, stale-draft/validation, unsuccessful or unconfirmed trial | Existing capability conflict; no publication |
+| Missing current validation, dependency invalidation, unacknowledged risks or closed use scope | Existing publication rejection remains |
+| File tools without successful file-environment trial evidence | No trial gate; tool risk acknowledgement remains required |
+| Authority/CAS or explicitly referenced trial confirmation changes before commit | Reject atomically, retaining original transaction and action-retry semantics |
+
+### 5. Good / Base / Bad Cases
+
+Base: publish a validated expert with no trialId and no model invocation. Good: optionally associate a genuine same-draft/same-validation confirmed success, including an old-format client request. Bad: attach an old validation's success automatically, or translate missing references into a claimed successful result. Existing sessions keep their immutable binding; subsequent sessions select the new revision.
+
+### 6. Tests Required
+
+Service/API/browser tests cover no-trial publication, non-gating trial statuses, file-tool risk acknowledgement without environment trial, explicit invalid references, old qualified trial requests, action retry, authorization/CAS guards, and old/new publication reads after restart. Desktop1060/1440 browser checks assert optional copy, explicit publication checkbox, no model call during publication and preserved optional trial/confirmation UI. Keep Skill publication and runtime history/admission regressions separate from real-provider or real-Docker acceptance.
+
+### 7. Wrong vs Correct
+
+Wrong: enable the browser button while the route still requires trialId; or suppress an explicit bad reference and claim it was verified. Correct: optional shared DTO and route required list, branch the original service checks only on supplied trialId, preserve true optional evidence, and omit unmatched UI references without altering trial records.

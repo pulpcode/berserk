@@ -1,0 +1,17 @@
+[WebServer] (node:92242) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:92205) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:92357) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:92357) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/capability-management.spec.ts:54:1 › admin creates and checks a draft without calling a model; shared conflicts preserve local edits (23.9s)
+  ✓  2 tests/e2e/capability-management.spec.ts:85:1 › optional plaintext trial can still be confirmed and personal defaults remain separate (23.3s)
+  ✓  3 tests/e2e/capability-management.spec.ts:158:1 › ordinary user cannot see expert management and can explicitly choose general as personal default (10.6s)
+  ✓  4 tests/e2e/capability-management.spec.ts:176:3 › untried expert publishes explicitly without a model call at desktop 1060 (16.1s)
+  ✓  5 tests/e2e/capability-management.spec.ts:176:3 › untried expert publishes explicitly without a model call at desktop 1440 (16.9s)
+
+  5 passed (2.2m)

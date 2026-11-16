@@ -1,0 +1,28 @@
+{
+  "checkpoint": "0e96ad1c24233db6bce7ccb91416d3500b3cb0a8",
+  "mergedBranch": "codex/expert-optional-trial",
+  "mergedHead": "33e9ae34fa8a5d9ce311393cffb8bb1113069406",
+  "textConflicts": 0,
+  "reviewFix": "内置专家复制说明明确隔离试用可选",
+  "sources": {
+    "experiments/harness-lab/src/capabilities/management.ts": "82e73cdd95d00b868121117b26c70e27df3dd031b3c850c7603a097f27ae4ec4",
+    "experiments/harness-lab/src/contracts/capability-management.ts": "3a2bc675a8bf8aacbd734a04c17972810b9421aac2e9e18b36f202c36b8d5a8b",
+    "experiments/harness-lab/src/server/capability-management-routes.ts": "6b4c20ec5f4f1b9f5cb011e6f8ab7b15a1a618e3e3971f71e1163b9ba3762f2e",
+    "experiments/harness-lab/src/web/CapabilityManagement.tsx": "12c20c1cf2177c5245881dbe02de7c3ea4829f75b74c82f95d46960cd251efb7",
+    "experiments/harness-lab/src/web/ExpertTrial.tsx": "cd057347543cd8171d2d0de8bd348394ca0bd1707ca1b742754ddfe1d7a3bb74",
+    "experiments/harness-lab/tests/capability-management-api.test.ts": "bb33bdd0be06fa9f889d059f0737e933647435034ed5a63a276e1eba36f9f213",
+    "experiments/harness-lab/tests/capability-management.test.ts": "1886900141c6b5bffc4ecb6ad2329854448f4146b2ed6fd03b1dc697cbdd5d7b",
+    "experiments/harness-lab/tests/e2e/capability-management.spec.ts": "b0e8a213cc6dc9355c6be6df1c1287b9ed74fd8cb921fd88961df726c5d20787"
+  },
+  "checks": {
+    "unitFiles": 11,
+    "unitPassed": 89,
+    "browserPassed": 10,
+    "typecheck": 0,
+    "lintAndBoundaries": 0,
+    "build": 0,
+    "warnings": "原InteractionCard两warning及原大chunk提示"
+  },
+  "userAcceptance": "pending",
+  "deployment": false
+}

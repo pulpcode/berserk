@@ -8,7 +8,7 @@ export interface ValidationIssue { code: string; message: string; severity: 'err
 export interface ExpertValidation { validationId: string; expertId: string; draftRevision: number; draftDigest: string; valid: boolean; policyDigest: string; issues: ValidationIssue[]; skills: SkillRevision[]; tools: string[]; createdAt: string }
 export interface ExpertTrialRecord { trialId: string; expertId: string; ownerId: string; draftDigest: string; validationId: string; status: 'prepared' | 'running' | 'succeeded' | 'failed' | 'cancelled' | 'interrupted'; input: string; createdAt: string; completedAt?: string; evidence?: ExpertTrialEvidence; confirmedAt?: string; confirmedBy?: string; decision?: { approved: boolean; reason: string; by: string; at: string } }
 export interface ExpertTrialEvidence { tools: string[]; model: string; runtime: string; fileEnvironmentVerified: boolean; success: boolean; summary: string; unverified: string[] }
-export interface ExpertPublication { publicationId: string; expertId: string; revisionId: string; digest: string; releaseVersion: string; releaseNotes: string; draftDigest: string; validationId: string; trialId: string; publishedAt: string; publishedBy: string }
+export interface ExpertPublication { publicationId: string; expertId: string; revisionId: string; digest: string; releaseVersion: string; releaseNotes: string; draftDigest: string; validationId: string; trialId?: string; publishedAt: string; publishedBy: string }
 export interface ExpertAudit { auditId: string; expertId: string; actorId: string; action: string; createdAt: string; details: unknown }
 export interface ManagedExpertSummary { expertId: string; name: string; description?: string; source: 'builtin' | 'organization'; stateRevision: number; archived: boolean; currentRevisionId: string | null; releaseVersion: string | null; draftRevision: number | null; state: CapabilityState; policy: ExpertUsePolicy }
 export interface ManagedExpertDetail { expert: ManagedExpertSummary; draft: ExpertDraft | null; current: ExpertRevision | null; validations: ExpertValidation[]; trials: ExpertTrialRecord[]; publications: ExpertPublication[]; audit: ExpertAudit[] }
@@ -20,5 +20,5 @@ export interface ExpertDefaultScope { kind: 'personal' | 'seat' | 'task'; id: st
 export interface ExpertDefaultSetting { scope: ExpertDefaultScope; revision: number; choice: ExpertDefaultChoice }
 export interface ResolvedExpertDefault { source: 'task' | 'personal' | 'seat' | 'general'; expertRef: ExpertRef; digest: string; name: string }
 export interface ManagementActor { userId: string; seatId?: string }
-export interface PublishExpertInput { clientActionId: string; expectedDraftRevision: number; expectedCurrentRevisionId: string | null; validationId: string; trialId: string; releaseNotes: string; acceptedRiskCodes: string[] }
+export interface PublishExpertInput { clientActionId: string; expectedDraftRevision: number; expectedCurrentRevisionId: string | null; validationId: string; trialId?: string; releaseNotes: string; acceptedRiskCodes: string[] }
 export interface ExpertImpact { activeRequests: number; defaultReferences: number; dependentExperts: number | null }

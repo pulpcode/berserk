@@ -131,3 +131,11 @@
 - 证据为research/grouping-browser.log、grouping-source.json、grouping-implementation.md、grouping-review.md及grouping-*-menu-{1060,1440}.png。最终静态门禁结果以下续记。
 
 本轮最终冻结后typecheck、全局lint/依赖边界和build全部exit0（build9.25s）；只保留InteractionCard两条既有warning和既有大chunk提示，diffcheck通过。实现/浏览器源hash未再变化，相对上一轮部署仅NewSession/main/styles三个UI文件变化。最终证据见grouping-final-proof.json；本次未更新4316/4315或Git提交push，用户阶段验收pending。
+
+## 用户授权合并专家可选试用并推送
+
+用户明确在空间分组完成后合并codex/expert-optional-trial并push。先保存当前阶段提交0e96ad1；fetch及ls-remote确认两个目标远端ref未发布，合并本地干净分支33e9ae3。自动合并routes/README/spec无文本冲突。保留真实管理Skill、原当前身份守卫及空间分组；专家试用改为可选，但当前配置校验、风险确认、使用范围、说明和人工发布确认继续必需，显式关联试用仍严格验证。
+
+独立检查修正内置专家复制说明中的旧“需试用”文字，未变更其他产品行为。整合定向11文件89单测通过（67.50s），10浏览器场景通过（1.3m），包括未试用发布、合格旧试用、原对话创建/确认及空间权限。浏览器首跑因sandbox监听EPERM执行0项，保留日志；相同命令授权本地监听后通过，无断言降级。最终全局typecheck、lint/依赖边界、build均exit0（build7.98s），保留两条既有ref warning及原chunk提示。证据为research/merge-optional-*；未把定向结果宣称为一次全量单测或真实模型验证。
+
+据此次明确授权生成中文合并提交并推送当前codex/axon-r3a；两个任务仍in_progress/userAcceptance=pending，不归档，不自动部署4316/4315。提交和远端HEAD以最终Git核对结果为准。

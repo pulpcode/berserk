@@ -1,0 +1,71 @@
+{
+  "baseBranch": "codex/axon-r3a",
+  "baseCommit": "1e99845e91b62f30c966baa25d9bf9de3756808b",
+  "branch": "codex/expert-optional-trial",
+  "worktree": "/Users/lau/.codex/worktrees/expert-optional-trial/berserk",
+  "productionChanged": false,
+  "providerCallsForPublication": 0,
+  "changes": [
+    ".trellis/spec/backend/authoring-r3a.md",
+    ".trellis/spec/backend/capabilities-r2.md",
+    ".trellis/spec/backend/capabilities-r3.md",
+    ".trellis/spec/frontend/harness-lab.md",
+    "docs/capability-center/requirements-delta.md",
+    "docs/capability-center/roadmap.md",
+    "experiments/harness-lab/README.md",
+    "experiments/harness-lab/src/capabilities/management.ts",
+    "experiments/harness-lab/src/contracts/capability-management.ts",
+    "experiments/harness-lab/src/server/capability-management-routes.ts",
+    "experiments/harness-lab/src/web/CapabilityManagement.tsx",
+    "experiments/harness-lab/src/web/ExpertTrial.tsx",
+    "experiments/harness-lab/tests/capability-management-api.test.ts",
+    "experiments/harness-lab/tests/capability-management.test.ts",
+    "experiments/harness-lab/tests/e2e/capability-management.spec.ts"
+  ],
+  "productSourceSha256": {
+    "experiments/harness-lab/src/capabilities/management.ts": "82e73cdd95d00b868121117b26c70e27df3dd031b3c850c7603a097f27ae4ec4",
+    "experiments/harness-lab/src/contracts/capability-management.ts": "3a2bc675a8bf8aacbd734a04c17972810b9421aac2e9e18b36f202c36b8d5a8b",
+    "experiments/harness-lab/src/server/capability-management-routes.ts": "c986821babf508c58c7efcb5cd6ed625e1733c6b151212f17e2c1bedb40de2f8",
+    "experiments/harness-lab/src/web/CapabilityManagement.tsx": "ad04212428cef382b3fb1b2005b85e23884bf2ee2177e9671090c8bc67861cc1",
+    "experiments/harness-lab/src/web/ExpertTrial.tsx": "cd057347543cd8171d2d0de8bd348394ca0bd1707ca1b742754ddfe1d7a3bb74"
+  },
+  "verification": {
+    "focused": {
+      "files": 4,
+      "tests": 27,
+      "passed": true
+    },
+    "browser": {
+      "tests": 5,
+      "passed": true,
+      "widths": [
+        1060,
+        1440
+      ]
+    },
+    "typecheck": true,
+    "lint": true,
+    "build": true,
+    "fullSuite": {
+      "command": "npm test -- --maxWorkers=2",
+      "files": 183,
+      "tests": 1849,
+      "passed": true,
+      "exitCode": 0,
+      "durationSeconds": 785.15,
+      "firstRun": "Interrupted with SIGINT after long-duration failures during concurrent full-suite/build/focused/browser checks; full-unit-first.log retained. No source workaround; bounded full rerun passed."
+    },
+    "independentReview": {
+      "passed": true,
+      "findings": 0,
+      "sourceFixes": 0,
+      "record": "review.md"
+    },
+    "visualReview": {
+      "ready1060": "passed",
+      "ready1440": "passed",
+      "published1440": "passed"
+    },
+    "diffCheck": true
+  }
+}

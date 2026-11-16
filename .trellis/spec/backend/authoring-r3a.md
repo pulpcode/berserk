@@ -18,7 +18,7 @@ Pending proposals are not restarted. Original native Pi history owns proposal/co
 
 ## Existing management
 
-Draft saves never publish, configure scope or change defaults. Skill format and original scan enqueue are reused; scans and trials remain non-gates for Skill publication. Expert validation, successful trial and separate publication confirmation remain mandatory. Report reads bind actual content and expose private trial material only to its owner. Administrator personal use of published organization Skills remains as specified by R3.
+Draft saves never publish, configure scope or change defaults. Skill format and original scan enqueue are reused; scans and trials remain non-gates for Skill publication. Expert validation and separate publication confirmation remain mandatory; isolated expert trials and their result confirmation are optional, as described in [R2 Expert Management](capabilities-r2.md#optional-expert-trials). Report reads bind actual content and expose private trial material only to its owner. Administrator personal use of published organization Skills remains as specified by R3.
 
 ## Verification
 
