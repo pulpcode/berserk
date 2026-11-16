@@ -2,7 +2,7 @@
 
 ## Ownership and compatibility
 
-`src/skills` owns full skill packages, draft CAS, format/integrity validation, bounded Markdown/ZIP import, immutable publication, ordinary lifecycle, seat policy, scan scheduling and explicit migration. `contracts/skills.ts` owns the shared DTOs. Skills are distinct from experts: Skill publication never requires a successful scan, trial or trial approval. R2 expert validation, successful trial and human publication confirmation remain unchanged.
+`src/skills` owns full skill packages, draft CAS, format/integrity validation, bounded Markdown/ZIP import, immutable publication, ordinary lifecycle, seat policy, scan scheduling and explicit migration. `contracts/skills.ts` owns the shared DTOs. Skills are distinct from experts: Skill publication never requires a successful scan, trial or trial approval. R2 experts also permit publication without a trial. Current expert validation, individually acknowledged risks, explicit use scope and human publication confirmation remain required; see [R2 Expert Management](capabilities-r2.md#optional-expert-trials).
 
 R3 adds `r3_skill_*` tables and an independently checked `r3_skill_meta` version1 to the existing capabilities database. Capability `user_version` remains2. Existing data requires an explicit stopped `scripts/migrate-skills-r3.ts` full-root backup and prepared/completed marker; startup rejects prepared migration. Dry-run reads without modifying business bytes. A post-schema crash is verified by reproducing the exact transformation against a private backup copy, not by trusting a changed SQLite file hash. Rollback pairs the R2 program with the full pre-R3 backup and preserves active R3 data.
 

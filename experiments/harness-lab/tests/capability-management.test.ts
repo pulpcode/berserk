@@ -28,7 +28,7 @@ test('default precedence is explicit and invalid defaults never silently fall th
 
 test('first creation resolves default once and persists source despite later default changes',async()=>{const env=await setup();const p=await prepared(env);const pub=await env.management.publish(actor,p.id,p.publish);const clientActionId=randomUUID();let calls=0;const input={principalId:'user',seatId:'a',clientActionId,input:{workspaceId:'workspace'},resolveDefault:async()=>{calls++;return {expertRef:{expertId:p.id,revisionId:pub.revisionId},digest:pub.digest,source:'task' as const};}};const first=await env.cap.reserveCreation(input);const next=await env.cap.reserveCreation({...input,resolveDefault:async()=>{throw Error('must not re-resolve');}});expect(next).toEqual(first);expect(calls).toBe(1);expect(env.cap.sourceForSession(first.sessionId)).toBe('task');});
 
-test('risk confirmation and file environment gate publication; rejection is not approval',async()=>{const env=await setup();const p=await prepared(env,{allowedTools:['bash']});await expect(env.management.publish(actor,p.id,{...p.publish,acceptedRiskCodes:[]})).rejects.toThrow('风险');await expect(env.management.publish(actor,p.id,p.publish)).rejects.toThrow('环境');const rejected=env.management.confirmTrial(actor,p.trial.trial.trialId,{approved:false,reason:'结果需改进',clientActionId:randomUUID()});expect(rejected.confirmedAt).toBeUndefined();expect(rejected.decision?.approved).toBe(false);});
+test('risk acknowledgement remains required but file environment trial evidence does not gate publication',async()=>{const env=await setup();const p=await prepared(env,{allowedTools:['bash']});await expect(env.management.publish(actor,p.id,{...p.publish,acceptedRiskCodes:[]})).rejects.toThrow('风险');const rejected=env.management.confirmTrial(actor,p.trial.trial.trialId,{approved:false,reason:'结果需改进',clientActionId:randomUUID()});expect(rejected.confirmedAt).toBeUndefined();expect(rejected.decision?.approved).toBe(false);await expect(env.management.publish(actor,p.id,p.publish)).rejects.toThrow('关联试用');const {trialId,...withoutTrial}=p.publish;void trialId;const publication=await env.management.publish(actor,p.id,withoutTrial);expect(publication).not.toHaveProperty('trialId');expect((await env.management.get(p.id)).trials[0]).toEqual(rejected);});
 
 test('re-authorization before blob publication rollback prevents visible half-publication',async()=>{const env=await setup();const p=await prepared(env);const original=env.cap.registerExpert.bind(env.cap);env.cap.registerExpert=async(definition,commit)=>original(definition,value=>{env.revoke();commit?.(value);});await expect(env.management.publish(actor,p.id,p.publish)).rejects.toThrow('revoked');expect(env.cap.db.prepare('SELECT 1 FROM experts WHERE expert_id=?').get(p.id)).toBeUndefined();expect((await env.management.get(p.id)).publications).toEqual([]);});
 
@@ -55,4 +55,76 @@ test('prepared R2 migration blocks startup after schema commit and resumes from 
   const backup=join(dir,'backup');await expect(migrateCapabilityManagement({dataDir:data,backupDir:backup,apply:true,serviceStopped:true,hooks:{afterSchema:async()=>{throw Error('crash after schema');}}})).rejects.toThrow('crash');
   const partial=await CapabilityService.open(data);services.push(partial);await expect(CapabilityManagement.open(partial,{skills:()=>[],tools:()=>[],seats:()=>[]})).rejects.toMatchObject({code:'CAPABILITY_R2_MIGRATION_REQUIRED'});partial.close();services.splice(services.indexOf(partial),1);
   await migrateCapabilityManagement({dataDir:data,backupDir:backup,apply:true,serviceStopped:true});const restored=await CapabilityService.open(backup);services.push(restored);expect((await restored.current()).expertId).toBe('axon-general');expect(restored.db.prepare('PRAGMA user_version').get()?.user_version).toBe(1);expect(restored.db.prepare("SELECT 1 FROM sqlite_master WHERE name='r2_experts'").get()).toBeUndefined();
+});
+
+
+async function untried(env: Awaited<ReturnType<typeof setup>>, allowedTools: string[] = []) {
+  const m = env.management;
+  const created = await m.create(actor, { clientActionId: randomUUID() });
+  const id = created.expert.expertId;
+  const draft = await m.save(actor, id, { expectedDraftRevision: 1, content: { name: '可选试用专家', description: '发布不强制试用', instructions: '只依据明确资料回答。', skillIds: [], allowedTools } });
+  const validation = await m.validate(actor, id, { expectedDraftRevision: draft.draftRevision });
+  m.setPolicy(actor, id, { expectedRevision: 0, mode: 'all', seatIds: [], clientActionId: randomUUID() });
+  const publish = { expectedDraftRevision: draft.draftRevision, expectedCurrentRevisionId: null, validationId: validation.validationId, releaseNotes: '未关联试用的发布', acceptedRiskCodes: validation.issues.filter(issue => issue.severity === 'warning').map(issue => issue.code), clientActionId: randomUUID() };
+  return { id, draft, validation, publish };
+}
+
+test('publication without any trial is idempotent and old and new publication records survive restart', async () => {
+  const env = await setup(), p = await untried(env), legacy = await prepared(env);
+  const oldPublication = await env.management.publish(actor, legacy.id, legacy.publish);
+  const [first, retry] = await Promise.all([env.management.publish(actor, p.id, p.publish), env.management.publish(actor, p.id, p.publish)]);
+  expect(first).toEqual(retry); expect(first).not.toHaveProperty('trialId'); expect(oldPublication.trialId).toBe(legacy.trial.trial.trialId);
+  expect((await env.management.get(p.id)).trials).toEqual([]);
+  expect((await env.management.get(p.id)).publications).toEqual([first]);
+  env.cap.close(); services.splice(services.indexOf(env.cap), 1);
+  const cap = await CapabilityService.open(env.dir); services.push(cap);
+  const management = await CapabilityManagement.open(cap, { skills: () => [], tools: () => [], seats: () => [] });
+  expect((await management.get(p.id)).publications).toEqual([first]);
+  expect((await management.get(legacy.id)).publications).toEqual([oldPublication]);
+  expect(await management.publish(actor, p.id, p.publish)).toEqual(first);
+});
+
+test('unreferenced trial states never gate publication or become successful evidence', async () => {
+  const env = await setup();
+  for (const status of ['prepared', 'running', 'failed', 'cancelled', 'interrupted', 'succeeded'] as const) {
+    const p = await untried(env);
+    const { trial } = await env.management.prepareTrial(actor, p.id, { expectedDraftRevision: p.draft.draftRevision, validationId: p.validation.validationId, input: '合成输入', clientActionId: randomUUID() });
+    if (status !== 'prepared') env.management.recordTrialResult(actor, trial.trialId, { status, ...(status === 'succeeded' ? { evidence: { tools: [], model: 'test', runtime: 'pi', fileEnvironmentVerified: false, success: true, summary: '执行成功但尚未确认', unverified: [] } } : {}) });
+    const before = env.management.getTrial(actor, trial.trialId);
+    await expect(env.management.publish(actor, p.id, { ...p.publish, trialId: trial.trialId })).rejects.toThrow('关联试用');
+    const publication = await env.management.publish(actor, p.id, p.publish);
+    expect(publication).not.toHaveProperty('trialId');
+    expect(env.management.getTrial(actor, trial.trialId)).toEqual(before);
+    expect(before.status).toBe(status); expect(before.confirmedAt).toBeUndefined();
+  }
+});
+
+test('optional explicit trial references still enforce identity and exact validation while other gates remain', async () => {
+  const env = await setup(), old = await prepared(env), p = await untried(env, ['bash']);
+  await expect(env.management.publish(actor, p.id, { ...p.publish, trialId: old.trial.trial.trialId })).rejects.toThrow('关联试用');
+  await expect(env.management.publish({ userId: 'other-admin' }, old.id, old.publish)).rejects.toMatchObject({ code: 'EXPERT_NOT_FOUND' });
+  await expect(env.management.publish(actor, p.id, { ...p.publish, trialId: randomUUID() })).rejects.toMatchObject({ code: 'EXPERT_NOT_FOUND' });
+  const checks = await env.management.validate(actor, old.id, { expectedDraftRevision: old.draft.draftRevision });
+  await expect(env.management.publish(actor, old.id, { ...old.publish, validationId: checks.validationId })).rejects.toThrow('关联试用');
+  await expect(env.management.publish(actor, p.id, { ...p.publish, acceptedRiskCodes: [] })).rejects.toThrow('风险');
+  await expect(env.management.publish(actor, p.id, { ...p.publish, releaseNotes: ' ' })).rejects.toThrow('发布说明');
+  await expect(env.management.publish(actor, p.id, { ...p.publish, expectedDraftRevision: p.draft.draftRevision + 1 })).rejects.toMatchObject({ code: 'CAPABILITY_CONFLICT' });
+  await expect(env.management.publish(actor, p.id, { ...p.publish, validationId: randomUUID() })).rejects.toThrow('重新校验');
+  env.management.setPolicy(actor, p.id, { expectedRevision: 1, mode: 'none', seatIds: [], clientActionId: randomUUID() });
+  await expect(env.management.publish(actor, p.id, p.publish)).rejects.toThrow('业务席位');
+  env.management.setPolicy(actor, p.id, { expectedRevision: 2, mode: 'all', seatIds: [], clientActionId: randomUUID() });
+  const pub = await env.management.publish(actor, p.id, p.publish);
+  expect(pub).not.toHaveProperty('trialId');
+  expect((await env.cap.current(p.id)).allowedTools).toEqual(['bash']);
+});
+
+test('an explicit trial decision is rechecked at commit even though trial itself is optional', async () => {
+  const env = await setup(), p = await prepared(env);
+  const original = env.cap.registerExpert.bind(env.cap);
+  env.cap.registerExpert = async (definition, commit) => {
+    env.management.confirmTrial(actor, p.trial.trial.trialId, { approved: false, reason: '发布前撤回确认', clientActionId: randomUUID() });
+    return original(definition, commit);
+  };
+  await expect(env.management.publish(actor, p.id, p.publish)).rejects.toThrow('试用结论已变化');
+  expect((await env.management.get(p.id)).publications).toEqual([]);
 });

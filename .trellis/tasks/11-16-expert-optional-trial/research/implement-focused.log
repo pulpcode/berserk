@@ -1,0 +1,16 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/expert-optional-trial/berserk/experiments/harness-lab
+
+(node:92119) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:92117) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:92120) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:92118) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  4 passed (4)
+      Tests  27 passed (27)
+   Start at  16:50:09
+   Duration  60.97s (transform 29.97s, setup 0ms, import 73.67s, tests 90.91s, environment 1ms)

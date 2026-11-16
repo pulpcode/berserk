@@ -82,7 +82,7 @@ test('admin creates and checks a draft without calling a model; shared conflicts
   } finally { await env.close(); }
 });
 
-test('representative plaintext trial requires human confirmation before publishing and personal defaults remain separate', async ({ page }) => {
+test('optional plaintext trial can still be confirmed and personal defaults remain separate', async ({ page }) => {
   test.setTimeout(60000);
   const env = await setup(); await env.attach(page);
   try {
@@ -93,18 +93,27 @@ test('representative plaintext trial requires human confirmation before publishi
     await dialog.getByRole('button', { name: '检查与试用', exact: true }).click();
     await dialog.getByRole('button', { name: '检查配置', exact: true }).click();
     await expect(dialog.getByRole('heading', { name: '检查通过', exact: true })).toBeVisible();
+    await dialog.getByLabel('发布说明', { exact: true }).fill('首个经过隔离试用的配置。');
+    await dialog.getByRole('checkbox', { name: '我已核对配置和使用范围，确认发布。', exact: true }).check();
+    await expect(dialog.getByRole('button', { name: '发布新版本', exact: true })).toBeEnabled();
+    expect(env.fake.calls).toHaveLength(0);
     await dialog.getByLabel('代表性试用任务', { exact: true }).fill('合成资料：计划10件，完成8件。请分别列出已完成与未完成数量。');
     await dialog.getByRole('button', { name: '开始试用', exact: true }).click();
     await expect(dialog.getByRole('heading', { name: '执行成功，待管理员核对', exact: true })).toBeVisible({ timeout: 30000 });
-    await expect(dialog.getByRole('button', { name: '发布新版本', exact: true })).toBeDisabled();
+    await expect(dialog.getByRole('button', { name: '发布新版本', exact: true })).toBeEnabled();
     await dialog.getByLabel('核对结论', { exact: true }).fill('结果符合输入事实，未执行外部业务动作。');
     await dialog.getByRole('checkbox', { name: '我已检查代表性任务结果、实际工具和未验证项目。', exact: true }).check();
     await dialog.getByRole('button', { name: '确认试用通过', exact: true }).click();
     await expect(dialog.getByText('管理员已确认本次试用。发布时仍会核对当前草稿与依赖。', { exact: true })).toBeVisible();
-    await dialog.getByLabel('发布说明', { exact: true }).fill('首个经过隔离试用的配置。');
-    await dialog.getByRole('checkbox', { name: '我已核对配置、试用结果和使用范围，确认发布。', exact: true }).check();
+    // Rechecking unchanged content must not attach the earlier validation's trial.
+    await dialog.getByRole('button', { name: '检查配置', exact: true }).click();
+    await expect(dialog.getByRole('heading', { name: '检查通过', exact: true })).toBeVisible();
     await dialog.getByRole('button', { name: '发布新版本', exact: true }).click();
     await expect(dialog).toContainText('版本 1.0.0');
+    const published = (await env.lab.management!.list()).find(item => item.name === '资料核对发布专家')!;
+    const publicationDetail = await env.lab.management!.get(published.expertId);
+    expect(publicationDetail.publications[0]).not.toHaveProperty('trialId');
+    expect(publicationDetail.trials[0].confirmedAt).toBeTruthy();
     await page.screenshot({ path: test.info().outputPath('r2-published-expert-desktop.png') });
     await dialog.getByRole('button', { name: '关闭面板', exact: true }).click();
     await expect(page.getByRole('navigation', { name: '专业专家列表' })).toContainText('资料核对发布专家');
@@ -161,3 +170,40 @@ test('ordinary user cannot see expert management and can explicitly choose gener
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   } finally { await env.close(); }
 });
+
+
+for (const width of [1060, 1440]) {
+  test(`untried expert publishes explicitly without a model call at desktop ${width}`, async ({ page }) => {
+    const env = await setup(); await env.attach(page);
+    try {
+      await page.setViewportSize({ width, height: 960 });
+      await login(page); const dialog = await newExpert(page, `免试用发布专家 ${width}`);
+      await dialog.getByRole('button', { name: '检查与试用', exact: true }).click();
+      await expect(dialog.getByRole('heading', { name: '隔离试用（可选）', exact: true })).toBeVisible();
+      await expect(dialog.getByText('试用用于验证效果，不影响发布。', { exact: true })).toBeVisible();
+      await dialog.getByLabel('发布说明', { exact: true }).fill('无需试用即可发布。');
+      await expect(dialog.getByRole('button', { name: '发布新版本', exact: true })).toBeDisabled();
+      await dialog.getByRole('checkbox', { name: '我已核对配置和使用范围，确认发布。', exact: true }).check();
+      await expect(dialog.getByRole('button', { name: '发布新版本', exact: true })).toBeDisabled();
+      await dialog.getByRole('button', { name: '检查配置', exact: true }).click();
+      await expect(dialog.getByRole('heading', { name: '检查通过', exact: true })).toBeVisible();
+      await expect(dialog.getByRole('button', { name: '发布新版本', exact: true })).toBeDisabled();
+      await dialog.getByRole('button', { name: '使用范围', exact: true }).click();
+      await dialog.getByLabel('开放方式', { exact: true }).selectOption('all');
+      await dialog.getByRole('button', { name: '保存使用范围', exact: true }).click();
+      await dialog.getByRole('button', { name: '检查与试用', exact: true }).click();
+      const publish = dialog.getByRole('button', { name: '发布新版本', exact: true });
+      await expect(publish).toBeEnabled(); expect(env.fake.calls).toHaveLength(0);
+      await publish.scrollIntoViewIfNeeded(); await publish.focus(); await expect(publish).toBeFocused();
+      expect(await dialog.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+      await page.screenshot({ path: test.info().outputPath(`optional-trial-ready-${width}.png`) });
+      await publish.click();
+      await expect(dialog).toContainText('版本 1.0.0'); expect(env.fake.calls).toHaveLength(0);
+      const summary = (await env.lab.management!.list()).find(item => item.name === `免试用发布专家 ${width}`)!;
+      const detail = await env.lab.management!.get(summary.expertId);
+      expect(detail.trials).toEqual([]); expect(detail.publications).toHaveLength(1);
+      expect(detail.publications[0]).not.toHaveProperty('trialId');
+      await page.screenshot({ path: test.info().outputPath(`optional-trial-published-${width}.png`) });
+    } finally { await env.close(); }
+  });
+}
