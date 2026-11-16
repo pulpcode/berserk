@@ -1,0 +1,9 @@
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "输入框、草稿、引用菜单、IME、人工交互和前台队列的既有行为"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "Pi/public DTO/会话投影/终态证据与模型选择边界"}
+{"file": ".trellis/spec/backend/model-thinking.md", "reason": "复用当前模型配置和 provider thinking 兼容，保留离线 wire 回归"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "真实账号、席位和管理员个人工作区授权及撤权"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "预测不能抢占原生人工提问和确认"}
+{"file": ".trellis/spec/backend/conversation-references.md", "reason": "保留附件/Skill/Agent/地图选择与公开历史投影"}
+{"file": ".trellis/tasks/11-16-input-predictions/research/code-evidence.md", "reason": "实际基线代码、关键缺口和验证范围"}
+{"file": ".trellis/tasks/11-16-input-predictions/research/upstream.md", "reason": "独立请求路线及上游可参考边界"}
+{"file": ".trellis/tasks/11-16-input-predictions/research/interaction-comparison.md", "reason": "用户采用空框展示、输入隐藏、删空恢复的最新交互决定和上游证据"}
