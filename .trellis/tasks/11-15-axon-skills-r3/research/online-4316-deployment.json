@@ -1,0 +1,46 @@
+{
+  "updatedAt": "2026-11-15T05:44:54Z",
+  "release": "/home/ubuntu/axon-r3-preview-4316-20261115",
+  "previousRelease": "/home/ubuntu/axon-r2-personal-4316-20261114",
+  "sourceArchiveSha256": "8e43f58f91276e9b3a5544e7f42f63e372bed013c94cd26eed72b2911794db1e",
+  "filesVerified": 472,
+  "previousPid": 2486155,
+  "pid": 2486986,
+  "dataDir": "/home/ubuntu/axon-chat-c-preview-20261112/data",
+  "backup": "/home/ubuntu/axon-r3-preview-4316-20261115/backup/before-r3-attempt2",
+  "backupDigest": "705e356ccf6695251a405b7e5714ce39334ff9065df544a48580c8ebf2b4ff92",
+  "migration": {
+    "capabilitySchemaVersion": 2,
+    "skillSchemaVersion": 1,
+    "legacySkillSnapshots": 2,
+    "expertRevisions": 4,
+    "expertDrafts": 1,
+    "expertTrials": 0,
+    "unfinishedIntents": 0,
+    "oldRevisionsRewritten": false,
+    "accountDatabaseChanged": false,
+    "stage": "completed",
+    "resumed": false,
+    "backupDigest": "705e356ccf6695251a405b7e5714ce39334ff9065df544a48580c8ebf2b4ff92"
+  },
+  "migrationReentryVerified": true,
+  "oldTablesPreserved": {
+    "collaboration/collaboration.sqlite": true,
+    "capabilities/capabilities.sqlite": true
+  },
+  "historicalJsonlPrefixesPreserved": true,
+  "historyFilesChecked": 83,
+  "serviceSecretsUnchanged": true,
+  "frontendAssetsVerified": [
+    "/assets/index-4NLbB_3e.js",
+    "/assets/index-DS5-5Y2j.css"
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "pid4315Unchanged": true,
+  "executionImage": "berserk-skill-runtime:r3-4bcd42bb3a7a",
+  "scannerImage": "berserk-skill-scanner:r3-semgrep-1.182.0",
+  "userAcceptance": "pending"
+}

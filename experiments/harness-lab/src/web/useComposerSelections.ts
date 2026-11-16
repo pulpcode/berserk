@@ -25,7 +25,7 @@ function load(key: string): SelectionMap {
 }
 function save(key: string, value: SelectionMap) { try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* Keep in-memory editing usable. */ } }
 export function selectionInput(value: DraftSelection): ComposerSelection {
-  return { ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
+  return { ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash, ...(value.skill.revisionId ? { revisionId: value.skill.revisionId, packageDigest: value.skill.packageDigest } : {}) } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
 }
 export function useComposerSelections() {
   const { storageKey } = useApi();

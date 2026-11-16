@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:7730) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/skill-package-guards.test.ts (5 tests | 5 failed) 1900ms
+   × manual-only extensions suppress autonomous invocation while explicit user selection still delivers exact body 357ms
+   × on-demand package loading supplies exact method body and native read evidence only after the actual tool call 331ms
+   × loaded request handles ordinary-disable using current authorization and original package 318ms
+   × loaded request handles policy-withdrawal using current authorization and original package 424ms
+   × a selected package reaches only the matching readonly child with the fixed body and no execution tools 468ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/pi/skill-package-guards.test.ts > manual-only extensions suppress autonomous invocation while explicit user selection still delivers exact body
+ FAIL  tests/pi/skill-package-guards.test.ts > on-demand package loading supplies exact method body and native read evidence only after the actual tool call
+ FAIL  tests/pi/skill-package-guards.test.ts > loaded request handles ordinary-disable using current authorization and original package
+ FAIL  tests/pi/skill-package-guards.test.ts > loaded request handles policy-withdrawal using current authorization and original package
+ FAIL  tests/pi/skill-package-guards.test.ts > a selected package reaches only the matching readonly child with the fixed body and no execution tools
+Error: 账号或席位已变化，请重新登录。
+ ❯ capabilityIdentity src/server/capability-authorization.ts:9:60
+      7| export function capabilityIdentity(lab: PiLab, actor: ManagementActor)…
+      8|   const identity = lab.access?.accountIdentity(actor.userId);
+      9|   if (!identity || identity.seatId !== actor.seatId) throw new Request…
+       |                                                            ^
+     10|   return identity;
+     11| }
+ ❯ requireCapabilityAdministrator src/server/capability-authorization.ts:13:3
+ ❯ Object.reauthorize src/pi/lab.ts:279:29
+ ❯ SkillService.auth src/skills/service.ts:58:75
+ ❯ src/skills/service.ts:84:150
+ ❯ Mutex.run src/resources/files.ts:73:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  11:15:17
+   Duration  4.94s (transform 991ms, setup 0ms, import 2.84s, tests 1.90s, environment 0ms)
+

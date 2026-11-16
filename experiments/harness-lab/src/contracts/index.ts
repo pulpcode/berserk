@@ -208,15 +208,15 @@ export interface InstructionUpdate {
   fileId: 'workspace'; status: 'updated' | 'unchanged'; previousHash: string | null;
   hash: string; effectiveFrom: 'next_request';
 }
-export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string }
+export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string; schemaVersion?: 2; revisionId?: string; packageDigest?: string; resourceRoot?: string; autoInvocationEligible?: boolean }
 export interface SkillFile extends SkillInfo { content: string }
 export interface AgentInfo { name: string; description: string; hash: string }
-export interface ComposerSelection { annotationRefs?: AnnotationSelection[]; contextRefs?: ContextRef[]; skill?: { id: string; hash: string }; agent?: { name: string; hash: string } }
+export interface ComposerSelection { annotationRefs?: AnnotationSelection[]; contextRefs?: ContextRef[]; skill?: { id: string; hash: string; revisionId?: string; packageDigest?: string }; agent?: { name: string; hash: string } }
 export interface LoadedComposerSelection { annotationContext?: AnnotationContext; annotationRefs?: LoadedAnnotationSelection[]; context?: LoadedContextSelection; skill?: SkillFile; agent?: AgentInfo }
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
 export type RequestResourcesRecord = { task?: {id:string;title:string;goal:string;visibility:'public'|'private'}; compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
   status: 'available'; requestId: string; workspaceId: string; instructions: InstructionFile[];
-  skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
+  schemaVersion?: 2; skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
 } | { status: 'unavailable'; requestId: string; message: string });
 
 export type CompactionReason = 'threshold' | 'overflow' | 'unknown';

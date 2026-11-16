@@ -565,7 +565,7 @@ export function useChat(enabled = true) {
       const owner = activitiesRef.current.find(item => item.id === id)?.workspaceId;
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
     }, workspaces, workspaceId,
-    workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
+    workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, selectedForWorkspace: (id: string) => selectionsRef.current[id] || '', createWorkspace,
     loading, creating, create, send, cancel, draftKey, attachments, composerSelections, inputQueue,
     resolveDraftOwner: () => movedDrafts.current.get(draftKey) || draftKey,
     setComposerSelection: (kind: 'skill' | 'agent', value?: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(movedDrafts.current.get(draftKey) || draftKey, kind, value),

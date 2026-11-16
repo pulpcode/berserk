@@ -2,7 +2,7 @@
 
 ## Scope and ownership
 
-R2 extends the existing capability store with organization drafts, validation, isolated trials, atomic publication, ordinary lifecycle, seat use policy and personal/seat/task defaults. R3 skills, R3A conversational authoring, R4 connectors, R5 background migration, R6 teams and R7 emergency administration remain future work. Never expose banned administration through R2.
+R2 extends the existing capability store with organization drafts, validation, isolated trials, atomic publication, ordinary lifecycle, seat use policy and personal/seat/task defaults. R3 skills extend this through [R3 Skill Packages](capabilities-r3.md); R3A conversational authoring, R4 connectors, R5 background migration, R6 teams and R7 emergency administration remain future work. Never expose banned administration through R2.
 
 ## Storage and mutation contracts
 

@@ -1,0 +1,143 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:29224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29227) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29234) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29225) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29229) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29226) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29230) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29233) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29231) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | tests/probe-scenario-execution.test.ts > v6 execution probe > defaults to a new isolated preparation and makes zero provider requests
+{"evidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-v6-prepare-7JUjeg/evidence/validation.json","preparationCompleted":false,"protocolCompleted":false,"semanticReviewPending":true,"accounting":{"apiRequests":0,"attempts":0,"inputTokensCharged":0,"outputTokensCharged":0,"conservativeCostCny":0,"stoppedReason":"driver_stopped","elapsedMs":276,"limits":null,"accountingOnly":null}}
+
+stdout | tests/probe-scenario-execution.test.ts > v6 execution probe > runs the dynamic v6 source, human controls and all native notice analyses with synthetic SSE
+{"evidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-v6-full-cKrROR/evidence/validation.json","preparationCompleted":false,"protocolCompleted":false,"semanticReviewPending":true,"accounting":{"apiRequests":0,"attempts":0,"inputTokensCharged":0,"outputTokensCharged":0,"conservativeCostCny":0,"stoppedReason":"driver_stopped","elapsedMs":93,"limits":null,"accountingOnly":{"providerInputLimitTokens":131072,"inputCnyPerMillion":2,"outputCnyPerMillion":8}}}
+
+stdout | tests/probe-scenario-execution.test.ts > v6 execution probe > runs the dynamic v6 source, human controls and all native notice analyses with synthetic SSE
+Synthetic failed evidence retained: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-v6-full-cKrROR
+
+ ❯ tests/probe-scenario-execution.test.ts (2 tests | 2 failed) 479ms
+     × defaults to a new isolated preparation and makes zero provider requests 345ms
+     × runs the dynamic v6 source, human controls and all native notice analyses with synthetic SSE 131ms
+ ❯ tests/scenario-director-api.test.ts (12 tests | 12 failed) 994ms
+     × initializes and reopens v5 task mappings without reinterpreting the saved bootstrap as v4 55ms
+     × leaves an existing deployment without a configured director free of new routes and run state 74ms
+     × requires both the independent capability and configured director seat even when overall owns all old source management grants 143ms
+     × recovers a committed creation with a missing file acknowledgment after restart without duplicating opening tasks 246ms
+     × rejects unknown, incomplete or changed host bootstrap mappings before activation without rewriting them 32ms
+     × keeps saved legacy three-task provenance and initialization receipts readable with strict legacy completeness 31ms
+     × creates and recovers exactly two host tasks, explicitly sends frozen notices, and archives only the prior round on replay 126ms
+     × rejects invalid activation before archiving tasks or leaving a pending receipt 105ms
+     × resumes the original pending activation after outstanding writes settle and the matching source definition is restored 30ms
+     × keeps both sides closed after restart until the original activation receipt is reconciled 110ms
+     × keeps old state/action/edit routes from exposing or changing the new scene and rejects client-supplied actor authority 16ms
+     × keeps scene access separate from public task preparation permission and reconciles after that permission is restored 23ms
+(node:29250) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/commands.test.ts (24 tests | 24 failed) 2166ms
+     × 只有显式授权控制席可以下达，无文档、审核或工作交接也可接收；不改变车辆和场景时间 53ms
+     × 准备去重、取消、对象校验与普通任务入口可用性 73ms
+     × 控制席原生工具等待人员确认，page不能代替agent确认；历史重开保留真实回执 143ms
+     × 确认之前切轮，旧准备不能发送到新轮；已经接收的回执仍属于原指令 246ms
+     × 外部已接收但响应丢失时只核对原回执，重启和并发查询保持同一结果 32ms
+     × 拒绝原生确认不发送，确认期间撤销授权也不能发送 51ms
+     × 损坏的已接收记录缺少回执时重开失败并保留原数据 107ms
+     × 大车组分批核对来源，二十四辆车可以准备，重复车辆仍拒绝 105ms
+     × 原生指令返回unknown时不投影成接收成功，历史重开保留该结果 28ms
+     × 原生指令返回rejected时不投影成接收成功，历史重开保留该结果 68ms
+     × 外部接收端自身重启仍返回原回执，相同编号修改内容被拒绝 55ms
+     × 接收与执行分别返回，查询不推进场景时间，调整须引用根指令和最新执行版本 20ms
+     × 取消执行通过新的确认指令提交，保留原接收回执并更新根进展 30ms
+     × 旧接收回执查询不生成执行，错误调整和外任务原指令被拒绝 52ms
+     × 来源执行查询失败或返回错指令时，保留真实接收和上次进展并提示查询失败 88ms
+     × 忙碌车辆指令可被接收但执行拒绝，原确认成功不能冒充车辆出发 72ms
+     × 同修订准备两条调整，先提交的改道成功，后提交的旧修订取消收到执行拒绝 82ms
+     × 总体席读取来源事实但不能读取完整指令，摘要不写回指令或推进来源 10ms
+     × 准备、未知结果及其他任务不产生本任务执行，普通任务与停用集成返回不可用 12ms
+     × 来源授权与当前账号在读取前后均核验，来源403不能回退显示缓存 48ms
+     × 取消与改道归并原派遣，混合时点、缺失对象和来源失败不返回完整总数 143ms
+     × 旧版本无执行与执行拒绝不冒充出发，历史任务保留本轮事实 195ms
+     × 取消后同车再派遣保留原行动历史而不双计，其他任务看不到本任务车辆 246ms
+     × 大量根记录明确拒绝而不截断，最终撤销控制授权后不保留指令详情入口 201ms
+(node:29247) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29255) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/task-information-api.test.ts (8 tests | 8 failed) 14435ms
+     × publishes one native assessment to two tasks, filters rights, and leaves browsing without workspace side effects 1678ms
+     × returns combined assessment and independent suggestion without auto-creation or permission leakage 1842ms
+     × keeps a new-task suggestion advisory until an authorized human creates and links, with replay and changed-input checks 1487ms
+     × accepts human creation from a successful unassigned native analysis without a suggestion 1898ms
+     × accepts human creation from a successful legacy native analysis without a suggestion 1655ms
+     × atomically deduplicates concurrent human creation from two native reprocessing jobs of one event 1808ms
+     × continues from a task with exact files, durable origin, idempotency and separate task/seat workspaces 1774ms
+     × supports manual collection and seat read tools for old jobs without external-context configuration 2289ms
+(node:29275) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29318) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29320) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/context-background.test.ts (8 tests | 8 failed) 287ms
+     × freezes source/scope at admission and returns actual HTTP and task-query evidence from native history 84ms
+     × isolates missing-scope configuration failures from legacy queue management and execution 38ms
+     × isolates missing-context configuration failures from legacy queue management and execution 91ms
+     × isolates unspecified-scope configuration failures from legacy queue management and execution 4ms
+     × isolates assessment-without-scope configuration failures from legacy queue management and execution 23ms
+     × denies source managers without context grants content/search/file/import paths and rejects out-of-scope recipients 21ms
+     × prepares an unsent follow-up with source/query references and preserves scope for seat background analysis 21ms
+     × keeps legacy unscoped jobs readable and usable by their authorized recipients 2ms
+(node:29323) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"evidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-scenario-probe-driver-EDRNci/new-evidence/validation.json","preparationCompleted":false,"protocolCompleted":false,"semanticReviewPending":true,"accounting":{"apiRequests":0,"attempts":0,"inputTokensCharged":0,"outputTokensCharged":0,"conservativeCostCny":0,"stoppedReason":"driver_stopped","elapsedMs":335,"limits":{"maxApiRequests":60,"maxInputTokens":10000,"maxOutputTokens":2000,"maxSeconds":60,"maxCostCny":1,"inputCnyPerMillion":2,"outputCnyPerMillion":8,"providerInputLimitTokens":1000},"accountingOnly":null}}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the usage-only driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"evidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-scenario-probe-driver-lyoP4e/new-evidence/validation.json","preparationCompleted":false,"protocolCompleted":false,"semanticReviewPending":true,"accounting":{"apiRequests":0,"attempts":0,"inputTokensCharged":0,"outputTokensCharged":0,"conservativeCostCny":0,"stoppedReason":"driver_stopped","elapsedMs":380,"limits":null,"accountingOnly":{"inputCnyPerMillion":2,"outputCnyPerMillion":8,"providerInputLimitTokens":1000}}}
+
+ ❯ tests/probe-scenario-budget.test.ts (15 tests | 2 failed) 1027ms
+     × runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review 350ms
+     × runs the usage-only driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review 386ms
+(node:29327) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/scenario-business-flow.test.ts (4 tests | 4 failed) 433ms
+     × starts with two background tasks, lets a human create from real analysis, collaborates and isolates the next run 148ms
+     × rejects an already submitted A creation after B activates without guessing a new owner 141ms
+     × ends A during a native completion repair without delivering or carrying the follow-up into B 87ms
+     × cancels an actual in-flight native analysis before B and preserves its A history without delivery 54ms
+(node:29330) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29358) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29362) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29406) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29435) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29449) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,0 +1,6 @@
+
+> @berserk/harness-lab@0.1.0 typecheck
+> tsc --noEmit
+
+src/web/CapabilityCenter.tsx(103,104): error TS2367: This comparison appears to be unintentional because the types '"connectors"' and '"skills"' have no overlap.
+src/web/CapabilityCenter.tsx(103,210): error TS2367: This comparison appears to be unintentional because the types '"connectors"' and '"skills"' have no overlap.

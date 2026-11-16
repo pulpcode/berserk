@@ -15,7 +15,7 @@ const revisionId = {type:'string',pattern:'^rev-[0-9a-f]{64}$'};
 const revision = {type:'integer',minimum:1};
 const params = (extra: Record<string, unknown> = {}) => ({type:'object',additionalProperties:false,required:['expertId',...Object.keys(extra)],properties:{expertId:id,...extra}});
 const body = (properties: Record<string,unknown>, required = Object.keys(properties)) => ({type:'object',additionalProperties:false,properties,required});
-const content = body({name:{type:'string',minLength:1,maxLength:120},description:{type:'string',minLength:1,maxLength:2000},instructions:{type:'string',maxLength:65536},skillIds:{type:'array',maxItems:4,uniqueItems:true,items:id},allowedTools:{type:'array',maxItems:100,uniqueItems:true,items:id}});
+const content = body({name:{type:'string',minLength:1,maxLength:120},description:{type:'string',minLength:1,maxLength:2000},instructions:{type:'string',maxLength:65536},skillIds:{type:'array',maxItems:4,uniqueItems:true,items:id},skillRefs:{type:'array',maxItems:32,items:body({skillId:id,revisionId:{type:'string',maxLength:160},packageDigest:{type:'string',pattern:'^[0-9a-f]{64}$'}})},allowedTools:{type:'array',maxItems:100,uniqueItems:true,items:id}},['name','description','instructions','skillIds','allowedTools']);
 const choice = {oneOf:[body({mode:{const:'inherit'}}),body({mode:{const:'general'}}),body({mode:{const:'expert'},expertId:id})]};
 const defaults = body({expectedRevision:{type:'integer',minimum:0},choice,clientActionId:uuid});
 
@@ -30,7 +30,7 @@ export async function capabilityManagementRoutes(app: FastifyInstance, lab: PiLa
   };
   const admin = (request: FastifyRequest) => {const value=actor(request);requireCapabilityAdministrator(lab,value);return value;};
   const trials = await CapabilityTrials.open({
-    ...options, dataDir: lab.config.dataDir, modelConfig: () => ({...lab.config}),
+    ...options, executionGuard:(_actor,_trial,expert)=>{for(const skill of expert.skills)if(skill.schemaVersion===2)lab.skills.assertTrialAllowed(skill.id);}, resolveSkillPackage: (who, skill) => lab.skills.resolveForManagement({skillId:skill.id,revisionId:skill.revisionId,packageDigest:skill.packageDigest!},{userId:who.userId,assertAdministrator:()=>requireCapabilityAdministrator(lab,who)}), dataDir: lab.config.dataDir, modelConfig: () => ({...lab.config}),
     authorize: (owner, trial) => {
       requireCapabilityAdministrator(lab, owner);
       if (trial.ownerId !== owner.userId) throw new RequestError('EXPERT_TRIAL_NOT_FOUND','试用不存在或无权访问。',404);
@@ -55,7 +55,7 @@ export async function capabilityManagementRoutes(app: FastifyInstance, lab: PiLa
   app.get<{Params:{expertId:string;revisionId:string}}>(`${root}/:expertId/revisions/:revisionId`,{schema:{params:params({revisionId}),querystring:empty}},async request=>{
     admin(request);await management.get(request.params.expertId);
     const value=await lab.capabilities.resolve({expertId:request.params.expertId,revisionId:request.params.revisionId});
-    return {content:{name:value.name,description:value.description,instructions:value.instructions,skillIds:value.skills.map(skill=>skill.id),allowedTools:value.allowedTools??[]},revision:value};
+    return {content:{name:value.name,description:value.description,instructions:value.instructions,skillIds:value.skills.filter(skill=>!skill.packageDigest).map(skill=>skill.id),skillRefs:value.skills.filter(skill=>skill.packageDigest).map(skill=>({skillId:skill.id,revisionId:skill.revisionId,packageDigest:skill.packageDigest!})),allowedTools:value.allowedTools??[]},revision:value};
   });
   app.put<{Params:{expertId:string};Body:{expectedRevision:number;mode:'none'|'all'|'seats';seatIds:string[];clientActionId:string}}>(`${root}/:expertId/policy`,{schema:{params:params(),body:body({expectedRevision:{type:'integer',minimum:0},mode:{enum:['none','all','seats']},seatIds:{type:'array',uniqueItems:true,maxItems:1000,items:{type:'string',pattern:'^[a-zA-Z0-9_-]{1,64}$'}},clientActionId:uuid})}},request=>management.setPolicy(admin(request),request.params.expertId,request.body));
   app.post<{Params:{expertId:string};Body:{action:'disable'|'enable'|'archive';revisionId?:string;reason:string;clientActionId:string;expectedStateRevision:number;expectedCurrentRevisionId:string|null}}>(`${root}/:expertId/lifecycle`,{schema:{params:params(),body:body({action:{enum:['disable','enable','archive']},revisionId,reason:{type:'string',minLength:1,maxLength:1000},clientActionId:uuid,expectedStateRevision:{type:'integer',minimum:0},expectedCurrentRevisionId:{anyOf:[revisionId,{type:'null'}]}},['action','reason','clientActionId','expectedStateRevision','expectedCurrentRevisionId'])}},request=>management.setLifecycle(admin(request),request.params.expertId,request.body));

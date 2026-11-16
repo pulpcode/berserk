@@ -1,4 +1,6 @@
+import { skillUseDetail } from '../skills/view.js';
 import type { CapabilityTrialsOptions } from '../pi/capability-trials.js';
+import { skillRoutes } from './skill-routes.js';
 import { capabilityManagementRoutes } from './capability-management-routes.js';
 import { SystemRoles } from '../access/system-roles.js';
 import type { CapabilityLibrary, ExpertSessionSelection } from '../contracts/capabilities.js';
@@ -99,6 +101,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
       return lab.capabilities.adminSummary();
     });
     await capabilityManagementRoutes(app,lab,capabilityOptions);
+    await skillRoutes(app,lab,capabilityOptions);
   }
   await app.register(async scoped => {
     const scope = apiScope(lab.config);
@@ -137,6 +140,11 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   } }, request => { if (lab.access && !lab.access.canUseWorkspace(scope.seat(request))) throw new RequestError('EXPERT_NOT_FOUND','专家不存在或不可用。',404); return lab.capabilities.detail(request.params.expertId, principal(request), scope.seat(request)); });
   if (!lab.access || lab.config.testSeats) {
     app.get(`${scope.base}/capabilities/library`, {schema:{querystring:settingsQuery}},capabilityLibrary);
+    app.get(`${scope.base}/capabilities/skills`, {schema:{querystring:settingsQuery}}, request => lab.skills.catalog({userId:`seat:${scope.seat(request)}`,seatId:scope.seat(request),canCollaborate:true}));
+    app.get<{Params:{skillId:string};Querystring:{revisionId:string;packageDigest:string}}>(`${scope.base}/capabilities/skills/:skillId`, {schema:{params:scope.params({skillId:{type:'string',minLength:1,maxLength:128}}),querystring:{type:'object',additionalProperties:false,required:['revisionId','packageDigest'],properties:{revisionId:{type:'string',minLength:1,maxLength:160},packageDigest:{type:'string',pattern:'^[0-9a-f]{64}$'}}}}}, async request => {
+      const value=await lab.skills.resolve({skillId:request.params.skillId,...request.query},{userId:`seat:${scope.seat(request)}`,seatId:scope.seat(request),canCollaborate:true});
+      return skillUseDetail(value);
+    });
     app.get(`${scope.base}/capabilities/access`, {schema:{querystring:settingsQuery}},()=>({administrator:false}));
     app.get(`${scope.base}/admin/capabilities/summary`, {schema:{querystring:settingsQuery}},()=>{
       throw new RequestError('FORBIDDEN','此环境未启用账号管理。',403);
@@ -180,14 +188,14 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId, undefined, request.body.modelId,
     { expertRef: request.body.expertRef, expectedDigest: request.body.expectedDigest, clientActionId: request.body.clientActionId,
       ...(lab.access ? { userId: workspaceIdentityOf(request).userId } : {}) }));
-  app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => lab.resources.info(request.params.id, scope.seat(request)));
+  app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => lab.resources.info(request.params.id, scope.seat(request), lab.access ? workspaceIdentityOf(request).userId : undefined));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/agents`, { schema: { params, querystring: settingsQuery } }, async request => lab.agents(request.params.id, scope.seat(request)));
   const resourceParams = (key: string) => scope.params({ id: uuid, [key]: { type: 'string', minLength: 1, maxLength: 80 } });
   app.get<{ Params: { id: string; fileId: string } }>(`${scope.base}/workspaces/:id/instructions/:fileId`, { schema: { params: resourceParams('fileId') } }, async request => lab.resources.readInstruction(request.params.id, request.params.fileId, scope.seat(request)));
   app.put<{ Params: { id: string; fileId: string }; Body: { content: string; expectedHash: string | null } }>(`${scope.base}/workspaces/:id/instructions/:fileId`, {
     schema: { params: resourceParams('fileId'), body: { type: 'object', properties: { content: { type: 'string' }, expectedHash: { anyOf: [{ type: 'string', pattern: '^[0-9a-f]{64}$' }, { type: 'null' }] } }, required: ['content', 'expectedHash'], additionalProperties: false } },
   }, async request => lab.resources.updateInstruction(request.params.id, request.params.fileId, request.body.content, request.body.expectedHash, undefined, scope.seat(request)));
-  app.get<{ Params: { id: string; skillId: string } }>(`${scope.base}/workspaces/:id/skills/:skillId`, { schema: { params: resourceParams('skillId') } }, async request => lab.resources.readSkill(request.params.id, request.params.skillId, scope.seat(request)));
+  app.get<{ Params: { id: string; skillId: string } }>(`${scope.base}/workspaces/:id/skills/:skillId`, { schema: { params: resourceParams('skillId') } }, async request => lab.resources.readSkill(request.params.id, request.params.skillId, scope.seat(request), lab.access ? workspaceIdentityOf(request).userId : undefined));
   app.get<{ Params: { id: string; requestId: string } }>(`${scope.base}/sessions/:id/requests/:requestId/resources`, { schema: { params: scope.params({ id: uuid, requestId: uuid }) } }, async request => lab.getRequestResources(request.params.id, request.params.requestId, scope.seat(request)));
   app.get<{ Params: { id: string; compactionId: string } }>(`${scope.base}/sessions/:id/compactions/:compactionId`, { schema: { querystring: settingsQuery, params: resourceParams('compactionId') } }, async request => lab.getCompaction(request.params.id, request.params.compactionId, scope.seat(request)));
   app.get<{ Params: { id: string } }>(`${scope.base}/sessions/:id`, { schema: { params } }, async request => lab.get(request.params.id, scope.seat(request)));
@@ -221,7 +229,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       contextRefs: { type: 'array', maxItems: 20, items: {type:'object',additionalProperties:false,required:['systemId','objectType','objectId'],properties:{systemId:{type:'string',minLength:1,maxLength:128},objectType:{enum:['road','resource','area']},objectId:{type:'string',minLength:1,maxLength:128}}} },
       uploadIds: { type: 'array', maxItems: 100, items: uuid },
       fileRefs: { type: 'array', maxItems: 100, items: { type: 'object', additionalProperties: false, required: ['path'], properties: { path: { type: 'string', minLength: 1, maxLength: 4096 } } } },
-      skill: { type: 'object', additionalProperties: false, required: ['id', 'hash'], properties: { id: { type: 'string', minLength: 1, maxLength: 80 }, hash: { type: 'string', pattern: '^[0-9a-f]{64}$' } } },
+      skill: { type: 'object', additionalProperties: false, required: ['id', 'hash'], dependencies: { revisionId: ['packageDigest'], packageDigest: ['revisionId'] }, properties: { id: { type: 'string', minLength: 1, maxLength: 128 }, hash: { type: 'string', pattern: '^[0-9a-f]{64}$' }, revisionId: { type: 'string', minLength: 1, maxLength: 160, pattern: '^[a-zA-Z0-9_-]+$' }, packageDigest: { type: 'string', pattern: '^[0-9a-f]{64}$' } } },
       agent: { type: 'object', additionalProperties: false, required: ['name', 'hash'], properties: { name: { type: 'string', pattern: '^[a-z][a-z0-9_-]*$', maxLength: 256 }, hash: { type: 'string', pattern: '^[0-9a-f]{64}$' } } },
     }, required: ['text'], additionalProperties: false } },
   }, async (request, reply) => {

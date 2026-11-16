@@ -1,0 +1,19 @@
+[WebServer] (node:28387) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:28330) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:28392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28392) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/skills.spec.ts:30:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate (4.6s)
+  ✓  2 tests/e2e/skills.spec.ts:49:1 › ordinary user can stage a published skill into an existing conversation without sending or changing its draft (4.8s)
+  ✓  3 tests/e2e/skills.spec.ts:63:1 › policy and publication saves retain their viewed baselines across background detail refreshes (5.2s)
+  ✓  4 tests/e2e/skills.spec.ts:101:1 › administrator stages a published skill in a personal conversation without business scope or automatic sending (4.4s)
+  ✓  5 tests/e2e/skills.spec.ts:136:1 › creation starts with an empty local form, cancel writes nothing, and invalid submission keeps the input (4.0s)
+  ✓  6 tests/e2e/skills.spec.ts:168:1 › a lost create response retries the same complete draft instead of creating another asset (3.4s)
+  ✓  7 tests/e2e/skills.spec.ts:183:1 › form and source editing share the same draft and preserve imported extensions and other files (3.8s)
+
+  7 passed (38.0s)

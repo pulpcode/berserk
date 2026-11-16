@@ -4,7 +4,7 @@ export type CapabilityState = 'enabled' | 'disabled' | 'banned';
 export interface ExpertRef { expertId: string; revisionId: string }
 export interface SkillRevision {
   id: string; name: string; description: string; version: string; hash: string; content: string;
-  revisionId: string; digest: string;
+  revisionId: string; digest: string; schemaVersion?: 2; packageDigest?: string; resourceRoot?: string;
 }
 export interface ExpertRevision extends ExpertRef {
   schemaVersion: 1; releaseVersion: string; digest: string;

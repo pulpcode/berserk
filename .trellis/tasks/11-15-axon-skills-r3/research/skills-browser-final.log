@@ -1,0 +1,18 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/skills.spec.ts --workers=1 --output=/private/tmp/axon-r3-ui-results-final
+
+[WebServer] (node:5976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:5945) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:6069) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6069) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/skills.spec.ts:27:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate (4.9s)
+  ✓  2 tests/e2e/skills.spec.ts:46:1 › ordinary user can stage a published skill into an existing conversation without sending or changing its draft (4.1s)
+
+  2 passed (16.8s)

@@ -1,0 +1,23 @@
+{
+  "exitCode": 0,
+  "version": "1.182.0",
+  "findings": [
+    {
+      "path": "unsafe.js",
+      "rule": "Users.lau..codex.worktrees.axon-r2.berserk.experiments.harness-lab.fixtures.skill-scanning.spawn-shell-true",
+      "line": 2
+    },
+    {
+      "path": "unsafe.py",
+      "rule": "Users.lau..codex.worktrees.axon-r2.berserk.experiments.harness-lab.fixtures.skill-scanning.eval-detected",
+      "line": 2
+    }
+  ],
+  "scanned": [
+    "safe.js",
+    "safe.py",
+    "unsafe.js",
+    "unsafe.py"
+  ],
+  "errors": []
+}

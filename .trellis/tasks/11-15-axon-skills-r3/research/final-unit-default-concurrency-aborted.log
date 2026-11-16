@@ -1,0 +1,123 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:29497) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29498) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29499) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29502) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29496) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29503) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29501) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29506) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29505) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29504) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29762) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29770) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29779) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29793) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29795) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29806) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29943) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29953) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29975) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29979) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29982) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29991) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E01","eventId":"8d92a39e-8742-45fd-ba4c-ebecdb2b2c45","jobId":"749e5407-95b6-4e5b-bb23-fe7dd0cb7235","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E02","eventId":"ba6f0f6e-8da5-4b07-965f-ee80d1a52ae7","jobId":"7ae4d0bc-30ca-413a-ac19-19f3deb26702","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E03","eventId":"702ed8bb-0252-4a1a-b466-5a54d50bbb69","jobId":"6380d2de-08cc-4fd2-bb9f-66fbd686e034","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E04","eventId":"0dfbc70e-99f3-44b4-946b-61db263470fb","jobId":"88c4d56e-974d-4fcf-a74b-b7b5870c1c9e","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E04","eventId":"06b966ee-2cdb-4c76-b8a2-9baaba7d1ae8","jobId":"205f947e-a764-4adc-83da-699a771bef75","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E05","eventId":"66621e7d-ccdd-4523-b7fe-de86c9686d43","jobId":"7e75da3c-b983-46c8-a180-b79bad55e447","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E06","eventId":"0aec2b28-862b-4310-b655-44bfcc35101b","jobId":"c4b8ad0c-3ece-48cf-a2f7-aef21433ce12","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E07","eventId":"65fb04f8-d06d-4114-a832-aaa03b91891a","jobId":"3746d3ce-2b5e-45a0-8954-23d99bd20d2a","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E08","eventId":"14203e34-1819-426b-b022-f77e3de4e273","jobId":"92d04fd0-dc42-403b-a288-edf543c2a6d9","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E09","eventId":"0653a418-3f6f-4c60-a22f-78390e021749","jobId":"2f92173b-d327-4898-b8b2-a8be3839ff6f","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E10","eventId":"45f840e7-3f97-4977-8ace-a8c27804da3b","jobId":"40c15750-b243-4552-943f-45204864e1ed","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E11","eventId":"77546241-f064-4ba0-9853-5b435664699e","jobId":"e04aad52-76e8-4b33-9db5-2ca8d71a4c97","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"step":"E12","eventId":"f5fbe9ce-582d-46b2-850a-2fd623ab62ca","jobId":"36d4a58c-9427-470a-87b7-bf1d61f13ea6","status":"succeeded","delivered":true,"semanticReviewPending":true}
+
+(node:30004) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the usage-only driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"evidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-scenario-probe-driver-M8yr6H/new-evidence/validation.json","preparationCompleted":true,"protocolCompleted":true,"semanticReviewPending":true,"accounting":{"apiRequests":39,"attempts":39,"inputTokensCharged":3900,"outputTokensCharged":390,"conservativeCostCny":0.010920000000000016,"stoppedReason":null,"elapsedMs":31068,"limits":{"maxApiRequests":60,"maxInputTokens":10000,"maxOutputTokens":2000,"maxSeconds":60,"maxCostCny":1,"inputCnyPerMillion":2,"outputCnyPerMillion":8,"providerInputLimitTokens":1000},"accountingOnly":null}}
+
+stdout | tests/probe-scenario-budget.test.ts > scenario probe dispatch budget > runs the usage-only driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review
+{"evidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-scenario-probe-driver-y30N8E/new-evidence/validation.json","preparationCompleted":true,"protocolCompleted":false,"semanticReviewPending":true,"accounting":{"apiRequests":1,"attempts":1,"inputTokensCharged":1000,"outputTokensCharged":100,"conservativeCostCny":0.0028,"stoppedReason":"provider_usage_unknown_reservation_retained","elapsedMs":9098,"limits":null,"accountingOnly":{"inputCnyPerMillion":2,"outputCnyPerMillion":8,"providerInputLimitTokens":1000}}}
+
+ ❯ tests/probe-scenario-budget.test.ts (15 tests | 2 failed) 39802ms
+     × runs the budgeted driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review 30001ms
+     × runs the usage-only driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review 9432ms
+(node:30010) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30040) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30043) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30080) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30083) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30090) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30097) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30103) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30102) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

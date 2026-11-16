@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:5576) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/composer-input.test.ts (28 tests | 4 failed) 11990ms
+     × preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v3 5ms
+     × preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v4 2ms
+     × preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v5 1ms
+     × preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v6 1ms
+(node:5620) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5635) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/pi/composer-input.test.ts > map input v5 and fixed legacy evidence > preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v3
+ FAIL  tests/pi/composer-input.test.ts > map input v5 and fixed legacy evidence > preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v4
+ FAIL  tests/pi/composer-input.test.ts > map input v5 and fixed legacy evidence > preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v5
+ FAIL  tests/pi/composer-input.test.ts > map input v5 and fixed legacy evidence > preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v6
+AssertionError: expected [Function] to throw an error
+ ❯ tests/pi/composer-input.test.ts:302:88
+    300|     for(const bad of corruptions)expect(()=>decodeComposerInput(bad,re…
+    301|     for(const type of ['berserk.composer-input.v7','berserk.composer-i…
+    302|       expect(()=>decodeComposerInput(record,record.workspaceId,record.…
+       |                                                                                        ^
+    303|       expect(()=>recordedComposerText(record,type)).toThrow();
+    304|       expect(()=>composerHistory(native(record,type,text),record.works…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  4 failed | 35 passed (39)
+   Start at  11:07:55
+   Duration  21.93s (transform 1.65s, setup 0ms, import 6.71s, tests 14.54s, environment 0ms)
+

@@ -42,7 +42,14 @@ export interface CreationIntent {
 export interface LegacySession { sessionId: string; workspaceId: string; seatId: string }
 interface AcceptedRequest { ref: ExpertRef; principalId?: string; seatId?: string; cancel: () => void; skills: SkillRevision[] }
 
-export function skillRevision(value: ControlledSkill): SkillRevision {
+export function skillRevision(value: ControlledSkill & Partial<Pick<SkillRevision,'schemaVersion'|'packageDigest'|'revisionId'|'resourceRoot'>>): SkillRevision {
+  if (value.schemaVersion === 2) {
+    if (!idPattern.test(value.id) || typeof value.content !== 'string' || Buffer.byteLength(value.content)>65536 || hashContent(value.content)!==value.hash
+      || !value.revisionId || !/^[a-zA-Z0-9_-]{1,128}$/.test(value.revisionId) || !value.packageDigest || !/^[0-9a-f]{64}$/.test(value.packageDigest)
+      || value.resourceRoot !== `/skills/${value.id}/${value.revisionId}/${value.name}`) throw invalid();
+    return {schemaVersion:2,id:value.id,name:value.name,description:value.description,version:value.version,hash:value.hash,content:value.content,
+      revisionId:value.revisionId,digest:value.packageDigest,packageDigest:value.packageDigest,resourceRoot:value.resourceRoot};
+  }
   if (!idPattern.test(value.id) || !value.name.trim() || !value.description.trim() || !value.version.trim()
     || !value.content.trim() || Buffer.byteLength(value.content) > 16384 || value.hash !== hashContent(value.content)) throw invalid();
   const body = { id: value.id, name: value.name, description: value.description, version: value.version, hash: value.hash, content: value.content };
@@ -67,7 +74,7 @@ export function expertRevision(value: ExpertDefinition): ExpertRevision {
 function decodeExpert(value: unknown): ExpertRevision {
   if (!object(value) || !exactKeys(value, ['schemaVersion', 'expertId', 'revisionId', 'releaseVersion', 'digest', 'name', 'description', 'instructions', 'modes', 'selectable', 'system', 'allowedTools', 'skills'])
     || value.schemaVersion !== 1 || !Array.isArray(value.skills) || !Array.isArray(value.modes)
-    || value.skills.some(skill => !object(skill) || !exactKeys(skill, ['id', 'name', 'description', 'version', 'hash', 'content', 'revisionId', 'digest']))) throw invalid();
+    || value.skills.some(skill => !object(skill) || !exactKeys(skill, ['id', 'name', 'description', 'version', 'hash', 'content', 'revisionId', 'digest', ...(skill.schemaVersion === 2 ? ['schemaVersion','packageDigest','resourceRoot'] : [])]))) throw invalid();
   try {
     const decoded = expertRevision(value as unknown as ExpertDefinition);
     if (canonicalJson(value) !== canonicalJson(decoded)) throw invalid();
@@ -211,7 +218,7 @@ export class CapabilityService {
         const saved = this.db.prepare('SELECT skill_id,digest FROM skills WHERE revision_id=?').get(skill.revisionId);
         if (!saved || saved.skill_id !== skill.id || saved.digest !== skill.digest) throw invalid();
         const skillPath = join(this.directory, 'blobs', skill.digest);
-        if ((await lstat(skillPath)).nlink !== 1 || await readControlled(skillPath, 32768) !== canonicalJson(skill)) throw invalid();
+        if ((await lstat(skillPath)).nlink !== 1 || await readControlled(skillPath, skill.schemaVersion === 2 ? 128 * 1024 : 32768) !== canonicalJson(skill)) throw invalid();
       }
     } catch { throw invalid(); }
     const bytes = Buffer.byteLength(canonicalJson(revision));

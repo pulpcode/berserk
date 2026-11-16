@@ -70,7 +70,7 @@ async function setup(mode: 'success' | 'nonzero' | 'timeout' | 'cancel' = 'succe
 describe('Pi public file factories', () => {
   it('routes read/write/edit/ls/find through virtual cwd and exposes only readonly tools to children', async () => {
     const env = await setup();
-    expect(env.readonly.map(tool => tool.name)).toEqual(['read', 'ls', 'find']);
+    expect(env.readonly.map(tool => tool.name)).toEqual(['read', 'ls', 'grep', 'find']);
     expect(env.writable.map(tool => tool.name)).toEqual(['write', 'edit', 'bash', 'file_output']);
     await env.call('write', { path: 'report.md', content: '原始内容\n' });
     expect(env.files.get('/workspace/report.md')?.toString()).toBe('原始内容\n');

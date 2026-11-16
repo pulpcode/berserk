@@ -1,0 +1,70 @@
+import { randomUUID } from 'node:crypto';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { expect, test, vi } from 'vitest';
+import { openDatabase } from '../src/access/database.js';
+import { AccessStore } from '../src/access/store.js';
+import { migrateAdministratorAccounts } from '../src/access/administrator-schema.js';
+import { SystemRoles } from '../src/access/system-roles.js';
+import { createApp } from '../src/server/app.js';
+import { PiLab } from '../src/pi/lab.js';
+import type { AuthSession } from '../src/contracts/access.js';
+import type { ManagedSkillDetail, SkillImportPreview, SkillPublication, SkillSummary, SkillUseDetail, SkillDraft } from '../src/contracts/skills.js';
+import type { ExpertTrialRunView } from '../src/contracts/capability-trials.js';
+import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
+
+test('authenticated skill import, optional publication and scoped trial keep management separate from use authority', async () => {
+  const dataDir = await mkdtemp(join(tmpdir(), 'axon-r3-api-'));
+  const db = await openDatabase(dataDir); const access = new AccessStore(db);
+  for (const seat of ['allowed', 'other']) await access.saveAccount({ username: seat, displayName: seat, seatId: seat, seatName: seat, password: 'test-password-123', createPublicTask: false, manageModelSettings: false });
+  migrateAdministratorAccounts(db); await access.saveAdministratorAccount({ username: 'admin', displayName: '管理员', password: 'test-password-123' }); await access.saveAdministratorAccount({ username: 'another', displayName: '其他管理员', password: 'test-password-123' }); db.close();
+  const config = testConfig(dataDir, { auth: { secret: 'test-only-signing-key-at-least-32-characters', sessionMs: 28800000 } });
+  const fake = await fakeRuntime(config, () => ({ text: '已按本次输入整理；未调用业务系统。' }));
+  const lab = await PiLab.create(config, fake.runtime); const app = await createApp(lab, false, undefined, undefined, { runtimeFactory: async () => fake.runtime });
+  try {
+    async function login(username: string) { const first = await app.inject('/api/auth/session'); const anonymous = first.json<AuthSession>(); const result = await app.inject({ method: 'POST', url: '/api/auth/login', headers: { cookie: first.cookies.map(item => `${item.name}=${item.value}`).join('; '), origin: 'http://localhost:4310', 'x-csrf-token': anonymous.csrf! }, payload: { username, password: 'test-password-123' } }); expect(result.statusCode, result.body).toBe(200); const auth = result.json<AuthSession>(); return { cookie: result.cookies.map(item => `${item.name}=${item.value}`).join('; '), origin: 'http://localhost:4310', 'x-csrf-token': auth.csrf!, 'x-axon-view': auth.viewId! }; }
+    const admin = await login('admin'), another = await login('another'), allowed = await login('allowed'), other = await login('other');
+    const call = (headers: typeof admin, url: string, payload?: object, method?: 'POST' | 'PUT' | 'GET') => app.inject({ url, headers, method: method || (payload ? 'POST' : 'GET'), ...(payload ? { payload } : {}) });
+    const ok = async <T,>(headers: typeof admin, url: string, payload?: object, method?: 'POST' | 'PUT' | 'GET') => { const response = await call(headers, url, payload, method); expect(response.statusCode, response.body).toBe(200); return response.json<T>(); };
+    const root = '/api/admin/capabilities/skills';
+    expect((await app.inject(root)).statusCode).toBe(401);
+    expect((await call(allowed, root, { clientActionId: randomUUID() })).statusCode).toBe(403);
+    const before = await ok<SkillSummary[]>(admin, root);
+    expect(before.filter(item => item.system)).toHaveLength(4);
+    const markdown = '---\nname: summary-method\ndescription: 使用明确输入整理摘要\n---\n\n先核对输入，再整理结论。';
+    const response = await app.inject({ method: 'POST', url: `${root}/import-preview?name=summary-method.md`, headers: { ...admin, 'content-type': 'application/octet-stream' }, payload: Buffer.from(markdown) });
+    expect(response.statusCode, response.body).toBe(200); const preview = response.json<SkillImportPreview>();
+    expect(preview.validation.valid).toBe(true); expect(await ok(admin, root)).toEqual(before); expect(fake.calls).toHaveLength(0);
+    const imported = await ok<ManagedSkillDetail>(admin, `${root}/import`, { clientActionId: randomUUID(), preview });
+    const id = imported.skill.skillId; const url = `${root}/${id}`;
+    expect((await call(admin, `${url}/draft`, { expectedDraftRevision: 1, files: preview.files, role: 'administrator' }, 'PUT')).statusCode).toBe(400);
+    expect((await call(admin,`${url}/policy`,{expectedRevision:0,mode:'seats',seatIds:['nonexistent-seat'],clientActionId:randomUUID()},'PUT')).statusCode).toBe(400);
+    await ok(admin, `${url}/policy`, { expectedRevision: 0, mode: 'seats', seatIds: ['allowed'], clientActionId: randomUUID() }, 'PUT');
+    // Publish has no trialId, scanId, zero-finding or approval dependency.
+    const input = { expectedDraftRevision: imported.draft!.draftRevision, expectedCurrentRevisionId: null, releaseNotes: '无需试用即可发布方法包', clientActionId: randomUUID() };
+    const pub = await ok<SkillPublication>(admin, `${url}/publish`, input);
+    expect(await ok(admin, `${url}/publish`, input)).toEqual(pub); expect(fake.calls).toHaveLength(0);
+    const catalog = await ok<SkillSummary[]>(allowed, '/api/capabilities/skills'); expect(catalog.some(skill => skill.skillId === id)).toBe(true);
+    expect((await ok<SkillSummary[]>(other, '/api/capabilities/skills')).some(skill => skill.skillId === id)).toBe(false);
+    expect((await ok<SkillSummary[]>(admin, '/api/capabilities/skills')).some(skill => skill.skillId === id)).toBe(true);
+    const publicPath = `/api/capabilities/skills/${id}?revisionId=${pub.revisionId}&packageDigest=${pub.packageDigest}`;
+    const detail = await ok<{ content: string; files: Array<{ path: string }>; [key: string]: unknown }>(allowed, publicPath); expect(detail.content).toBe(markdown); expect(detail).not.toHaveProperty('draft'); expect(detail).not.toHaveProperty('audit'); expect((await call(other, publicPath)).statusCode).toBe(404); expect(detail.trialSummary).toEqual({status:'not_tried'}); expect(detail.releaseVersion).toBe('1.0.0');
+    expect((await call(allowed, `${url}/trials`, { expectedDraftRevision: 1, input: '核对', clientActionId: randomUUID() })).statusCode).toBe(403);
+    const trialInput = { revisionId: pub.revisionId, input: '请基于输入给出摘要。', clientActionId: randomUUID() };
+    const trial = await ok<ExpertTrialRunView>(admin, `${url}/trials`, trialInput);
+    const trialUrl = `${url}/trials/${trial.trial.trialId}`;
+    await vi.waitFor(async () => { const result = await ok<ExpertTrialRunView>(admin, trialUrl); expect(result.trial.status, result.trial.evidence?.summary).toBe('succeeded'); }, { timeout: 15000 });
+    const calls = fake.calls.length; expect(calls).toBeGreaterThan(0);
+    expect((await ok<ExpertTrialRunView>(admin, `${url}/trials`, trialInput)).trial.trialId).toBe(trial.trial.trialId); expect(fake.calls).toHaveLength(calls);
+    expect((await call(another, trialUrl)).statusCode).toBeGreaterThanOrEqual(400);
+    const records = await ok<ExpertTrialRunView[]>(admin, `${url}/trials`); expect(records.map(item => item.trial.trialId)).toContain(trial.trial.trialId);
+    const publicAfterTrial=await ok<SkillUseDetail>(allowed,publicPath); expect(publicAfterTrial.trialSummary).toEqual({status:'succeeded'});
+    const publicText=JSON.stringify(publicAfterTrial); expect(publicText).not.toContain(trialInput.input); expect(publicText).not.toContain('ownerId'); expect(publicText).not.toContain('trialId'); expect(publicText).not.toContain('snapshot');
+    const changed=await ok<SkillDraft>(admin,`${url}/draft`,{expectedDraftRevision:imported.draft!.draftRevision,files:[{path:'SKILL.md',contentBase64:Buffer.from(markdown+'\n新的方法快照。').toString('base64')}]},'PUT');
+    const next=await ok<SkillPublication>(admin,`${url}/publish`,{expectedDraftRevision:changed.draftRevision,expectedCurrentRevisionId:pub.revisionId,releaseNotes:'新修订不继承旧试用结果',clientActionId:randomUUID()});
+    const newPublicPath=`/api/capabilities/skills/${id}?revisionId=${next.revisionId}&packageDigest=${next.packageDigest}`;
+    expect((await ok<SkillUseDetail>(allowed,newPublicPath)).trialSummary).toEqual({status:'not_tried'}); expect((await ok<SkillUseDetail>(allowed,publicPath)).trialSummary).toEqual({status:'succeeded'});
+    new SystemRoles(lab.access!.db).revoke('admin'); expect((await call(admin, root)).statusCode).toBe(401);
+  } finally { await app.close(); await rm(dataDir, { recursive: true, force: true }); }
+}, 60000);

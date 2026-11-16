@@ -1,0 +1,30 @@
+import { cp, lstat, mkdtemp, readdir, readFile, realpath, rm } from 'node:fs/promises';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
+import { DatabaseSync } from 'node:sqlite';
+import { capabilityDigest } from '../capabilities/service.js';
+import { atomicWrite, checkDirectory, readControlled } from '../resources/files.js';
+import { fileHash } from './package.js';
+import { initializeSkillSchema } from './service.js';
+interface Entry {path:string;hash:string}
+interface Record {schemaVersion:1;stage:'prepared'|'completed';sourceDir:string;backupDir:string;files:Entry[];backupDigest:string}
+async function inventory(root:string,prefix=''):Promise<Entry[]>{await checkDirectory(root);const output:Entry[]=[];for(const entry of (await readdir(root,{withFileTypes:true})).sort((a,b)=>a.name.localeCompare(b.name))){const path=join(root,entry.name),name=prefix?`${prefix}/${entry.name}`:entry.name,stat=await lstat(path);if(stat.isSymbolicLink()||!stat.isDirectory()&&!stat.isFile()||stat.isFile()&&stat.nlink!==1)throw Error('数据目录包含链接或运行时特殊文件，请停服后核对。');if(stat.isDirectory())output.push(...await inventory(path,name));else output.push({path:name,hash:fileHash(await readFile(path))});}return output;}
+function logical(db:DatabaseSync):string{const schema=db.prepare("SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name").all();const tables=schema.filter(s=>s.type==='table').map(s=>({name:s.name,rows:db.prepare('SELECT * FROM "'+String(s.name).replaceAll('"','""')+'"').all().map(r=>JSON.stringify(r)).sort()}));return capabilityDigest({schema,tables,version:db.prepare('PRAGMA user_version').get()?.user_version});}
+export async function migrateSkillsR3(options:{dataDir:string;backupDir:string;apply:boolean;serviceStopped:boolean;hooks?:{afterPrepared?:()=>Promise<void>;afterSchema?:()=>Promise<void>}}){
+  if(!isAbsolute(options.dataDir)||!isAbsolute(options.backupDir)||resolve(options.dataDir)==='/')throw Error('需要绝对数据根与独立备份目录。');
+  if(options.apply&&!options.serviceStopped)throw Error('请先停服并传入--service-stopped。');
+  const source=await realpath(options.dataDir);await checkDirectory(dirname(options.backupDir));const backup=join(await realpath(dirname(options.backupDir)),resolve(options.backupDir).split('/').at(-1)!);
+  for(const[from,to]of[[source,backup],[backup,source]]){const rel=relative(from,to);if(!rel||!rel.startsWith('..')&&!isAbsolute(rel))throw Error('备份必须在独立目录。');}
+  const marker=join(source,'capabilities/r3-migration.json');const raw=await readControlled(marker,32*1024*1024,true);let record:Record|undefined;
+  if(raw){record=JSON.parse(raw) as Record;if(record.schemaVersion!==1||!['prepared','completed'].includes(record.stage)||record.sourceDir!==source||record.backupDir!==backup||capabilityDigest(record.files)!==record.backupDigest)throw Error('R3迁移记录不匹配，请保留现场。');}
+  const path=join(source,'capabilities/capabilities.sqlite');const stat=await lstat(path);if(!stat.isFile()||stat.isSymbolicLink()||stat.nlink!==1)throw Error('能力库文件异常。');
+  const inspect=new DatabaseSync(path,{readOnly:true});let summary;
+  try{if(inspect.prepare('PRAGMA quick_check').get()?.quick_check!=='ok'||Number(inspect.prepare('PRAGMA user_version').get()?.user_version)!==2)throw Error('需要已完成迁移的R2能力库。');const r3=!!inspect.prepare("SELECT 1 FROM sqlite_master WHERE name='r3_skill_meta'").get();if(r3&&!record)throw Error('R3表存在但无迁移记录，请核对来源。');summary={capabilitySchemaVersion:2,skillSchemaVersion:1,legacySkillSnapshots:inspect.prepare('SELECT count(*) n FROM skills').get()?.n,expertRevisions:inspect.prepare('SELECT count(*) n FROM revisions').get()?.n,expertDrafts:inspect.prepare('SELECT count(*) n FROM r2_drafts').get()?.n,expertTrials:inspect.prepare('SELECT count(*) n FROM r2_trials').get()?.n,unfinishedIntents:inspect.prepare("SELECT count(*) n FROM creation_intents WHERE json_extract(data,'$.state')!='completed'").get()?.n,oldRevisionsRewritten:false,accountDatabaseChanged:false};}finally{inspect.close();}
+  if(record?.stage==='completed')return{...summary,stage:options.apply?'completed':'dry-run',resumed:true,backupDigest:record.backupDigest};
+  if(!record){const files=await inventory(source);record={schemaVersion:1,stage:'prepared',sourceDir:source,backupDir:backup,files,backupDigest:capabilityDigest(files)};}
+  if(!options.apply)return{...summary,stage:'dry-run',resumed:!!raw,backupDigest:record.backupDigest};
+  const exists=await lstat(backup).catch(e=>{if(e.code==='ENOENT')return null;throw e;});if(!exists)await cp(source,backup,{recursive:true,force:false,errorOnExist:true,preserveTimestamps:true});
+  if(capabilityDigest(await inventory(backup))!==record.backupDigest)throw Error('完整备份校验失败，不会覆盖备份。');
+  if(raw){const current=(await inventory(source)).filter(f=>f.path!=='capabilities/r3-migration.json');if(JSON.stringify(current.map(f=>f.path))!==JSON.stringify(record.files.map(f=>f.path)))throw Error('迁移准备后的文件清单已变化。');for(const file of current)if(file.path!=='capabilities/capabilities.sqlite'&&record.files.find(f=>f.path===file.path)?.hash!==file.hash)throw Error('迁移准备后的其他文件已变化。');const scratch=await mkdtemp(join(tmpdir(),'axon-r3-migrate-'));try{const expectedPath=join(scratch,'expected.sqlite');await cp(join(backup,'capabilities/capabilities.sqlite'),expectedPath);const expected=new DatabaseSync(expectedPath),actual=new DatabaseSync(path,{readOnly:true});try{const actualHasSchema=!!actual.prepare("SELECT 1 FROM sqlite_master WHERE name='r3_skill_meta'").get();if(actualHasSchema)initializeSkillSchema(expected);if(logical(expected)!==logical(actual))throw Error('能力库超出已知R3迁移变更。');}finally{expected.close();actual.close();}}finally{await rm(scratch,{recursive:true,force:true});}}
+  await atomicWrite(marker,JSON.stringify(record));await options.hooks?.afterPrepared?.();const db=new DatabaseSync(path);try{db.exec('PRAGMA foreign_keys=ON;PRAGMA synchronous=FULL');initializeSkillSchema(db);}finally{db.close();}await options.hooks?.afterSchema?.();record.stage='completed';await atomicWrite(marker,JSON.stringify(record));return{...summary,stage:'completed',resumed:!!raw,backupDigest:record.backupDigest};
+}

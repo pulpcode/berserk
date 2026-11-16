@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-16",
+  "scope": "技能步骤流程增量最终审查；不含部署操作",
+  "source_sha256": {
+    "experiments/harness-lab/src/web/SkillLibrary.tsx": "cece337b0ab5ac5dbd5e6b5ae3a1f53f86c3cc38907b279c2bb469a0fc5d77bb",
+    "experiments/harness-lab/src/web/CapabilityCenter.tsx": "4678ad830d887430957adc39d7c3649947042441c5ed1b3f44ee7aaed29e77ab",
+    "experiments/harness-lab/src/web/skill-management.css": "672595858c949db5ba450150a3250ec0ef0a63f7c4b3ce63998d06d1acedd167",
+    "experiments/harness-lab/tests/e2e/skills.spec.ts": "0db9641800b7a594e42c63b2b50b6e076dce31935bd5d293c40e7cb2d9129a88",
+    "/private/tmp/axon-skill-flow-archive-placeholder.py": "d60d3f56500641dd55f6720622e02f87ee87a395d8cdc6a0265caa49367b60eb"
+  },
+  "verified": {
+    "typecheck_exit_code": 0,
+    "lint_exit_code": 0,
+    "diff_check_exit_code": 0,
+    "targeted_creation_race_browser": "1 passed (16.7s)"
+  },
+  "source_frozen": true
+}

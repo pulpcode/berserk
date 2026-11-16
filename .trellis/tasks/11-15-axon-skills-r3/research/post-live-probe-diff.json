@@ -1,0 +1,30 @@
+{
+  "probeArchiveSha256": "e7660656e215f445a88b4fcf66a7045131ca510fa8e74c71ce6cf66f046d323a",
+  "changes": [
+    {
+      "path": "experiments/harness-lab/src/pi/lab.ts",
+      "probeSha256": "236e3be87a38479de0f5d52ff1d866d753ec809ec70af01b00969e9fa1e57d75",
+      "currentSha256": "1ce51d4594f177743809f67028816ccfe5392080fc93aab4de721856aac60a64"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/measure-skills-r3.ts",
+      "probeSha256": "69cefae3111efa2d449c605b5b8e0d8c6332c865e266b04dd75a64ea3e1b2b01",
+      "currentSha256": "8afec7f98629b752aea185876c0b305a7e7054e9923b463efb8ee472d902a812"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/migration.test.ts",
+      "probeSha256": "46b755dbb4746e541a5862a6a3a8d50355cd8faae355f31242cdf0bbf5a0058b",
+      "currentSha256": "9990fada74bdfabc835255c64991dd56df1f5d92ce9ccc6664db0d68ced54d7f"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/capability-lab.test.ts",
+      "probeSha256": "2c0f109a9aaeccca335ba8bef0b9e9d27d8c7808a8f5b206dd35786baeab7b4a",
+      "currentSha256": "692539c9af0cbc406ba8a68de98edbbe94f73e8f3e62704981a65025df9fdb14"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/file-tools.test.ts",
+      "probeSha256": "271af365d80851c2a1d739596dece495ddfdc699a41a958d0cf1ad7108b50124",
+      "currentSha256": "7f6b9bd3f04b71dc7ee047c1ddbf4dac313ef21e38c3a51d3e8d98783c1c1cef"
+    }
+  ]
+}

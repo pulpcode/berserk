@@ -1,0 +1,50 @@
+[WebServer] (node:29111) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:29082) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:29121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29121) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/skills.spec.ts:209:1 › creation respects Unicode code-point limits without truncating supplementary-plane input (9.2s)
+
+
+  1) tests/e2e/skills.spec.ts:209:1 › creation respects Unicode code-point limits without truncating supplementary-plane input 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByRole('dialog', { name: '创建技能', exact: true }).getByLabel('技能名称', { exact: true })
+    Expected: "𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨"
+    Received: "𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByRole('dialog', { name: '创建技能', exact: true }).getByLabel('技能名称', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: '创建技能', exact: true }).getByLabel('技能名称', { exact: true })
+        14 × locator resolved to <input required="" maxlength="64" aria-label="技能名称" placeholder="例如：资料摘要" value="𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨"/>
+           - unexpected value "𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨𐐨"
+
+
+      213 |     const before = env.lab.skills.list().length, letter = String.fromCodePoint(0x10428), emoji = String.fromCodePoint(0x1f600);
+      214 |     const form = page.getByRole('dialog', { name: '创建技能', exact: true }), name = form.getByLabel('技能名称', { exact: true }), description = form.getByLabel('技能简介', { exact: true });
+    > 215 |     await name.fill(letter.repeat(65)); await description.fill(emoji.repeat(1024)); await expect(name).toHaveValue(letter.repeat(65));
+          |                                                                                                        ^
+      216 |     await form.getByRole('button', { name: '创建草稿', exact: true }).click(); await expect(form.getByRole('alert')).toContainText('技能名称'); expect(env.lab.skills.list()).toHaveLength(before);
+      217 |     await name.fill(letter.repeat(64)); await description.fill(emoji.repeat(1025));
+      218 |     await form.getByRole('button', { name: '创建草稿', exact: true }).click(); await expect(form.getByRole('alert')).toContainText('技能简介'); expect(env.lab.skills.list()).toHaveLength(before);
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/skills.spec.ts:215:104
+
+    Error Context: ../../../../../../../../private/tmp/axon-skill-create-unicode-browser-results/skills-creation-respects-U-bc9d4-g-supplementary-plane-input/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-skill-create-unicode-browser-results/skills-creation-respects-U-bc9d4-g-supplementary-plane-input/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-skill-create-unicode-browser-results/skills-creation-respects-U-bc9d4-g-supplementary-plane-input/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/skills.spec.ts:209:1 › creation respects Unicode code-point limits without truncating supplementary-plane input 

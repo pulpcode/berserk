@@ -178,7 +178,7 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
     try {
       const file = await api<SkillFile>(`/api/workspaces/${encodeURIComponent(workspaceId)}/skills/${encodeURIComponent(skill.id)}`);
       if (token !== detailRequest.current.value) return;
-      if (file.hash !== skill.hash) throw new Error('Skill 已更新，请重新选择后查看。');
+      if (file.hash !== skill.hash || skill.packageDigest && file.packageDigest !== skill.packageDigest || skill.revisionId && file.revisionId !== skill.revisionId) throw new Error('Skill 已更新，请重新选择后查看。');
       setDetail({ scope, file }); setDetailError(undefined);
     } catch (error) { if (token === detailRequest.current.value) setDetailError({ scope, message: failure(error) }); }
   }

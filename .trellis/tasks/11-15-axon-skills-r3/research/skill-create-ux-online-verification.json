@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "administrator": {
+    "login": 200,
+    "managedSkills": 6,
+    "availableSkills": 5,
+    "publishedOrganizationSkills": 1,
+    "allPublishedSkillDetailsReadable": true,
+    "businessSeatPolicyNotRequired": true,
+    "management": 200,
+    "personalWorkspacesAndSessions": 200,
+    "businessWorkbenchDenied": 403
+  },
+  "businessAccounts": [
+    {
+      "seatId": "seat-overall",
+      "login": 200,
+      "skills": 5,
+      "managementDenied": 403,
+      "existingSessions": 2,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-intelligence",
+      "login": 200,
+      "skills": 5,
+      "managementDenied": 403,
+      "existingSessions": 2,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-planning",
+      "login": 200,
+      "skills": 5,
+      "managementDenied": 403,
+      "existingSessions": 1,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-situation",
+      "login": 200,
+      "skills": 5,
+      "managementDenied": 403,
+      "existingSessions": 1,
+      "historyReadable": true
+    }
+  ],
+  "unauthenticatedDenied": 401,
+  "managementCountsUnchanged": {
+    "r3_skill_assets": 6,
+    "r3_skill_drafts": 2,
+    "r3_skill_publications": 1,
+    "r2_drafts": 1,
+    "r2_trials": 0
+  },
+  "credentialsChanged": false,
+  "modelsInvoked": 0,
+  "testAssetsCreated": 0
+}

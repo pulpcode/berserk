@@ -1,3 +1,4 @@
+import type { SkillPackageRevision } from '../contracts/skills.js';
 import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readdir } from 'node:fs/promises';
 import { isAbsolute, join } from 'node:path';
@@ -37,10 +38,15 @@ export interface CapabilityTrialsOptions {
   modelConfig: () => LabConfig;
   /** Require current administrator and matching owner on every access. */
   authorize: (actor: ManagementActor, trial: ExpertTrialRecord) => void;
+  /** Execution-only guard. Never called by history/read/list endpoints. */
+  executionGuard?: (actor:ManagementActor,trial:ExpertTrialRecord,expert:ExpertRevision)=>void;
   onUpdate?: (actor: ManagementActor, trial: ExpertTrialRecord) => void | Promise<void>;
   runtimeFactory?: (config: LabConfig) => Promise<ModelRuntime>;
   executionFactory?: (config: LabConfig) => DockerExecutionService;
   authorizationPollMs?: number;
+  requireDeclaredToolCoverage?: boolean;
+  optionalFileEnvironment?: boolean;
+  resolveSkillPackage?: (actor: ManagementActor, skill: import('../contracts/capabilities.js').SkillRevision) => Promise<SkillPackageRevision>;
 }
 /** Per-trial PiLab data/index. The existing Pi execution loop remains the only model/tool loop. */
 export class CapabilityTrials {
@@ -84,19 +90,25 @@ export class CapabilityTrials {
     const snapshot = active?.lab && active.sessionId ? active.lab.get(active.sessionId) : r.snapshot;
     return structuredClone({ trial: r.trial, ...(snapshot ? { snapshot } : {}), calls: r.calls, environment: r.environment });
   }
+  publicSummary(expertId:string,packageDigest:string):{status:'not_tried'|'running'|'succeeded'|'failed'|'interrupted'|'cancelled';updatedAt?:string} {
+    const latest=[...this.records.values()].filter(r=>r.expert.expertId===expertId&&r.trial.draftDigest===packageDigest).sort((a,b)=>b.trial.createdAt.localeCompare(a.trial.createdAt))[0];
+    if(!latest)return{status:'not_tried'};
+    return{status:latest.trial.status==='prepared'?'running':latest.trial.status,updatedAt:latest.trial.completedAt??latest.trial.createdAt};
+  }
+  list(actor:ManagementActor,expertId?:string) { return [...this.records.values()].filter(r=>r.trial.ownerId===actor.userId&&(!expertId||r.expert.expertId===expertId)).map(r=>this.view(this.require(actor,r.trial.trialId))); }
   get(actor: ManagementActor, id: string) { return this.view(this.require(actor, id)); }
   private async update(actor: ManagementActor, r: StoredTrial) {
     await this.save(r);
     // Runtime truth persists even if the owner loses permission to update management metadata.
     try { await this.options.onUpdate?.(actor, structuredClone(r.trial)); } catch { /* Reconcile on next authorized read. */ }
   }
-  async start(actor: ManagementActor, input: { trial: ExpertTrialRecord; expert: ExpertRevision }, files: ExpertTrialFile[] = []): Promise<ExpertTrialRunView> {
+  async start(actor: ManagementActor, input: { trial: ExpertTrialRecord; expert: ExpertRevision; packages?: SkillPackageRevision[] }, files: ExpertTrialFile[] = []): Promise<ExpertTrialRunView> {
     const prior = this.starting.get(input.trial.trialId);
     if (prior) { await prior; return this.start(actor, input, files); }
     const pending = this.startOnce(actor, input, files); this.starting.set(input.trial.trialId, pending);
     try { return await pending; } finally { this.starting.delete(input.trial.trialId); }
   }
-  private async startOnce(actor: ManagementActor, input: { trial: ExpertTrialRecord; expert: ExpertRevision }, files: ExpertTrialFile[]): Promise<ExpertTrialRunView> {
+  private async startOnce(actor: ManagementActor, input: { trial: ExpertTrialRecord; expert: ExpertRevision; packages?: SkillPackageRevision[] }, files: ExpertTrialFile[]): Promise<ExpertTrialRunView> {
     if (this.closed) throw unavailable('试用服务已关闭。');
     const { trial, expert } = structuredClone(input);
     if (!UUID.test(trial.trialId) || trial.ownerId !== actor.userId || !['prepared', 'running', 'succeeded', 'failed', 'cancelled', 'interrupted'].includes(trial.status) || expert.expertId !== trial.expertId
@@ -119,7 +131,7 @@ export class CapabilityTrials {
       environment: { sources: 'synthetic-fixtures', businessWrites: false, fileEnvironmentAvailable: false, model: `${selected.provider}/${selected.model}`, runtime: runtimeName } };
     await mkdir(this.path(trial.trialId), { mode: 0o700 }); this.records.set(trial.trialId, r); await this.save(r);
     const running: LiveTrial = { promise: Promise.resolve(), checkpoints: Promise.resolve() }; this.live.set(trial.trialId, running);
-    running.promise = this.execute(actor, r, running, selected, structuredClone(files));
+    running.promise = this.execute(actor, r, running, selected, structuredClone(files),input.packages);
     void running.promise.catch(() => {}); return this.view(r);
   }
   private config(m: LabConfig, id: string, needsFiles: boolean): LabConfig {
@@ -138,10 +150,11 @@ export class CapabilityTrials {
       if (call) Object.assign(call, { status: 'completed', output: event.text, isError: event.isError });
     }
   }
-  private async execute(actor: ManagementActor, r: StoredTrial, running: LiveTrial, selected: LabConfig, files: ExpertTrialFile[]) {
+  private async execute(actor: ManagementActor, r: StoredTrial, running: LiveTrial, selected: LabConfig, files: ExpertTrialFile[], packages?: SkillPackageRevision[]) {
     const guard = () => {
       if (running.stop || this.closed) throw new RequestError('FORBIDDEN', '试用已停止或权限已失效。', 403);
       this.options.authorize(actor, r.trial);
+      this.options.executionGuard?.(actor,r.trial,r.expert);
     };
     const timer = setInterval(() => {
       try { guard(); } catch { if (!running.stop) running.stop = 'revoked'; this.stopLive(running); }
@@ -154,9 +167,13 @@ export class CapabilityTrials {
       const needsFiles = r.expert.allowedTools!.some(tool => fileTools.has(tool)); const config = this.config(selected, r.trial.trialId, needsFiles);
       const runtime = await this.options.runtimeFactory?.(config); guard();
       const execution = needsFiles ? this.options.executionFactory?.(config) : undefined;
-      const lab = await PiLab.create(config, runtime, execution, { requestGuard: guard, executionMode: 'trial', skipManagement: true, extraTrialTools: syntheticTrialTools(r.expert.allowedTools!) }); running.lab = lab; guard();
+      if (!packages && r.expert.skills.some(skill=>skill.schemaVersion===2)) {
+        if(!this.options.resolveSkillPackage)throw unavailable('技能包试用解析器不可用。');
+        packages=await Promise.all(r.expert.skills.filter(skill=>skill.schemaVersion===2).map(skill=>this.options.resolveSkillPackage!(actor,skill)));guard();
+      }
+      const lab = await PiLab.create(config, runtime, execution, { requestGuard: guard, executionMode: 'trial', skipManagement: true, fixedPackages:packages, extraTrialTools: syntheticTrialTools(r.expert.allowedTools!) }); running.lab = lab; guard();
       r.environment.fileEnvironmentAvailable = !!lab.info().files?.executionAvailable;
-      if (needsFiles && !r.environment.fileEnvironmentAvailable) throw unavailable('试用需要文件执行环境，但受控Docker沙箱不可用。');
+      if (needsFiles && !r.environment.fileEnvironmentAvailable && !this.options.optionalFileEnvironment) throw unavailable('试用需要文件执行环境，但受控Docker沙箱不可用。');
       const expert = await lab.capabilities.registerExpert({ expertId: r.expert.expertId, releaseVersion: r.expert.releaseVersion,
         name: r.expert.name, description: r.expert.description, instructions: r.expert.instructions, modes: r.expert.modes,
         selectable: r.expert.selectable, system: r.expert.system, allowedTools: r.expert.allowedTools, skills: r.expert.skills });
@@ -191,11 +208,11 @@ export class CapabilityTrials {
       const excluded = r.expert.allowedTools!.filter(tool => excludedTrialWriteTools.includes(tool));
       const missing = r.expert.allowedTools!.filter(tool => !tools.includes(tool) && !excludedTrialWriteTools.includes(tool));
       const excludedAttempted = r.calls.some(call => excluded.some(tool => publicToolName(tool) === call.name));
-      const success = r.snapshot.lastResult?.status === 'succeeded' && !running.stop && missing.length === 0 && !excludedAttempted;
+      const success = r.snapshot.lastResult?.status === 'succeeded' && !running.stop && (this.options.requireDeclaredToolCoverage === false || missing.length === 0) && !excludedAttempted;
       r.trial.status = running.stop === 'interrupted' ? 'interrupted' : running.stop === 'revoked' ? 'failed' : running.stop === 'cancelled' ? 'cancelled' : success ? 'succeeded' : 'failed';
       r.trial.evidence = { tools, model: r.environment.model, runtime: runtimeName, success,
         fileEnvironmentVerified: needsFiles && r.environment.fileEnvironmentAvailable && r.calls.some(call => call.status === 'completed' && !call.isError && ['write', 'edit', 'bash', 'read'].includes(call.name.replaceAll('.', '_'))),
-        summary: success ? '代表性试用执行完成，仍需管理员确认。' : r.snapshot.lastResult?.message || '试用未通过，请检查执行记录及未验证能力。', unverified: [...missing, ...excluded.map(tool => `excluded:${tool}`), ...r.expert.allowedTools!.filter(tool => syntheticTrialToolNames.includes(tool)).map(tool => `${tool}:real-business-integration-and-schema`)] };
+        summary: success ? this.options.requireDeclaredToolCoverage === false ? '本次试用执行完成；仅代表本次记录，不作为技能发布条件。' : '代表性试用执行完成，仍需管理员确认。' : r.snapshot.lastResult?.message || '试用未通过，请检查执行记录及未验证能力。', unverified: [...missing, ...excluded.map(tool => `excluded:${tool}`), ...r.expert.allowedTools!.filter(tool => syntheticTrialToolNames.includes(tool)).map(tool => `${tool}:real-business-integration-and-schema`)] };
     } catch (error) {
       if (running.lab && running.sessionId) {
         try { r.snapshot = running.lab.get(running.sessionId); } catch { /* Preserve original error and the last validated snapshot. */ }

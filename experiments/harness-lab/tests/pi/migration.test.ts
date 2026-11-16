@@ -1,4 +1,5 @@
 import { migrateCapabilityManagement } from '../../src/capabilities/management-migration.js';
+import { migrateSkillsR3 } from '../../src/skills/migration.js';
 import { migrateCapabilities } from '../../src/pi/capability-migration.js';
 import { mkdtemp, rm, mkdir, writeFile, readFile, readdir, rename } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -48,6 +49,9 @@ describe('explicit stopped-service migration', () => {
     await migrateCapabilities({ dataDir, backupDir: `${backupDir}-capabilities`, apply: true, serviceStopped: true });
     cleanup.push(()=>rm(`${backupDir}-capabilities-r2`,{recursive:true,force:true}));
     await migrateCapabilityManagement({dataDir,backupDir:`${backupDir}-capabilities-r2`,apply:true,serviceStopped:true});
+    await expect(PiLab.create(config,fake.runtime)).rejects.toMatchObject({code:'SKILL_MIGRATION_REQUIRED'});
+    cleanup.push(()=>rm(`${backupDir}-skills-r3`,{recursive:true,force:true}));
+    await migrateSkillsR3({dataDir,backupDir:`${backupDir}-skills-r3`,apply:true,serviceStopped:true});
     const lab = await PiLab.create(config, fake.runtime); cleanup.push(() => lab.close());
     expect(lab.list()).toHaveLength(3);
     expect(lab.get(sessions.find(item => item.kind === 'incomplete')!.id).recoveryWarning).toBeTruthy();

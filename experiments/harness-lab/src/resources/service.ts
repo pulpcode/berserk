@@ -29,7 +29,13 @@ export async function loadControlledSkills(ids: readonly string[], signal?: Abor
     return { id: skill.id, name: skill.name, description, version: skill.version, hash: hashContent(content), content };
   }));
 }
+export interface DynamicSkillProvider {
+  catalog(seatId: string, userId?: string): Promise<SkillFile[]>;
+  resolve(skill: SkillFile, seatId: string, userId?: string): Promise<SkillFile>;
+}
 export interface ResourceSnapshot {
+  /** Request-scoped resolver; never serialized into native history or model context. */
+  loadSkill?: (id:string) => Promise<SkillFile>;
   task?: {id:string;title:string;goal:string;visibility:'public'|'private'};
   workspaceId: string; instructions: InstructionFile[];
   sources: Array<SourceInfo & { content: string }>; skills: SkillFile[];
@@ -38,9 +44,10 @@ export function resourceInfo(snapshot: ResourceSnapshot): WorkspaceResources {
   return { workspaceId: snapshot.workspaceId,
     instructions: snapshot.instructions.map(({ fileId, name, hash, editable }) => ({ fileId, name, hash, editable })),
     sources: snapshot.sources.map(({ id, title, description, hash }) => ({ id, title, description, hash })),
-    skills: snapshot.skills.map(({ id, name, description, version, hash }) => ({ id, name, description, version, hash })) };
+    skills: snapshot.skills.map(({content: _content, ...info}) => { void _content; return info; }) };
 }
 export class ResourceService {
+  dynamicSkills?: DynamicSkillProvider;
   private locks = new Map<string, Mutex>();
   constructor(private readonly workspaces: WorkspaceStore, private readonly hooks: WriteHooks = {}) {}
   private lock(id: string, seatId?: string) { this.workspaces.get(id, seatId); if (!this.locks.has(id)) this.locks.set(id, new Mutex()); return this.locks.get(id)!; }
@@ -80,14 +87,19 @@ export class ResourceService {
       return { fileId, status: 'updated', previousHash: current.hash, hash, effectiveFrom: 'next_request' };
     });
   }
-  async readSkill(workspaceId: string, id: string, seatId?: string): Promise<SkillFile> {
+  async readSkill(workspaceId: string, id: string, seatId?: string, userId?: string): Promise<SkillFile> {
     const workspace = this.workspaces.get(workspaceId, seatId);
+    if (this.dynamicSkills && !effectiveSkillIds(workspace.skillIds).includes(id)) {
+      const skill = (await this.dynamicSkills.catalog(workspace.seatId,userId)).find(item => item.id === id);
+      if (skill) return this.dynamicSkills.resolve(skill, workspace.seatId,userId);
+    }
     if (!effectiveSkillIds(workspace.skillIds).includes(id)) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
     return (await loadControlledSkills([id]))[0];
   }
-  snapshot(workspaceId: string, signal?: AbortSignal, seatId?: string, fixedSkills: readonly SkillFile[] = []): Promise<ResourceSnapshot> {
+  snapshot(workspaceId: string, signal?: AbortSignal, seatId?: string, fixedSkills: readonly SkillFile[] = [], userId?: string, includeDynamic = true): Promise<ResourceSnapshot> {
     return this.lock(workspaceId, seatId).run(async () => {
       signal?.throwIfAborted();
+      if(!includeDynamic && fixedSkills.some(skill=>skill.schemaVersion===2))throw new RequestError('SKILL_BACKGROUND_UNSUPPORTED','后台仍仅支持既有受控技能；组织技能固定依赖需待后续后台迁移。',409);
       const workspace = this.workspaces.get(workspaceId, seatId);
       const instructions = await Promise.all(['common', 'workspace'].map(id => this.instruction(workspaceId, id, seatId)));
       const sources = await Promise.all(sourceDefinitions.filter(source => workspace.sourceIds.includes(source.id)).map(async source => {
@@ -96,14 +108,29 @@ export class ResourceService {
       }));
       const ids = effectiveSkillIds(workspace.skillIds);
       const loadedSkills = await loadControlledSkills(ids.filter(id => !fixedSkills.some(skill => skill.id === id)), signal);
-      for (const fixed of fixedSkills) loadedSkills.push({ id: fixed.id, name: fixed.name, description: fixed.description, version: fixed.version, hash: fixed.hash, content: fixed.content });
+      if (includeDynamic && this.dynamicSkills) {
+        const dynamic = await this.dynamicSkills.catalog(workspace.seatId,userId);
+        for (const item of dynamic) if (!fixedSkills.some(fixed => fixed.id === item.id)) loadedSkills.push(item);
+      }
+      for (const fixed of fixedSkills) loadedSkills.push(fixed.schemaVersion === 2 && includeDynamic && this.dynamicSkills
+        ? await this.dynamicSkills.resolve(fixed, workspace.seatId,userId) : structuredClone(fixed));
       loadedSkills.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
       signal?.throwIfAborted();
       const task = this.workspaces.access?.get(workspace.taskSpaceId, workspace.seatId);
-      return { workspaceId, instructions, sources, skills: loadedSkills, ...(task ? { task: { id:task.id,title:task.title,goal:task.goal,visibility:task.visibility } } : {}) };
+      const snapshot:ResourceSnapshot = { workspaceId, instructions, sources, skills: loadedSkills, ...(task ? { task: { id:task.id,title:task.title,goal:task.goal,visibility:task.visibility } } : {}) };
+      if(includeDynamic && this.dynamicSkills)snapshot.loadSkill=async id=>{
+        const selected=snapshotSkill(snapshot,id);
+        if(selected.schemaVersion!==2 || selected.content)return selected;
+        signal?.throwIfAborted();
+        const resolved=await this.dynamicSkills!.resolve(selected,workspace.seatId,userId);
+        if(resolved.hash!==selected.hash || resolved.packageDigest!==selected.packageDigest || resolved.revisionId!==selected.revisionId)throw new RequestError('SELECTION_CHANGED','技能包固定内容不一致。',409);
+        signal?.throwIfAborted();snapshot.skills[snapshot.skills.findIndex(item=>item.id===id)]=resolved;
+        return structuredClone(resolved);
+      };
+      return snapshot;
     });
   }
-  async info(workspaceId: string, seatId?: string): Promise<WorkspaceResources> { return resourceInfo(await this.snapshot(workspaceId, undefined, seatId)); }
+  async info(workspaceId: string, seatId?: string,userId?:string): Promise<WorkspaceResources> { return resourceInfo(await this.snapshot(workspaceId, undefined, seatId,[],userId)); }
 }
 
 /** Both explicit selection and skill_read use the same fixed request snapshot. */
@@ -111,4 +138,13 @@ export function snapshotSkill(snapshot: ResourceSnapshot, id: string): SkillFile
   const skill = snapshot.skills.find(item => item.id === id);
   if (!skill) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill 不存在或不可用，请重新选择。', 404);
   return structuredClone(skill);
+}
+
+/** Only actual method reads or explicit selections resolve a package body. */
+export async function resolveSnapshotSkill(snapshot:ResourceSnapshot,id:string):Promise<SkillFile>{
+  // A narrowed parent/child snapshot must not inherit the broader loader's catalog.
+  const captured=snapshotSkill(snapshot,id);
+  const loaded=snapshot.loadSkill?await snapshot.loadSkill(id):captured;
+  if(loaded.id!==captured.id||loaded.hash!==captured.hash||loaded.revisionId!==captured.revisionId||loaded.packageDigest!==captured.packageDigest)throw new RequestError('RESOURCE_STATE_INVALID','请求技能快照不一致。',409);
+  return loaded;
 }

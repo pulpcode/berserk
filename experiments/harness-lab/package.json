@@ -45,7 +45,13 @@
     "migrate:capabilities": "tsx scripts/migrate-capabilities.ts",
     "probe:capabilities": "tsx --env-file-if-exists=.env.local scripts/probe-capabilities.ts",
     "migrate:capabilities:r2": "tsx scripts/migrate-capabilities-r2.ts",
-    "migrate:access:administrators": "tsx scripts/migrate-administrators.ts"
+    "migrate:access:administrators": "tsx scripts/migrate-administrators.ts",
+    "migrate:skills:r3": "tsx scripts/migrate-skills-r3.ts",
+    "probe:skills:r3": "tsx --env-file-if-exists=.env.local scripts/probe-skills-r3.ts",
+    "probe:skills:scanner": "tsx scripts/probe-skills-scanner.ts",
+    "probe:skills:rollback": "tsx scripts/probe-skills-r3-rollback.ts",
+    "measure:skills:r3": "tsx scripts/measure-skills-r3.ts",
+    "measure:skills:context": "tsx scripts/measure-skills-context-r3.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",
@@ -76,7 +82,9 @@
     "terra-draw-maplibre-gl-adapter": "1.5.0",
     "tree-sitter": "0.25.1",
     "tree-sitter-bash": "0.25.1",
-    "typebox": "1.3.7"
+    "typebox": "1.3.7",
+    "yaml": "2.9.1",
+    "yauzl": "3.4.0"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
@@ -84,6 +92,7 @@
     "@types/node": "24.13.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "@types/yauzl": "3.4.0",
     "@vitejs/plugin-react": "5.2.0",
     "concurrently": "10.0.5",
     "eslint": "9.39.5",

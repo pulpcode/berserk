@@ -1,0 +1,33 @@
+{
+  "scope": "Administrator personal published skills authorization delta",
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/skills/service.ts",
+      "sha256": "ef4edca3a7c791ed27fa28c9db61483e6cbfb255ef1bdcc99b90d9687f6701c8"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/lab.ts",
+      "sha256": "3580abff49834a9dbdc04e8a13056bb9dfa27b19d8420e64d2aa69774fe00963"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/SkillLibrary.tsx",
+      "sha256": "ae09df72a88ef0ab33ad13c1247e0a5922b3b5246b1f17d8a2d3d244e9b9ab64"
+    },
+    {
+      "path": "experiments/harness-lab/tests/admin-personal-skills.test.ts",
+      "sha256": "ccf8b09632ea36013ffbfbf117e7ad79247d81f9ad3478c0255097a951898c07"
+    },
+    {
+      "path": "experiments/harness-lab/tests/skills-api.test.ts",
+      "sha256": "f318df1892b66e5b60801134da5d9dd563b125e2faf0b313d7fc0c3499754057"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/skills.spec.ts",
+      "sha256": "72bdb5416ebb5e9768aef03d9ca47532217ee4aee497a0c221eadb9a53cf8885"
+    },
+    {
+      "path": "experiments/harness-lab/scripts/probe-skills-r3.ts",
+      "sha256": "6116cde7b41efd8157a2023b2ab25a8af92a303689eea27b89d6c0195bff4647"
+    }
+  ]
+}

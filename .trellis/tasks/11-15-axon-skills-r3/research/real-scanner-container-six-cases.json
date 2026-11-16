@@ -1,0 +1,174 @@
+{
+  "passed": true,
+  "scannerVersion": "1.182.0",
+  "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+  "reports": [
+    {
+      "name": "method-not-applicable",
+      "report": {
+        "scanId": "42766e56-c1f8-4611-96e7-a7ecf5a49400",
+        "skillId": "skill-3302e1d9-3eb2-49eb-afbd-22456c599121",
+        "packageDigest": "96893e4452675d4d79c77a97a92f84a139e32077edc1c1c356bd9e5dc0bc0f05",
+        "scanner": "Semgrep CE",
+        "scannerVersion": "1.182.0",
+        "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+        "state": "not_applicable",
+        "findings": [],
+        "targets": [],
+        "scanned": [],
+        "skipped": [],
+        "errors": [],
+        "createdAt": "2026-11-15T03:37:48.759Z",
+        "completedAt": "2026-11-15T03:37:48.759Z"
+      }
+    },
+    {
+      "name": "python-javascript-findings",
+      "report": {
+        "scanId": "85320a98-76b5-4f0f-bd3d-d96d303e4b95",
+        "skillId": "skill-85c6fbc9-945c-4071-9bfe-53c7cd5ff44a",
+        "packageDigest": "4cd34680a18434c90083327efdf8f8654acd6a49fb6cdae404c2631f249e6e78",
+        "scanner": "Semgrep CE",
+        "scannerVersion": "1.182.0",
+        "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+        "state": "completed",
+        "findings": [
+          {
+            "path": "scripts/unsafe.js",
+            "line": 1,
+            "endLine": 1,
+            "ruleId": "spawn-shell-true",
+            "message": "Found '$SPAWN' with '{shell: true}'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use '{shell: false}' instead.",
+            "severity": "ERROR"
+          },
+          {
+            "path": "scripts/unsafe.py",
+            "line": 2,
+            "endLine": 2,
+            "ruleId": "eval-detected",
+            "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+            "severity": "WARNING"
+          }
+        ],
+        "targets": [
+          "scripts/unsafe.js",
+          "scripts/unsafe.py"
+        ],
+        "scanned": [
+          "scripts/unsafe.js",
+          "scripts/unsafe.py"
+        ],
+        "skipped": [],
+        "errors": [],
+        "createdAt": "2026-11-15T03:37:48.804Z",
+        "completedAt": "2026-11-15T03:37:53.224Z",
+        "elapsedMs": 4413.944946
+      }
+    },
+    {
+      "name": "python-javascript-no-findings",
+      "report": {
+        "scanId": "a8af401d-0f34-41b6-9cb2-f4955811a734",
+        "skillId": "skill-0d6f9780-f82c-414b-bc65-2abf60dcd63e",
+        "packageDigest": "03c2e13e5abbe14f78a713eba1bb13a15ba81ba1c353cfe3254bdee4cdd44f13",
+        "scanner": "Semgrep CE",
+        "scannerVersion": "1.182.0",
+        "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+        "state": "completed",
+        "findings": [],
+        "targets": [
+          "scripts/safe.js",
+          "scripts/safe.py"
+        ],
+        "scanned": [
+          "scripts/safe.js",
+          "scripts/safe.py"
+        ],
+        "skipped": [],
+        "errors": [],
+        "createdAt": "2026-11-15T03:37:53.278Z",
+        "completedAt": "2026-11-15T03:37:57.611Z",
+        "elapsedMs": 4328.709238999999
+      }
+    },
+    {
+      "name": "unsupported-language-partial",
+      "report": {
+        "scanId": "2e894cf9-87b3-4f43-8797-fa428760b663",
+        "skillId": "skill-60b74191-b33b-4a5e-8a1d-38c44db53b56",
+        "packageDigest": "74c2f110351b8db65b1ea05c0d03a4a39b8ac86ae51e674180587f34b4b1a2a9",
+        "scanner": "Semgrep CE",
+        "scannerVersion": "1.182.0",
+        "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+        "state": "partial",
+        "findings": [],
+        "targets": [
+          "scripts/safe.py"
+        ],
+        "scanned": [
+          "scripts/safe.py"
+        ],
+        "skipped": [
+          {
+            "path": "scripts/uncovered.rb",
+            "reason": "本次规则未覆盖此语言。"
+          }
+        ],
+        "errors": [],
+        "createdAt": "2026-11-15T03:37:57.646Z",
+        "completedAt": "2026-11-15T03:38:01.964Z",
+        "elapsedMs": 4314.530167999999
+      }
+    },
+    {
+      "name": "actual-parse-error",
+      "report": {
+        "scanId": "9e10b658-8797-448f-8994-1d86c8cad67d",
+        "skillId": "skill-77f2727b-228d-4794-b647-0fdc955d1a8d",
+        "packageDigest": "39c2460fc80bbe3e3a327d73f49d9a758523164c0837a91093951507ae4108a9",
+        "scanner": "Semgrep CE",
+        "scannerVersion": "1.182.0",
+        "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+        "state": "partial",
+        "findings": [],
+        "targets": [
+          "scripts/broken.py"
+        ],
+        "scanned": [
+          "scripts/broken.py"
+        ],
+        "skipped": [],
+        "errors": [
+          "PartialParsing (3): scripts/broken.py"
+        ],
+        "createdAt": "2026-11-15T03:38:02.014Z",
+        "completedAt": "2026-11-15T03:38:06.369Z",
+        "elapsedMs": 4350.763740000002
+      }
+    },
+    {
+      "name": "actual-missing-executable",
+      "report": {
+        "scanId": "5f57b12e-41ce-41da-8065-f49c7ab1831d",
+        "skillId": "skill-eb9b5164-567a-4b6c-9231-d4fd747fc2e8",
+        "packageDigest": "4a7145eb67b84a932a030761bb4a140da9167197d1ef44b9ec77869fc8e87069",
+        "scanner": "Semgrep CE",
+        "scannerVersion": "1.182.0",
+        "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+        "state": "failed",
+        "findings": [],
+        "targets": [
+          "scripts/safe.py"
+        ],
+        "scanned": [],
+        "skipped": [],
+        "errors": [
+          "扫描器不可用或无法启动。"
+        ],
+        "createdAt": "2026-11-15T03:38:06.445Z",
+        "completedAt": "2026-11-15T03:38:06.457Z",
+        "elapsedMs": 2.9186999999983527
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[WebServer] (node:41560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:41510) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:41570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:41570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/skills.spec.ts:27:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate (6.1s)
+  ✓  2 tests/e2e/skills.spec.ts:46:1 › ordinary user can stage a published skill into an existing conversation without sending or changing its draft (4.8s)
+  ✓  3 tests/e2e/skills.spec.ts:60:1 › policy and publication saves retain their viewed baselines across background detail refreshes (5.1s)
+  ✓  4 tests/e2e/skills.spec.ts:98:1 › administrator stages a published skill in a personal conversation without business scope or automatic sending (4.6s)
+
+  4 passed (30.8s)

@@ -16,6 +16,8 @@ This product targets desktop browsers only (user decision, 2026-10-13). Do not a
 
 ## Pre-Development and Quality Check
 
+Read [R3 Skill Packages](../backend/capabilities-r3.md) for full package identity, import, independent Skill publication, scanner reports, scoped runtime loading and compatibility.
+
 Read [R2 Expert Management](../backend/capabilities-r2.md) for drafts, isolated trials, publication, ordinary lifecycle and scoped defaults; R1 immutable history remains valid.
 
 Read [R1 Expert Capabilities](../backend/capabilities.md) for immutable expert bindings, professional catalogs, persistent session creation intents, current-state guards and explicit legacy migration.

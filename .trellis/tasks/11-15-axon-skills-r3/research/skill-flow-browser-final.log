@@ -1,0 +1,24 @@
+[WebServer] (node:36359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:36330) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:36366) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36366) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/skills.spec.ts:30:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate (4.6s)
+  ✓   2 tests/e2e/skills.spec.ts:49:1 › ordinary user can stage a published skill into an existing conversation without sending or changing its draft (4.3s)
+  ✓   3 tests/e2e/skills.spec.ts:63:1 › policy and publication saves retain their viewed baselines across background detail refreshes (5.1s)
+  ✓   4 tests/e2e/skills.spec.ts:102:1 › administrator stages a published skill in a personal conversation without business scope or automatic sending (4.5s)
+  ✓   5 tests/e2e/skills.spec.ts:137:1 › creation starts with an empty local form, cancel writes nothing, and invalid submission keeps the input (3.9s)
+  ✓   6 tests/e2e/skills.spec.ts:169:1 › a lost create response retries the same complete draft instead of creating another asset (3.4s)
+  ✓   7 tests/e2e/skills.spec.ts:184:1 › form and source editing share the same draft and preserve imported extensions and other files (3.7s)
+  ✓   8 tests/e2e/skills.spec.ts:210:1 › creation respects Unicode code-point limits without truncating supplementary-plane input (3.4s)
+  ✓   9 tests/e2e/skills.spec.ts:227:1 › creation advances through saved scope and validation to explicit publication and completion (4.0s)
+  ✓  10 tests/e2e/skills.spec.ts:255:1 › a conflicting draft save retains edited fields and the content step even after reading latest data (3.2s)
+  ✓  11 tests/e2e/skills.spec.ts:273:1 › scope stays saved when automatic validation fails and the checks step offers a safe retry (3.4s)
+  ✓  12 tests/e2e/skills.spec.ts:289:1 › the skill heading shares one row with actions and only archived records are folded away (3.5s)
+
+  12 passed (54.2s)

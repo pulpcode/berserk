@@ -1,0 +1,34 @@
+[
+  {
+    "path": "experiments/harness-lab/src/web/SkillLibrary.tsx",
+    "sha256": "699ae17a5eb0ecc3c1a169530f43a151c07f991c3920a46bdccc96d23bf9d577"
+  },
+  {
+    "path": "experiments/harness-lab/src/web/skill-management.css",
+    "sha256": "ae74030ec8d84753c9b8efb0aff30e2cfb903cdbf8a664da41d64af9cac6f271"
+  },
+  {
+    "path": "experiments/harness-lab/src/web/skill-method.ts",
+    "sha256": "45319468b6ac9fbc2c16ddb4d9447499f343ce62f7ba39cffdae539650f8a83a"
+  },
+  {
+    "path": "experiments/harness-lab/src/skills/service.ts",
+    "sha256": "69dd946cf2df29470e4cfeceb8debfbe58749bec7827b4cf80217f637db7f5ed"
+  },
+  {
+    "path": "experiments/harness-lab/src/server/skill-routes.ts",
+    "sha256": "cc14ef150bb521d84bc17d00037023e0a3b53701409e79a5164bec5b5ff89689"
+  },
+  {
+    "path": "experiments/harness-lab/tests/skill-method-form.test.ts",
+    "sha256": "8aa6f860be77543d7c4b44d971ccf4ed7e03ab6a0e922af4673d8366fc362fe6"
+  },
+  {
+    "path": "experiments/harness-lab/tests/skills-create.test.ts",
+    "sha256": "684416be352c72060a282ebb83167a7d62b3991a961aab285994f269b871829d"
+  },
+  {
+    "path": "experiments/harness-lab/tests/e2e/skills.spec.ts",
+    "sha256": "5b8d01b22a7b508ccf11eec711592589e8bde9bde64cbae524797d49a86d3065"
+  }
+]

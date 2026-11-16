@@ -145,6 +145,7 @@ test('capability tabs share searchable cards and real read-only skills without c
   try {
     await page.goto('/capabilities');
     const center = page.locator('.capability-center');
+    await expect(center.getByText('找到适合当前工作的专家与技能。', { exact: true })).toHaveCount(0);
     await expect(center.getByRole('heading', { name: '资料综合专家（示范）', exact: true })).toBeVisible();
     await expect(center.getByRole('button', { name: '创建专家', exact: true })).toHaveCount(0);
     await expect(center.locator('.expert-list')).not.toContainText(/版本|修订|rev-/);
@@ -152,6 +153,7 @@ test('capability tabs share searchable cards and real read-only skills without c
     await expect(center.getByRole('heading', { name: '没有找到相关专家', exact: true })).toBeVisible();
     await center.getByRole('tab', { name: '技能', exact: true }).click();
     await expect(center.locator('.capability-skill-list')).toContainText('资料综合写作');
+    await expect(center.getByText('管理技能方法与资源，发布后按使用范围提供。', { exact: true })).toHaveCount(0);
     await page.screenshot({ path: test.info().outputPath('capability-skills-desktop-wide.png') });
     await center.getByRole('searchbox', { name: '搜索技能', exact: true }).fill('资料综合');
     await expect(center.locator('.skill-card')).toHaveCount(1);

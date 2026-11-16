@@ -1,0 +1,35 @@
+{
+  "branch": "codex/axon-r3",
+  "sourceInventoryUnchanged": true,
+  "typecheck": {
+    "exitCode": 0,
+    "log": "final-typecheck.log"
+  },
+  "lint": {
+    "exitCode": 0,
+    "existingWarnings": 2,
+    "log": "final-lint.log"
+  },
+  "build": {
+    "exitCode": 0,
+    "log": "final-build.log"
+  },
+  "fullUnit": {
+    "exitCode": 0,
+    "command": "npm test -- --maxWorkers=4",
+    "files": 176,
+    "tests": 1814,
+    "durationSeconds": 427.83,
+    "log": "final-full-unit-1814-pass.log"
+  },
+  "affectedBrowser": {
+    "files": 3,
+    "passed": 12,
+    "durationSeconds": 58.6,
+    "log": "final-browser-12-pass.log"
+  },
+  "userAcceptance": "pending",
+  "committed": false,
+  "pushed": false,
+  "deployed": false
+}

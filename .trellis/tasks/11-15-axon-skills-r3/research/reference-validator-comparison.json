@@ -1,0 +1,91 @@
+{
+  "referenceVersion": "skills-ref0.1.1",
+  "command": "agentskills validate",
+  "intentionalDifference": "Unknown generic ecosystem extensions are preserved and separately reported per approved R3v0.3; reference validator treats extra fields as errors.",
+  "cases": [
+    {
+      "label": "basic",
+      "referenceExit": 0,
+      "referenceReport": "Valid skill: /private/tmp/axon-r3-reference/basic/sample\n",
+      "axonValid": true,
+      "axonIssues": [],
+      "matchesReference": true
+    },
+    {
+      "label": "empty-body",
+      "referenceExit": 0,
+      "referenceReport": "Valid skill: /private/tmp/axon-r3-reference/empty-body/sample\n",
+      "axonValid": true,
+      "axonIssues": [
+        {
+          "code": "AXON_EMPTY_BODY",
+          "severity": "warning",
+          "path": "SKILL.md",
+          "message": "Axon提示：技能正文为空。"
+        }
+      ],
+      "matchesReference": true
+    },
+    {
+      "label": "invalid-name",
+      "referenceExit": 1,
+      "referenceReport": "Validation failed for /private/tmp/axon-r3-reference/invalid-name/Sample:\n  - Skill name 'Sample' must be lowercase\n",
+      "axonValid": false,
+      "axonIssues": [
+        {
+          "code": "NAME_INVALID",
+          "severity": "error",
+          "path": "SKILL.md",
+          "message": "name须为1至64个小写字母、数字或单连字符，可使用Unicode字符。"
+        }
+      ],
+      "matchesReference": true
+    },
+    {
+      "label": "missing-description",
+      "referenceExit": 1,
+      "referenceReport": "Validation failed for /private/tmp/axon-r3-reference/missing-description/sample:\n  - Missing required field in frontmatter: description\n",
+      "axonValid": false,
+      "axonIssues": [
+        {
+          "code": "DESCRIPTION_INVALID",
+          "severity": "error",
+          "path": "SKILL.md",
+          "message": "description须为非空且不超过1024字符。"
+        }
+      ],
+      "matchesReference": true
+    },
+    {
+      "label": "custom-extension",
+      "referenceExit": 1,
+      "referenceReport": "Validation failed for /private/tmp/axon-r3-reference/custom-extension/sample:\n  - Unexpected fields in frontmatter: x-product. Only ['allowed-tools', 'compatibility', 'description', 'license', 'metadata', 'name'] are allowed.\n",
+      "axonValid": true,
+      "axonIssues": [
+        {
+          "code": "EXTENSION_UNSUPPORTED",
+          "severity": "warning",
+          "path": "SKILL.md",
+          "message": "扩展字段x-product原文保留，Axon不自动应用其调用或权限配置。"
+        }
+      ],
+      "matchesReference": false
+    },
+    {
+      "label": "metadata-map",
+      "referenceExit": 0,
+      "referenceReport": "Valid skill: /private/tmp/axon-r3-reference/metadata-map/sample\n",
+      "axonValid": true,
+      "axonIssues": [],
+      "matchesReference": true
+    },
+    {
+      "label": "unicode-name",
+      "referenceExit": 0,
+      "referenceReport": "Valid skill: /private/tmp/axon-r3-reference/unicode-name/样例\n",
+      "axonValid": true,
+      "axonIssues": [],
+      "matchesReference": true
+    }
+  ]
+}
