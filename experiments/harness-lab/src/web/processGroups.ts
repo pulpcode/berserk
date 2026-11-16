@@ -11,6 +11,7 @@ const requestOf = (item: DisplayItem) => item.kind === 'thinking' ? item.request
 const matchesOutput = (message: PublicMessage, file: FileOutput) => message.role === 'tool' && message.toolName === 'file_output' && message.requestId === file.requestId && message.toolCallId === file.toolCallId;
 
 const toolActions: Record<string, string> = {
+  capability_authoring_catalog: '查看能力目录', capability_authoring_read: '读取草稿或回执', capability_authoring_propose: '准备草稿候选', capability_authoring_save: '保存能力草稿', capability_authoring_report: '读取已有报告', capability_authoring_method: '读取创作方法',
   read: '读取文件', write: '写入文件', edit: '修改文件', bash: '执行命令', ls: '列出文件', find: '查找文件',
   file_output: '提供文件', task_resource_query: '查询资源', spatial_analyze: '空间分析',
   work_item_list: '查看工作待办', work_item_read: '查看工作详情', work_item_action: '工作交接', work_item_prepare: '准备交接', work_item_commit: '执行交接', handoff_import_file: '复制交接文件',

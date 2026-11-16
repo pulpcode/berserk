@@ -1,3 +1,4 @@
+import type { AuthoringIntent } from '../contracts/authoring';
 import { useEffect, useMemo, useState } from 'react';
 import { Copy, Plus, RefreshCw } from 'lucide-react';
 import type { CapabilityManagementCatalog, ExpertDraft, ExpertDraftContent, ExpertImpact, ExpertPublication, ExpertUsePolicy, ExpertValidation, ManagedExpertDetail, ManagedExpertSummary } from '../contracts/capability-management';
@@ -13,7 +14,7 @@ const root = '/api/admin/capabilities/experts';
 const message = (error: unknown) => error instanceof Error ? error.message : '操作未完成，请核对状态后再试。';
 const stateLabel = (expert: ManagedExpertSummary) => expert.archived ? '已归档' : expert.state === 'disabled' ? '已停用' : expert.state === 'banned' ? '受限制' : expert.currentRevisionId ? '已发布' : '草稿';
 
-export function CapabilityManagement({ close, changed, embedded = false, initialExpertId = '' }: { close: () => void; changed: () => void; embedded?: boolean; initialExpertId?: string }) {
+export function CapabilityManagement({ close, changed, embedded = false, initialExpertId = '', authoring }: { authoring?: (intent: AuthoringIntent) => void; close: () => void; changed: () => void; embedded?: boolean; initialExpertId?: string }) {
   const { api, storageKey } = useApi();
   const [experts, setExperts] = useState<ManagedExpertSummary[]>();
   const [catalog, setCatalog] = useState<CapabilityManagementCatalog>();
@@ -63,7 +64,7 @@ export function CapabilityManagement({ close, changed, embedded = false, initial
     {!catalog && !error && <LoadingIndicator label="正在读取管理目录…" />}
     {section === 'seats' && catalog && <section className="management-seat-default"><label>席位<select aria-label="席位" value={seat} onChange={event => setSeat(event.target.value)}>{catalog.seats.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>{seat && <ExpertDefaultSettings key={seat} choices={seatChoices} path={`/api/admin/seats/${encodeURIComponent(seat)}/expert-default`} title="席位默认专家" help="仅作为新会话的默认选择；不向席位授予专家使用权，也不改变业务权限。" />}</section>}
     {section === 'experts' && catalog && <div className="management-layout"><aside className="management-sidebar"><button type="button" className="primary-action" disabled={working} onClick={() => void create()}><Plus size={16} aria-hidden="true" />新建专家</button><nav aria-label="管理专家列表">{experts?.map(expert => <button type="button" key={expert.expertId} aria-current={selected === expert.expertId ? 'page' : undefined} onClick={() => { if (discard()) { setDirty(false); setSelected(expert.expertId); } }}><strong>{expert.name || '未命名专家'}</strong><span>{expert.source === 'builtin' ? '系统内置 · ' : ''}{stateLabel(expert)}</span></button>)}</nav></aside>
-      <div className="management-detail">{!ready ? <LoadingIndicator label="正在读取专家配置…" /> : <><header className="management-expert-heading"><div><h3>{ready.expert.name || '未命名专家'}</h3><p>{stateLabel(ready.expert)}{ready.expert.releaseVersion ? ` · 版本 ${ready.expert.releaseVersion}` : ''}</p></div><button type="button" disabled={working} onClick={() => void create({ expertId: ready.expert.expertId })}><Copy size={16} aria-hidden="true" />复制为新专家</button></header>
+      <div className="management-detail">{!ready ? <LoadingIndicator label="正在读取专家配置…" /> : <><header className="management-expert-heading"><div><h3>{ready.expert.name || '未命名专家'}</h3><p>{stateLabel(ready.expert)}{ready.expert.releaseVersion ? ` · 版本 ${ready.expert.releaseVersion}` : ''}</p></div>{authoring && ready.expert.source !== 'builtin' && !ready.expert.archived && <button type="button" disabled={working} onClick={() => { if (!discard()) return; close(); authoring({ kind: 'expert', targetId: ready.expert.expertId, ...(ready.draft ? { baseline: { draftRevision: ready.draft.draftRevision, digest: ready.draft.draftDigest } } : {}) }); }}>对话修改当前草稿</button>}<button type="button" disabled={working} onClick={() => void create({ expertId: ready.expert.expertId })}><Copy size={16} aria-hidden="true" />复制为新专家</button></header>
         {ready.expert.source === 'builtin' ? <><p className="management-info">系统内置配置由平台维护，可查看或复制为独立组织专家。复制后需重新设置使用范围、检查和试用。</p><h4>专业指令</h4><pre className="resource-text">{ready.current?.instructions || '使用平台通用工作能力。'}</pre><h4>技能依赖</h4><ul>{ready.current?.skills.map(skill => <li key={skill.id}>{skill.name}</li>)}</ul></> : <ExpertEditor key={`${ready.expert.expertId}:${ready.draft?.draftRevision}`} detail={ready} catalog={catalog} dirtyChanged={setDirty} changed={refresh} />}
       </>}</div></div>}
   </>;

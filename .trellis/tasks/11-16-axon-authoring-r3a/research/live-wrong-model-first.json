@@ -1,0 +1,313 @@
+{
+  "passed": false,
+  "failure": "insufficient_quota: 模型额度不足，请检查账户后重试。\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n",
+  "dataDir": "/tmp/axon-r3a-live-qiazwy",
+  "elapsedMs": 2695,
+  "model": {
+    "provider": "deepseek",
+    "id": "deepseek-flash"
+  },
+  "calls": [
+    {
+      "model": "deepseek-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    }
+  ],
+  "checks": [],
+  "records": [
+    {
+      "text": "请创建一个专家草稿，名称为“R3A资料核对专家”，简介为“核对明确输入并保留未知项”。专业指令为“只根据用户给出的内容核对资料；未知就说明未知；回答末尾加 R3A_EXPERT_READY。”工具范围为空数组、旧技能引用为空数组、新技能引用为空数组。需求已明确，无需问答；请按管理方法提出完整候选并请求网页确认保存，不发布、不改范围。",
+      "intent": {
+        "kind": "expert"
+      },
+      "approvals": 0,
+      "events": [
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "response.started"
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "resources.loaded",
+          "resources": {
+            "workspaceId": "2102b2eb-e2fa-429e-82ed-1cd1259f9ff6",
+            "instructions": [
+              {
+                "fileId": "common",
+                "name": "通用指令（AGENTS.md）",
+                "hash": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07",
+                "editable": false
+              },
+              {
+                "fileId": "workspace",
+                "name": "工作区指令（AGENTS.md）",
+                "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "editable": true
+              }
+            ],
+            "sources": [
+              {
+                "id": "meeting-notes",
+                "title": "项目讨论纪要",
+                "description": "通用资料示例：目标、约束与待办。",
+                "hash": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+              },
+              {
+                "id": "resource-brief",
+                "title": "资源与约束说明",
+                "description": "通用资料示例：人员、时间与交付条件。",
+                "hash": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+              }
+            ],
+            "skills": [
+              {
+                "id": "synthesis",
+                "name": "资料综合写作",
+                "description": "综合多份资料形成有来源、可执行的方案。",
+                "version": "1",
+                "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+              },
+              {
+                "id": "review",
+                "name": "结果检查",
+                "description": "根据资料检查草稿的事实、约束与可执行性。",
+                "version": "1",
+                "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+              },
+              {
+                "id": "map-annotations",
+                "name": "态势标绘",
+                "description": "查询、创建、修改、导入、比较或发布地图标注；说明资源声明、可信来源身份、固定版本、字段保留和保存回执的使用方法。",
+                "version": "3",
+                "hash": "6d5bbfd01e41858ab5ed6ce039b3e7d642e02fc0db8f4019e5a64a8836581fe0"
+              },
+              {
+                "id": "spatial-analysis",
+                "name": "空间分析",
+                "description": "分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持组合分析、边界判断、固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。",
+                "version": "3",
+                "hash": "f947a59341898f1d89eccbb122b6518d1f174fa65f928b27721b564afe83bede"
+              }
+            ]
+          }
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+            "revision": 1,
+            "available": true,
+            "items": []
+          }
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "assistant.updated",
+          "message": {
+            "id": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54:assistant:0",
+            "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+            "role": "assistant",
+            "presentationId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54:assistant:0",
+            "text": "",
+            "content": []
+          }
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "input.queue",
+          "queue": {
+            "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+            "revision": 1,
+            "available": false,
+            "reason": "正在准备下一步，请稍候。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "input.queue",
+          "queue": {
+            "revision": 2,
+            "available": false,
+            "reason": "当前回复已结束。",
+            "items": []
+          }
+        },
+        {
+          "sessionId": "00902800-715f-4d20-8af4-b47e51ab714f",
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "type": "response.failed",
+          "snapshot": {
+            "id": "00902800-715f-4d20-8af4-b47e51ab714f",
+            "workspaceId": "2102b2eb-e2fa-429e-82ed-1cd1259f9ff6",
+            "title": "请创建一个专家草稿，名称为“R3A资料核对专家”，简介为“核对明确输入并保留未知",
+            "updatedAt": "2026-11-16T04:14:49.397Z",
+            "expertDefaultSource": "general",
+            "expert": {
+              "expertId": "axon-general",
+              "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "name": "Axon 通用助手",
+              "description": "帮助处理通用任务，保留工作台现有能力。",
+              "releaseVersion": "1.0.0",
+              "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "modes": [
+                "interactive"
+              ],
+              "dependencies": [],
+              "availability": {
+                "available": true,
+                "state": "enabled"
+              },
+              "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+              "updateAvailable": false
+            },
+            "modelId": "default",
+            "inputQueue": {
+              "revision": 2,
+              "available": false,
+              "reason": "当前回复已结束。",
+              "items": []
+            },
+            "messages": [
+              {
+                "id": "732b83c6",
+                "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+                "role": "user",
+                "text": "请创建一个专家草稿，名称为“R3A资料核对专家”，简介为“核对明确输入并保留未知项”。专业指令为“只根据用户给出的内容核对资料；未知就说明未知；回答末尾加 R3A_EXPERT_READY。”工具范围为空数组、旧技能引用为空数组、新技能引用为空数组。需求已明确，无需问答；请按管理方法提出完整候选并请求网页确认保存，不发布、不改范围。"
+              }
+            ],
+            "active": null,
+            "turns": [
+              {
+                "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+                "status": "failed",
+                "startedAt": "2026-11-16T04:14:48.851Z",
+                "completedAt": "2026-11-16T04:14:49.397Z"
+              }
+            ],
+            "interactions": [],
+            "lastResult": {
+              "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+              "status": "failed",
+              "message": "insufficient_quota: 模型额度不足，请检查账户后重试。",
+              "compactionIds": [],
+              "compactions": [],
+              "usageSummary": {
+                "modelAttempts": 1,
+                "replyAttempts": 1,
+                "compactionAttempts": 0,
+                "toolCalls": 0,
+                "unknownUsageAttempts": 1,
+                "actual": null
+              }
+            }
+          }
+        }
+      ],
+      "snapshot": {
+        "id": "00902800-715f-4d20-8af4-b47e51ab714f",
+        "workspaceId": "2102b2eb-e2fa-429e-82ed-1cd1259f9ff6",
+        "title": "请创建一个专家草稿，名称为“R3A资料核对专家”，简介为“核对明确输入并保留未知",
+        "updatedAt": "2026-11-16T04:14:49.397Z",
+        "expertDefaultSource": "general",
+        "expert": {
+          "expertId": "axon-general",
+          "revisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "name": "Axon 通用助手",
+          "description": "帮助处理通用任务，保留工作台现有能力。",
+          "releaseVersion": "1.0.0",
+          "digest": "cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "modes": [
+            "interactive"
+          ],
+          "dependencies": [],
+          "availability": {
+            "available": true,
+            "state": "enabled"
+          },
+          "currentRevisionId": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+          "updateAvailable": false
+        },
+        "modelId": "default",
+        "inputQueue": {
+          "revision": 2,
+          "available": false,
+          "reason": "当前回复已结束。",
+          "items": []
+        },
+        "messages": [
+          {
+            "id": "732b83c6",
+            "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+            "role": "user",
+            "text": "请创建一个专家草稿，名称为“R3A资料核对专家”，简介为“核对明确输入并保留未知项”。专业指令为“只根据用户给出的内容核对资料；未知就说明未知；回答末尾加 R3A_EXPERT_READY。”工具范围为空数组、旧技能引用为空数组、新技能引用为空数组。需求已明确，无需问答；请按管理方法提出完整候选并请求网页确认保存，不发布、不改范围。"
+          }
+        ],
+        "active": null,
+        "turns": [
+          {
+            "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+            "status": "failed",
+            "startedAt": "2026-11-16T04:14:48.851Z",
+            "completedAt": "2026-11-16T04:14:49.397Z"
+          }
+        ],
+        "interactions": [],
+        "lastResult": {
+          "requestId": "25d35220-fd4d-49ce-9ffd-ff0ba23acc54",
+          "status": "failed",
+          "message": "insufficient_quota: 模型额度不足，请检查账户后重试。",
+          "compactionIds": [],
+          "compactions": [],
+          "usageSummary": {
+            "modelAttempts": 1,
+            "replyAttempts": 1,
+            "compactionAttempts": 0,
+            "toolCalls": 0,
+            "unknownUsageAttempts": 1,
+            "actual": null
+          }
+        }
+      }
+    }
+  ]
+}

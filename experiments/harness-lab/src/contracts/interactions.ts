@@ -1,3 +1,4 @@
+import type { AuthoringConfirmation } from './authoring.js';
 import type { HandoffConfirmation } from './collaboration.js';
 export interface InteractionQuestion {
   id: string;
@@ -27,7 +28,7 @@ export interface QuestionInteraction extends InteractionBase {
 export interface ConfirmationInteraction extends InteractionBase {
   kind: 'confirmation';
   status: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'expired';
-  action: { title: string; description: string; command?: string; cwd?: string; parameters: Record<string, unknown>; commandReference?: { id: string; contentHash: string }; handoff?: HandoffConfirmation };
+  action: { title: string; description: string; command?: string; cwd?: string; parameters: Record<string, unknown>; commandReference?: { id: string; contentHash: string }; handoff?: HandoffConfirmation; authoring?: AuthoringConfirmation };
   rule: { ruleId: string; reason: string; version: string };
   /** Derived from the native tool result, never from approval alone. */
   execution?: 'succeeded' | 'failed' | 'unknown' | 'not_started';

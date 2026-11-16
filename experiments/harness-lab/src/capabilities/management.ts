@@ -1,3 +1,5 @@
+import type { AuthoringProposal, AuthoringReceipt } from '../contracts/authoring.js';
+import { assertProposal, authoringReceipt, type AuthoringGrant } from '../authoring/integrity.js';
 import type { SkillRef } from '../contracts/skills.js';
 import type { SkillRevision } from '../contracts/capabilities.js';
 import { randomUUID } from 'node:crypto';
@@ -104,6 +106,31 @@ export class CapabilityManagement {
   }
   async save(actor:ManagementActor,id:string,input:{expectedDraftRevision:number;content:ExpertDraftContent}):Promise<ExpertDraft> {
     this.auth(actor);this.managed(id);const content=this.content(input.content);return this.lock.run(async()=>{this.auth(actor);this.managed(id);const prior=this.draft(id,input.expectedDraftRevision);const next={...prior,draftRevision:prior.draftRevision+1,draftDigest:capabilityDigest(content),content,updatedAt:now(),updatedBy:actor.userId};this.tx(()=>{this.saveDraft(next);this.audit(actor,id,'draft_saved',{from:prior.draftRevision,to:next.draftRevision});});return next;});
+  }
+  async prepareAuthoringContent(actor:ManagementActor,value:ExpertDraftContent):Promise<ExpertDraftContent> {
+    this.auth(actor);const content=this.content(value);const catalog=this.catalog();
+    if(content.allowedTools.some(id=>!catalog.tools.some(tool=>tool.id===id))||content.skillIds.some(id=>!this.options.skills().some(skill=>skill.id===id)))throw invalid('请只引用真实目录中的工具与技能。');
+    for(const ref of content.skillRefs??[]){if(!this.options.resolvePackage)throw invalid('当前技能引用不可用。');await this.options.resolvePackage(ref,actor);this.auth(actor);}
+    for(const id of content.skillIds){const skill=this.options.skills().find(value=>value.id===id)!;if(!this.capabilities.assetAvailability(id,skillRevision(skill).revisionId).available)throw invalid('技能不可用。');}
+    this.auth(actor);return content;
+  }
+  authoringReceipt(actor:ManagementActor,proposalId:string):AuthoringReceipt|undefined {
+    this.auth(actor);if(!uuid.test(proposalId))throw invalid();const row=this.db.prepare('SELECT data FROM r2_actions WHERE actor_id=? AND action_id=?').get(actor.userId,proposalId);if(!row)return;const receipt=JSON.parse(String(row.data)) as AuthoringReceipt;
+    return receipt.schemaVersion===1&&receipt.proposalId===proposalId&&receipt.ownerUserId===actor.userId&&receipt.kind==='expert'?receipt:undefined;
+  }
+  async saveAuthoring(actor:ManagementActor,value:AuthoringProposal,grant:AuthoringGrant):Promise<AuthoringReceipt> {
+    const proposal=structuredClone(value);assertProposal(proposal,actor.userId,'expert');
+    return this.lock.run(async()=>{grant.assertAuthorized?.();this.auth(actor);const key={action:'authoring',proposal};const old=this.prior<AuthoringReceipt>(actor,proposal.proposalId,key);if(old)return old;
+      const candidate=proposal.candidate;if(candidate.kind!=='expert')throw invalid();const content=await this.prepareAuthoringContent(actor,candidate.content);
+      if(capabilityDigest(content)!==capabilityDigest(candidate.content))throw invalid('候选尚未规范化，请重新提出保存。');
+      grant.assertAuthorized?.();this.auth(actor);let prior:ExpertDraft|undefined;
+      if(proposal.targetId){this.managed(proposal.targetId);prior=this.draft(proposal.targetId,proposal.baseline!.draftRevision);if(prior.draftDigest!==proposal.baseline!.digest)throw conflict();}
+      const id=proposal.targetId??`expert-${randomUUID()}`,digest=capabilityDigest(content);
+      const draft:ExpertDraft=prior&&prior.draftDigest===digest?prior:{expertId:id,draftRevision:prior?prior.draftRevision+1:1,draftDigest:digest,content,baseRevisionId:prior?.baseRevisionId??null,updatedAt:now(),updatedBy:actor.userId};
+      const result=authoringReceipt(proposal,id,draft.draftRevision,draft.draftDigest,grant);
+      this.tx(()=>{grant.assertAuthorized?.();this.auth(actor);if(!prior){this.db.prepare('INSERT INTO r2_experts(expert_id,archived,created_at,created_by) VALUES(?,0,?,?)').run(id,now(),actor.userId);this.db.prepare('INSERT INTO r2_policies VALUES(?,?)').run(id,JSON.stringify({mode:'none',seatIds:[],revision:0}));}
+        this.saveDraft(draft);this.audit(actor,id,prior?'authoring_saved':'created',{proposalId:proposal.proposalId,proposalDigest:proposal.proposalDigest,sessionId:proposal.sessionId,requestId:proposal.requestId});this.receipt(actor,proposal.proposalId,key,result);});return result;
+    });
   }
   async restore(actor:ManagementActor,id:string,input:{revisionId:string;expectedDraftRevision:number;clientActionId:string}):Promise<ExpertDraft> {
     this.auth(actor);this.managed(id);return this.lock.run(async()=>{this.auth(actor);const key={action:'restore',expertId:id,...input};const existing=this.prior<ExpertDraft>(actor,input.clientActionId,key);if(existing)return existing;const revision=await this.capabilities.resolve({expertId:id,revisionId:input.revisionId});this.auth(actor);this.managed(id);const prior=this.draft(id,input.expectedDraftRevision);const content=this.content({name:revision.name,description:revision.description,instructions:revision.instructions,skillIds:revision.skills.filter(skill=>skill.schemaVersion!==2).map(skill=>skill.id),...this.packageRefs(revision.skills),allowedTools:revision.allowedTools??[]});const next={...prior,content,draftRevision:prior.draftRevision+1,draftDigest:capabilityDigest(content),updatedAt:now(),updatedBy:actor.userId};this.tx(()=>{this.saveDraft(next);this.audit(actor,id,'history_to_draft',{revisionId:input.revisionId});this.receipt(actor,input.clientActionId,key,next);});return next;});

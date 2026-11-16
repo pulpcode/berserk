@@ -48,6 +48,7 @@
     "migrate:access:administrators": "tsx scripts/migrate-administrators.ts",
     "migrate:skills:r3": "tsx scripts/migrate-skills-r3.ts",
     "probe:skills:r3": "tsx --env-file-if-exists=.env.local scripts/probe-skills-r3.ts",
+    "probe:authoring:r3a": "tsx --env-file-if-exists=.env.local scripts/probe-authoring-r3a.ts",
     "probe:skills:scanner": "tsx scripts/probe-skills-scanner.ts",
     "probe:skills:rollback": "tsx scripts/probe-skills-r3-rollback.ts",
     "measure:skills:r3": "tsx scripts/measure-skills-r3.ts",

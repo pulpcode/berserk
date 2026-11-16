@@ -1,3 +1,4 @@
+import type { AuthoringReceipt } from '../contracts/authoring';
 import { useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { Brain, ChevronDown, ListChecks } from 'lucide-react';
 import type { RequestState, SessionSnapshot } from '../contracts/index';
@@ -58,8 +59,8 @@ function Thinking({ text, running, focusKey, focusTransfers }: { text: string; r
   return <details ref={ref} className="tool-result thinking-result"><summary><Brain size={15} aria-hidden="true" /><span>思考</span><span className="thinking-preview">{preview}</span><ChevronDown size={14} aria-hidden="true" /></summary><div className="message-content thinking-body"><Markdown remarkPlugins={[remarkGfm]} skipHtml>{text}</Markdown></div></details>;
 }
 type InteractionProps = ComponentProps<typeof InteractionCard>;
-export function ChatPresentation({ snapshot, active, busy, choices, canAutoCollapse, submissions, respond, query }: {
-  snapshot: SessionSnapshot; active?: RequestState | null; busy: boolean; choices: ProcessChoices; canAutoCollapse: () => boolean;
+export function ChatPresentation({ snapshot, active, busy, choices, canAutoCollapse, submissions, respond, query, openAuthoring }: {
+  openAuthoring?: (receipt: AuthoringReceipt) => void; snapshot: SessionSnapshot; active?: RequestState | null; busy: boolean; choices: ProcessChoices; canAutoCollapse: () => boolean;
   submissions: Record<string, InteractionProps['submission']>; respond: InteractionProps['respond']; query: InteractionProps['query'];
 }) {
   const [focusTransfers] = useState<ChatFocusTransfer>(() => new Map());
@@ -91,9 +92,9 @@ export function ChatPresentation({ snapshot, active, busy, choices, canAutoColla
   const render = (item: DisplayItem) => {
     if (item.kind === 'thinking') return <Thinking key={item.key} text={item.text} running={item.running} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} />;
     if (item.kind === 'file') return <FileOutputCard key={item.key} file={item.file} />;
-    if (item.kind === 'interaction') return <InteractionCard key={item.key} interaction={item.interaction} result={item.result} canRespond={item.interaction.status === 'pending' && active?.requestId === item.interaction.requestId && active.status !== 'stopping'} executing={snapshot.interactions?.filter(entry => entry.kind === 'confirmation' && entry.status === 'approved' && entry.execution === undefined && entry.requestId === item.interaction.requestId && entry.toolName === item.interaction.toolName).length === 1 && item.interaction.kind === 'confirmation' && active?.requestId === item.interaction.requestId && active.status !== 'stopping' && active.phase === 'tool' && active.toolName === item.interaction.toolName} submission={submissions[item.interaction.interactionId]} respond={respond} query={query} />;
+    if (item.kind === 'interaction') return <InteractionCard openAuthoring={openAuthoring} key={item.key} interaction={item.interaction} result={item.result} canRespond={item.interaction.status === 'pending' && active?.requestId === item.interaction.requestId && active.status !== 'stopping'} executing={snapshot.interactions?.filter(entry => entry.kind === 'confirmation' && entry.status === 'approved' && entry.execution === undefined && entry.requestId === item.interaction.requestId && entry.toolName === item.interaction.toolName).length === 1 && item.interaction.kind === 'confirmation' && active?.requestId === item.interaction.requestId && active.status !== 'stopping' && active.phase === 'tool' && active.toolName === item.interaction.toolName} submission={submissions[item.interaction.interactionId]} respond={respond} query={query} />;
     if (item.kind === 'subagent') return <SubagentCard key={item.key} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} />;
-    return <Message key={item.key} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} message={item.message} finalAnswer={snapshot.turns?.some(turn=>turn.requestId===item.message.requestId && turn.finalMessageId===item.message.id) && (!item.message.content || item.key === `text:${item.message.content.filter(block => block.type === 'text' && block.text.trim()).at(-1)?.id}`)} evidence={snapshot.messages.slice(0,snapshot.messages.findIndex(message=>message.id===item.message.id))} workspaceId={snapshot.workspaceId} active={busy && item.message.requestId === active?.requestId} />;
+    return <Message openAuthoring={openAuthoring} key={item.key} focusKey={`${snapshot.id}:${item.key}`} focusTransfers={focusTransfers} message={item.message} finalAnswer={snapshot.turns?.some(turn=>turn.requestId===item.message.requestId && turn.finalMessageId===item.message.id) && (!item.message.content || item.key === `text:${item.message.content.filter(block => block.type === 'text' && block.text.trim()).at(-1)?.id}`)} evidence={snapshot.messages.slice(0,snapshot.messages.findIndex(message=>message.id===item.message.id))} workspaceId={snapshot.workspaceId} active={busy && item.message.requestId === active?.requestId} />;
   };
   const seen = new Set<string>();
   return <div className="chat-presentation" ref={root}>{blocks.map(block => {

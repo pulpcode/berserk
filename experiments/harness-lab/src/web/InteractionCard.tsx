@@ -1,3 +1,5 @@
+import { messageAuthoringReceipt } from './authoring-receipt';
+import type { AuthoringCandidate, AuthoringReceipt } from '../contracts/authoring';
 import { useEffect, useLayoutEffect, useRef, useState, type FocusEvent, type RefObject } from 'react';
 import { AssignmentAttachments, HandoffFiles } from './HandoffFiles';
 import { Check, ChevronDown, CircleAlert, CircleHelp, Clock3, ChevronLeft, ChevronRight, X } from 'lucide-react';
@@ -82,21 +84,21 @@ function QuestionFields({ item, question, value, disabled, change, next }: {
 }
 
 export interface InteractionCardProps {
-  interaction: Interaction; canRespond: boolean; submission?: InteractionSubmission;
+  openAuthoring?: (receipt: AuthoringReceipt) => void; interaction: Interaction; canRespond: boolean; submission?: InteractionSubmission;
   respond: Respond; query: Query; result?: PublicMessage;
   /** The owning request is currently executing this interaction's tool. */
   executing?: boolean;
 }
 
 /** Message-flow rendering: pending items are a status pointer only; the composer owns the form. */
-export function InteractionCard({ interaction: item, result, executing }: InteractionCardProps) {
+export function InteractionCard({ interaction: item, result, executing, openAuthoring }: InteractionCardProps) {
   if (item.status === 'pending') {
     const question = item.kind === 'question';
     return <section className="interaction-card interaction-pointer" data-interaction-id={item.interactionId} data-state="pending" aria-label={question ? '提问状态' : '确认状态'}>
       {question ? <CircleHelp size={16} aria-hidden="true" /> : <Clock3 size={16} aria-hidden="true" />}<span>{question ? '提问 · 等待回答' : '确认 · 等待确认'}</span>
     </section>;
   }
-  if (item.kind === 'confirmation') return <ConfirmationHistory item={item} result={result} executing={executing} />;
+  if (item.kind === 'confirmation') return <ConfirmationHistory item={item} result={result} executing={executing} openAuthoring={openAuthoring} />;
   return <section className="interaction-card question-card question-history" data-interaction-id={item.interactionId} data-state={item.status} aria-label="回答记录">
     {item.status === 'answered' ? <div className="qa-bubble">{item.questions.map(question => {
       const answer = item.answers?.find(entry => entry.questionId === question.id);
@@ -121,15 +123,34 @@ const commandExecutionLabels: Record<NonNullable<ConfirmationInteraction['execut
 const handoffConfirmLabels = { assign: '确认分派', claim: '确认签收', submit: '确认提交', review: '确认审核' };
 const isExternalCommand = (item: ConfirmationInteraction) => item.toolName === 'simulation_command_send';
 function confirmActionLabel(item: ConfirmationInteraction): string {
+  if (item.action.authoring) return '确认保存草稿';
   if (isExternalCommand(item)) return '确认下达';
   if (item.action.handoff) return handoffConfirmLabels[item.action.handoff.kind];
   return item.action.command !== undefined ? '允许本次执行' : '确认执行';
+}
+
+function CandidateContents({ candidate }: { candidate: AuthoringCandidate }) {
+  if (candidate.kind === 'expert') return <dl className="authoring-candidate-fields">{Object.entries(candidate.content).map(([key, value]) => <div key={key}><dt>{{name:'名称',description:'简介',instructions:'专业指令',skillIds:'原有技能引用',skillRefs:'固定技能引用',allowedTools:'工具范围'}[key] || key}</dt><dd><pre tabIndex={0}>{typeof value === 'string' ? value : JSON.stringify(value, null, 2)}</pre></dd></div>)}</dl>;
+  return <>{candidate.files.map(file => {
+    let content: string;
+    try { content = new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(atob(file.contentBase64), value => value.charCodeAt(0))); }
+    catch { content = '文件无法显示为文本，请取消本次保存并核对内容。'; }
+    return <section key={file.path}><h4>{file.path}</h4><pre tabIndex={0}>{content}</pre></section>;
+  })}{Object.keys(candidate.requirements).length > 0 && <section><h4>已有环境声明</h4><pre>{JSON.stringify(candidate.requirements, null, 2)}</pre></section>}</>;
+}
+
+function candidateChanges(candidate: AuthoringCandidate, before?: AuthoringCandidate): string[] {
+  if (candidate.kind === 'expert') return Object.keys(candidate.content).filter(key => !before || before.kind !== 'expert' || JSON.stringify(candidate.content[key as keyof typeof candidate.content]) !== JSON.stringify(before.content[key as keyof typeof before.content])).map(key => ({ name: '名称', description: '简介', instructions: '专业指令', skillIds: '原有技能引用', skillRefs: '固定技能引用', allowedTools: '工具范围' }[key] || key));
+  const previous = new Map(before?.kind === 'skill' ? before.files.map(file => [file.path, file.contentBase64]) : []);
+  const current = new Map(candidate.files.map(file => [file.path, file.contentBase64]));
+  return [...candidate.files.filter(file => previous.get(file.path) !== file.contentBase64).map(file => `${previous.has(file.path) ? '修改' : '新增'}：${file.path}`), ...[...previous.keys()].filter(path => !current.has(path)).map(path => `删除：${path}`)];
 }
 
 function ConfirmationDetails({ item }: { item: ConfirmationInteraction }) {
   return <>
     {item.action.handoff?.kind === 'assign' && <AssignmentAttachments files={item.action.handoff.files} />}
     <p className="confirmation-description">{item.action.description}</p>
+    {item.action.authoring && <div className="authoring-confirmation"><dl className="confirmation-metadata"><dt>保存目标</dt><dd>{item.action.authoring.proposal.targetId || `新建${item.action.authoring.proposal.candidate.kind === 'expert' ? '专家' : '技能'}`}</dd><dt>当前基线</dt><dd>{item.action.authoring.proposal.baseline ? `草稿 ${item.action.authoring.proposal.baseline.draftRevision} · ${item.action.authoring.proposal.baseline.digest}` : '新建草稿'}</dd></dl><p>本次变更：{candidateChanges(item.action.authoring.proposal.candidate, item.action.authoring.proposal.before).join('、') || '内容未变化'}</p>{item.action.authoring.proposal.before && <details><summary>保存前的完整内容</summary><CandidateContents candidate={item.action.authoring.proposal.before} /></details>}<details><summary>查看完整候选</summary><CandidateContents candidate={item.action.authoring.proposal.candidate} /></details></div>}
     {item.action.handoff && item.action.handoff.kind !== 'assign' && item.action.handoff.files.length > 0 && <HandoffFiles files={item.action.handoff.files} />}
     {item.action.cwd !== undefined && <dl className="confirmation-metadata"><dt>工作目录</dt><dd><code>{item.action.cwd}</code></dd></dl>}
     {item.action.command !== undefined && <div className="confirmation-command"><span>完整命令</span><pre tabIndex={0} aria-label="完整命令">{item.action.command}</pre></div>}
@@ -137,7 +158,8 @@ function ConfirmationDetails({ item }: { item: ConfirmationInteraction }) {
   </>;
 }
 
-function ConfirmationHistory({ item, result, executing }: { item: ConfirmationInteraction; result?: PublicMessage; executing?: boolean }) {
+function ConfirmationHistory({ item, result, executing, openAuthoring }: { openAuthoring?: (receipt: AuthoringReceipt) => void; item: ConfirmationInteraction; result?: PublicMessage; executing?: boolean }) {
+  const receipt = item.status === 'approved' && item.execution === 'succeeded' ? messageAuthoringReceipt(result) : undefined;
   const command = item.action.command !== undefined;
   const externalCommand = isExternalCommand(item);
   const status = confirmationLabels[item.status];
@@ -152,7 +174,7 @@ function ConfirmationHistory({ item, result, executing }: { item: ConfirmationIn
     <details className="confirmation-history">
       <summary><Icon size={16} aria-hidden="true" /><span className="confirmation-history-heading"><span className="confirmation-title">{item.action.command ?? item.action.title}</span>{outcome && <span className="confirmation-outcome">{outcome}</span>}</span><span className="confirmation-decision">{status}</span><ChevronDown className="confirmation-chevron" size={16} aria-hidden="true" /></summary>
       <div className="confirmation-body">{command && <h3>{item.action.title}</h3>}<ConfirmationDetails item={item} />{item.rule.reason !== item.action.description && item.rule.reason !== item.reason && <p className="interaction-rule">{item.rule.reason}</p>}
-        {result?.text && <details className="interaction-result"><summary>{item.status === 'rejected' ? '拒绝后的工具返回' : result.isError ? '工具返回（未完成）' : '工具返回'}</summary><pre tabIndex={0}>{result.text}</pre></details>}
+        {receipt && openAuthoring && <button type="button" onClick={() => openAuthoring(receipt)}>查看{receipt.kind === 'expert' ? '专家' : '技能'}详情</button>}{result?.text && <details className="interaction-result"><summary>{item.status === 'rejected' ? '拒绝后的工具返回' : result.isError ? '工具返回（未完成）' : '工具返回'}</summary><pre tabIndex={0}>{result.text}</pre></details>}
       </div>
     </details>
   </section>;

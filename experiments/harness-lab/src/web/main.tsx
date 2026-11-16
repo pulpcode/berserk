@@ -1,3 +1,6 @@
+import type { AuthoringIntent, AuthoringReceipt } from '../contracts/authoring';
+import { CapabilityManagement } from './CapabilityManagement';
+import { SkillManagement } from './SkillLibrary';
 import { LoadingIndicator } from './LoadingIndicator';
 import { MapReferenceChips } from './MapReferenceChips';
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -140,6 +143,8 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
   const [compactionDetail, setCompactionDetail] = useState<{ sessionId: string; entryId: string }>();
   const [workspaceForm, setWorkspaceForm] = useState(false);
   const [newSessionOpen, setNewSessionOpen] = useState(false);
+  const pendingAuthoring = useRef<AuthoringIntent | undefined>(undefined);
+  const [authoringManagement, setAuthoringManagement] = useState<Pick<AuthoringReceipt, 'kind' | 'targetId' | 'created' | 'draftDigest'>>();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [creationError, setCreationError] = useState('');
   const [informationNavigationError, setInformationNavigationError] = useState<{ url: string; message: string }>();
@@ -202,7 +207,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
   const picks = chat.composerSelections.all[chat.draftKey];
-  const richDraft = Boolean(attachmentItems.length || picks?.skill || picks?.agent || picks?.contextRefs?.length || picks?.annotationRefs?.length);
+  const richDraft = Boolean(attachmentItems.length || picks?.authoring || picks?.skill || picks?.agent || picks?.contextRefs?.length || picks?.annotationRefs?.length);
   const queue = snapshot?.inputQueue;
   const intakeWorking = chat.inputQueue.working[chat.selected];
   const intakeUncertain = chat.inputQueue.operations[chat.selected];
@@ -425,9 +430,10 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
     if (sendNow && freshDraft) void chat.send(session.id);
     return freshDraft;
   }
-  function newChat() { if(!canCollaborate)return; rememberPosition(); if(personalOnly && !navigationWorkspaces.length){setTaskPanel({visibility:'private',startConversation:true});return;} setNewSessionOpen(true); }
+  function newChat(intent?: AuthoringIntent) { if(!canCollaborate || (intent && !administratorAccount))return; pendingAuthoring.current = intent; rememberPosition(); if(personalOnly && !navigationWorkspaces.length){setTaskPanel({visibility:'private',startConversation:true});return;} setNewSessionOpen(true); }
   async function createChat(workspaceId: string) {
     if(!canCollaborate)return null;
+    const authoring = pendingAuthoring.current;
     if (location.pathname + location.search !== '/') history.pushState(null, '', '/');
     const navigation = ++navigationRequest.current;
     rememberPosition(); setView('chat'); setSidebarOpen(false); setCreationError('');
@@ -437,6 +443,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
       if(navigation!==navigationRequest.current)return null;
     }
     const id = await chat.create(workspaceId);
+    if (id && authoring) { chat.composerSelections.setAuthoring(id, authoring); pendingAuthoring.current = undefined; }
     if (id && navigation === navigationRequest.current) history.replaceState(null, '', `/?session=${encodeURIComponent(id)}`);
     if (!id) setCreationError(`在「${chat.workspaces.find(workspace => workspace.id === workspaceId)?.name || '所选项目'}」中创建对话未完成，请核对会话列表后重试。`);
     else if (newSessionOpen) focusAfterCreation.current = { id, navigation };
@@ -495,6 +502,13 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
     chat.composerSelections.set(selected || `workspace:${workspaceId}`, 'skill', skill);
     setView('chat'); setSidebarOpen(false);
     history.pushState(null, '', selected ? `/?session=${encodeURIComponent(selected)}` : '/');
+  }
+  async function copyManagedSkill(sourceSkillId: string) {
+    const action = sessionAction(storageKey('skill-create'), { sourceSkillId });
+    try {
+      const value = await api<import('../contracts/skills').ManagedSkillDetail>('/api/admin/capabilities/skills', { sourceSkillId, clientActionId: action.id });
+      action.complete(); setAuthoringManagement({ kind: 'skill', targetId: value.skill.skillId, created: false, draftDigest: value.draft?.packageDigest || '' });
+    } catch (error) { setCreationError(error instanceof Error ? error.message : '复制技能未完成，请核对目录。'); }
   }
   async function createExpertChat(targetWorkspaceId: string, selection: Required<Pick<ExpertSessionSelection, 'expertRef' | 'expectedDigest'>>) {
     const navigation = navigationRequest.current;
@@ -571,7 +585,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
       {!personalOnly&&seatActive && view === 'situation' && <Suspense fallback={<LoadingIndicator label="正在加载态势地图…"/>}>{canCollaborate&&annotationMapTaskId?<AnnotationWorkspace key={`${annotationMapTaskId}:${annotationMapSessionId || ''}`} initial={annotationInitial} taskId={annotationMapTaskId} taskTitle={directory.tasks.find(task=>task.id===annotationMapTaskId)?.title} openTask={()=>showTaskInformation(annotationMapTaskId)} sessionId={annotationMapSessionId} taskContext={directory.tasks.find(task=>task.id===annotationMapTaskId)?.context} archived={Boolean(directory.tasks.find(task=>task.id===annotationMapTaskId)?.readOnly||directory.tasks.find(task=>task.id===annotationMapTaskId)?.state==='archived')} reference={referenceAnnotation} sourceReference={referenceMapObject} derive={deriveAnnotations} openSession={selectSession}/>:<SituationView readOnly={!canCollaborate} toolbarTarget={mapToolbarTarget} key={`${routeRevision}:${location.search}`} initial={parseMapHref(location.pathname+location.search)} reference={referenceMapObject}/>}</Suspense>}
       {!personalOnly&&canCollaborate&&seatActive && view === 'simulation' && <Suspense fallback={<LoadingIndicator label="正在读取模拟控制…"/>}><Simulation/></Suspense>}
       {!personalOnly&&seatActive && view === 'scenario_director' && <Suspense fallback={<LoadingIndicator label="正在加载场景导演台…"/>}><ScenarioDirector identity={identity} allowed={Boolean(identity && mapConfig.data?.scenarioControlEnabled)} checking={!mapConfig.data && !mapConfig.error} permissionError={mapConfig.error} retryPermission={mapConfig.refresh} returnToWork={returnToWork} openTask={id=>showTaskInformation(id,'description')}/></Suspense>}
-      {seatActive && view === 'capabilities' && <CapabilityCenter administration={Boolean(administratorAccount)} canCollaborate={canCollaborate} key={`${capabilityWorkspaceId || 'global'}:${capabilityExpertId || ''}`} workspaces={navigationWorkspaces.filter(workspace => taskMeta?.[workspace.id]?.state !== 'archived')} fixedWorkspaceId={capabilityWorkspaceId} initialExpertId={capabilityExpertId} create={createExpertChat} applySkill={applyLibrarySkill} domId={domId} />}
+      {seatActive && view === 'capabilities' && <CapabilityCenter authoring={administratorAccount ? newChat : undefined} administration={Boolean(administratorAccount)} canCollaborate={canCollaborate} key={`${capabilityWorkspaceId || 'global'}:${capabilityExpertId || ''}`} workspaces={navigationWorkspaces.filter(workspace => taskMeta?.[workspace.id]?.state !== 'archived')} fixedWorkspaceId={capabilityWorkspaceId} initialExpertId={capabilityExpertId} create={createExpertChat} applySkill={applyLibrarySkill} domId={domId} />}
       {view !== 'chat'||!canCollaborate ? null : <>
       {snapshot?.workItemId && seats.length > 0 && <LinkedWork key={snapshot.workItemId} id={snapshot.workItemId} open={() => showWork(snapshot.workItemId)} />}
       <div id={domId('conversation')} className="conversation-scroll" ref={scroll} tabIndex={0} aria-label="对话内容" onScroll={() => {
@@ -591,7 +605,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
             <button onClick={() => suggest('我想梳理一个问题，请先帮我明确目标和需要补充的信息。')}><MessageSquare size={19} aria-hidden="true" /><strong>一起梳理思路</strong><span>从一个问题开始讨论</span><ArrowUpRight size={15} aria-hidden="true" /></button>
             {currentResources?.sources[0] && <button onClick={() => suggest(`请读取《${currentResources?.sources[0]?.title}》，提炼要点，并说明信息依据。`)}><BookOpen size={19} aria-hidden="true" /><strong>从资料中找线索</strong><span>读取资料，提炼关键信息</span><ArrowUpRight size={15} aria-hidden="true" /></button>}
           </div>
-        </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && Boolean(scroll.current?.getClientRects().length) && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} />}{busy && !waiting && backgroundJob?.status !== 'queued' && (lastMessage?.role !== 'assistant' || (!lastMessage.text.trim() && !lastMessage.content?.some(block => block.text.trim())) || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
+        </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && Boolean(scroll.current?.getClientRects().length) && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} openAuthoring={administratorAccount ? receipt => { if (receipt.sessionId === chat.selected) setAuthoringManagement(receipt); } : undefined} />}{busy && !waiting && backgroundJob?.status !== 'queued' && (lastMessage?.role !== 'assistant' || (!lastMessage.text.trim() && !lastMessage.content?.some(block => block.text.trim())) || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
       <div className="composer-dock" onFocusCapture={() => { dockFocus.current = true; }} onBlurCapture={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) dockFocus.current = false; }}>
@@ -627,7 +641,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
                 else if (canSend) void chat.send();
               }
             }} />
-            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button>{snapshot?.expert && <SessionExpertIdentity expert={snapshot.expert} source={snapshot.expertDefaultSource} />}<ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{composerControl}</div>
+            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button>{snapshot?.expert && <SessionExpertIdentity expert={snapshot.expert} source={snapshot.expertDefaultSource} />}{administratorAccount && <label className="authoring-method-picker"><span className="visually-hidden">创作方法</span><select aria-label="创作方法" disabled={!composerReady || busy} value={picks?.authoring?.kind || ''} onChange={event => { chat.composerSelections.setAuthoring(chat.resolveDraftOwner(), event.target.value ? { kind: event.target.value as 'expert' | 'skill' } : undefined); textarea.current?.focus(); }}><option value="">普通对话</option><option value="expert">专家创作</option><option value="skill">技能创作</option></select></label>}{picks?.authoring?.targetId && <span className="authoring-target" title={picks.authoring.targetId}>修改已选{picks.authoring.kind === 'expert' ? '专家' : '技能'}</span>}<ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{composerControl}</div>
           </form>}
           {!currentCard && intakeNotice && <p className="attachment-notice" role="status">{intakeNotice}</p>}
           {!currentCard && blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
@@ -643,11 +657,13 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
     </SituationWorkspace>
     </div>
     {filesOpen && <FilesPanel key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} close={() => setFilesOpen(false)} upload={uploadFiles} executionAvailable={Boolean(fileLimits?.executionAvailable)} attachments={attachmentList} refreshKey={attachmentItems.filter(item => item.status === 'ready').map(item => item.id).join(',')} reference={file => chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 20)} />}
-    {newSessionOpen && <NewSession workspaces={navigationWorkspaces.filter(w=>taskMeta?.[w.id]?.state!=='archived')} workspaceId={chat.workspaceId} create={createChat} close={() => setNewSessionOpen(false)} />}
+    {newSessionOpen && <NewSession workspaces={navigationWorkspaces.filter(w=>taskMeta?.[w.id]?.state!=='archived')} workspaceId={chat.workspaceId} create={createChat} close={() => { pendingAuthoring.current = undefined; setNewSessionOpen(false); }} />}
+    {authoringManagement?.kind === 'expert' && <CapabilityManagement key={authoringManagement.targetId} initialExpertId={authoringManagement.targetId} close={() => setAuthoringManagement(undefined)} changed={() => {}} authoring={intent => { setAuthoringManagement(undefined); newChat(intent); }} />}
+    {authoringManagement?.kind === 'skill' && <SkillManagement key={authoringManagement.targetId} skillId={authoringManagement.targetId} initialTab={authoringManagement.created ? 'policy' : 'files'} expectedDraftDigest={authoringManagement.created ? authoringManagement.draftDigest : undefined} close={() => setAuthoringManagement(undefined)} changed={() => {}} copy={id => { void copyManagedSkill(id); }} authoring={intent => { setAuthoringManagement(undefined); newChat(intent); }} />}
     {settingsOpen && <SettingsPanel simulation={canCollaborate&&mapConfig.data?.simulationEnabled ? ()=>{setSettingsOpen(false);navigationRequest.current++;chat.noteNavigation();rememberPosition();history.pushState(null,'','/simulation');setView('simulation');} : undefined} identity={administratorAccount || identity} logout={logout} logoutError={logoutError} close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}
     {resourceOpen && <Resources key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} resources={currentResources} resourceError={resourceErrors[chat.workspaceId]} reloadResources={() => setResourceReload(value => value + 1)} instructions={instructions} close={() => setResourceOpen(false)} />}
     {compactionDetail && <CompactionPanel key={`${compactionDetail.sessionId}:${compactionDetail.entryId}`} {...compactionDetail} close={() => setCompactionDetail(undefined)} />}
-    {canCollaborate&&taskPanel && identity && <TaskPanel personalOnly={personalOnly} key={taskPanel.task?.id || taskPanel.visibility} identity={identity} showInformation={showTaskInformation} {...taskPanel} close={()=>setTaskPanel(undefined)} saved={task=>{directory.saved(task);void chat.refreshActivity();if(taskPanel.startConversation)void createChat(`task:${task.id}`);}}/>}
+    {canCollaborate&&taskPanel && identity && <TaskPanel personalOnly={personalOnly} key={taskPanel.task?.id || taskPanel.visibility} identity={identity} showInformation={showTaskInformation} {...taskPanel} close={()=>{pendingAuthoring.current=undefined;setTaskPanel(undefined);}} saved={task=>{directory.saved(task);void chat.refreshActivity();if(taskPanel.startConversation)void createChat(`task:${task.id}`);}}/>}
     {workspaceForm && <Panel title="新建项目" close={() => setWorkspaceForm(false)}><form className="workspace-form" onSubmit={event => { event.preventDefault(); void createWorkspace(); }}><label htmlFor="workspace-name">项目名称</label><input id="workspace-name" value={workspaceName} maxLength={60} required onChange={event => setWorkspaceName(event.target.value)} placeholder="例如：方案讨论" /><p className="resource-help">每个项目拥有独立的指令、资料和会话。</p>{workspaceError && <p className="resource-error" role="alert">{workspaceError}</p>}<button className="primary-action" disabled={workspaceCreating || !workspaceName.trim()} type="submit">{workspaceCreating ? '创建中…' : '创建项目'}</button></form></Panel>}
     {mapObject && <Panel title="引用并提问" close={()=>setMapObject(undefined)}><p>{mapObject.name} · 发送问题时读取最新状态</p><label>会话保存位置<select value={mapWorkspace} onChange={event=>setMapWorkspace(event.target.value)}><option value="">选择任务空间或个人空间</option>{navigationWorkspaces.map(workspace=><option key={workspace.id} value={workspace.id}>{workspace.name}</option>)}</select></label><button className="primary-action" disabled={!mapWorkspace || chat.creating} onClick={()=>void prepareMapConversation()}>创建对话草稿</button></Panel>}
   </div>;

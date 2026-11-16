@@ -1,3 +1,4 @@
+import type { AuthoringIntent } from '../contracts/authoring';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, BookOpen, CircleAlert, Layers, Link, Plus, RefreshCw, Search, Settings2, Sparkles } from 'lucide-react';
 import type { ExpertDetail, ExpertSummary, SessionExpert, ExpertSessionSelection } from '../contracts/capabilities';
@@ -31,8 +32,8 @@ type LibraryTab = 'experts' | 'skills' | 'connectors';
 const libraryTabs = [{ id: 'experts', name: '专家', icon: Layers }, { id: 'skills', name: '技能', icon: Sparkles }, { id: 'connectors', name: '连接器', icon: Link }] as const;
 const managedState = (expert: ManagedExpertSummary) => expert.archived ? '已归档' : expert.state === 'disabled' ? '已停用' : expert.state === 'banned' ? '受限制' : expert.currentRevisionId ? '已发布' : '草稿';
 
-export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId, create, applySkill, domId, canCollaborate = true, administration = false }: {
-  workspaces: Workspace[]; fixedWorkspaceId?: string; initialExpertId?: string;
+export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId, create, applySkill, domId, canCollaborate = true, administration = false, authoring }: {
+  workspaces: Workspace[]; fixedWorkspaceId?: string; initialExpertId?: string; authoring?: (intent: AuthoringIntent) => void;
   create: (workspaceId: string, selection: Required<Pick<ExpertSessionSelection, 'expertRef' | 'expectedDigest'>>) => Promise<void>;
   applySkill?: (workspaceId: string, skill: SkillInfo) => Promise<void>;
   domId: (id: string) => string; canCollaborate?: boolean; administration?: boolean;
@@ -95,7 +96,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
         if (next < 0) return; event.preventDefault(); chooseTab(libraryTabs[next].id); document.getElementById(domId(`capability-tab-${libraryTabs[next].id}`))?.focus();
       }}><Icon size={18} aria-hidden="true" />{name}</button>)}</div>
       <div className="capability-toolbar-actions"><label className="capability-search"><Search size={17} aria-hidden="true" /><input type="search" aria-label={`搜索${libraryTabs.find(item => item.id === tab)!.name}`} placeholder={`搜索${libraryTabs.find(item => item.id === tab)!.name}名称或描述`} value={query} onChange={event => setQuery(event.target.value)} /></label>
-        {tab === 'experts' && administrator && <><button type="button" onClick={() => setAdminOpen({})}><Settings2 size={16} aria-hidden="true" />专家管理</button><button type="button" className="primary-action" disabled={creating} onClick={() => void createExpert()}><Plus size={17} aria-hidden="true" />{creating ? '创建中…' : '创建专家'}</button></>}
+        {tab === 'experts' && administrator && <><button type="button" onClick={() => setAdminOpen({})}><Settings2 size={16} aria-hidden="true" />专家管理</button><button type="button" disabled={creating} onClick={() => void createExpert()}>手动创建</button><button type="button" className="primary-action" disabled={creating || !authoring} onClick={() => authoring?.({ kind: 'expert' })}><Plus size={17} aria-hidden="true" />创建专家</button></>}
         <button type="button" className="icon-button" onClick={() => setReload(value => value + 1)} aria-label="刷新能力目录" title="刷新能力目录"><RefreshCw size={17} aria-hidden="true" /></button>
       </div>
     </div>
@@ -110,7 +111,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
             : visibleExperts?.map(expert => <article className="expert-card" key={expert.expertId}><button type="button" className="expert-card-open" aria-label={`查看${expert.name}`} onClick={() => setSelected(expert.expertId)}><span className="expert-card-heading"><span className="expert-card-icon"><BookOpen size={23} aria-hidden="true" /></span><h3>{expert.name}</h3></span><span className="expert-card-description">{expert.description}</span></button><div className="expert-card-footer"><span>{expert.availability.available ? '可协作' : '暂不可用'}</span><button type="button" onClick={() => setSelected(expert.expertId)}>查看详情<ArrowRight size={15} aria-hidden="true" /></button></div></article>)}
         </nav>
       </>}
-      {tab === 'skills' && <SkillLibrary administrator={administrator} query={query} refresh={reload} workspaces={workspaces.filter(workspace => !workspace.id.startsWith('task:'))} applySkill={applySkill} />}
+      {tab === 'skills' && <SkillLibrary authoring={authoring} administrator={administrator} query={query} refresh={reload} workspaces={workspaces.filter(workspace => !workspace.id.startsWith('task:'))} applySkill={applySkill} />}
       {tab === 'connectors' && <LibraryEmpty icon={Link} title={search ? '没有找到相关连接器' : '暂无连接器'} />}
     </div>
     {selected && !administration && <Panel title={detail?.name || '专家详情'} className="expert-detail-panel" close={() => { setSelected(''); setCollaborating(false); }}><div className="expert-detail" aria-label="专家详情" aria-busy={!detail && !detailError}>{detailError ? <p className="resource-error" role="alert">{detailError}<button onClick={() => setReload(value => value + 1)}>重新读取详情</button></p> : !detail ? <LoadingIndicator label="正在读取专家详情…" /> : <>
@@ -121,7 +122,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
     </>}</div></Panel>}
     {collaborating && detail && <ExpertCollaboration expert={detail} workspaces={workspaces} fixedWorkspaceId={fixedWorkspaceId} create={create} close={() => setCollaborating(false)} refresh={() => { setCollaborating(false); setReload(value => value + 1); }} />}
 
-    {adminOpen && <CapabilityManagement key={adminOpen.id || 'directory'} initialExpertId={adminOpen.id} close={() => setAdminOpen(undefined)} changed={() => setReload(value => value + 1)} />}
+    {adminOpen && <CapabilityManagement authoring={authoring} key={adminOpen.id || 'directory'} initialExpertId={adminOpen.id} close={() => setAdminOpen(undefined)} changed={() => setReload(value => value + 1)} />}
   </section>;
 }
 

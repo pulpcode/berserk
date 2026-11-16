@@ -1,0 +1,86 @@
+{
+  "productFrozen": true,
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/contracts/authoring.ts",
+      "sha256": "8a98c70839ec69d7759dab33ae88cabc3a926a5636e45744f157782c69718581"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/index.ts",
+      "sha256": "49cfe17f9556ea9d72f5f0026e4c3aab7966d642a05350dc4b15ea212ec28e8a"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/chat-projection.ts",
+      "sha256": "7b0f74045d201fcce5b237f7c8e0c1bf589853e23241845581a9893a785b44ab"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CapabilityCenter.tsx",
+      "sha256": "f9464d51024147b23de196be7248038e3677129f54cafebf377bab0e8b19c0af"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/CapabilityManagement.tsx",
+      "sha256": "47f7837f00ee3e70f0e1e67e2cf47c7c745679e0e458d5a0a39e34cc152b0379"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/SkillLibrary.tsx",
+      "sha256": "b2a96e38d79c86b1649e20dcff9fb4ba2b4fcdbabf3d1143a6055574c7a9105f"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "sha256": "aa886e67898853d847615cc0ff642cea613b262bc356ff5bcf830029bb08a7f8"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useChat.ts",
+      "sha256": "5ef42cd80ae090ad7c5ddb85e465353e217b53c31cce825bba670644e4042520"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/useComposerSelections.ts",
+      "sha256": "4e3f6a3eb418aa8837f9a15c7920e0a5cc94225acb445957ec19a3decb043e07"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ChatMessage.tsx",
+      "sha256": "89dd3c2148f075f7dacc479929818b7afc6405f5a56ee440a484e2e061a816db"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ChatPresentation.tsx",
+      "sha256": "a1a282b041670abc853b8c7e7a31a1e871f61c5c052e6f0fb0020a620f9a0c08"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/InteractionCard.tsx",
+      "sha256": "b04fd62ea356c82d031a01f024ff9cbb65fb337174659b3145b3069dee69e702"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/authoring-receipt.ts",
+      "sha256": "58b9f7aed89841dd87eab813ac47845d9244167610f23a3a39308bb9d188f007"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/processGroups.ts",
+      "sha256": "38585e5006f9ce089aba9feb93b97442ad33c45641ab793f1add1ef436731958"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/capabilities.css",
+      "sha256": "26a6e084cb95fa2323f8e3c021bbb2f9774f988df2aa3299673575bb8e10a290"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/authoring.spec.ts",
+      "sha256": "f018c1c4e5b3263bbd39b0c8d51aeac1a7a199104d5f60f26264f88842c16d75"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/skills.spec.ts",
+      "sha256": "05d9647c6bb1ee137433284793a771c710ec64f9167a4df187b1696ef11a65be"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/administrator.spec.ts",
+      "sha256": "da653f4590d973b50ee27134913f97a22c17c241ac690c2ff5b57bffc2ebb203"
+    },
+    {
+      "path": "experiments/harness-lab/tests/authoring-projection.test.ts",
+      "sha256": "c18d6121a58ae69182b1c3ed3ad6417c4ccfda7aaa13f5715944c95a3854b817"
+    }
+  ],
+  "newAuthoringBrowserTests": 3,
+  "newAuthoringBrowserPassed": 3,
+  "existingBrowserTests": 22,
+  "existingBrowserPassed": 22,
+  "projectionUnitTests": 1
+}

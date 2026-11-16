@@ -1,0 +1,31 @@
+
+> @berserk/harness-lab@0.1.0 typecheck
+> tsc --noEmit
+
+scripts/probe-authoring-r3a.ts(71,40): error TS2339: Property 'filter' does not exist on type 'Promise<ManagedExpertSummary[]>'.
+scripts/probe-authoring-r3a.ts(71,47): error TS7006: Parameter 'e' implicitly has an 'any' type.
+scripts/probe-authoring-r3a.ts(73,46): error TS2339: Property 'draft' does not exist on type 'Promise<ManagedExpertDetail>'.
+scripts/probe-authoring-r3a.ts(75,46): error TS2339: Property 'draft' does not exist on type 'Promise<ManagedExpertDetail>'.
+scripts/probe-authoring-r3a.ts(78,29): error TS2339: Property 'get' does not exist on type 'SkillService'.
+scripts/probe-authoring-r3a.ts(78,87): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/probe-authoring-r3a.ts(80,31): error TS2339: Property 'get' does not exist on type 'SkillService'.
+scripts/probe-authoring-r3a.ts(80,86): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/probe-authoring-r3a.ts(80,185): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/probe-authoring-r3a.ts(98,281): error TS2339: Property 'draft' does not exist on type 'Promise<ManagedExpertDetail>'.
+src/authoring/service.ts(126,50): error TS2488: Type 'ExpertValidation[] | undefined' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/authoring/service.ts(126,74): error TS2488: Type 'ExpertTrialRecord[] | undefined' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/pi/authoring-tools.ts(65,13): error TS2322: Type '{ files?: { path: string; content: string; }[] | { path: string; contentBase64: string; }[] | undefined; content?: { name?: string | undefined; description?: string | undefined; skillIds?: string[] | undefined; instructions?: string | undefined; allowedTools?: string[] | undefined; skillRefs?: { ...; }[] | undefined...' is not assignable to type 'AuthoringProposeInput'.
+  Types of property 'files' are incompatible.
+    Type '{ path: string; content: string; }[] | { path: string; contentBase64: string; }[] | undefined' is not assignable to type 'SkillFileInput[] | undefined'.
+      Type '{ path: string; content: string; }[]' is not assignable to type 'SkillFileInput[]'.
+        Property 'contentBase64' is missing in type '{ path: string; content: string; }' but required in type 'SkillFileInput'.
+src/pi/interactions.ts(2,10): error TS2724: '"../contracts/authoring.js"' has no exported member named 'isAuthoringReceipt'. Did you mean 'AuthoringReceipt'?
+src/pi/interactions.ts(167,58): error TS18046: 'receipt' is of type 'unknown'.
+src/pi/interactions.ts(167,104): error TS18046: 'receipt' is of type 'unknown'.
+src/pi/interactions.ts(167,158): error TS18046: 'receipt' is of type 'unknown'.
+src/pi/interactions.ts(167,206): error TS18046: 'receipt' is of type 'unknown'.
+src/pi/interactions.ts(167,250): error TS18046: 'receipt' is of type 'unknown'.
+src/pi/interactions.ts(167,294): error TS18046: 'receipt' is of type 'unknown'.
+src/pi/interactions.ts(167,338): error TS18046: 'receipt' is of type 'unknown'.
+src/pi/interactions.ts(167,400): error TS18046: 'receipt' is of type 'unknown'.
+src/web/ChatMessage.tsx(42,190): error TS18048: 'message.toolDetails' is possibly 'undefined'.

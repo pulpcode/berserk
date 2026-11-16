@@ -1,3 +1,4 @@
+import type { AuthoringIntent, AuthoringReceipt } from './authoring.js';
 import type { SessionExpert } from './capabilities.js';
 export type * from './capabilities.js';
 import type { TaskDiscovery } from './continuous.js';
@@ -14,7 +15,7 @@ export type * from './collaboration.js';
 export interface SourceInfo { id: string; title: string; description: string; hash: string }
 export interface PublicAssistantContent { id: string; type: 'text' | 'thinking'; text: string }
 export interface PublicToolInput { path?: string; offset?: number; limit?: number; pattern?: string; command?: string }
-export interface PublicToolDetails { diff?: string; patch?: string; firstChangedLine?: number; truncated?: boolean; fullOutputPath?: string }
+export interface PublicToolDetails { authoringReceipt?: AuthoringReceipt; diff?: string; patch?: string; firstChangedLine?: number; truncated?: boolean; fullOutputPath?: string }
 export interface PublicMessage {
   /** Stable presentation identity shared by live and persisted assistant blocks. */
   presentationId?: string;
@@ -211,7 +212,7 @@ export interface InstructionUpdate {
 export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string; schemaVersion?: 2; revisionId?: string; packageDigest?: string; resourceRoot?: string; autoInvocationEligible?: boolean }
 export interface SkillFile extends SkillInfo { content: string }
 export interface AgentInfo { name: string; description: string; hash: string }
-export interface ComposerSelection { annotationRefs?: AnnotationSelection[]; contextRefs?: ContextRef[]; skill?: { id: string; hash: string; revisionId?: string; packageDigest?: string }; agent?: { name: string; hash: string } }
+export interface ComposerSelection { authoring?: AuthoringIntent; annotationRefs?: AnnotationSelection[]; contextRefs?: ContextRef[]; skill?: { id: string; hash: string; revisionId?: string; packageDigest?: string }; agent?: { name: string; hash: string } }
 export interface LoadedComposerSelection { annotationContext?: AnnotationContext; annotationRefs?: LoadedAnnotationSelection[]; context?: LoadedContextSelection; skill?: SkillFile; agent?: AgentInfo }
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
 export type RequestResourcesRecord = { task?: {id:string;title:string;goal:string;visibility:'public'|'private'}; compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({

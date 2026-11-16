@@ -1,0 +1,100 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:52747) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/authoring-storage.test.ts (5 tests | 5 failed) 46ms
+   × complete expert/skill creation persists original-service receipts and replay has one unpublished effect 19ms
+   × receipt insertion failure rolls back complete asset, draft and audit for both services 7ms
+   × patch preserves other files and concurrent changes conflict without a receipt 6ms
+   × unknown references, forged fields, scripts and superseded candidates cannot save 6ms
+   × stop and revocation block current proposals while immutable receipt queries never replay 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/authoring-storage.test.ts > complete expert/skill creation persists original-service receipts and replay has one unpublished effect
+Error: 能力配置缺失或摘要不匹配，请核对数据或恢复备份。
+ ❯ invalid src/capabilities/service.ts:17:23
+     15| const digestPattern = /^[0-9a-f]{64}$/;
+     16| const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-…
+     17| const invalid = () => new RequestError('CAPABILITY_STATE_INVALID', '能力…
+       |                       ^
+     18| const changed = () => new RequestError('EXPERT_CHANGED', '专家配置已更新，请刷新详…
+     19| const object = (value: unknown): value is Record<string, unknown> => !…
+ ❯ src/capabilities/service.ts:131:132
+ ❯ CapabilityService.registerBuiltins src/capabilities/service.ts:131:45
+ ❯ setup tests/authoring-storage.test.ts:20:119
+ ❯ tests/authoring-storage.test.ts:32:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/authoring-storage.test.ts > receipt insertion failure rolls back complete asset, draft and audit for both services
+Error: 能力配置缺失或摘要不匹配，请核对数据或恢复备份。
+ ❯ invalid src/capabilities/service.ts:17:23
+     15| const digestPattern = /^[0-9a-f]{64}$/;
+     16| const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-…
+     17| const invalid = () => new RequestError('CAPABILITY_STATE_INVALID', '能力…
+       |                       ^
+     18| const changed = () => new RequestError('EXPERT_CHANGED', '专家配置已更新，请刷新详…
+     19| const object = (value: unknown): value is Record<string, unknown> => !…
+ ❯ src/capabilities/service.ts:131:132
+ ❯ CapabilityService.registerBuiltins src/capabilities/service.ts:131:45
+ ❯ setup tests/authoring-storage.test.ts:20:119
+ ❯ tests/authoring-storage.test.ts:51:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/authoring-storage.test.ts > patch preserves other files and concurrent changes conflict without a receipt
+Error: 能力配置缺失或摘要不匹配，请核对数据或恢复备份。
+ ❯ invalid src/capabilities/service.ts:17:23
+     15| const digestPattern = /^[0-9a-f]{64}$/;
+     16| const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-…
+     17| const invalid = () => new RequestError('CAPABILITY_STATE_INVALID', '能力…
+       |                       ^
+     18| const changed = () => new RequestError('EXPERT_CHANGED', '专家配置已更新，请刷新详…
+     19| const object = (value: unknown): value is Record<string, unknown> => !…
+ ❯ src/capabilities/service.ts:131:132
+ ❯ CapabilityService.registerBuiltins src/capabilities/service.ts:131:45
+ ❯ setup tests/authoring-storage.test.ts:20:119
+ ❯ tests/authoring-storage.test.ts:65:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/authoring-storage.test.ts > unknown references, forged fields, scripts and superseded candidates cannot save
+Error: 能力配置缺失或摘要不匹配，请核对数据或恢复备份。
+ ❯ invalid src/capabilities/service.ts:17:23
+     15| const digestPattern = /^[0-9a-f]{64}$/;
+     16| const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-…
+     17| const invalid = () => new RequestError('CAPABILITY_STATE_INVALID', '能力…
+       |                       ^
+     18| const changed = () => new RequestError('EXPERT_CHANGED', '专家配置已更新，请刷新详…
+     19| const object = (value: unknown): value is Record<string, unknown> => !…
+ ❯ src/capabilities/service.ts:131:132
+ ❯ CapabilityService.registerBuiltins src/capabilities/service.ts:131:45
+ ❯ setup tests/authoring-storage.test.ts:20:119
+ ❯ tests/authoring-storage.test.ts:78:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/authoring-storage.test.ts > stop and revocation block current proposals while immutable receipt queries never replay
+Error: 能力配置缺失或摘要不匹配，请核对数据或恢复备份。
+ ❯ invalid src/capabilities/service.ts:17:23
+     15| const digestPattern = /^[0-9a-f]{64}$/;
+     16| const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-…
+     17| const invalid = () => new RequestError('CAPABILITY_STATE_INVALID', '能力…
+       |                       ^
+     18| const changed = () => new RequestError('EXPERT_CHANGED', '专家配置已更新，请刷新详…
+     19| const object = (value: unknown): value is Record<string, unknown> => !…
+ ❯ src/capabilities/service.ts:131:132
+ ❯ CapabilityService.registerBuiltins src/capabilities/service.ts:131:45
+ ❯ setup tests/authoring-storage.test.ts:20:119
+ ❯ tests/authoring-storage.test.ts:89:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  12:01:43
+   Duration  2.13s (transform 209ms, setup 0ms, import 1.88s, tests 46ms, environment 0ms)
+

@@ -68,3 +68,20 @@
 
 .task-expert-entry { display: flex; justify-content: flex-end; padding: 12px 32px 0; }
 .task-expert-entry button { display: inline-flex; align-items: center; gap: 8px; }
+
+.authoring-method-picker { display: inline-flex; min-width: 0; max-width: 140px; }
+.authoring-method-picker select { width: 100%; padding: 5px 7px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: inherit; font: inherit; font-size: 12px; }
+.authoring-target { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.authoring-confirmation { min-width: 0; display: grid; gap: 12px; }
+.authoring-confirmation details { min-width: 0; }
+.authoring-confirmation summary { cursor: pointer; }
+.authoring-confirmation pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 300px; overflow: auto; font-size: 12px; }
+.authoring-candidate-fields { margin: 8px 0; }
+.authoring-candidate-fields dt { font-weight: 600; }
+.authoring-candidate-fields dd { margin: 4px 0 12px; }
+
+.authoring-confirmation .confirmation-metadata dd { overflow-wrap: anywhere; }
+.authoring-confirmation pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: none; }
+.authoring-method-picker { min-width: 0; }
+.authoring-method-picker select { max-width: 132px; }
+.authoring-target { font-size: 12px; color: var(--muted); }

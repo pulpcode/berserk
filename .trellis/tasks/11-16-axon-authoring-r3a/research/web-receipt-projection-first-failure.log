@@ -1,0 +1,54 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/authoring.spec.ts --workers=1 --output=/private/tmp/r3a-web-authoring-sse-results
+
+[WebServer] (node:55314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:55286) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:55335) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55335) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/authoring.spec.ts:52:1 › creation uses original new-chat flow, cancel has no writes, and manual skill creation stays independent (5.8s)
+  ✘  2 tests/e2e/authoring.spec.ts:72:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (1.5m)
+(node:55746) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55746) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  3 tests/e2e/authoring.spec.ts:90:1 › one personal conversation modifies two exact targets without changing unrelated fields (5.1s)
+
+
+  1) tests/e2e/authoring.spec.ts:72:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for locator('.process-group:not([open]) > summary').nth(1)
+
+
+      47 | async function showResults(page: Page) {
+      48 |   for (const toggle of await page.locator('.turn-process-control[aria-expanded="false"]').all()) await toggle.click();
+    > 49 |   for (const summary of await page.locator('.process-group:not([open]) > summary').all()) await summary.click();
+         |                                                                                                         ^
+      50 | }
+      51 |
+      52 | test('creation uses original new-chat flow, cancel has no writes, and manual skill creation stays independent', async ({ page }, info) => {
+        at showResults (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:49:105)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:82:5
+
+    Error Context: ../../../../../../../../private/tmp/r3a-web-authoring-sse-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-web-authoring-sse-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-web-authoring-sse-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/authoring.spec.ts:72:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 
+  2 passed (1.9m)

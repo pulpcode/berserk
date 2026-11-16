@@ -82,7 +82,7 @@ test('independent administrator manages experts without mounting a seat workbenc
     await expectSidebarSpacing(page);
     await expect(page.getByText('任务空间', { exact: true })).toHaveCount(0);
     expect(env.writes.filter(path => path === '/api/admin/capabilities/experts')).toHaveLength(0);
-    await page.getByRole('button', { name: '创建专家', exact: true }).click();
+    await page.getByRole('button', { name: '手动创建', exact: true }).click();
     const management = page.getByRole('dialog', { name: '专家管理', exact: true });
     await management.getByLabel('专家名称', { exact: true }).fill('独立管理员创建专家');
     expect(env.writes.filter(path => path === '/api/admin/capabilities/experts')).toHaveLength(1);

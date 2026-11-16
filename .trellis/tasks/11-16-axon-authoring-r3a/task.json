@@ -1,0 +1,16 @@
+{
+  "id": "axon-authoring-r3a",
+  "name": "axon-authoring-r3a",
+  "title": "R3A 原对话辅助专家与方法技能创建",
+  "status": "in_progress",
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-16",
+  "branch": "codex/axon-r3a",
+  "base_branch": "codex/axon-r3",
+  "baseCommit": "6631b48",
+  "notes": "用户明确按v0.2方案实施，授权本轮任务和实现；复用工作树。Trellis开发者身份未初始化，不改保护配置。分享链接web cache miss、IAB加载超时，未声称已读。原文自带文档编写说明不限制本次用户开工授权。未授权部署或生产迁移。用户验收pending。 技术实施及独立审查完成：全量183文件1845单测通过，浏览器原22+新增3+hitl44分组通过，冻结type/lint/build通过。真实方舟AgentPlan23次调用95.496秒通过专家/Skill多轮创建修改、原发布使用及重开不重放；前两次模型/Plan配置错误保留。无新schema/生产迁移，无部署/提交推送，用户验收pending。 用户随后明确更新4316，已发布/home/ubuntu/axon-r3a-preview-4316-20261116 PID2828752；482包文件核对、475文件全备份、87历史前缀和原账号/能力表及方舟配置保留，无迁移。线上5账号/权限/全前端资源验收通过，4315原PID2776215不变。用户效果验收pending，未Git提交推送。 用户明确本次仅提交阶段性成果，不能标记本阶段已验收；后续继续收集修改意见。保持in_progress，用户验收pending，不归档。",
+  "userAcceptance": "pending",
+  "milestone": "interim"
+}

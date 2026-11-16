@@ -1,0 +1,24 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:55554) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/authoring.test.ts (6 tests | 1 failed) 7878ms
+   × management report reads only the matching skill trial owned by the current administrator 2790ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/pi/authoring.test.ts > management report reads only the matching skill trial owned by the current administrator
+Error: 报告不存在或不属于当前可访问内容。
+ ❯ AuthoringService.report src/authoring/service.ts:138:23
+
+ ❯ tests/pi/authoring.test.ts:124:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  12:10:49
+   Duration  11.96s (transform 1.56s, setup 0ms, import 3.89s, tests 7.88s, environment 0ms)
+

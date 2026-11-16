@@ -36,6 +36,14 @@ export async function skillRoutes(app: FastifyInstance, lab: PiLab, options: Pic
     return { userId: identity.userId, seatId: identity.seatId, canCollaborate: identity.canCollaborate };
   };
   const trials = await SkillTrials.open({ ...options, assertTrialAllowed:skillId=>skills.assertTrialAllowed(skillId), dataDir: lab.config.dataDir, modelConfig: () => ({ ...lab.config }), authorize: userId => requireCapabilityAdministrator(lab, { userId }) });
+  if (lab.authoring) lab.authoring.readSkillTrial = async (context, input) => {
+    context.assertActive(); context.actor.assertAdministrator();
+    const value = await trials.get(context.actor, input.reportId);
+    context.assertActive(); context.actor.assertAdministrator();
+    if (value.trial.ownerId !== context.actor.userId || value.trial.trialId !== input.reportId || value.trial.expertId !== `skill-trial-${input.targetId}`) throw new RequestError('AUTHORING_REPORT_NOT_FOUND', '报告不存在或不属于当前可访问内容。', 404);
+    // Existing owner-authorized trial metadata only; no private conversation, tool outputs or files.
+    return structuredClone(value.trial);
+  };
   app.addHook('onClose', async () => trials.close());
   const root = '/api/admin/capabilities/skills';
   app.get('/api/capabilities/skills', { schema: { querystring: empty } }, request => skills.catalog(principal(request)));

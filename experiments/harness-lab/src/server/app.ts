@@ -225,6 +225,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }}, async request => lab.actOnInput(request.params.id, request.params.submissionId, request.body, scope.seat(request)));
   app.post<{ Params: { id: string }; Body: ComposerSelection & { text: string; uploadIds?: string[]; fileRefs?: { path: string }[] } }>(`${scope.base}/sessions/:id/messages`, {
     schema: { params, body: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 16000 },
+      authoring: { type: 'object', additionalProperties: false, required: ['kind'], properties: { kind: { enum: ['expert','skill'] }, targetId: { type: 'string', minLength: 1, maxLength: 160 }, baseline: { type:'object', additionalProperties:false, required:['draftRevision','digest'], properties:{draftRevision:{type:'integer',minimum:1},digest:{type:'string',pattern:'^[0-9a-f]{64}$'}} } } },
       annotationRefs: { type: 'array', maxItems: 20, items: annotationSelectionSchema },
       contextRefs: { type: 'array', maxItems: 20, items: {type:'object',additionalProperties:false,required:['systemId','objectType','objectId'],properties:{systemId:{type:'string',minLength:1,maxLength:128},objectType:{enum:['road','resource','area']},objectId:{type:'string',minLength:1,maxLength:128}}} },
       uploadIds: { type: 'array', maxItems: 100, items: uuid },
@@ -235,7 +236,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }, async (request, reply) => {
     const text = request.body.text.trim();
     if (!text) throw new RequestError('EMPTY_MESSAGE', '请输入消息。');
-    const execution = lab.start(request.params.id, text, { annotationRefs: request.body.annotationRefs, contextRefs: request.body.contextRefs, uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request), undefined, lab.access ? workspaceIdentityOf(request).userId : undefined);
+    const execution = lab.start(request.params.id, text, { authoring: request.body.authoring, annotationRefs: request.body.annotationRefs, contextRefs: request.body.contextRefs, uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request), undefined, lab.access ? workspaceIdentityOf(request).userId : undefined);
     reply.hijack();
     const stream = reply.raw;
     stream.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' });
