@@ -77,3 +77,6 @@ Use stopped full-root and external-config/key/credential backup inventories for 
 Wrong: `if (expert.allowedTools===null) registerEveryMcp(); fetch(modelUrl,{Authorization:otherSeatToken});` or silently resend after a lost reply.
 
 Correct: derive current principal and existing workspace access, resolve an explicit/unique/answered target, intersect frozen expert/action contracts, validate final args, obtain original one-use confirmation, persist intent, dispatch once with pinned request-owned transport and preserve actual source/outcome.
+
+## Existing multi-source ingress compatibility
+A single ingress slot may retain multiple distinct sourceIds for the same systemId. Preserve the complete original background configuration, per-source organization credential references, profiles, recipients, rules and histories. Deduplicate only binding systemIds. Each simulation mapping must match its exact sourceId and systemId when background config exists; missing or cross-system source mappings still conflict. Information and situation query slots remain separate and reject duplicate systems. Regression fixtures tests/fixtures/r4-online preserve the 4316 source topology with normalized endpoints and no credential values.

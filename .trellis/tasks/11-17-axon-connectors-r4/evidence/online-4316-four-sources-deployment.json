@@ -1,0 +1,19 @@
+{
+  "release": "/home/ubuntu/axon-r4-merged-4316-20261117",
+  "previousRelease": "/home/ubuntu/axon-work-activity-4316-20261117",
+  "backup": "/home/ubuntu/axon-r4-merged-4316-20261117/before-r4-four-sources",
+  "migrationBackup": "/home/ubuntu/axon-r4-merged-4316-20261117/migration-backup",
+  "pid": [
+    3193408
+  ],
+  "health4316": 200,
+  "health4315": 200,
+  "originalTablesPreserved": true,
+  "historyPrefixesPreserved": 91,
+  "assetsVerified": [
+    "/assets/index-XOJpCEQp.js",
+    "/assets/index--jHuLFd7.css"
+  ],
+  "userTesting": "pending",
+  "userAcceptance": "pending"
+}

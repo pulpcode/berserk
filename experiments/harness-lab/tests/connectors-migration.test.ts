@@ -67,3 +67,41 @@ test('paired ingress credentials retain the original length and HTTP header vali
   await writeFile(credentialPath,'INGRESS=original-inbound-token-at-least-24\n');
   expect((await migrateConnectorsR4(options)).conflicts).toEqual([]);
 });
+
+test('4316 four-source configuration migrates without merging credentials, profiles, recipients or historical mappings', async () => {
+  const input = await setup();
+  const context = JSON.parse(await readFile(new URL('./fixtures/r4-online/context.json', import.meta.url), 'utf8'));
+  const background = JSON.parse(await readFile(new URL('./fixtures/r4-online/background.json', import.meta.url), 'utf8'));
+  const backgroundConfigPath = join(input.parent, 'background.json');
+  await writeFile(input.contextConfigPath, JSON.stringify(context));
+  await writeFile(backgroundConfigPath, JSON.stringify(background));
+  const refs: string[] = [...context.systems.map((s: {tokenEnv: string}) => s.tokenEnv), context.simulation.tokenEnv, ...background.sources.map((s: {credentialRef: string}) => s.credentialRef)];
+  const env = Object.fromEntries(refs.map(ref => [ref, `synthetic-distinct-secret-for-${ref}`]));
+  await writeFile(input.credentialFiles[0], Object.entries(env).map(([key, value]) => `${key}=${value}`).join('\n'));
+  const options = {...input, backgroundConfigPath};
+  const before = await readFile(join(input.dataDir, 'capabilities/capabilities.sqlite'));
+  const preview = await migrateConnectorsR4({...options, apply: false});
+  expect(preview.conflicts).toEqual([]);
+  expect(await readFile(join(input.dataDir, 'capabilities/capabilities.sqlite'))).toEqual(before);
+  await migrateConnectorsR4(options);
+  expect(await readFile(join(input.backupDir, 'data/capabilities/capabilities.sqlite'))).toEqual(before);
+  expect((await migrateConnectorsR4(options)).resumed).toBe(true);
+  const service = await ConnectorService.open(input.dataDir, {env, ingressEnv: env});
+  try {
+    expect(service.legacyProjection()?.background).toEqual(background);
+    expect(service.legacyProjection()?.context).toEqual(context);
+    for (const source of background.sources) {
+      expect(service.resolveLegacy({sourceId: source.sourceId})).toMatchObject({connectorId: 'legacy-ingress', token: env[source.credentialRef]});
+    }
+    expect(service.resolveLegacy({systemId: 'intel'}).connectorId).toBe('legacy-information');
+    expect(service.resolveLegacy({systemId: 'situation'}).connectorId).toBe('legacy-situation');
+    expect(await readFile(join(input.dataDir, 'old-history.txt'), 'utf8')).toBe('native history unchanged\n');
+  } finally { service.close(); }
+  for (const invalid of ['missing-source', 'mock-situation-source']) {
+    context.simulation.sources[0].sourceId = invalid;
+    const bad = await setup();
+    await writeFile(bad.contextConfigPath, JSON.stringify(context));
+    const result = await migrateConnectorsR4({...bad, backgroundConfigPath, credentialFiles: input.credentialFiles, apply: false});
+    expect(result.conflicts.some(c => c.includes('来源映射与入站不一致'))).toBe(true);
+  }
+});

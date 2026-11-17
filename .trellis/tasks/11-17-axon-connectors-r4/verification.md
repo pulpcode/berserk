@@ -72,3 +72,8 @@
 合并目标为本地 codex/input-predictions（远端无同名引用），同时包含对话工作面板。保留R4 MCP证据、连接器选择和预测菜单键盘协调。合并后typecheck/lint/build通过；定向9文件76项通过（首次MCP监听受沙箱限制，放开监听后21项重跑通过）。浏览器首轮30/31通过，唯一失败为新增独立预测调用导致旧测试总调用计数过时，修正为仅计带工具的原聊天请求，完整连接器组重跑。用户测试与阶段验收仍pending。
 
 连接器浏览器组最终6/6通过，结合前一轮输入预测/工作面板25/25，通过全部31个目标用例。合并提交6d0cb94。4316部署尝试因真实配置同时包含mock-intel/mock-situation及scenario-intel/scenario-situation四个入站source，与当前每业务单source迁移规则冲突而停止；未完成R4迁移或上线。完整备份位于/home/ubuntu/axon-r4-merged-4316-20261117/before-r4，脚本已恢复旧数据并启动旧release，4316/4315健康200。等待用户确认保留四来源并调整迁移兼容的处理方案。用户测试与阶段验收仍pending。
+
+## 2026-11-17 四来源兼容后成功上线
+用户明确授权保留四source并修正迁移。仅调整legacy-config两处限制：同system多source合法、simulation按精确sourceId/systemId核对；不改变查询独立连接器或配置内容。真实配置fixture（端点归一化，无秘密值）覆盖dry-run零写、完整备份、apply/重入、projection全等、逐source凭证及错误映射拒绝。4文件18项回归通过，typecheck/lint通过（2既有warning）；UI未变化，沿用上一轮31个浏览器用例及build。
+4316成功发布/home/ubuntu/axon-r4-merged-4316-20261117，PID3193408。新停服全量备份before-r4-four-sources；迁移配对全量数据与外置配置/凭证/密钥备份migration-backup。原所有业务表摘要保持一致，91份JSONL前缀保留；未修改密码或业务配置。5账号登录、权限、原技能、历史与16项JS/CSS核验通过，两个端口健康200，4315原进程不变。回退脚本遇到失败会停止新进程、保留失败数据、恢复全量备份并启动旧release；前次冲突已实际触发该机制。
+技术检查和上线不代表用户验收；userTesting/userAcceptance仍pending。证据online-4316-four-sources-*.json。

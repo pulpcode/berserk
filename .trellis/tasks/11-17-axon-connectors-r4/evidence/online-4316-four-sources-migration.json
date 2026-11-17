@@ -1,0 +1,179 @@
+{
+  "capabilitySchemaVersion": 2,
+  "connectorSchemaVersion": 1,
+  "expertRevisions": 4,
+  "unfinishedIntents": 0,
+  "systems": [
+    {
+      "systemId": "intel",
+      "adapter": "mock-information-http"
+    },
+    {
+      "systemId": "situation",
+      "adapter": "mock-situation-http"
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "mock-intel-source",
+      "systemId": "intel",
+      "profileIds": [
+        "context-analysis"
+      ],
+      "recipientSeatIds": [
+        "seat-overall",
+        "seat-intelligence",
+        "seat-planning",
+        "seat-situation"
+      ]
+    },
+    {
+      "sourceId": "mock-situation-source",
+      "systemId": "situation",
+      "profileIds": [
+        "context-analysis"
+      ],
+      "recipientSeatIds": [
+        "seat-overall",
+        "seat-intelligence",
+        "seat-planning",
+        "seat-situation"
+      ]
+    },
+    {
+      "sourceId": "scenario-intel-source",
+      "systemId": "intel",
+      "profileIds": [
+        "scenario-source-review"
+      ],
+      "recipientSeatIds": [
+        "seat-overall",
+        "seat-intelligence",
+        "seat-planning",
+        "seat-situation",
+        "seat-control"
+      ]
+    },
+    {
+      "sourceId": "scenario-situation-source",
+      "systemId": "situation",
+      "profileIds": [
+        "scenario-source-review"
+      ],
+      "recipientSeatIds": [
+        "seat-overall",
+        "seat-intelligence",
+        "seat-planning",
+        "seat-situation",
+        "seat-control"
+      ]
+    }
+  ],
+  "simulationMappings": [
+    {
+      "systemId": "intel",
+      "sourceId": "scenario-intel-source"
+    },
+    {
+      "systemId": "situation",
+      "sourceId": "scenario-situation-source"
+    }
+  ],
+  "profiles": [
+    {
+      "profileId": "context-analysis",
+      "contextScopeId": "demo-context"
+    },
+    {
+      "profileId": "scenario-source-review",
+      "contextScopeId": "demo-context"
+    }
+  ],
+  "commandSeatIds": [
+    "seat-control"
+  ],
+  "bindings": [
+    {
+      "slot": "information",
+      "connectorId": "legacy-information",
+      "systemIds": [
+        "intel"
+      ],
+      "sourceIds": []
+    },
+    {
+      "slot": "situation",
+      "connectorId": "legacy-situation",
+      "systemIds": [
+        "situation"
+      ],
+      "sourceIds": []
+    },
+    {
+      "slot": "simulation-control",
+      "connectorId": "legacy-simulation-control",
+      "systemIds": [
+        "intel",
+        "situation"
+      ],
+      "sourceIds": [
+        "scenario-intel-source",
+        "scenario-situation-source"
+      ]
+    },
+    {
+      "slot": "ingress",
+      "connectorId": "legacy-ingress",
+      "systemIds": [
+        "intel",
+        "situation"
+      ],
+      "sourceIds": [
+        "mock-intel-source",
+        "mock-situation-source",
+        "scenario-intel-source",
+        "scenario-situation-source"
+      ]
+    }
+  ],
+  "requiredEnvironmentReferences": [
+    "MOCK_CONTEXT_API_TOKEN",
+    "MOCK_CONTEXT_CONTROL_TOKEN",
+    "MOCK_INTEL_SOURCE_TOKEN",
+    "MOCK_SITUATION_SOURCE_TOKEN",
+    "SCENARIO_INTEL_SOURCE_TOKEN",
+    "SCENARIO_SITUATION_SOURCE_TOKEN"
+  ],
+  "externalFiles": [
+    {
+      "path": "/home/ubuntu/axon-chat-c-preview-20261112/data/context-config.json",
+      "role": "context"
+    },
+    {
+      "path": "/home/ubuntu/axon-chat-c-preview-20261112/data/background-config.json",
+      "role": "background"
+    },
+    {
+      "path": "/home/ubuntu/axon-r4-merged-4316-20261117/connector-keys.json",
+      "role": "key"
+    },
+    {
+      "path": "/home/ubuntu/axon-r4-merged-4316-20261117/migration-service.env",
+      "role": "credential"
+    },
+    {
+      "path": "/home/ubuntu/axon-release-background.ClBNID/app/.env.local",
+      "role": "credential"
+    },
+    {
+      "path": "/home/ubuntu/axon-task-plan.XcoPwo/releases/autoimport-99b40ec/runtime.env",
+      "role": "credential"
+    }
+  ],
+  "conflicts": [],
+  "oldBytesRewritten": false,
+  "rollbackRequires": "matched old binary + backup/data + backup/external + original usable environment credential versions",
+  "stage": "completed",
+  "resumed": false,
+  "backupDigest": "3135d62615d4f09f28459d1ef1e7ced34c117f8c1e7a0e9cbcad46dd3c08507a"
+}

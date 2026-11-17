@@ -20,11 +20,11 @@ export function planLegacyConnectors(context?: ContextConfig, background?: Backg
   }
   if (context?.simulation) {
     bindings.push({slot:'simulation-control',connectorId:stableId('simulation-control'),systemIds:context.simulation.sources.map(source=>source.systemId),sourceIds:context.simulation.sources.map(source=>source.sourceId),envRefs:{organization:context.simulation.tokenEnv}});
-    for (const mapping of context.simulation.sources) { const actual=background?.sources.filter(source=>source.systemId===mapping.systemId)??[];if(actual.length&&actual.some(source=>source.sourceId!==mapping.sourceId))conflicts.push(`simulation-control:来源映射与入站不一致(${mapping.systemId})`); }
+    for (const mapping of context.simulation.sources) { const actual=background?.sources.find(source=>source.sourceId===mapping.sourceId);if(background && (!actual || actual.systemId!==mapping.systemId))conflicts.push(`simulation-control:来源映射与入站不一致(${mapping.systemId})`); }
   }
   if (background?.sources.length) {
     const sourceIds:string[]=[],systemIds:string[]=[],envRefs:Record<string,string>={};
-    for (const source of background.sources) { sourceIds.push(source.sourceId);envRefs[`organization:${source.sourceId}`]=source.credentialRef;if(source.systemId===undefined)continue;if(!context?.systems.some(system=>system.id===source.systemId))conflicts.push(`ingress:未映射来源(${source.sourceId})`);else if(systemIds.includes(source.systemId))conflicts.push(`ingress:同一业务存在多条入站来源(${source.systemId})`);else systemIds.push(source.systemId); }
+    for (const source of background.sources) { sourceIds.push(source.sourceId);envRefs[`organization:${source.sourceId}`]=source.credentialRef;if(source.systemId===undefined)continue;if(!context?.systems.some(system=>system.id===source.systemId))conflicts.push(`ingress:未映射来源(${source.sourceId})`);else if(!systemIds.includes(source.systemId))systemIds.push(source.systemId); }
     bindings.push({slot:'ingress',connectorId:stableId('ingress'),systemIds,sourceIds,envRefs});
   }
   const input={...(context?{context}:{}),...(background?{background}:{}),bindings,conflicts};
