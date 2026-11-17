@@ -1387,3 +1387,9 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .new-chat-space-menu button:hover, .new-chat-space-menu button:focus-visible { background: #eef3ef; }
 .new-chat-space-menu button[aria-checked="true"] { color: #2d4a3c; }
 .new-chat-space-divider { height: 1px; margin: 5px; background: var(--line); }
+
+/* Predictions use the native empty-input placeholder; real drafts keep their existing layout. */
+.composer textarea.has-prompt-suggestion::placeholder { color: var(--muted); opacity: 1; }
+.prompt-suggestion-preference { margin-bottom: 24px; }
+.prompt-suggestion-preference label { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.prompt-suggestion-preference p { font-size: 12px; color: var(--muted); line-height: 1.7; max-width: 56ch; }

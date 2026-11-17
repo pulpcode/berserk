@@ -1,3 +1,4 @@
+export type * from './prompt-suggestions.js';
 import type { AuthoringIntent, AuthoringReceipt } from './authoring.js';
 import type { SessionExpert } from './capabilities.js';
 export type * from './capabilities.js';

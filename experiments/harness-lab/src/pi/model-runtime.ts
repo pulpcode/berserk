@@ -21,3 +21,11 @@ export async function configuredRuntime(config: LabConfig): Promise<ModelRuntime
   if (config.apiKey) await runtime.setRuntimeApiKey(config.provider, config.apiKey);
   return runtime;
 }
+
+/** Preserve the existing legacy provider mapping for every independent model caller. */
+export function providerPayload(config: Readonly<LabConfig>, payload: unknown): Record<string, unknown> {
+  if (typeof payload !== 'object' || payload === null) throw new Error('Provider message payload unavailable');
+  const thinking = resolveModelThinking(config, config.thinkingMode);
+  const legacy = (!thinking.thinkingSupported || config.thinkingMode === undefined) && config.provider.toLowerCase() === 'deepseek';
+  return { ...payload, ...(legacy ? { thinking: { type: 'disabled' } } : {}) };
+}

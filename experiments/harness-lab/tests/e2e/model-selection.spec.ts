@@ -76,9 +76,9 @@ async function addModel(page: Page) {
 }
 async function enter(page: Page, name: 'A' | 'B') {
   await page.getByRole('button', { name: `进入项目：模型项目 ${name}`, exact: true }).click();
-  await expect(page.locator('.workspace-header .workspace-name')).toHaveText(`模型项目 ${name}`);
   // The project title opens task details; explicitly enter its existing conversation.
   await page.getByRole('region', { name: `模型项目 ${name}`, exact: true }).getByRole('button', { name: '新会话', exact: true }).click();
+  await expect(page.locator('.workspace-header .workspace-name')).toHaveText(`模型项目 ${name}`);
   await expect(composer(page)).toBeEnabled();
 }
 
@@ -246,7 +246,8 @@ test('failed and delayed model selection stays with its conversation; busy and q
     await expect(selector(member)).toBeDisabled();
     await expect(member.getByText('默认模型测试完成', { exact: true })).toBeVisible();
     await expect(selector(member)).toBeEnabled();
-    expect(env.fake.calls).toHaveLength(1);
+    // This assertion counts Agent execution; input prediction is an independent no-tool call.
+    expect(env.fake.calls.filter(call => Boolean(call.context.tools?.length))).toHaveLength(1);
 
     await member.setViewportSize({ width: 1440, height: 960 });
     const reserved = { ...env.lab.get(env.sessions.member[0]!.id, 'member'), backgroundJob: { id: randomUUID(), status: 'queued', revision: 1 } };

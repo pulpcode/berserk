@@ -1,3 +1,4 @@
+{"file": ".trellis/spec/backend/prompt-suggestions.md", "reason": "已实现的独立预测接口、权限/取消、空框建议与前端恢复契约"}
 {"file": ".trellis/spec/frontend/harness-lab.md", "reason": "输入框、草稿、引用菜单、IME、人工交互和前台队列的既有行为"}
 {"file": ".trellis/spec/backend/harness-lab.md", "reason": "Pi/public DTO/会话投影/终态证据与模型选择边界"}
 {"file": ".trellis/spec/backend/model-thinking.md", "reason": "复用当前模型配置和 provider thinking 兼容，保留离线 wire 回归"}

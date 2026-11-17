@@ -1,0 +1,30 @@
+{
+  "updatedAt": "2026-11-17T07:47:42Z",
+  "updateId": "work-panel-list-row-20261117T074736Z",
+  "release": "/home/ubuntu/axon-work-activity-4316-20261117",
+  "backup": "/home/ubuntu/axon-work-activity-4316-20261117/frontend-updates/work-panel-list-row-20261117T074736Z/backup",
+  "sourceArchiveSha256": "72614c86762e4a75b1f7dd634caa0a6dc7f416ca5dbcf3650c4bcf9627c600a6",
+  "filesVerified": 24,
+  "newAssets": [
+    "/assets/index-mwRgZpJL.js",
+    "/assets/index-Dx0gjcRS.css"
+  ],
+  "pidsUnchanged": {
+    "4315": 2776215,
+    "4316": 3160962
+  },
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "serviceRestarted": false,
+  "threeSectionLayout": true,
+  "tabsRemoved": true,
+  "floatingWorkPanel": true,
+  "compactTitleRows": true,
+  "evidenceControlsRemoved": true,
+  "preferenceOnlyInSettings": true,
+  "dataTouched": false,
+  "userAcceptance": "pending",
+  "modelsInvoked": 0
+}

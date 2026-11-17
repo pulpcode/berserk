@@ -1,5 +1,6 @@
 import { createAssistantMessageEventStream, type AssistantMessage, type Context, type Model, type Api, type SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { ModelRuntime } from '@earendil-works/pi-coding-agent';
+import { providerPayload } from './model-runtime.js';
 import { resolveModelThinking, type LabConfig } from '../server/config.js';
 import type { UsageSummary } from '../contracts/index.js';
 import { tokenUsage } from './compaction-history.js';
@@ -68,16 +69,13 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
         },
         ...(config.llmRequestTimeoutMs ? { timeoutMs: config.llmRequestTimeoutMs } : {}),
         onPayload: payload => {
-          if (typeof payload !== 'object' || payload === null) throw new Error('Provider message payload unavailable');
-          // Preserve the previous payload for unspecified or unverified DeepSeek configurations.
-          // Verified profiles use Pi's native thinkingFormat mapping.
-          const providerOptions = (!thinking.thinkingSupported || config.thinkingMode === undefined) && config.provider.toLowerCase() === 'deepseek' ? { thinking: { type: 'disabled' } } : {};
-          if (purpose === 'compaction') return { ...payload, ...providerOptions };
-          if (!('messages' in payload) || !Array.isArray(payload.messages)) throw new Error('Provider message payload unavailable');
-          const messages: unknown[] = payload.messages;
+          const compatible = providerPayload(config, payload);
+          if (purpose === 'compaction') return compatible;
+          if (!Array.isArray(compatible.messages)) throw new Error('Provider message payload unavailable');
+          const messages: unknown[] = compatible.messages;
           const index = messages.findLastIndex(message => typeof message === 'object' && message !== null && 'role' in message && message.role === 'user');
           if (index < 0) throw new Error('Current user message unavailable');
-          return { ...payload, ...providerOptions, messages: [...messages.slice(0, index), { role: 'system', content: reminder }, ...messages.slice(index)] };
+          return { ...compatible, messages: [...messages.slice(0, index), { role: 'system', content: reminder }, ...messages.slice(index)] };
         },
       });
       for await (const event of upstream) {

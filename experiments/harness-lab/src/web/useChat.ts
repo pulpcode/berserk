@@ -99,6 +99,7 @@ export function useChat(enabled = true) {
   const interactionLocks = useRef(new Set<string>());
   const [interactionSubmissions, setInteractionSubmissions] = useState<Record<string, InteractionSubmission>>({});
   const [pending, setPending] = useState<Record<string, boolean>>({});
+  const [completedForeground, setCompletedForeground] = useState<{ sessionId: string; requestId: string }>();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [readErrors, setReadErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(enabled);
@@ -471,6 +472,7 @@ export function useChat(enabled = true) {
         stream.terminal = true;
         put(event.snapshot);
         setPending(previous => ({ ...previous, [id]: false }));
+        if (event.type === 'response.completed') setCompletedForeground({ sessionId: id, requestId: event.requestId });
         return;
       }
       if (event.type === 'interaction.updated') {
@@ -568,7 +570,7 @@ export function useChat(enabled = true) {
     }, workspaces, workspaceId,
     workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace,
     beginNew, selectedForWorkspace: (id: string) => selectionsRef.current[id] || '', createWorkspace,
-    loading, creating, create, send, cancel, draftKey, attachments, composerSelections, inputQueue,
+    loading, creating, create, send, cancel, draftKey, attachments, composerSelections, inputQueue, completedForeground,
     resolveDraftOwner: () => movedDrafts.current.get(draftKey) || draftKey,
     setComposerSelection: (kind: 'skill' | 'agent', value?: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(movedDrafts.current.get(draftKey) || draftKey, kind, value),
     interactionSubmissions, respondInteraction, queryInteraction,

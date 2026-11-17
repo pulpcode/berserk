@@ -1,0 +1,26 @@
+{
+  "updatedAt": "2026-11-16T14:50:18Z",
+  "updateId": "prediction-ui-20261116T144950Z",
+  "release": "/home/ubuntu/axon-input-predictions-4316-20261116",
+  "backup": "/home/ubuntu/axon-input-predictions-4316-20261116/frontend-updates/prediction-ui-20261116T144950Z/backup",
+  "sourceArchiveSha256": "9c8b29791319eb4ecefc64774d97ec242b418b6ae06a1d3f7cd64aac311ef7ea",
+  "filesVerified": 25,
+  "newAssets": [
+    "/assets/index-Dabe71Kt.js",
+    "/assets/index-DuycM4OV.css"
+  ],
+  "pidsUnchanged": {
+    "4315": 2776215,
+    "4316": 2942949
+  },
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "serviceRestarted": false,
+  "acceptButtonRemoved": true,
+  "existingCandidateRetainedAcrossVisibility": true,
+  "dataTouched": false,
+  "userAcceptance": "pending",
+  "modelsInvoked": 0
+}
