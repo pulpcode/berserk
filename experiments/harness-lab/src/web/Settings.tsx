@@ -5,17 +5,16 @@ import { ModelCatalogSettings } from './ModelCatalogSettings';
 import { Panel } from './Resources';
 import { ExpertDefaultPreferences } from './ExpertDefaults';
 
-export function SettingsPanel({ identity, logout, logoutError, close, saved, simulation, suggestions, workActivity }: {
+export function SettingsPanel({ identity, logout, logoutError, close, saved, suggestions, workActivity }: {
   workActivity?: { enabled: boolean; change: (enabled: boolean) => void };
   suggestions?: { enabled: boolean; change: (enabled: boolean) => void };
-  simulation?: () => void; identity?: AccountIdentity; logout?: () => void; logoutError?: string; close: () => void; saved: () => Promise<void>;
+  identity?: AccountIdentity; logout?: () => void; logoutError?: string; close: () => void; saved: () => Promise<void>;
 }) {
   const modelAllowed = !identity || (identity.canCollaborate!==false && identity.manageModelSettings);
   const [section, setSection] = useState<'model' | 'account' | 'preferences'>(modelAllowed ? 'model' : 'account');
   return <Panel title="设置" className="settings-panel" close={close}>
     <div className="settings-layout">
       <nav className="settings-nav" aria-label="设置分类">
-        {simulation && <button type="button" onClick={simulation}>模拟验证</button>}
         {modelAllowed && <button type="button" aria-current={section === 'model' ? 'page' : undefined} onClick={() => setSection('model')}><Cpu size={17} aria-hidden="true" />模型</button>}
         {(suggestions || workActivity || identity?.canCollaborate !== false && identity) && <button type="button" aria-current={section === 'preferences' ? 'page' : undefined} onClick={() => setSection('preferences')}><SlidersHorizontal size={17} aria-hidden="true" />个人偏好</button>}
         {identity && <button type="button" aria-current={section === 'account' ? 'page' : undefined} onClick={() => setSection('account')}><UserRound size={17} aria-hidden="true" />账户</button>}

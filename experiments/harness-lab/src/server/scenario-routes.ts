@@ -1,3 +1,4 @@
+import { directorRoutes } from './director-routes.js';
 import { ScenarioScope } from '../scenario/scope.js';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { PiLab } from '../pi/lab.js';
@@ -41,6 +42,7 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
     const savedBootstrap=scenarioTaskBootstrap(raw.taskBootstrap);
     if(raw.instanceId!==id||JSON.stringify(savedBootstrap)!==JSON.stringify(bootstrap)||JSON.stringify(scenarioTaskDefinitions(raw.tasks,savedBootstrap))!==JSON.stringify(definitions))throw conflict('任务归属与已保存来源不一致。');
   });
+  const transition=await tasks.directorTransition();if(transition?.state==='pending'){if(transition.input.expectedInstanceId)runScope.close(transition.input.expectedInstanceId);if(transition.nextInstanceId)runScope.close(transition.nextInstanceId);}
   const unfinished=await tasks.activation();
   if(unfinished?.state==='pending'){if(unfinished.previousInstanceId)runScope.close(unfinished.previousInstanceId);runScope.close(unfinished.instanceId);}
   await runScope.sync();
@@ -82,11 +84,13 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
     }
     const full=contextRecord(await runScope.provenance(id),['instanceId','tasks','taskBootstrap','notifications','actions'],['instanceId','tasks','actions']);
     const bootstrap=scenarioTaskBootstrap(r.taskBootstrap),provenanceBootstrap=scenarioTaskBootstrap(full.taskBootstrap);
-    if(!bootstrap&&!['1','2','3'].includes(String(i.definitionVersion))||bootstrap&&(bootstrap.definitionId!==i.definitionId||bootstrap.definitionVersion!==i.definitionVersion||bootstrap.definitionHash!==i.definitionHash)||JSON.stringify(bootstrap)!==JSON.stringify(provenanceBootstrap))throw conflict('来源开场任务版本与场景不一致。');
-    const taskDefinitions=scenarioTaskDefinitions(full.tasks,bootstrap);
+    const debug=i.operationMode==='free_debug';
+    if(debug&&(i.definitionId!=='free-debug'||i.definitionVersion!=='1'||bootstrap!==undefined||provenanceBootstrap!==undefined||!Array.isArray(full.tasks)||full.tasks.length!==0))throw conflict('调试快照无效。');
+    if(!debug&&!bootstrap&&!['1','2','3'].includes(String(i.definitionVersion))||bootstrap&&(bootstrap.definitionId!==i.definitionId||bootstrap.definitionVersion!==i.definitionVersion||bootstrap.definitionHash!==i.definitionHash)||JSON.stringify(bootstrap)!==JSON.stringify(provenanceBootstrap))throw conflict('来源开场任务版本与场景不一致。');
+    const taskDefinitions=debug?[]:scenarioTaskDefinitions(full.tasks,bootstrap);
     if(full.instanceId!==id||!Array.isArray(full.actions))throw conflict('来源通知记录无效。');
     const sendStates=full.actions.map(action=>{if(!action||typeof action!=='object'||!('sendState' in action)||!['unsent','unconfirmed','accepted'].includes(String(action.sendState)))throw conflict('通知回执状态无效。');return String(action.sendState);});
-    return {clock,paused:i.paused,status:String(i.status),sendStates,definitionId:contextText(i.definitionId,64),definitionVersion:contextText(i.definitionVersion,64),definitionHash:contextText(i.definitionHash,128),taskBootstrap:bootstrap,taskDefinitions};
+    return {operationMode:debug?'free_debug' as const:'scenario' as const,clock,paused:i.paused,status:String(i.status),sendStates,definitionId:contextText(i.definitionId,64),definitionVersion:contextText(i.definitionVersion,64),definitionHash:contextText(i.definitionHash,128),taskBootstrap:bootstrap,taskDefinitions};
   };
   const checkTaskManagement=(request:FastifyRequest)=>{const {actor}=scenarioDirector(lab,background,request);if(!actor.createPublicTask)throw new RequestError('FORBIDDEN','演示任务准备还需要工作任务管理权限。',403);return actor;};
   const mutation=(body:unknown,extra:string[]=[]):Record<string,unknown>&{clientActionId:string;expectedRevision:number}=>{
@@ -136,7 +140,7 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
   app.post<{Params:{id:string}}>(`${base}/instances/:id/initialize`,{schema:{params,querystring:empty}},request=>mutex.run(async()=>{
     const actor=checkTaskManagement(request);await tasks.assertSettled();
     const r=contextRecord(request.body,['clientActionId'],['clientActionId']),id=scenarioId(request.params.id);
-    const state=await status(request,id);if(state.status==='frozen')throw conflict('旧轮已经冻结，不能初始化任务。');
+    const state=await status(request,id);if(state.operationMode==='free_debug')throw conflict('自由调试不创建演练开场任务。');if(state.status==='frozen')throw conflict('旧轮已经冻结，不能初始化任务。');
     const definitionResponse=contextRecord(await call(request,`instances/${id}/tasks`),['items','taskBootstrap'],['items']);
     const bootstrap=scenarioTaskBootstrap(definitionResponse.taskBootstrap);
     if(JSON.stringify(bootstrap)!==JSON.stringify(state.taskBootstrap))throw conflict('来源开场任务定义已变化。');
@@ -155,6 +159,7 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
       }
       // Reject known source conflicts before persisting a pending receipt or archiving old tasks.
       const next=await status(request,id);
+      if(next.operationMode==='free_debug')throw conflict('自由调试仅可通过导演台切换启动。');
       await tasks.requireReady(actor,id,next.taskBootstrap,next.taskDefinitions);
       if(next.status!=='prepared'||next.clock.revision!==input.expectedRevision)throw conflict('新轮状态或修订已变化，请刷新后核对。');
       const definitions=contextRecord(await call(request,'scenarios'),['items'],['items']);
@@ -206,8 +211,16 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
   app.post<{Params:{id:string}}>(`${base}/instances/:id/control`,{schema:{params,querystring:empty}},request=>mutex.run(async()=>{
     scenarioDirector(lab,background,request);await tasks.assertSettled();const input=mutation(request.body,['action']);if(!['pause','resume'].includes(String(input.action)))throw conflict('场景控制动作无效。');return call(request,`instances/${scenarioId(request.params.id)}/control`,input);
   }));
+  directorRoutes(app,lab,background!,scope,tasks,runScope,mutex,call,status);
   return {
     allowed(request:FastifyRequest){try{scenarioDirector(lab,background,request);return true;}catch{return false;}},
-    action(request:FastifyRequest,id:string,send=false){return mutex.run(async()=>{scenarioDirector(lab,background,request);if(send)await tasks.assertSettled();return call(request,`scenario-actions/${operationId(id)}${send?'/send':''}`,send?{}:undefined);});},
+    action(request:FastifyRequest,id:string,send=false){return mutex.run(async()=>{
+      scenarioDirector(lab,background,request);const path=`scenario-actions/${operationId(id)}`;
+      if(!send)return call(request,path);await tasks.assertSettled();
+      const saved=await call(request,path) as {instanceId:string};const current=await status(request,scenarioId(saved.instanceId));
+      const body=contextRecord(request.body??{},current.operationMode==='free_debug'?['instanceId','expectedRevision']:[],current.operationMode==='free_debug'?['instanceId','expectedRevision']:[]);
+      if(current.operationMode==='free_debug'&&(body.instanceId!==saved.instanceId||contextInteger(body.expectedRevision)!==current.clock.revision))throw conflict('调试轮次或修订已变化。');
+      return call(request,`${path}/send`,body);
+    });},
   };
 }

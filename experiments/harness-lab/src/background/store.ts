@@ -224,7 +224,8 @@ export class BackgroundStore {
     }
     for (const job of jobs.values()) {
       if ((job.kind !== 'continuous_analysis' && (events.get(job.eventId)?.sourceId !== job.sourceId || events.get(job.eventId)?.scenarioInstanceId !== job.scenarioInstanceId)) || !job.requestId) throw stateError();
-      if (job.kind === 'preprocess' && (!job.ruleSnapshot || job.ruleSnapshot.rule.sourceId !== job.sourceId || job.ruleSnapshot.rule.profileId !== job.ruleSnapshot.profile.id)) throw stateError();
+      if (job.kind !== 'continuous_analysis' && job.policySourceId !== this.getEvent(job.eventId).policySourceId) throw stateError();
+      if (job.kind === 'preprocess' && (!job.ruleSnapshot || job.ruleSnapshot.rule.sourceId !== (job.policySourceId ?? job.sourceId) || job.ruleSnapshot.rule.profileId !== job.ruleSnapshot.profile.id)) throw stateError();
       if (job.ruleSnapshot && !validCandidateSnapshot(job.ruleSnapshot)) throw stateError();
       if (job.recipientSuggestion) assertCandidateRecipients(job, job.recipientSuggestion.recipients);
       if (job.status === 'succeeded' && (!job.result || job.result.sessionId !== job.sessionId || job.result.requestId !== job.requestId || !Array.isArray(job.result.files))) throw stateError();
@@ -293,7 +294,7 @@ export class BackgroundStore {
       const previous = this.findEvent(event.sourceId, event.sourceMessageId);
       if (previous) { if (previous.payloadHash !== event.payloadHash || previous.scenarioInstanceId !== event.scenarioInstanceId) throw conflict('该来源消息标识已用于不同内容。'); return previous; }
       if (!event.auditOnly && this.backlogSize() >= options.capacity) throw busy();
-      if(!event.auditOnly)this.assertRuleCurrent(event.sourceId, options.expectedRule);
+      if(!event.auditOnly)this.assertRuleCurrent(event.policySourceId ?? event.sourceId, options.expectedRule);
       if (options.initialJob && (options.initialJob.eventId !== event.id || options.initialJob.kind !== 'preprocess' || options.initialJob.sourceId !== event.sourceId || options.initialJob.scenarioInstanceId !== event.scenarioInstanceId)) throw conflict('初始处理与接收记录不一致。');
       const next = {...event, initialJobId: options.initialJob?.id};
       this.db.prepare('INSERT INTO background_events VALUES(?,?,?,?,?,?,?)').run(next.id, next.sourceId, next.sourceMessageId, next.payloadHash, next.receivedAt, next.initialJobId ?? null, JSON.stringify(next));
@@ -314,7 +315,7 @@ export class BackgroundStore {
       const event = this.getEvent(eventId);
       if (event.continuousEpochId) throw conflict('该信息已纳入持续研判。');
       if (event.initialJobId) { if (action) throw conflict('该信息已经启动初始处理，请查看原记录。'); return this.getJob(event.initialJobId); }
-      this.assertRuleCurrent(event.sourceId, snapshot.rule);
+      this.assertRuleCurrent(event.policySourceId ?? event.sourceId, snapshot.rule);
       if (job.eventId !== event.id || job.sourceId !== event.sourceId || job.kind !== 'preprocess') throw conflict();
       const next = {...event, initialJobId: job.id, ruleSnapshot: snapshot, revision: event.revision + 1};
       this.insertJob({...job, ruleSnapshot: snapshot});
@@ -472,7 +473,7 @@ export class BackgroundStore {
     const inputHash = backgroundHash({reviewId: id, ...input});
     return this.transaction(() => {
       const review = this.getDeliveryReview(id);
-      if (review.reviewerSeatId !== actor.seatId || this.effectivePermission(actor, review.sourceId) !== 'manage') throw new RequestError('FORBIDDEN', '仅本次指定总体席可批准补充投递。', 403);
+      if (review.reviewerSeatId !== actor.seatId || this.effectivePermission(actor, this.getJob(review.jobId).policySourceId ?? review.sourceId) !== 'manage') throw new RequestError('FORBIDDEN', '仅本次指定总体席可批准补充投递。', 403);
       const action: NewBackgroundAction = {...actor, clientActionId: input.clientActionId, inputHash, kind: 'delivery_review', reviewId: id, jobId: review.jobId, eventId: review.eventId};
       const previous = this.findAction(actor.userId, input.clientActionId);
       if (previous) { this.assertSameAction(previous, action); if (previous.reviewId !== id || previous.status !== 'completed') throw conflict(); return review; }

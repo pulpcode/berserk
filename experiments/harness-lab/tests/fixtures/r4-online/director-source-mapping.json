@@ -1,0 +1,4 @@
+[
+  {"businessSlot":"information","canonicalSourceId":"scenario-intel-source","scenarioPolicySourceId":"scenario-intel-source","freeDebugPolicySourceId":"mock-intel-source"},
+  {"businessSlot":"situation","canonicalSourceId":"scenario-situation-source","scenarioPolicySourceId":"scenario-situation-source","freeDebugPolicySourceId":"mock-situation-source"}
+]

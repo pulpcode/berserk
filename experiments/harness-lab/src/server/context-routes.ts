@@ -4,10 +4,8 @@ import type { BackgroundService } from '../background/service.js';
 import { defaultMapConfig, normalizeMapConfig } from '../contracts/map.js';
 import { RequestError } from '../contracts/errors.js';
 import { readContextJson } from '../context/http.js';
-import { contextRecord, contextRef } from '../context/validation.js';
-import { identityOf } from './auth.js';
 import type { apiScope } from './seat-scope.js';
-import { scenarioRoutes } from './scenario-routes.js';
+import { scenarioRoutes, scenarioDirector } from './scenario-routes.js';
 
 async function readWithSignal<T>(request: FastifyRequest, reply: FastifyReply, work: (signal: AbortSignal) => Promise<T>): Promise<T> {
   const controller = new AbortController(), abort = () => controller.abort();
@@ -18,16 +16,7 @@ async function readWithSignal<T>(request: FastifyRequest, reply: FastifyReply, w
 const empty = {type:'object',additionalProperties:false};
 export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: ReturnType<typeof apiScope>, background?: BackgroundService, env: NodeJS.ProcessEnv = process.env) {
   const context = () => { if (!lab.context) throw new RequestError('CONTEXT_UNAVAILABLE','业务资料查询不可用。',503); return lab.context; };
-  const simulation = (request: FastifyRequest) => {
-    const config = context().config.simulation;
-    if (!config?.enabled || !background || !lab.access) throw new RequestError('SIMULATION_DISABLED','模拟控制未启用。',404);
-    const actor = identityOf(request), visible = context().catalog(actor.seatId).systems.map(system => system.id);
-    for (const source of config.sources) {
-      background.permission(actor, source.sourceId, true);
-      if (!visible.includes(source.systemId) || background.config.sources.find(item => item.sourceId === source.sourceId)?.systemId !== source.systemId) throw new RequestError('CONTEXT_FORBIDDEN','无权管理全部模拟来源。',403);
-    }
-    return config;
-  };
+  const simulation = (request: FastifyRequest) => scenarioDirector(lab,background,request).config;
   const scenarios=await scenarioRoutes(app,lab,scope,background,env);
   const queryScope={...empty,properties:{taskId:{type:'string',format:'uuid'}}};
   const queryPrincipal=(request:FastifyRequest)=>{
@@ -60,19 +49,17 @@ export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: Ret
     return readContextJson(new URL(`${connection?.endpoint??config.baseUrl}/control/${path}`),token,undefined,{method:body === undefined ? 'GET' : 'POST',body,...(path === 'state' ? {maxBytes:2 * 1024 * 1024} : {})});
   };
   app.get(`${scope.base}/simulation`,{schema:{querystring:empty}},request => forward(request,'state'));
-  app.post(`${scope.base}/simulation/object-updates`,{schema:{querystring:empty}},request => {
-    const config=simulation(request),body=contextRecord(request.body,['clientActionId','ref','expectedRevision','properties','effectiveAt','validTime'],['clientActionId','ref','expectedRevision','properties','effectiveAt','validTime']);
-    const ref=contextRef(body.ref); if (!config.sources.some(source=>source.systemId===ref.systemId)) throw new RequestError('CONTEXT_FORBIDDEN','对象来源不在模拟范围内。',403);
-    return forward(request,'object-updates',body);
+  for(const path of ['object-updates','report-updates'])app.post(`${scope.base}/simulation/${path}`,{schema:{querystring:empty}},request=>{
+    simulation(request);throw new RequestError('SIMULATION_ENDPOINT_RETIRED','请在导演台选择自由调试轮次后编辑。',410);
   });
-  app.post(`${scope.base}/simulation/report-updates`,{schema:{querystring:empty}},request => forward(request,'report-updates',contextRecord(request.body,['clientActionId','reportId','expectedRevision','report'],['clientActionId','reportId','expectedRevision','report'])));
   const actionParams=scope.params({id:{type:'string',format:'uuid'}});
   const action=async(request:FastifyRequest,id:string,send=false)=>{
     if(scenarios?.allowed(request)){
       try{return await scenarios.action(request,id,send);}catch(error){if(!(error instanceof RequestError&&error.code==='CONTEXT_NOT_FOUND'))throw error;}
     }
-    return forward(request,`actions/${id}${send?'/send':''}`,send?{}:undefined);
+    if(send){simulation(request);throw new RequestError('SIMULATION_ENDPOINT_RETIRED','旧模拟通知仅可核对历史，不再发送。',410);}
+    return forward(request,`actions/${id}`);
   };
   app.get<{Params:{id:string}}>(`${scope.base}/simulation/actions/:id`,{schema:{params:actionParams,querystring:empty}},request=>action(request,request.params.id));
-  app.post<{Params:{id:string}}>(`${scope.base}/simulation/actions/:id/send`,{schema:{params:actionParams,querystring:empty,body:empty},preValidation:async request=>{request.body??={};}},request=>action(request,request.params.id,true));
+  app.post<{Params:{id:string}}>(`${scope.base}/simulation/actions/:id/send`,{schema:{params:actionParams,querystring:empty,body:{type:'object',additionalProperties:false,properties:{instanceId:{type:'string'},expectedRevision:{type:'integer',minimum:1}}}},preValidation:async request=>{request.body??={};}},request=>action(request,request.params.id,true));
 }

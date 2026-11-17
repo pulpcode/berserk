@@ -1,4 +1,4 @@
-/** Fresh, isolated map trial. Starting it never sends source events or model messages. */
+/** Historical Orchard read-only source fixture. No director or source-editing controls are enabled. */
 import {spawn} from 'node:child_process';
 import {randomBytes, randomUUID} from 'node:crypto';
 import {chmod, mkdir, mkdtemp, readFile, writeFile} from 'node:fs/promises';
@@ -70,18 +70,13 @@ export async function startMapTrial(port=4321,env:NodeJS.ProcessEnv=process.env,
   const trialId=`map-${randomUUID().slice(0,8)}`;
   const day=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   const url=`http://127.0.0.1:${port}`, socket=join(dataDir,'mock.sock');
-  const secret=randomBytes(40).toString('hex'),queryToken=randomBytes(32).toString('hex'),controlToken=randomBytes(32).toString('hex');
-  const sourceEnv:NodeJS.ProcessEnv={MOCK_CONTEXT_API_TOKEN:queryToken,MOCK_CONTEXT_CONTROL_TOKEN:controlToken,
+  const secret=randomBytes(40).toString('hex'),queryToken=randomBytes(32).toString('hex');
+  const sourceEnv:NodeJS.ProcessEnv={MOCK_CONTEXT_API_TOKEN:queryToken,MOCK_CONTEXT_CONTROL_TOKEN:undefined,MOCK_CONTEXT_NOTIFICATION_CONFIG:undefined,MOCK_CONTEXT_SCENARIOS_ENABLED:'false',
     MOCK_INTEL_SOURCE_TOKEN:randomBytes(32).toString('hex'),MOCK_SITUATION_SOURCE_TOKEN:randomBytes(32).toString('hex')};
-  const notificationConfig=join(dataDir,'notifications.json');
-  await save(notificationConfig,[
-    {systemId:'intel',sourceId:'mock-intel-source',url,tokenEnv:'MOCK_INTEL_SOURCE_TOKEN'},
-    {systemId:'situation',sourceId:'mock-situation-source',url,tokenEnv:'MOCK_SITUATION_SOURCE_TOKEN'},
-  ]);
   await save(join(dataDir,'service-secrets.json'),{...sourceEnv,LAB_SESSION_SECRET:secret});
   const mock=spawn(process.execPath,['--import','tsx',join(packageRoot,'scripts/mock-context/main.ts')],{
     cwd:packageRoot,env:{...env,...sourceEnv,MOCK_CONTEXT_PORT:'0',MOCK_CONTEXT_CONTROL_SOCKET:socket,
-      MOCK_CONTEXT_INSTANCE_ID:trialId,MOCK_CONTEXT_DAY:day,MOCK_CONTEXT_DATA_DIR:join(dataDir,'mock'),MOCK_CONTEXT_NOTIFICATION_CONFIG:notificationConfig},stdio:'ignore',
+      MOCK_CONTEXT_INSTANCE_ID:trialId,MOCK_CONTEXT_DAY:day,MOCK_CONTEXT_DATA_DIR:join(dataDir,'mock')},stdio:'ignore',
   });
   let app:Awaited<ReturnType<typeof createApp>>|undefined;
   let stopped=false;
@@ -105,8 +100,7 @@ export async function startMapTrial(port=4321,env:NodeJS.ProcessEnv=process.env,
     const context=parseContextConfig({systems:[
       {id:'intel',name:'模拟特情系统',adapter:'mock-information-http',baseUrl:`${mockUrl}/intel`,tokenEnv:'MOCK_CONTEXT_API_TOKEN',areas:[{id:`${trialId}-zone-west`,name:'西区'},{id:`${trialId}-zone-east`,name:'东区'}]},
       {id:'situation',name:'模拟态势系统',adapter:'mock-situation-http',baseUrl:`${mockUrl}/situation`,tokenEnv:'MOCK_CONTEXT_API_TOKEN',areas:[{id:`${trialId}-zone-west`,name:'西区'},{id:`${trialId}-zone-east`,name:'东区'}]},
-    ],scopes:[{id:'demo-context',name:'本轮模拟资料',systemIds:['intel','situation'],seatIds:seats.map(seat=>`seat-${seat}`)}],
-    simulation:{enabled:true,baseUrl:mockUrl,tokenEnv:'MOCK_CONTEXT_CONTROL_TOKEN',sources:[{systemId:'intel',sourceId:'mock-intel-source'},{systemId:'situation',sourceId:'mock-situation-source'}]}});
+    ],scopes:[{id:'demo-context',name:'历史地图查询资料',systemIds:['intel','situation'],seatIds:seats.map(seat=>`seat-${seat}`)}]});
     const background=parseBackgroundConfig(JSON.parse(await readFile(join(packageRoot,'fixtures/background-seat-routing.example.json'),'utf8')));
     await save(join(dataDir,'context-config.json'),context); await save(join(dataDir,'background-config.json'),background);
     const credentials:PrivateConfig={accounts:{},sessions:{}};
@@ -176,9 +170,9 @@ export async function queryMapTrial(manifest:MapTrialManifest) {
 }
 async function main() {
   const [command,...args]=process.argv.slice(2);
-  if (!['serve','verify'].includes(command) || (args.length && !(args.length===2 && args[0]==='--port' && /^\d+$/.test(args[1])))) throw new Error('用法：serve/verify [--port 4321]；每次建立独立测试目录。verify 明确发起一次真实模型请求。');
+  if (!['serve','verify'].includes(command) || (args.length && !(args.length===2 && args[0]==='--port' && /^\d+$/.test(args[1])))) throw new Error('用法：serve/verify [--port 4321]；每次建立独立只读地图查询环境，不开启模拟编辑或导演控制。verify 明确发起一次真实模型查询。');
   const trial=await startMapTrial(args.length?Number(args[1]):4321,process.env,command==='serve');
-  console.info(JSON.stringify({url:trial.manifest.url,dataDir:trial.manifest.dataDir,manifest:join(trial.manifest.dataDir,'manifest.json'),credentials:join(trial.manifest.dataDir,'credentials.json'),tasks:trial.manifest.tasks}));
+  console.info(JSON.stringify({sourceMode:'historical_read_only',directorEnabled:false,url:trial.manifest.url,dataDir:trial.manifest.dataDir,manifest:join(trial.manifest.dataDir,'manifest.json'),credentials:join(trial.manifest.dataDir,'credentials.json'),tasks:trial.manifest.tasks}));
   if (command==='verify') {
     try {
       const evidence=await queryMapTrial(trial.manifest);

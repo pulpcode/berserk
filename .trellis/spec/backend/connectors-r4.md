@@ -80,3 +80,7 @@ Correct: derive current principal and existing workspace access, resolve an expl
 
 ## Existing multi-source ingress compatibility
 A single ingress slot may retain multiple distinct sourceIds for the same systemId. Preserve the complete original background configuration, per-source organization credential references, profiles, recipients, rules and histories. Deduplicate only binding systemIds. Each simulation mapping must match its exact sourceId and systemId when background config exists; missing or cross-system source mappings still conflict. Information and situation query slots remain separate and reject duplicate systems. Regression fixtures tests/fixtures/r4-online preserve the 4316 source topology with normalized endpoints and no credential values.
+
+## Director source consolidation (2026-11-17)
+
+The four-source compatibility above remains the input baseline. Explicit offline migration under [Director unification](director-unification.md) retires two write sources and binds original mode-specific policies to the two canonical sources. It never rewrites historical records or unions permissions. Business cards combine query and inbound configuration; reception state reuses the original background control, distinct from query lifecycle. Ordinary startup does not silently perform this migration.

@@ -7,6 +7,9 @@ import { RequestError } from '../contracts/errors.js';
 export interface BackgroundSourceConfig {
   sourceId: string; name: string; credentialRef: string; systemId?: string;
   allowedProfileIds: string[]; allowedRecipientSeatIds: string[];
+  /** Retained for original history/policy ACL only; never receives new writes. */
+  retired?: true;
+  operationPolicies?: {scenario: string; free_debug: string};
 }
 export interface BackgroundConfig {
   enabled: boolean; concurrency: number; modelConcurrency: number; backlogLimit: number;
@@ -62,13 +65,17 @@ export function parseBackgroundConfig(value: unknown): BackgroundConfig {
       ...(p.contextScopeId === undefined ? {} : {contextScopeId: identifier(p.contextScopeId)}), skillIds: list(p.skillIds, true), agentIds: list(p.agentIds, true), instructions, resources};
   });
   const sources = raw.sources.map(item => {
-    const s = record(item); fields(s, ['sourceId', 'name', 'credentialRef', 'allowedProfileIds', 'allowedRecipientSeatIds', 'systemId']);
+    const s = record(item); fields(s, ['sourceId', 'name', 'credentialRef', 'allowedProfileIds', 'allowedRecipientSeatIds', 'systemId', 'retired', 'operationPolicies']);
+    if (s.retired !== undefined && s.retired !== true) throw fail();
+    let operationPolicies: BackgroundSourceConfig['operationPolicies'];
+    if (s.operationPolicies !== undefined) {const policies = record(s.operationPolicies); fields(policies, ['scenario', 'free_debug']); operationPolicies = {scenario: identifier(policies.scenario), free_debug: identifier(policies.free_debug)};}
     const credentialRef = text(s.credentialRef, 100); if (!/^[A-Z][A-Z0-9_]{0,99}$/.test(credentialRef)) throw fail();
     const allowedProfileIds = list(s.allowedProfileIds), allowedRecipientSeatIds = list(s.allowedRecipientSeatIds);
     if (!allowedProfileIds.length || !allowedRecipientSeatIds.length || allowedProfileIds.some(id => !profiles.some(p => p.id === id))) throw fail();
-    return {...(s.systemId === undefined ? {} : {systemId: identifier(s.systemId)}), sourceId: identifier(s.sourceId), name: text(s.name, 100), credentialRef, allowedProfileIds, allowedRecipientSeatIds};
+    return { ...(s.retired === true ? {retired: true as const} : {}), ...(operationPolicies ? {operationPolicies} : {}), ...(s.systemId === undefined ? {} : {systemId: identifier(s.systemId)}), sourceId: identifier(s.sourceId), name: text(s.name, 100), credentialRef, allowedProfileIds, allowedRecipientSeatIds};
   });
   if (new Set(sources.map(s => s.sourceId)).size !== sources.length || new Set(profiles.map(p => p.id)).size !== profiles.length || new Set(sources.map(s => s.credentialRef)).size !== sources.length) throw fail();
+  for (const source of sources) if (source.operationPolicies && (source.retired || Object.values(source.operationPolicies).some(id => !sources.some(policy => policy.sourceId === id && policy.systemId === source.systemId)))) throw fail();
   return {...(raw.deliveryReviewSeatId === undefined ? {} : {deliveryReviewSeatId: identifier(raw.deliveryReviewSeatId)}), enabled: raw.enabled === true, concurrency: limit(raw.concurrency, 1, 32), modelConcurrency: limit(raw.modelConcurrency, 2, 64), backlogLimit: limit(raw.backlogLimit, 100, 100_000), sources, profiles};
 }
 
@@ -80,7 +87,7 @@ export async function loadBackgroundConfig(env: NodeJS.ProcessEnv = process.env)
   let config: BackgroundConfig;
   try { config = parseBackgroundConfig(JSON.parse((await readControlled(resolve(path), 2_000_000))!)); }
   catch { throw fail(); }
-  if (config.sources.some(source => !env[source.credentialRef] || env[source.credentialRef]!.length < 24)) throw new Error('来源凭证未配置或不足 24 个字符，请在环境变量中配置。');
+  if (config.sources.some(source => !source.retired && (!env[source.credentialRef] || env[source.credentialRef]!.length < 24))) throw new Error('来源凭证未配置或不足 24 个字符，请在环境变量中配置。');
   return config;
 }
 

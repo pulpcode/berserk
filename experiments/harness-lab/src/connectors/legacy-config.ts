@@ -7,7 +7,7 @@ import { RequestError } from '../contracts/errors.js';
 import { connectorStateError, insertConnectorRevision, writeConnectorAsset, type ConnectorBinding } from './store.js';
 
 export interface LegacyConnectorPlan { context?: ContextConfig; background?: BackgroundConfig; bindings: ConnectorBinding[]; conflicts: string[]; digest: string; createdAt: string }
-export interface LegacyResolutionInput { systemId?: string; sourceId?: string; control?: boolean }
+export interface LegacyResolutionInput { systemId?: string; sourceId?: string; control?: boolean; receiptOnly?: boolean }
 export type LegacyConnectionResolver = (input: LegacyResolutionInput) => LegacyConnectionResolution;
 export interface LegacyConnectionResolution { connectorId: string; revisionId: string; credentialVersion: number; endpoint: string; token: string }
 const stableId = (slot: string) => `legacy-${slot}`;
@@ -24,7 +24,7 @@ export function planLegacyConnectors(context?: ContextConfig, background?: Backg
   }
   if (background?.sources.length) {
     const sourceIds:string[]=[],systemIds:string[]=[],envRefs:Record<string,string>={};
-    for (const source of background.sources) { sourceIds.push(source.sourceId);envRefs[`organization:${source.sourceId}`]=source.credentialRef;if(source.systemId===undefined)continue;if(!context?.systems.some(system=>system.id===source.systemId))conflicts.push(`ingress:未映射来源(${source.sourceId})`);else if(!systemIds.includes(source.systemId))systemIds.push(source.systemId); }
+    for (const source of background.sources.filter(source=>!source.retired)) { sourceIds.push(source.sourceId);envRefs[`organization:${source.sourceId}`]=source.credentialRef;if(source.systemId===undefined)continue;if(!context?.systems.some(system=>system.id===source.systemId))conflicts.push(`ingress:未映射来源(${source.sourceId})`);else if(!systemIds.includes(source.systemId))systemIds.push(source.systemId); }
     bindings.push({slot:'ingress',connectorId:stableId('ingress'),systemIds,sourceIds,envRefs});
   }
   const input={...(context?{context}:{}),...(background?{background}:{}),bindings,conflicts};
@@ -53,9 +53,11 @@ const bindingRows=(db:DatabaseSync)=>db.prepare('SELECT data FROM r4_connection_
 export function resolveLegacyConnection(db: DatabaseSync,input: LegacyResolutionInput,token:Token,revision:Revision,state:State):LegacyConnectionResolution {
   if(Number(!!input.systemId)+Number(!!input.sourceId)+Number(input.control===true)!==1)throw connectorStateError();
   const binding=bindingRows(db).find(binding=>input.control?binding.slot==='simulation-control':input.sourceId?binding.slot==='ingress'&&binding.sourceIds.includes(input.sourceId):['information','situation'].includes(binding.slot)&&binding.systemIds.includes(input.systemId!));
-  if(!binding||state(binding.connectorId)!=='enabled')throw new RequestError('CONNECTOR_LEGACY_UNAVAILABLE','既有业务连接已停用或未完成映射。',409);
-  const current=revision(binding.connectorId),credential=token(binding.connectorId,input.sourceId?`organization:${input.sourceId}`:'organization');
-  return{connectorId:binding.connectorId,revisionId:current.revisionId,credentialVersion:credential.version,endpoint:current.endpoint.replace(/\/$/,''),token:credential.value};
+  const historical = input.sourceId && input.receiptOnly && !binding ? JSON.parse(String(db.prepare('SELECT data FROM r4_connection_legacy WHERE id=1').get()?.data ?? '{}')).background?.sources?.some((source: {sourceId:string;retired?:boolean})=>source.sourceId===input.sourceId&&source.retired) : false;
+  const selected = binding ?? (historical ? bindingRows(db).find(item=>item.slot==='ingress') : undefined);
+  if(!selected||state(selected.connectorId)!=='enabled')throw new RequestError('CONNECTOR_LEGACY_UNAVAILABLE','既有业务连接已停用或未完成映射。',409);
+  const current=revision(selected.connectorId),credential=token(selected.connectorId,input.sourceId?`organization:${input.sourceId}`:'organization');
+  return{connectorId:selected.connectorId,revisionId:current.revisionId,credentialVersion:credential.version,endpoint:current.endpoint.replace(/\/$/,''),token:credential.value};
 }
 /** This persisted snapshot is authoritative; legacy files are never reapplied on startup. */
 export function legacyProjection(db:DatabaseSync,token:Token,revision:Revision,_state:State):{context?:ContextConfig;background?:BackgroundConfig;env:NodeJS.ProcessEnv}|undefined {
@@ -68,7 +70,7 @@ export function legacyProjection(db:DatabaseSync,token:Token,revision:Revision,_
   const bindings=bindingRows(db);
   for(const system of context?.systems??[]){const binding=bindings.find(binding=>['information','situation'].includes(binding.slot)&&binding.systemIds.includes(system.id));if(!binding)throw connectorStateError();system.baseUrl=revision(binding.connectorId).endpoint.replace(/\/$/,'');project(binding.connectorId,'organization',system.tokenEnv);}
   if(context?.simulation){const binding=bindings.find(binding=>binding.slot==='simulation-control');if(!binding)throw connectorStateError();context.simulation.baseUrl=revision(binding.connectorId).endpoint.replace(/\/$/,'');project(binding.connectorId,'organization',context.simulation.tokenEnv);}
-  for(const source of background?.sources??[]){const binding=bindings.find(binding=>binding.slot==='ingress'&&binding.sourceIds.includes(source.sourceId));if(!binding)throw connectorStateError();project(binding.connectorId,`organization:${source.sourceId}`,source.credentialRef);}
+  for(const source of (background?.sources??[]).filter(source=>!source.retired)){const binding=bindings.find(binding=>binding.slot==='ingress'&&binding.sourceIds.includes(source.sourceId));if(!binding)throw connectorStateError();project(binding.connectorId,`organization:${source.sourceId}`,source.credentialRef);}
   return{...(context?{context}:{}),...(background?{background}:{}),env};
 }
 export function legacySlotForSystem(plan:LegacyConnectorPlan,id:string):ConnectorBusinessSlot|undefined{return plan.bindings.find(binding=>['information','situation'].includes(binding.slot)&&binding.systemIds.includes(id))?.slot;}

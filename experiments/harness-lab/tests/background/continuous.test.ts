@@ -82,6 +82,12 @@ async function setup(options:{requireTaskAssessment?:boolean;inputText?:string;e
 }
 
 describe('continuous queue, native evidence and atomic publication',()=>{
+  it('keeps continuous deliveries out of the event inbox without breaking recipient reads',async()=>{
+    const s=await setup();s.setMode('significant');await s.accept();await s.settled(1);
+    await vi.waitFor(()=>expect(s.host.store.listDeliveries().some(delivery=>delivery.recipientSeatId==='b'&&delivery.status==='delivered')).toBe(true));
+    expect(s.host.inboxItems(s.actors.b)).toEqual([]);
+    expect(s.host.inbox(s.actors.b,{}).total).toBe(0);
+  });
   it('keeps continuous completion independent of the profile preprocess judgment requirement',async()=>{
     const s=await setup({requireTaskAssessment:true});await s.accept();const job=await s.settled(1);
     expect(job.status).toBe('succeeded');expect(s.host.continuous.store.publication(job.id).status).toBe('published');

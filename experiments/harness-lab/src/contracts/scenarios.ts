@@ -26,6 +26,7 @@ export interface ScenarioDefinitionSummary {
 }
 export interface ScenarioStepSummary { id: string; title: string; description: string; businessTime: string; messageCount: number; taskCodes?: ScenarioTaskDefinition['code'][]; kind?: 'source'|'execution'; state?: 'applied'|'pending' }
 export interface ScenarioInstance extends ScenarioClock {
+  operationMode?: 'free_debug';
   definitionId: string; definitionVersion: string; definitionHash: string; name: string; mode: ScenarioMode;
   status: 'prepared' | 'active' | 'frozen'; paused: boolean; stepIndex: number; stepCount: number;
   createdAt: string; updatedAt: string;
@@ -33,7 +34,7 @@ export interface ScenarioInstance extends ScenarioClock {
 }
 export interface ScenarioAction extends SimulationAction { instanceId: string; stepId: string; actor: ScenarioActor; deliveryActor?: ScenarioActor; deliveryAt?: string }
 export interface ScenarioOperation {
-  id: string; instanceId: string; kind: 'create' | 'activate' | 'step' | 'pause' | 'resume';
+  id: string; instanceId: string; kind: 'create' | 'activate' | 'step' | 'pause' | 'resume' | 'finish' | 'debug-edit';
   state?: 'advancing'|'completed'|'interrupted';
   revision: number; businessNow: string; createdAt: string; actor: ScenarioActor; actionIds: string[];
 }

@@ -69,6 +69,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     }
   }
   const background = backgroundConfig ? new BackgroundService(lab, backgroundConfig, backgroundOptions?.executor) : undefined;
+  if(background)lab.connectors.bindInboundControl({read:sourceId=>background.store.getControl(`source:${sourceId}`,background.config.enabled),write:(actor,sourceId,enabled,revision)=>background.controlInbound(actor,sourceId,enabled,revision)});
   const app = Fastify({ logger: false, bodyLimit: 128 * 1024, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
   app.addHook('onClose', async () => { await background?.close(); await lab.close(); });
   if (background) { await background.initialize(); app.addHook('onReady', () => background.start()); }
@@ -96,7 +97,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   });
   if (lab.access && lab.config.auth) { await registerAuth(app,lab.access,lab.config.auth); await taskRoutes(app,lab, taskId => background?.store.hasTaskReservations(taskId) ?? false); }
   else app.get('/api/auth/session',async()=>({mode:'test'}));
-  if (lab.access) { await backgroundRoutes(app,background,legacyEnv,sourceId=>lab.connectors!.resolveLegacy({sourceId}).token); await continuousRoutes(app,background); await workbenchRoutes(app,new WorkbenchService(lab.access,lab.collaboration,background)); }
+  if (lab.access) { await backgroundRoutes(app,background,legacyEnv,(sourceId,receiptOnly)=>lab.connectors!.resolveLegacy({sourceId,receiptOnly}).token); await continuousRoutes(app,background); await workbenchRoutes(app,new WorkbenchService(lab.access,lab.collaboration,background)); }
   if (background) await taskInformationRoutes(app,background);
   app.get('/api/health',async()=>({ok:true}));
   app.get('/api/info', async () => lab.info());
@@ -146,7 +147,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
-    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation','/scenario-director','/capabilities','/admin']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
+    for (const path of ['/information','/inbox','/work','/overview','/situation','/director','/capabilities','/admin']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
     app.get('/tasks/:taskId/information',(_request,reply)=>reply.sendFile('index.html'));
   }
   return app;

@@ -65,6 +65,8 @@ export interface DeliveryReviewDetail extends DeliveryReviewSummary {
   canDecide: boolean; jobDetail: InformationJobDetail;
 }
 export interface BackgroundEvent {
+  /** Frozen authority/rule scope selected from the authenticated run mode. */
+  policySourceId?: string;
   /** Verified host metadata, never inferred from business text. */
   scenarioInstanceId?: string;
   auditOnly?: true;
@@ -78,6 +80,7 @@ export interface BackgroundResultRef {
   sessionId: string; requestId: string; finalMessageId?: string; files: BackgroundFile[];
 }
 export interface BackgroundJobBase {
+  policySourceId?: string;
   scenarioInstanceId?: string;
   id: string;
   status: BackgroundJobStatus; phase?: BackgroundPhase; revision: number;
@@ -119,7 +122,12 @@ export interface InformationSource {
   accepting: boolean; revision: number; permission: InformationPermission;
 }
 export interface InformationProfile { id: string; name: string; goal: string; configurationError?: string; contextScope?: ContextScopeSnapshot & {systemNames?: string[]} }
+export interface InformationHistorySource { sourceId: string; name: string; groupId: string; groupName: string; permission?: InformationPermission }
 export interface InformationCapabilities {
+  /** Original policy permissions; group metadata never expands authorization. */
+  historySources?: InformationHistorySource[];
+  /** Original rule scopes, labelled by business integration and operation mode. */
+  ruleSources?: InformationSource[];
   enabled: boolean; sources: InformationSource[]; profiles: InformationProfile[];
   seats: Array<{ id: string; name: string; responsibility?: string; responsibilityRevision?: number }>;
   deliveryReviewSeatId?: string; canReviewDeliveries?: boolean; pendingDeliveryReviews?: number;
@@ -161,6 +169,7 @@ export interface BackgroundAction {
 }
 /** All optional content fields require the owning seat's authority for seat analysis. */
 export interface InformationJobSummary {
+  policySourceId?: string;
   id: string; kind: BackgroundJobKind; sourceId: string; eventId: string;
   status: BackgroundJobStatus; phase?: BackgroundPhase; revision: number;
   createdAt: string; startedAt?: string; endedAt?: string; seatId?: string; sessionId?: string;

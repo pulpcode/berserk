@@ -1,3 +1,4 @@
+import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -28,10 +29,13 @@ async function setup(twoTasks = false) {
   const fake = await fakeRuntime(config,()=>({text:'没有调用模型的需要'}));
   const lab = await PiLab.create(config, fake.runtime), app = await createApp(lab);
   const details = new Map<string,ScenarioInstanceDetail>(), ledger = new Map<string,ScenarioMutationResult>(), initialized = new Map<string,ScenarioTaskInitialization>();
-  const counts = {privateReads:0,create:0,apply:0,send:0,operationReads:0,initialize:0};
+  const counts = {privateReads:0,create:0,apply:0,send:0,operationReads:0,initialize:0,switches:0,debugSaves:0};
   const activationRequests:Record<string,string|number|boolean>[]=[];
   const pages:Page[]=[];
   let activeId:string|null=null,activeRevision=0,loseCreateResponse=false;
+  let loseSwitchResponse=false;
+  let operationMode: 'scenario' | 'free_debug' = 'scenario';
+  const switches = new Map<string,unknown>();
   let rejectActivation:string|undefined;
   let loseApplyResponse = false;
   let loseInitializeResponse = false;
@@ -58,9 +62,23 @@ async function setup(twoTasks = false) {
       if(url.pathname==='/api/context/map-config'){await route.fulfill({json:{...defaultMapConfig,scenarioControlEnabled:allowed,directorSeatId:directorSeat}});return;}
       if(url.pathname.startsWith('/api/simulation/')){
         if(req.method()==='GET')counts.privateReads++;
-        if(!allowed){await route.fulfill({status:403,json:{error:{code:'SCENARIO_FORBIDDEN',message:'当前账号无权访问场景导演台。'}}});return;}
+        if(!allowed){await route.fulfill({status:403,json:{error:{code:'SCENARIO_FORBIDDEN',message:'当前账号无权访问导演台。'}}});return;}
         const body=req.method()==='POST'?req.postDataJSON() as Record<string,string|number|boolean>:{};
         const respond=async(value:unknown,status=200)=>route.fulfill({status,json:value});
+        const directorState=()=>({mode:operationMode,activeInstanceId:activeId,activeRevision,...(activeId?{activeInstance:details.get(activeId)!.instance}:{})});
+        if(url.pathname==='/api/simulation/director'){await respond(directorState());return;}
+        if(url.pathname.startsWith('/api/simulation/director/operations/')){const value=switches.get(url.pathname.split('/').at(-1)!);await respond(value||{error:{code:'NOT_FOUND',message:'未找到切换回执'}},value?200:404);return;}
+        if(url.pathname==='/api/simulation/director/switch'){
+          const request=req.postDataJSON();if(switches.has(request.clientActionId)){await respond(switches.get(request.clientActionId));return;}
+          if(request.expectedActiveRevision!==activeRevision){await respond({error:{code:'CONFLICT',message:'轮次已变化'}},409);return;}
+          counts.switches++;
+          if(activeId)details.get(activeId)!.instance.status='frozen';activeId=null;activeRevision++;operationMode=request.mode;
+          if(request.mode==='free_debug'){
+            const fixture=mapFixtures('debug','2026-10-11'),id=`run-debug-${details.size+1}`;
+            details.set(id,{instance:{instanceId:id,definitionId:'free-debug',definitionVersion:'1',definitionHash:'debug',name:'自由调试',operationMode:'free_debug',mode:'source_replay',status:'active',paused:false,stepIndex:0,stepCount:0,businessNow:clock(10),revision:1,createdAt:'2026-11-04T06:00:00Z',updatedAt:'2026-11-04T06:00:00Z'},steps:[],objects:fixture.objects,reports:fixture.reports,actions:[],operations:[]});activeId=id;
+          }
+          const result=directorState();switches.set(request.clientActionId,result);if(loseSwitchResponse){loseSwitchResponse=false;await route.abort('failed');return;}await respond(result);return;
+        }
         if(url.pathname==='/api/simulation/scenarios'){await respond({items:[definition]});return;}
         if(url.pathname==='/api/simulation/instances'&&req.method()==='GET'){await respond({items:[...details.values()].map(d=>d.instance),activeInstanceId:activeId,activeRevision,hasMore:false,nextCursor:null});return;}
         if(url.pathname==='/api/simulation/instances'){
@@ -89,6 +107,12 @@ async function setup(twoTasks = false) {
         }
         const segments=url.pathname.split('/'),id=segments[4],detail=details.get(id);
         if(!detail){await respond({error:{code:'NOT_FOUND',message:'实例不存在'}},404);return;}
+        if(segments[5]==='debug'){
+          if(req.method()==='GET'){await respond({instance:detail.instance,objects:detail.objects,reports:detail.reports,actions:detail.actions});return;}
+          const input=req.postDataJSON();if(input.expectedRunRevision!==detail.instance.revision){await respond({error:{code:'CONFLICT',message:'数据已变化，请重新选择'}},409);return;}
+          counts.debugSaves++;const item=input.ref ? detail.objects.find(item=>item.ref.objectId===input.ref.objectId)! : detail.reports.find(item=>item.reportId===input.reportId)!;if('properties' in item)item.properties=input.properties;else Object.assign(item,input.report);item.revision++;detail.instance.revision++;
+          const action:ScenarioAction={id:input.clientActionId,instanceId:id,stepId:'debug-edit',actor:identity!,systemId:'situation',createdAt:'2026-11-04T06:00:00Z',revision:item.revision,sendState:'unsent',notification:{sourceMessageId:input.clientActionId,title:'调试车辆更新',text:'调试车辆数量已保存',subjectId:'ref' in item ? item.ref.objectId : item.subjectId,occurredAt:input.effectiveAt || input.report.observedAt,scenarioInstanceId:id}};detail.actions.push(action);await respond(operation(input.clientActionId,'debug-edit',detail,identity!,[action]));return;
+        }
         if(segments[5]==='preflight'){await respond({queuedJobs:0,runningJobs:0,foregroundRequests:0,unconfirmedNotifications:detail.actions.filter(a=>a.sendState==='unconfirmed').length,unsentNotifications:detail.actions.filter(a=>a.sendState==='unsent').length});return;}
         if(segments[5]==='initialize'){
           if(req.method()==='POST'){ counts.initialize++; initialized.set(id,{instanceId:id,initialized:true,...(taskBootstrap?{taskBootstrap}:{}),tasks:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',taskId:`task-${index}`,title:['仓储火情支援','交通救援','训练任务'][index]})).filter(task=>!twoTasks||task.code!=='T01')});
@@ -131,7 +155,7 @@ async function setup(twoTasks = false) {
       await route.fulfill({status:response.statusCode,headers:Object.fromEntries(Object.entries(response.headers).filter(([,v])=>v!==undefined).map(([k,v])=>[k,String(v)])),body:response.rawPayload});
     });
   }
-  return {attach,counts,sendIds,loseNextInitialize:()=>{loseInitializeResponse=true;},receiptReads,loseNextApply:()=>{loseApplyResponse=true;},interruptSend:(messageId:string)=>{interruptMessage=messageId;},activationRequests,rejectNextActivation:(code:string)=>{rejectActivation=code;},loseNextCreate:()=>{loseCreateResponse=true;},calls:fake.calls,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
+  return {attach,counts,sendIds,loseNextSwitch:()=>{loseSwitchResponse=true;},loseNextInitialize:()=>{loseInitializeResponse=true;},receiptReads,loseNextApply:()=>{loseApplyResponse=true;},interruptSend:(messageId:string)=>{interruptMessage=messageId;},activationRequests,rejectNextActivation:(code:string)=>{rejectActivation=code;},loseNextCreate:()=>{loseCreateResponse=true;},calls:fake.calls,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
 }
 
 async function login(page:Page,seat:string) {
@@ -252,8 +276,8 @@ test('four business seats have no director entry and cannot trigger private dire
     for(const seat of businessSeats){
       const context=await browser.newContext(),page=await context.newPage();await env.attach(page);
       try {
-        await login(page,seat);await expect(page.getByRole('button',{name:'场景导演台',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'工作待办',exact:true})).toBeVisible();
-        const reads=env.counts.privateReads;await page.goto('/scenario-director');await expect(page.getByRole('heading',{name:'无权访问场景导演台',exact:true})).toBeVisible();expect(env.counts.privateReads).toBe(reads);
+        await login(page,seat);await expect(page.getByRole('button',{name:'导演台',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'工作待办',exact:true})).toBeVisible();
+        const reads=env.counts.privateReads;await page.goto('/director');await expect(page.getByRole('heading',{name:'无权访问导演台',exact:true})).toBeVisible();expect(env.counts.privateReads).toBe(reads);
         await page.getByRole('button',{name:'返回业务工作台',exact:true}).click();await expect(page).toHaveURL(/\/work$/);await expect(page.getByRole('button',{name:'工作待办',exact:true})).toBeVisible();
       } finally {await context.close();}
     }
@@ -397,12 +421,12 @@ test('hover expands an event in the list, moving between rows stays stable, and 
     await expect(second).toHaveAttribute('aria-expanded','true');
     await expect(details).toContainText('交通救援');
     await expect(details).toHaveCount(1);
-    await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();
+    await page.getByRole('heading',{name:'导演台',exact:true}).hover();
     await expect(details).toHaveCount(0);
     await first.focus();
     await page.keyboard.press('Enter');
     await expect(first).toHaveAttribute('aria-expanded','true');
-    await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();
+    await page.getByRole('heading',{name:'导演台',exact:true}).hover();
     await expect(details).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(details).toHaveCount(0);
@@ -413,7 +437,7 @@ test('hover expands an event in the list, moving between rows stays stable, and 
     const bounds=(await details.boundingBox())!;
     expect(bounds.x+bounds.width).toBeLessThanOrEqual(1080);
     expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);
-    await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();
+    await page.getByRole('heading',{name:'导演台',exact:true}).hover();
     await expect(details).toHaveCount(0);
     await expect(page.getByText('操作记录与来源资料',{exact:true})).toHaveCount(0);
     await page.getByRole('button',{name:'演示记录',exact:true}).click();const records=page.getByRole('dialog',{name:'演示记录',exact:true});await expect(records).toBeVisible();await records.getByRole('button').filter({hasText:'当前演示'}).click();await records.getByRole('button',{name:'操作记录',exact:true}).click();await expect(records.getByRole('table')).toContainText('创建本轮');
@@ -435,7 +459,7 @@ test('prepared history and a history URL stay read-only while live control remai
       },body:JSON.stringify({definitionId:'ui-fire',version:'1',mode:'main_story',clientActionId:crypto.randomUUID()})});
       if(!response.ok)throw Error('prepare fixture failed');
     });
-    await page.goto('/scenario-director?instance=run-2');
+    await page.goto('/director?instance=run-2');
     const history=page.getByRole('dialog',{name:'演示记录',exact:true});
     const preview=history.getByRole('region',{name:'演示详情',exact:true});
     await expect(preview).toContainText('准备中');
@@ -478,5 +502,44 @@ test('an old scene definition remains readable but cannot deliver or unlock; a f
     await page.getByRole('button',{name:'重新演示',exact:true}).click();
     await expect(page.getByRole('dialog',{name:'重新演示',exact:true}).getByRole('button',{name:'开始演示',exact:true})).toBeEnabled();
     expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);expect(env.calls).toHaveLength(0);
+  }finally{await env.close();}
+});
+
+test('director modes confirm before switching, debug saves separately from notices, and history remains read-only',async({page})=>{
+  const env=await setup();await env.attach(page);
+  try {
+    await startRun(page);
+    const selector=page.getByRole('combobox',{name:'操作方式',exact:true});
+    await selector.selectOption('free_debug');const dialog=page.getByRole('dialog',{name:'切换到自由调试',exact:true});
+    expect(env.counts.switches).toBe(0);await dialog.getByRole('button',{name:'取消',exact:true}).click();await expect(selector).toHaveValue('scenario');
+    await selector.selectOption('free_debug');await dialog.getByRole('button',{name:'结束当前轮次并开始调试',exact:true}).click();
+    await expect(selector).toHaveValue('free_debug');expect(env.counts.switches).toBe(1);expect(env.counts.send).toBe(0);
+    await page.getByRole('button',{name:/西区可用车辆/}).click();await page.getByLabel('可用车辆数量').fill('2');await page.getByRole('button',{name:'保存修改',exact:true}).click();
+    await expect(page.getByText('修改已保存，尚未发送通知。可重新选择条目继续编辑。')).toBeVisible();expect(env.counts.debugSaves).toBe(1);expect(env.counts.send).toBe(0);
+    await page.getByRole('button',{name:'发送测试通知',exact:true}).click();await expect(page.getByRole('link',{name:'查看接收与处理记录',exact:true})).toBeVisible();expect(env.counts.send).toBe(1);
+    const reportTitle=mapFixtures('debug','2026-10-11').reports[0].title;await page.getByRole('navigation',{name:'调试对象'}).getByRole('button',{name:reportTitle,exact:true}).click();
+    await page.getByLabel('标题',{exact:true}).fill('自由调试报告');await page.getByRole('group',{name:'关联对象',exact:true}).getByRole('checkbox').first().check();await expect(page.getByRole('group',{name:'关联区域',exact:true})).toBeVisible();
+    await page.setViewportSize({width:1060,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('director-free-debug-1060.png')});
+    await page.setViewportSize({width:1440,height:960});await page.screenshot({path:test.info().outputPath('director-free-debug-1440.png')});
+    await page.getByRole('button',{name:'保存修改',exact:true}).click();await expect(page.getByText('修改已保存，尚未发送通知。可重新选择条目继续编辑。')).toBeVisible();expect(env.counts.debugSaves).toBe(2);expect(env.counts.send).toBe(1);
+    await page.getByRole('button',{name:'重新开始',exact:true}).click();await page.getByRole('dialog',{name:'重新开始自由调试',exact:true}).getByRole('button',{name:'结束当前轮次并开始调试',exact:true}).click();
+    await expect(page.getByText('暂无修改记录',{exact:true})).toBeVisible();expect(env.counts.switches).toBe(2);
+    await page.getByRole('button',{name:'历史记录',exact:true}).click();const history=page.getByRole('dialog',{name:'历史记录',exact:true});await history.getByRole('button',{name:/自由调试.*已结束/}).click();await expect(history.getByText('调试车辆更新',{exact:true})).toHaveCount(2);await expect(history.getByRole('button',{name:'发送测试通知',exact:true})).toHaveCount(0);await history.getByRole('button',{name:'关闭面板',exact:true}).click();
+    await selector.selectOption('scenario');await page.getByRole('dialog',{name:'切换到场景演练',exact:true}).getByRole('button',{name:'结束调试并选择场景',exact:true}).click();await expect(selector).toHaveValue('scenario');await expect(page.getByRole('button',{name:'开始演示',exact:true})).toBeVisible();expect(env.counts.create).toBe(1);expect(env.counts.send).toBe(1);
+    await page.reload();await expect(selector).toHaveValue('scenario');expect(env.counts.switches).toBe(3);expect(env.calls).toHaveLength(0);
+  }finally{await env.close();}
+});
+
+
+test('lost mode switch response remains pending after reload and resolves without a second switch',async({page})=>{
+  const env=await setup();await env.attach(page);
+  try {
+    await startRun(page);env.loseNextSwitch();
+    const selector=page.getByRole('combobox',{name:'操作方式',exact:true});await selector.selectOption('free_debug');
+    await page.getByRole('dialog',{name:'切换到自由调试',exact:true}).getByRole('button',{name:'结束当前轮次并开始调试',exact:true}).click();
+    await expect(page.getByRole('heading',{name:'模式切换结果待核对',exact:true})).toBeVisible();await expect(selector).toBeDisabled();expect(env.counts.switches).toBe(1);
+    await page.reload();await expect(page.getByRole('heading',{name:'模式切换结果待核对',exact:true})).toBeVisible();expect(env.counts.switches).toBe(1);
+    await page.getByRole('button',{name:'核对切换结果',exact:true}).click();await expect(selector).toBeEnabled();await expect(selector).toHaveValue('free_debug');
+    await expect(page.getByRole('region',{name:'自由调试',exact:true})).toBeVisible();expect(env.counts.switches).toBe(1);expect(env.counts.send).toBe(0);expect(env.calls).toHaveLength(0);
   }finally{await env.close();}
 });

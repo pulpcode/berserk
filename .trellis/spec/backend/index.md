@@ -90,3 +90,5 @@ The goal is to help AI assistants and new team members understand how YOUR proje
 ---
 
 **Language**: All documentation should be written in **English**.
+
+Read [Director Unification](./director-unification.md) for the sole `/director` page, mutually exclusive free-debug runs, source consolidation and historical policy permissions.

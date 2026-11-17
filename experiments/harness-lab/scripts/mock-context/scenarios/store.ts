@@ -7,7 +7,9 @@ import { DatabaseSync } from 'node:sqlite';
 import { dirname } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { RequestError } from '../../../src/contracts/errors.js';
-import type { SituationChange } from '../../../src/contracts/context.js';
+import { contextRecord, contextInteger, contextTimestamp, contextText, situationObject, decodeContextResponse } from '../../../src/context/validation.js';
+import type { DirectorState } from '../../../src/contracts/director.js';
+import type { InformationReport, SituationObject, SituationChange } from '../../../src/contracts/context.js';
 import type { ScenarioAction, ScenarioActor, ScenarioClock, ScenarioCreateInput, ScenarioInstance, ScenarioInstanceDetail, ScenarioInstances, ScenarioMutationResult, ScenarioOperation, ScenarioPreview, ScenarioTaskBootstrap } from '../../../src/contracts/scenarios.js';
 import { isScenarioClock } from '../../../src/contracts/scenarios.js';
 import { scenarioTaskBootstrap, scenarioTaskDefinitions } from '../../../src/scenario/task-definitions.js';
@@ -17,7 +19,7 @@ import { sceneWorld, motionDefinition, motionBootstrap, scenarioDefinition, exec
 export const sceneError = (message:string,code='SCENARIO_CONFLICT',status=409) => new RequestError(code,message,status);
 export const stable = (value:unknown):string => JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.entries(item).sort(([a],[b])=>a.localeCompare(b))):item);
 interface StoredOperation extends ScenarioOperation { input:string; resultInstance:ScenarioInstance }
-export interface SceneRecord extends SceneWorld { execution?:ExecutionState; schemaVersion:1|2|3; taskBootstrap?:ScenarioTaskBootstrap; instance:ScenarioInstance; changes:SituationChange[]; actions:ScenarioAction[]; operations:StoredOperation[] }
+export interface SceneRecord extends SceneWorld { execution?:ExecutionState; schemaVersion:1|2|3|4; taskBootstrap?:ScenarioTaskBootstrap; instance:ScenarioInstance; changes:SituationChange[]; actions:ScenarioAction[]; operations:StoredOperation[] }
 interface ActivePointer { instanceId:string|null; revision:number }
 const now = () => new Date().toISOString();
 const publicOperation = ({input:_input,resultInstance:_instance,...operation}:StoredOperation):ScenarioOperation => {void _input;void _instance;return structuredClone(operation);};
@@ -77,7 +79,9 @@ export class ScenarioStore {
     if(!record)throw sceneError('场景实例不存在。','NOT_FOUND',404);
     if(!record.instance||record.instance.instanceId!==id||!isScenarioClock(sceneClock(record)))throw sceneError('场景快照无法读取，未覆盖原数据。','SCENARIO_SNAPSHOT_INVALID',500);
     try {
-      if(record.schemaVersion===1){
+      if(record.schemaVersion===4){
+        if(record.instance.operationMode!=='free_debug'||record.instance.definitionId!=='free-debug'||record.instance.definitionVersion!=='1'||record.tasks.length||record.steps.length||record.taskBootstrap!==undefined||record.execution!==undefined)throw new Error('Invalid debug record');
+      }else if(record.schemaVersion===1){
         if(record.taskBootstrap!==undefined||record.instance.definitionId!=='harbor-fire'||!['1','2','3'].includes(record.instance.definitionVersion))throw new Error('Unknown legacy definition');
         scenarioTaskDefinitions(record.tasks);
       }else if(record.schemaVersion===2||record.schemaVersion===3){
@@ -125,11 +129,11 @@ export class ScenarioStore {
   private result(record:SceneRecord,operation:StoredOperation):ScenarioMutationResult {return {instance:structuredClone(operation.resultInstance),operation:publicOperation(operation),actions:record.actions.filter(action=>operation.actionIds.includes(action.id)).map(action=>structuredClone(action))};}
   operation(id:string):ScenarioMutationResult {const found=this.findOperation(id);if(!found)throw sceneError('场景操作尚不存在。','NOT_FOUND',404);return this.result(found.record,found.operation);}
   private prior(id:string,input:string) {const found=this.findOperation(id);if(!found)return;if(found.operation.input!==input)throw sceneError('操作编号已用于不同内容。','ACTION_CONFLICT');return this.result(found.record,found.operation);}
-  private writable(record:SceneRecord,revision:number) {
-    if(![scenarioDefinition,executionDefinition,repairedExecutionDefinition,motionDefinition].some(def=>def.version===record.instance.definitionVersion&&def.definitionHash===record.instance.definitionHash))throw sceneError('场景定义已变化，旧轮仅可读，请创建新轮。','SCENARIO_DEFINITION_CHANGED');
+  private writable(record:SceneRecord,revision:number,ending=false) {
+    if(record.schemaVersion!==4&&![scenarioDefinition,executionDefinition,repairedExecutionDefinition,motionDefinition].some(def=>def.version===record.instance.definitionVersion&&def.definitionHash===record.instance.definitionHash))throw sceneError('场景定义已变化，旧轮仅可读，请创建新轮。','SCENARIO_DEFINITION_CHANGED');
     if(record.instance.status==='frozen')throw sceneError('旧轮已冻结，不能继续修改。','SCENARIO_FROZEN');
     if(record.instance.revision!==revision)throw sceneError('场景已更新，请刷新并核对。','REVISION_CONFLICT');
-    if(record.operations.length>=1000)throw sceneError('本轮控制操作已达上限，请建立新轮。','SCENARIO_LIMIT');
+    if(!ending&&record.operations.length>=1000)throw sceneError('本轮控制操作已达上限，请建立新轮。','SCENARIO_LIMIT');
   }
   private append(record:SceneRecord,kind:ScenarioOperation['kind'],id:string,input:string,actor:ScenarioActor,actionIds:string[]=[]):StoredOperation {
     const operation:StoredOperation={id,instanceId:record.instance.instanceId,kind,revision:record.instance.revision,businessNow:record.instance.businessNow,createdAt:now(),actor:structuredClone(actor),actionIds,input,resultInstance:structuredClone(record.instance)};record.operations.push(operation);return operation;
@@ -151,8 +155,60 @@ export class ScenarioStore {
     const records=[record];if(active.instanceId){const old=this.get(active.instanceId);if(!old.instance.paused)throw sceneError('请先暂停旧轮。');if(old.actions.some(a=>a.sendState==='unconfirmed'))throw sceneError('旧轮还有接收未确认的消息，请先核对。');if(old.actions.some(a=>a.sendState==='unsent')&&!terminateUnsent)throw sceneError('旧轮存在未投放消息；请显式保留未投放记录后重演。');old.instance.status='frozen';old.instance.revision++;old.instance.updatedAt=now();records.push(old);}
     record.instance.status='active';record.instance.revision++;record.instance.updatedAt=now();const operation=this.append(record,'activate',operationId,input,actor);this.save(records,{instanceId:id,revision:active.revision+1});return this.result(record,operation);
   }
+  director():DirectorState {
+    const active=this.active(),instance=active.instanceId?this.get(active.instanceId).instance:undefined;
+    return {mode:instance?.operationMode==='free_debug'?'free_debug':'scenario',activeInstanceId:active.instanceId,activeRevision:active.revision,...(instance?{activeInstance:instance}:{})};
+  }
+  createDebug(operationId:string,actor:ScenarioActor):ScenarioMutationResult {
+    const input=stable({kind:'create-debug',operationId,actor}),prior=this.prior(operationId,input);if(prior)return prior;
+    const instanceId=`run-${randomUUID()}`,time=now(),world=sceneWorld(instanceId);
+    // Reuse versioned preset facts, never copy the active run or its mutable world.
+    const record:SceneRecord={schemaVersion:4,instance:{instanceId,operationMode:'free_debug',definitionId:'free-debug',definitionVersion:'1',definitionHash:scenarioDefinition.definitionHash,name:'自由调试',mode:'source_replay',status:'prepared',paused:false,revision:1,businessNow:scenarioDefinition.initialBusinessNow,stepIndex:0,stepCount:0,createdAt:time,updatedAt:time},...world,steps:[],tasks:[],changes:[],actions:[],operations:[]};
+    // A preset report is needed for the existing report editor; take the preset's first factual report.
+    if(!record.reports.length)record.reports=structuredClone(world.steps.flatMap(step=>step.reports).slice(0,1));
+    const op=this.append(record,'create',operationId,input,actor);this.save([record]);return this.result(record,op);
+  }
+  finish(id:string,operationId:string,revision:number,activeRevision:number,actor:ScenarioActor):ScenarioMutationResult {
+    const input=stable({kind:'finish',id,operationId,revision,activeRevision,actor}),prior=this.prior(operationId,input);if(prior)return prior;
+    const record=this.get(id),active=this.active();this.writable(record,revision,true);
+    if(active.instanceId!==id||active.revision!==activeRevision||record.instance.status!=='active'||!record.instance.paused)throw sceneError('活动轮次未暂停或已变化。');
+    if(record.actions.some(action=>action.sendState==='unconfirmed'))throw sceneError('仍有通知接收结果待核对。');
+    record.instance.status='frozen';record.instance.revision++;record.instance.updatedAt=now();
+    const op=this.append(record,'finish',operationId,input,actor);this.save([record],{instanceId:null,revision:active.revision+1});return this.result(record,op);
+  }
+  debugState(id:string) {
+    const record=this.get(id);if(record.schemaVersion!==4)throw sceneError('当前轮次不是自由调试。');
+    const latest=new Map<string,InformationReport>();for(const report of record.reports)if(!latest.has(report.reportId)||latest.get(report.reportId)!.revision<report.revision)latest.set(report.reportId,report);
+    // Keep unresolved receipts reachable even after newer edits fill the recent window.
+    return {instance:record.instance,objects:record.objects,reports:[...latest.values()],actions:record.actions.filter((action,index)=>index>=record.actions.length-20||action.sendState==='unconfirmed')};
+  }
+  editDebug(id:string,kind:'object-updates'|'report-updates',raw:unknown,actor:ScenarioActor):ScenarioMutationResult {
+    const object=kind==='object-updates';const keys=['clientActionId','expectedRunRevision','expectedRevision',...(object?['ref','properties','effectiveAt','validTime']:['reportId','report'])];
+    const body=contextRecord(raw,keys,keys),operationId=contextText(body.clientActionId),input=stable({kind,id,body,actor});
+    const record=this.get(id);if(record.schemaVersion!==4||record.instance.status!=='active'||record.instance.paused||this.active().instanceId!==id)throw sceneError('调试轮次已结束、暂停或不是当前轮次。');
+    const prior=this.prior(operationId,input);if(prior)return prior;
+    this.writable(record,contextInteger(body.expectedRunRevision));
+    const expected=contextInteger(body.expectedRevision);let systemId:string,title:string,subjectId:string,effectiveAt:string,text:string,updated:SituationObject|undefined,report:InformationReport|undefined;
+    if(object){
+      const current=record.objects.find(item=>stable(item.ref)===stable(body.ref));if(!current||!['road','resource'].includes(current.ref.objectType))throw sceneError('对象不可修改。');
+      if(current.revision!==expected)throw sceneError('对象修订已变化。','REVISION_CONFLICT');
+      effectiveAt=contextTimestamp(body.effectiveAt);updated=situationObject({...current,revision:expected+1,properties:body.properties,effectiveAt,validTime:body.validTime},current.ref.systemId);
+      if(current.ref.objectType==='road'&&!('passability' in updated.properties))throw sceneError('需要道路通行状态。');
+      systemId=current.ref.systemId;subjectId=current.ref.objectId;title=`${current.name}态势更新`;text=`对象 ${systemId}/${current.ref.objectType}/${subjectId} 已更新至修订 ${updated.revision}。请查询当前状态及变化。`;
+      record.changes.push({cursor:sceneChangeCursor(id,record.changes.length+1),effectiveAt,before:structuredClone(current),after:updated});record.objects[record.objects.indexOf(current)]=updated;
+    }else{
+      const reportId=contextText(body.reportId),current=record.reports.filter(item=>item.reportId===reportId).sort((a,b)=>b.revision-a.revision)[0];if(!current||current.revision!==expected)throw sceneError('报告修订已变化。','REVISION_CONFLICT');
+      const value=contextRecord(body.report,['subjectId','title','summary','content','objectRefs','areaIds','observedAt','publishedAt','validTime']);report={...value,reportId,revision:expected+1} as unknown as InformationReport;
+      decodeContextResponse('information_read',{systemId:'intel',reportId},{systemId:'intel',asOf:record.instance.businessNow,item:report});
+      if(report.subjectId!==current.subjectId||report.objectRefs.some(ref=>!record.objects.some(item=>stable(item.ref)===stable(ref)))||report.areaIds.some(area=>!record.objects.some(item=>item.areaIds.includes(area))))throw sceneError('报告不能引用其他轮次或改变原主题。','SCENARIO_CLOCK_CONFLICT');
+      systemId='intel';subjectId=reportId;title=report.title;effectiveAt=report.publishedAt??record.instance.businessNow;text=`报告 ${reportId} 已更新至修订 ${report.revision}。请查询报告正文及历史。`;record.reports.push(report);
+    }
+    record.instance.revision++;record.instance.updatedAt=now();
+    const action:ScenarioAction={id:operationId,instanceId:id,stepId:'debug-edit',actor:structuredClone(actor),systemId,revision:record.instance.revision,createdAt:now(),sendState:'unsent',notification:{sourceMessageId:`${id}-${operationId}`,scenarioInstanceId:id,title,text,subjectId,occurredAt:effectiveAt}};
+    record.actions.push(action);const op=this.append(record,'debug-edit',operationId,input,actor,[action.id]);this.save([record]);return this.result(record,op);
+  }
   private legacyPreview(id:string):ScenarioPreview {
-    const record=this.get(id),step=record.steps[record.instance.stepIndex];let reason:string|undefined;
+    const record=this.get(id),step=record.steps[record.instance.stepIndex];if(record.schemaVersion===4)throw sceneError('自由调试不能推进演练事件。');let reason:string|undefined;
     if(record.instance.status!=='active')reason=record.instance.status==='frozen'?'旧轮已冻结。':'请先初始化任务并激活本轮。';
     else if(record.instance.paused)reason='本轮已暂停，请继续后再投放。';
     else if(!step)reason='来源事件已投放完毕；这不表示业务任务完成。';
@@ -243,7 +299,7 @@ export class ScenarioStore {
     const previous=this.command(input.commandId);
     if(previous){if(stable(previous.command.input)!==stable(input))throw sceneError('指令编号已用于其他内容。','ACTION_CONFLICT');return previous.command.receipt;}
     if(this.movingId===input.scenarioInstanceId)this.stopMotion();
-    const record=this.get(input.scenarioInstanceId);this.writable(record,record.instance.revision);
+    const record=this.get(input.scenarioInstanceId);if(record.schemaVersion===4)throw sceneError('自由调试暂不支持演练执行指令。','UNSUPPORTED_OPERATION');this.writable(record,record.instance.revision);
     if(this.active().instanceId!==record.instance.instanceId||record.instance.status!=='active')throw sceneError('当前资料已只读。','SCENARIO_FROZEN');
     assertCommandObjects(input.command,record.objects);
     record.instance.revision++;record.instance.updatedAt=now();
@@ -253,7 +309,7 @@ export class ScenarioStore {
   }
   control(id:string,action:'pause'|'resume',operationId:string,revision:number,actor:ScenarioActor):ScenarioMutationResult {
     const input=stable({kind:action,id,operationId,revision,actor}),prior=this.prior(operationId,input);if(prior)return prior;
-    let record=this.get(id);this.writable(record,revision);if(record.instance.advancing){this.stopMotion();record=this.get(id);}if(record.instance.status!=='active')throw sceneError('只能暂停或继续活动轮次。');record.instance.paused=action==='pause';record.instance.revision++;record.instance.updatedAt=now();const operation=this.append(record,action,operationId,input,actor);this.save([record]);return this.result(record,operation);
+    let record=this.get(id);this.writable(record,revision,action==='pause'&&!record.instance.paused);if(record.instance.advancing){this.stopMotion();record=this.get(id);}if(record.instance.status!=='active')throw sceneError('只能暂停或继续活动轮次。');record.instance.paused=action==='pause';record.instance.revision++;record.instance.updatedAt=now();const operation=this.append(record,action,operationId,input,actor);this.save([record]);return this.result(record,operation);
   }
   action(id:string):{record:SceneRecord;action:ScenarioAction}|undefined {
     if(this.db){const row=this.db.prepare("SELECT i.instance_id FROM scenario_instances i,json_each(i.body,'$.actions') a WHERE json_extract(a.value,'$.id')=? LIMIT 1").get(id);if(!row)return;const record=this.get(String(row.instance_id));return {record,action:record.actions.find(a=>a.id===id)!};}

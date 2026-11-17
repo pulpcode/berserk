@@ -12,6 +12,7 @@ import { actionId, connectorConflict, connectorInvalid, connectorMissing, valida
 import { applyLegacyConnectorPlan, planLegacyConnectors, legacyProjection, resolveLegacyConnection, type LegacyResolutionInput } from './legacy-config.js';
 import type { ContextConfig } from '../context/config.js';
 import type { BackgroundConfig } from '../background/config.js';
+import type { BackgroundControl } from '../contracts/background.js';
 
 interface Credential { version: number; secret?: EncryptedSecret; envRef?: string; revoked: boolean }
 export interface ConnectorRemoteSession { discover(): Promise<ConnectorDiscovery>; close(): Promise<void> | void }
@@ -26,9 +27,14 @@ const now = () => new Date().toISOString();
 const organization = 'organization';
 export class ConnectorService {
   private readonly lock = new Mutex(); private closed = false;
+  private inboundControl?: {read(sourceId:string):BackgroundControl;write(actor:ConnectorActor,sourceId:string,enabled:boolean,revision:number):BackgroundControl};
+  /** Host binds the existing background control store; no second receiving state is persisted. */
+  bindInboundControl(control:NonNullable<ConnectorService['inboundControl']>):void { this.inboundControl=control; }
   private constructor(readonly dataDir: string, readonly db: DatabaseSync, private readonly secrets: ConnectorSecrets, private readonly options: ConnectorServiceOptions) {}
   static async open(dataDir: string, options: ConnectorServiceOptions = {}): Promise<ConnectorService> {
     const cap = join(dataDir, 'capabilities'); await checkDirectory(cap);
+    const directorMarker = await readControlled(join(cap, 'director-migration.json'),32*1024*1024,true);
+    if(directorMarker && JSON.parse(directorMarker).stage!=='completed' && !options.allowMigration) throw new RequestError('CONNECTOR_MIGRATION_INCOMPLETE','导演来源迁移未完成，请停服核对。',409);
     const marker = await readControlled(join(cap, 'r4-migration.json'), 32 * 1024 * 1024, true);
     if (marker && JSON.parse(marker).stage !== 'completed' && !options.allowMigration) throw new RequestError('CONNECTOR_MIGRATION_INCOMPLETE', 'R4连接迁移未完成，请停服核对。', 409);
     const path = join(cap, 'capabilities.sqlite'), stat = await lstat(path);
@@ -87,8 +93,30 @@ export class ConnectorService {
     return {connectorId,revisionId,revision:revision.revision,kind,...(businessSlot?{businessSlot}:{}),name,description,state:asset.state,stateRevision:asset.stateRevision,auth,credential:{configured:auth.mode === 'none' || !!c && !c.revoked,version:c?.version ?? 0,source:auth.mode==='none'?'none':c?.envRef?'environment':auth.credentialSource},tools:(discovery?.tools ?? []).filter(tool => management || revision.exposedTools.some(exposed => exposed.name === tool.name && exposed.contractDigest === tool.contractDigest))};
   }
   catalog(principal: ConnectorPrincipal): ConnectorSummary[] { this.auth(principal); return this.db.prepare('SELECT id FROM r4_connections ORDER BY id').all().flatMap(row => { const id = String(row.id); try { this.allowed(id,principal); return [this.summary(id,principal)]; } catch (error) { if (error instanceof RequestError && error.code === 'CONNECTOR_NOT_FOUND') return []; throw error; } }); }
-  list(actor: ConnectorActor): ConnectorSummary[] { this.admin(actor); return this.db.prepare('SELECT id FROM r4_connections ORDER BY id').all().map(row => this.summary(String(row.id),actor,true)); }
-  detail(actor: ConnectorActor,id: string): ConnectorDetail { this.admin(actor); const revision = this.revision(id), c = this.credential(id,this.credentialSubject(revision,actor)), discovery = this.readDiscovery(id,revision.revisionId,this.credentialSubject(revision,actor),c?.version ?? 0); const ingress=decode<ConnectorBinding>(this.db.prepare("SELECT data FROM r4_connection_bindings WHERE slot='ingress' AND connection_id=?").get(id));return {connection:this.summary(id,actor,true),revision,...(ingress?{sourceIds:ingress.sourceIds}:{}),revisions:this.db.prepare('SELECT data FROM r4_connection_revisions WHERE connection_id=? ORDER BY revision DESC').all(id).map(row => this.revision(id,(JSON.parse(String(row.data)) as ConnectorRevision).revisionId)),audit:this.db.prepare('SELECT data FROM r4_connection_audit WHERE connection_id=? ORDER BY rowid DESC LIMIT 100').all(id).map(row => JSON.parse(String(row.data)) as ConnectorDetail['audit'][number]),...(discovery?{discovery}:{})}; }
+  list(actor: ConnectorActor): ConnectorSummary[] { this.admin(actor); return this.db.prepare('SELECT id FROM r4_connections ORDER BY id').all().map(row => this.summary(String(row.id),actor,true)).filter(item=>item.businessSlot!=='ingress'||this.hasUnassignedIngress()); }
+  private hasUnassignedIngress(): boolean {
+    const binding=decode<ConnectorBinding>(this.db.prepare("SELECT data FROM r4_connection_bindings WHERE slot='ingress'").get());
+    const assigned=this.db.prepare("SELECT connection_id FROM r4_connection_bindings WHERE slot IN ('information','situation')").all().flatMap(row=>this.businessInbound(String(row.connection_id)).map(source=>source.sourceId));
+    return Boolean(binding?.sourceIds.some(id=>!assigned.includes(id)));
+  }
+  private businessScope(id:string): NonNullable<ConnectorDetail['businessScope']> {
+    const binding=decode<ConnectorBinding>(this.db.prepare("SELECT data FROM r4_connection_bindings WHERE connection_id=? AND slot IN ('information','situation')").get(id));
+    const original=decode<{context?:ContextConfig}>(this.db.prepare('SELECT data FROM r4_connection_legacy WHERE id=1').get());
+    return binding ? (original?.context?.scopes??[]).filter(scope=>scope.systemIds.some(system=>binding.systemIds.includes(system))).map(scope=>({scopeId:scope.id,name:scope.name,seatIds:scope.seatIds})) : [];
+  }
+  private businessInbound(id:string): NonNullable<ConnectorDetail['inbound']> {
+    const binding = decode<ConnectorBinding>(this.db.prepare("SELECT data FROM r4_connection_bindings WHERE connection_id=? AND slot IN ('information','situation')").get(id));
+    const ingress = decode<ConnectorBinding>(this.db.prepare("SELECT data FROM r4_connection_bindings WHERE slot='ingress'").get());
+    const original = decode<{background?:BackgroundConfig}>(this.db.prepare('SELECT data FROM r4_connection_legacy WHERE id=1').get());
+    if(!binding || !ingress) return [];
+    return (original?.background?.sources ?? []).filter(source=>!source.retired && binding.systemIds.includes(source.systemId ?? '') && ingress.sourceIds.includes(source.sourceId)).map(source=>({connectorId:ingress.connectorId,sourceId:source.sourceId,name:source.name,accepting:this.inboundControl?.read(source.sourceId).enabled??false,revision:this.inboundControl?.read(source.sourceId).revision??0,policyScopes:Object.entries(source.operationPolicies??{}).map(([mode,policyId])=>{const policy=original!.background!.sources.find(value=>value.sourceId===policyId)!;return {mode:mode as 'scenario'|'free_debug',sourceId:policyId,profileIds:policy.allowedProfileIds,recipientSeatIds:policy.allowedRecipientSeatIds};})}));
+  }
+  async inboundState(actor:ConnectorActor,id:string,sourceId:string,input:{enabled:boolean;expectedRevision:number;clientActionId:string}):Promise<ConnectorDetail> {
+    return this.lock.run(async()=>{this.admin(actor);const key={kind:'inbound-state',id,sourceId,...input},old=this.receipt<ConnectorDetail>(actor,input.clientActionId,key);if(old)return old;
+      const inbound=this.businessInbound(id).find(source=>source.sourceId===sourceId);if(!inbound)throw connectorMissing();if(inbound.revision!==input.expectedRevision)throw connectorConflict();
+      if(!this.inboundControl)throw new RequestError('CONNECTOR_LEGACY_UNAVAILABLE','通知服务未就绪。',409);this.inboundControl.write(actor,sourceId,input.enabled,input.expectedRevision);this.audit(actor,id,input.enabled?'inbound_enabled':'inbound_disabled',{sourceId});const result=this.detail(actor,id);this.saveReceipt(actor,input.clientActionId,key,result);return result;});
+  }
+  detail(actor: ConnectorActor,id: string): ConnectorDetail { this.admin(actor); const revision = this.revision(id), c = this.credential(id,this.credentialSubject(revision,actor)), discovery = this.readDiscovery(id,revision.revisionId,this.credentialSubject(revision,actor),c?.version ?? 0); const ingress=decode<ConnectorBinding>(this.db.prepare("SELECT data FROM r4_connection_bindings WHERE slot='ingress' AND connection_id=?").get(id));return {connection:this.summary(id,actor,true),revision,...(this.businessScope(id).length ? {businessScope:this.businessScope(id)} : {}),...(this.businessInbound(id).length ? {inbound:this.businessInbound(id)} : {}),...(ingress?{sourceIds:ingress.sourceIds}:{}),revisions:this.db.prepare('SELECT data FROM r4_connection_revisions WHERE connection_id=? ORDER BY revision DESC').all(id).map(row => this.revision(id,(JSON.parse(String(row.data)) as ConnectorRevision).revisionId)),audit:this.db.prepare('SELECT data FROM r4_connection_audit WHERE connection_id=? ORDER BY rowid DESC LIMIT 100').all(id).map(row => JSON.parse(String(row.data)) as ConnectorDetail['audit'][number]),...(discovery?{discovery}:{})}; }
   private audit(actor: ConnectorPrincipal,id: string,action: string,detail: Record<string,unknown> = {}): void { const auditId=randomUUID();this.db.prepare('INSERT INTO r4_connection_audit VALUES(?,?,?)').run(auditId,id,JSON.stringify({id:auditId,connectorId:id,userId:actor.userId,action,createdAt:now(),detail})); }
   private receipt<T>(principal: ConnectorPrincipal,id: string,input: unknown,secret = false): T | undefined { actionId(id); const row = this.db.prepare('SELECT input_digest,data FROM r4_connection_actions WHERE principal=? AND id=?').get(principal.userId,id); if (!row) return; const old = String(row.input_digest), digest = secret ? this.secrets.receiptDigest(canonicalJson(input),old.split(':')[1]) : capabilityDigest(input); if (old !== digest) throw connectorConflict(); return JSON.parse(String(row.data)) as T; }
   private saveReceipt(principal: ConnectorPrincipal,id: string,input: unknown,result: unknown,secret = false): void { this.db.prepare('INSERT INTO r4_connection_actions VALUES(?,?,?,?)').run(principal.userId,id,secret?this.secrets.receiptDigest(canonicalJson(input)):capabilityDigest(input),JSON.stringify(result)); }

@@ -29,6 +29,12 @@ export class ScenarioScope {
     if (!config?.enabled || !token) throw new RequestError('SIMULATION_UNAVAILABLE', '业务资料来源暂不可用。', 503);
     return readContextJson(new URL(`${connection?.endpoint??config.baseUrl}/control/${path}`), token, undefined, {maxBytes: 2 * 1024 * 1024});
   }
+  async modeFor(id:string):Promise<'scenario'|'free_debug'> {
+    const raw=contextRecord(await this.read(`instances/${encodeURIComponent(instanceId(id))}`),['instance','steps','timeline','objects','reports','actions','operations','taskDefinitions','taskBootstrap'],['instance']);
+    const instance=raw.instance as Record<string,unknown>;if(!instance||instance.instanceId!==id||instance.operationMode!==undefined&&instance.operationMode!=='free_debug')throw mismatch();
+    if(instance.operationMode==='free_debug'&&instance.definitionId!=='free-debug')throw mismatch();
+    return instance.operationMode==='free_debug'?'free_debug':'scenario';
+  }
   provenance(id: string) { return this.read(`instances/${encodeURIComponent(instanceId(id))}/provenance`); }
   async reconcileLegacy(events: Array<{id:string;sourceId:string;sourceMessageId:string;title:string;text:string;subjectId?:string;occurredAt?:string;scenarioInstanceId?:string;files?:unknown[]}>, bind: (eventId:string,id:string)=>Promise<void>) {
     const candidates=events.filter(event=>event.scenarioInstanceId===undefined && this.config.simulation?.sources.some(mapping=>mapping.sourceId===event.sourceId && this.config.systems.some(system=>system.id===mapping.systemId&&system.scenarioClock===true)));

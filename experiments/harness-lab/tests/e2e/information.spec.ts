@@ -11,7 +11,7 @@ import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 
-async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1], withRoles = false) {
+async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1], withRoles = false, modePolicies = false) {
   const dir = await mkdtemp(join(tmpdir(), 'axon-information-web-'));
   if (withRoles) await cp('fixtures/agents', join(dir, 'roles'), { recursive: true });
   const db = await openDatabase(dir); const access = new AccessStore(db);
@@ -27,6 +27,14 @@ async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1], wit
   const ruleInput = { name: '资料预处理并投递', sourceId: 'incoming', profileId: 'preprocess', recipientSeatIds: ['a', 'b'], enabled: true };
   if (rule) store.createRule(actor.userId, randomUUID(), ruleInput);
   const background = parseBackgroundConfig({ enabled: true, sources: [{ sourceId: 'incoming', name: '资料接入', credentialRef: 'TEST_INFORMATION_TOKEN', allowedProfileIds: ['preprocess'], allowedRecipientSeatIds: ['a', 'b'] }], profiles: [{ id: 'preprocess', name: '资料预处理', goal: '整理事实和待核实问题', tools: ['source_read'] }] });
+  if (modePolicies) {
+    background.sources[0].operationPolicies = {scenario: 'incoming', free_debug: 'incoming-debug'};
+    background.sources[0].name = '情报接入';
+    const debugSource = {...background.sources[0], sourceId: 'incoming-debug', name: '旧调试来源', retired: true as const, allowedRecipientSeatIds: ['b']};
+    delete debugSource.operationPolicies; background.sources.push(debugSource);
+    store.grant('seat', 'a', 'incoming', 'view');
+    store.grant('seat', 'a', 'incoming-debug', 'manage');
+  }
   const token = 'test-information-source-secret-value'; const app = await createApp(lab, false, { config: background, env: { TEST_INFORMATION_TOKEN: token } });
   const pages: Page[] = []; let losePreparationResponse = false; let hideSkills = false;
   const messages: { sessionId: string; body: Record<string, unknown> }[] = [];
@@ -69,13 +77,16 @@ test('one preprocessing reaches two seats; explicit continuation sends once to i
   const env = await setup(); const context = await browser.newContext(); const b = await context.newPage(); await env.attach(page); await env.attach(b);
   try {
     await env.receive(); await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
-    const initialCalls = env.fake.calls.length; expect(initialCalls).toBeGreaterThan(0);
+    const processingCalls = () => env.fake.calls.filter(call => !call.context.systemPrompt?.startsWith('预测用户'));
+    const initialCalls = processingCalls().length; expect(initialCalls).toBeGreaterThan(0);
+    const workspace = await env.lab.workspaces.ensureWorkspace(env.task.id, env.actor.seatId, env.task.title);
+    await env.lab.createSession(workspace.id, env.actor.seatId, undefined, undefined, undefined, { userId: env.actor.userId });
     await login(page, 'a'); await login(b, 'b');
     await expect(page.getByRole('button', { name: '工作总览', exact: true })).toBeVisible(); await expect(b.getByRole('button', { name: '工作总览', exact: true })).toHaveCount(0);
-    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 联合分析任务 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 联合分析任务 中新建对话' }).click(); await page.getByRole('textbox', { name: '发送消息' }).fill('保留在原对话的草稿');
+    await page.locator('.session-item').first().click(); await page.getByRole('textbox', { name: '发送消息' }).fill('保留在原对话的草稿');
     await page.getByRole('button', { name: '工作总览', exact: true }).click(); await expect(page.getByRole('heading', { name: '工作总览' })).toBeVisible(); await expect(page.getByRole('complementary', { name: '会话与资料' })).toBeVisible(); await expect(page.getByRole('button', { name: '返回工作台', exact: true })).toHaveCount(0); await page.locator('.session-item').first().click(); await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('保留在原对话的草稿');
     await inbox(page); await page.getByLabel('处理位置', { exact: true }).selectOption(env.task.id); await page.getByRole('textbox', { name: '问题或工作要求', exact: true }).fill('请确认道路信息对任务的影响'); await page.getByRole('button', { name: '发送并进入对话', exact: true }).click();
-    await expect.poll(() => env.fake.calls.length).toBe(initialCalls + 1);
+    await expect.poll(() => processingCalls().length).toBe(initialCalls + 1);
     await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('');
     const prepared = env.store.listActions().find(item => item.kind === 'analysis')!;
     expect(env.messages).toHaveLength(1); expect(env.messages[0]!.sessionId).toBe(prepared.sessionId);
@@ -143,9 +154,10 @@ test('received attachment and explicit capabilities are carried into the first c
     await page.getByLabel('处理位置', { exact: true }).selectOption(env.task.id); await page.getByLabel('问题或工作要求').fill('请结合这份信息核实任务影响'); await page.locator('.continuation-materials > summary').click(); await page.getByRole('checkbox', { name: /任务材料.txt/ }).check();
     await page.getByText('更多选项', { exact: true }).click();
     await page.getByLabel('Skill（可选）').selectOption('synthesis'); await page.getByLabel('Agents（可选）').selectOption('analyst');
-    const calls = env.fake.calls.length;
+    const processingCalls = () => env.fake.calls.filter(call => !call.context.systemPrompt?.startsWith('预测用户'));
+    const calls = processingCalls().length;
     await page.getByRole('button', { name: '发送并进入对话', exact: true }).click(); await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('');
-    await expect.poll(() => env.fake.calls.length).toBe(calls + 1);
+    await expect.poll(() => processingCalls().length).toBe(calls + 1);
     const action = env.store.listActions().find(item => item.kind === 'analysis')!; expect(action.imports).toHaveLength(1);
     expect(await readFile(join(env.lab.files.filesDirectory(action.workspaceId!, 'a'), action.imports![0]!.path), 'utf8')).toBe('附件原文：道路施工，等待恢复。'); expect(env.messages).toHaveLength(1);
     expect(env.messages[0]).toMatchObject({ sessionId: action.sessionId, body: { fileRefs: [{ path: action.imports![0]!.path }], skill: { id: 'synthesis' }, agent: { name: 'analyst' } } });
@@ -291,7 +303,8 @@ test('uncertain conversation preparation is queried without sending; manual draf
     await login(page, 'a'); await inbox(page);
     await page.getByLabel('处理位置', { exact: true }).selectOption(env.task.id);
     await page.getByLabel('问题或工作要求').fill('响应丢失仍要保留的要求');
-    const calls = env.fake.calls.length;
+    const processingCalls = () => env.fake.calls.filter(call => !call.context.systemPrompt?.startsWith('预测用户'));
+    const calls = processingCalls().length;
     env.loseNextPreparationResponse();
     await page.getByRole('button', { name: '发送并进入对话', exact: true }).click();
     await expect(page.getByRole('alert')).toContainText('提交结果尚需核对');
@@ -311,7 +324,7 @@ test('uncertain conversation preparation is queried without sending; manual draf
     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('我在对话里改过的新要求');
     expect(env.messages).toHaveLength(0);
     await page.getByRole('button', { name: '发送消息', exact: true }).click();
-    await expect.poll(() => env.fake.calls.length).toBe(calls + 1);
+    await expect.poll(() => processingCalls().length).toBe(calls + 1);
     expect(env.messages).toHaveLength(1); expect(env.messages[0]!.body.text).toBe('我在对话里改过的新要求');
   } finally { await env.close(); }
 });
@@ -476,5 +489,24 @@ test('reopening an unregistered submission preserves its draft and allows a new 
     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('');
     await expect.poll(() => env.messages.length).toBe(1); expect(posts).toBe(2);
     expect(env.messages[0]!.body.text).toContain('人员修改后重新发送');
+  } finally { await env.close(); }
+});
+
+
+test('mode policy rule scope remains editable without canonical-source management', async ({ page }) => {
+  const env = await setup(false, undefined, false, true); await env.attach(page);
+  try {
+    await login(page, 'a'); await page.getByRole('button', {name: '工作总览', exact: true}).click();
+    await page.getByRole('button', {name: '处理与投递规则', exact: true}).click();
+    await page.getByRole('button', {name: '新建规则', exact: true}).click();
+    await expect(page.getByRole('combobox', {name: '接入来源', exact: true})).toHaveValue('incoming-debug');
+    await expect(page.getByRole('combobox', {name: '接入来源', exact: true}).locator('option:checked')).toHaveText('情报接入 · 自由调试');
+    await expect(page.getByLabel('席位 A', {exact: true})).toHaveCount(0);
+    await page.getByLabel('规则名称').fill('调试处理规则'); await page.getByLabel('席位 B', {exact: true}).check();
+    await page.getByRole('button', {name: '保存规则', exact: true}).click();
+    await expect(page.locator('.information-rules').getByRole('status')).toContainText('规则已保存');
+    expect(env.store.listRules()).toHaveLength(1);
+    expect(env.store.listRules()[0]).toMatchObject({sourceId: 'incoming-debug', recipientSeatIds: ['b']});
+    expect(env.fake.calls).toHaveLength(0);
   } finally { await env.close(); }
 });

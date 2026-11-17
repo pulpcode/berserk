@@ -1,5 +1,6 @@
 /** Opt-in synthetic S01–S07 acceptance. Every run uses a fresh formal trial; never deploys. */
 import assert from 'node:assert/strict';
+import { requireDirectorProbeRebuild } from './director-probe-guard.js';
 import {execFileSync} from 'node:child_process';
 import {createHash, randomUUID} from 'node:crypto';
 import {appendFile, chmod, mkdir, mkdtemp, readFile, readdir, writeFile} from 'node:fs/promises';
@@ -324,7 +325,8 @@ async function runScenario(run:number, port:number, prepareOnly:boolean, summary
 }
 
 export async function main(args=process.argv.slice(2)) {
-  if(args.includes('--help')) {console.info('probe:agent-framework -- [--runs 1|2|3] [--port 4331] [--prepare-only]\n默认一轮；三轮互相独立，失败不重试。--prepare-only 无模型，仅准备合成材料并取证，不能证明 Docker/模型通过。证据含待审阅语义，自动结构检查不能替代人工业务审阅。');return;}
+  if(args.includes('--help')) {console.info('probe:agent-framework -- [--runs 1|2|3] [--port 4331] [--prepare-only]\n此旧地图用例已停用，需按导演台自由调试预置数据重编排；运行会在创建环境前拒绝。默认一轮；三轮互相独立，失败不重试。--prepare-only 无模型，仅准备合成材料并取证，不能证明 Docker/模型通过。证据含待审阅语义，自动结构检查不能替代人工业务审阅。');return;}
+  requireDirectorProbeRebuild('agent-framework');
   let runs=1,port=Number(process.env.AGENT_FRAMEWORK_PORT??'4331'),prepareOnly=false;
   for(let i=0;i<args.length;i++) {
     if(args[i]==='--runs')runs=Number(args[++i]);

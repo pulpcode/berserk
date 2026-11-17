@@ -8,7 +8,7 @@ Read for changes to spatial source data, map UI, object references, and simulati
 
 - `GET /api/context/map-config` exposes public basemap settings and actor-specific `simulationEnabled`, never business-source tokens or private URLs; public basemap URLs and attribution are intentionally exposed.
 - `POST /api/context/situation`, `POST /api/context/reports/search`, and `GET /api/context/reports/:systemId/:reportId` use existing `ContextService` permissions.
-- `/api/simulation` and its `object-updates`, `report-updates`, `actions/:id`, `actions/:id/send` routes proxy only the configured mock control service.
+- `/api/simulation` reads and action receipts proxy only the configured mock control service under director authorization. Old unscoped `object-updates`/`report-updates` writes are retired; use the run-scoped director endpoints in [Director unification](director-unification.md).
 - Optional `SituationObject.geometry` is bounded GeoJSON Point, LineString, or Polygon in WGS84 longitude/latitude order. Road properties may contain `passability`; legacy empty properties and objects without geometry remain valid.
 - `npm run probe:situation-map -- serve` creates an isolated trial without sending notifications or model messages. `verify` explicitly performs one real model request.
 

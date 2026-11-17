@@ -86,9 +86,9 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
       const response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':current.csrf},body:JSON.stringify({...selector,password})});
       const body=await response.json(); if(!response.ok)throw new Error(body.error?.message || '登录未完成。');
       const signedIn=body as AuthSession;
-      const directorPath=location.pathname==='/scenario-director' || signedIn.identity?.controlScenarios===true;
+      const directorPath=location.pathname==='/director' || signedIn.identity?.controlScenarios===true;
       clearPrivateState();setPassword('');setState(signedIn);channel?.postMessage('changed');
-      history.replaceState(null,'',signedIn.identity && !isBusinessIdentity(signedIn.identity) ? '/capabilities' : directorPath?'/scenario-director':'/');
+      history.replaceState(null,'',signedIn.identity && !isBusinessIdentity(signedIn.identity) ? '/capabilities' : directorPath?'/director':'/');
     } catch(error){setError(error instanceof Error ? error.message : '连接失败，请重试。');} finally{setBusy(false);}
   }
   async function logout() {

@@ -1,3 +1,4 @@
+import { DirectorModes } from './DirectorModes';
 import { useDirectorReplay } from './useDirectorReplay';
 import { useDirectorDelivery } from './useDirectorDelivery';
 import { LoadingIndicator } from './LoadingIndicator';
@@ -36,7 +37,7 @@ function restoredRequest(key: string): PendingRequest | undefined {
 }
 
 function Denied({back, message}: {back: () => void; message?: string}) {
-  return <div className="director-empty"><CircleAlert size={28} aria-hidden="true"/><h1>无权访问场景导演台</h1><p>{message || '场景导演台仅对获授权的专用导演席开放。请使用业务工作台查看已生效的信息。'}</p><button onClick={back}>返回业务工作台</button></div>;
+  return <div className="director-empty"><CircleAlert size={28} aria-hidden="true"/><h1>无权访问导演台</h1><p>{message || '导演台仅对获授权的专用导演席开放。请使用业务工作台查看已生效的信息。'}</p><button onClick={back}>返回业务工作台</button></div>;
 }
 
 export default function ScenarioDirector({identity, allowed, checking, permissionError, retryPermission, returnToWork, openTask}: {
@@ -45,7 +46,7 @@ export default function ScenarioDirector({identity, allowed, checking, permissio
 }) {
   const {domId} = useApi();
   return <section id={domId('scenario-director')} className="scenario-director" tabIndex={-1}>
-    {checking ? <LoadingIndicator label="正在核对导演台访问权限…" /> : !allowed || !identity ? permissionError ? <div className="director-empty"><h1>暂时无法核对访问权限</h1><p role="alert">{permissionError}</p><button onClick={retryPermission}>重新核对</button><button onClick={returnToWork}>返回业务工作台</button></div> : <Denied back={returnToWork}/> : <DirectorWorkspace identity={identity} openTask={openTask} back={returnToWork}/>}
+    {checking ? <LoadingIndicator label="正在核对导演台访问权限…" /> : !allowed || !identity ? permissionError ? <div className="director-empty"><h1>暂时无法核对访问权限</h1><p role="alert">{permissionError}</p><button onClick={retryPermission}>重新核对</button><button onClick={returnToWork}>返回业务工作台</button></div> : <Denied back={returnToWork}/> : <DirectorModes key={identity.userId} identity={identity}><DirectorWorkspace identity={identity} openTask={openTask} back={returnToWork}/></DirectorModes>}
   </section>;
 }
 
@@ -234,7 +235,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   if (denied || definitions.denied || instances.denied) return <Denied back={back} message="当前账号已无法读取导演台资料。请核对导演授权与场景配置后重新进入。"/>;
   return <>
     <header className="director-heading">
-      <div><h1>场景导演台</h1><p className="director-scene-meta">{instance?.name || definition?.name || '场景'}<span>{modes[instance?.mode || mode]}</span>{instance && <><time dateTime={instance.createdAt} title={instance.createdAt}>{realTimestamp(instance.createdAt)}</time><span>{directorInstanceStatus(instance)}</span></>}</p></div>
+      <div><h2>场景演练</h2><p className="director-scene-meta">{instance?.name || definition?.name || '场景'}<span>{modes[instance?.mode || mode]}</span>{instance && <><time dateTime={instance.createdAt} title={instance.createdAt}>{realTimestamp(instance.createdAt)}</time><span>{directorInstanceStatus(instance)}</span></>}</p></div>
       <div className="director-buttons">
         <button disabled={blocked || !definition || !identity.createPublicTask} onClick={() => openRestart()}><RotateCcw size={16} aria-hidden="true"/>重新演示</button>
         <button disabled={Boolean(busy || replay.busy)} onClick={() => { eventDetails.close(); setPanel(undefined); setInitialRecordId(undefined); setRecords(true); }}><History size={16} aria-hidden="true"/>演示记录</button>

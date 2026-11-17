@@ -1,3 +1,4 @@
+import type { DirectorState, DebugState } from '../src/contracts/director.js';
 import { randomUUID } from 'node:crypto';
 import { mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -113,7 +114,7 @@ describe('scenario director authorization and host/source integration',()=>{
     const f=await setup(false),overall=await login(f.app,'seat-overall');
     expect(await json(f.director.call('/api/context/map-config'))).toMatchObject({scenarioControlEnabled:false});
     expect((await f.director.call('/api/simulation/scenarios')).statusCode).toBe(404);
-    expect((await overall.call('/api/simulation')).statusCode).toBe(200);
+    expect((await overall.call('/api/simulation')).statusCode).toBe(403);
     expect(await readdir(join(f.dir,'axon'))).not.toContain('scenario-runs');
     expect(f.fake.calls).toHaveLength(0);
   },30000);
@@ -121,13 +122,13 @@ describe('scenario director authorization and host/source integration',()=>{
   it('requires both the independent capability and configured director seat even when overall owns all old source management grants',async()=>{
     const f=await setup();
     expect((await f.app.inject('/api/simulation/scenarios')).statusCode).toBe(401);
-    expect(await json(f.director.call('/api/context/map-config'))).toMatchObject({scenarioControlEnabled:true,simulationEnabled:false});
+    expect(await json(f.director.call('/api/context/map-config'))).toMatchObject({scenarioControlEnabled:true,simulationEnabled:true});
     const definitions=await json<ScenarioDefinitions>(f.director.call('/api/simulation/scenarios'));
     expect(definitions.items[0].counts).toMatchObject({vehicles:24,objects:53,resources:41,steps:12,messages:13});
     const {result}=await create(f),id=result.instance.instanceId;
     for(const seat of businessSeats){
       const actor=await login(f.app,seat);
-      expect(await json(actor.call('/api/context/map-config'))).toMatchObject({scenarioControlEnabled:false,simulationEnabled:seat==='seat-overall'});
+      expect(await json(actor.call('/api/context/map-config'))).toMatchObject({scenarioControlEnabled:false,simulationEnabled:false});
       const denied=[await actor.call('/api/simulation/scenarios'),await actor.call('/api/simulation/instances'),await actor.call(`/api/simulation/instances/${id}`),await actor.call(`/api/simulation/instances/${id}/initialize`),await actor.call(`/api/simulation/instances/${id}/preview`,{}),await actor.call(`/api/simulation/instances/${id}/control`,{clientActionId:randomUUID(),expectedRevision:1,action:'pause'})];
       for(const response of denied){expect(response.statusCode,response.body).toBe(403);expect(response.body).not.toContain('definitionHash');expect(response.body).not.toContain('steps');}
     }
@@ -379,11 +380,11 @@ describe('scenario director authorization and host/source integration',()=>{
     const f=await setup(),{result:created}=await create(f),id=created.instance.instanceId;await initialize(f,id);const active=await activate(f,created);
     const applied=await json<ScenarioMutationResult>(f.director.call(`/api/simulation/instances/${id}/steps/E01`,{clientActionId:randomUUID(),expectedRevision:active.instance.revision}));
     const action=applied.actions[0],overall=await login(f.app,'seat-overall');
-    const legacy=await overall.call('/api/simulation');expect(legacy.statusCode,legacy.body).toBe(200);expect(legacy.body).not.toContain(id);
-    for(const response of [await overall.call(`/api/simulation/actions/${action.id}`),await overall.call(`/api/simulation/actions/${action.id}/send`,{})])expect(response.statusCode,response.body).toBe(404);
+    const legacy=await overall.call('/api/simulation');expect(legacy.statusCode,legacy.body).toBe(403);expect(legacy.body).not.toContain(id);
+    for(const response of [await overall.call(`/api/simulation/actions/${action.id}`),await overall.call(`/api/simulation/actions/${action.id}/send`,{})])expect(response.statusCode,response.body).toBe(403);
     expect((await json<ScenarioAction>(f.director.call(`/api/simulation/actions/${action.id}`))).sendState).toBe('unsent');
     const detail=await json<ScenarioInstanceDetail>(f.director.call(`/api/simulation/instances/${id}`)),road=detail.objects.find(o=>o.ref.objectType==='road')!;
-    expect((await overall.call('/api/simulation/object-updates',{clientActionId:randomUUID(),ref:road.ref,expectedRevision:road.revision,properties:{passability:'closed'},effectiveAt:road.effectiveAt,validTime:null})).statusCode).toBe(404);
+    expect((await overall.call('/api/simulation/object-updates',{clientActionId:randomUUID(),ref:road.ref,expectedRevision:road.revision,properties:{passability:'closed'},effectiveAt:road.effectiveAt,validTime:null})).statusCode).toBe(403);
     expect((await f.director.call(`/api/simulation/instances/${id}/control`,{clientActionId:randomUUID(),expectedRevision:applied.instance.revision,action:'pause',actor:{userId:overall.auth.identity!.userId,seatId:'seat-overall'}})).statusCode).toBe(400);
     expect((await json<ScenarioInstanceDetail>(f.director.call(`/api/simulation/instances/${id}`))).instance.paused).toBe(false);
     for(const secret of Object.values(env))expect(JSON.stringify(detail)).not.toContain(secret);
@@ -402,3 +403,75 @@ describe('scenario director authorization and host/source integration',()=>{
     expect(f.fake.calls).toHaveLength(0);
   },30000);
 });
+
+
+describe('unified director mutually exclusive debug runs',()=>{
+  const switchInput=(state:DirectorState,mode:'scenario'|'free_debug',restart=false)=>({clientActionId:randomUUID(),mode,confirmed:true as const,expectedActiveRevision:state.activeRevision,expectedInstanceId:state.activeInstanceId,expectedRevision:state.activeInstance?.revision??null,...(restart?{restart:true}:{})});
+  it('starts isolated debug, edits and explicitly sends, resets with old facts intact then ends into scenario selection',async()=>{
+    const f=await setup();
+    const initial=await json<DirectorState>(f.director.call('/api/simulation/director'));
+    expect(initial).toMatchObject({mode:'scenario',activeInstanceId:null});
+    const input=switchInput(initial,'free_debug');
+    const started=await json<DirectorState>(f.director.call('/api/simulation/director/switch',input));
+    const id=started.activeInstanceId!;expect(started.mode).toBe('free_debug');
+    expect(await json<DirectorState>(f.director.call('/api/simulation/director/switch',input))).toMatchObject({activeInstanceId:id});
+    expect(f.store.listEvents()).toHaveLength(0);
+    const debug=await json<DebugState>(f.director.call(`/api/simulation/instances/${id}/debug`));
+    expect(debug.objects.length).toBeGreaterThan(0);expect(debug.reports.length).toBeGreaterThan(0);
+    const road=debug.objects.find(item=>item.ref.objectType==='road')!;
+    const update={clientActionId:randomUUID(),expectedRunRevision:debug.instance.revision,expectedRevision:road.revision,ref:road.ref,properties:{passability:'closed'},effectiveAt:debug.instance.businessNow,validTime:null};
+    const edited=await json<ScenarioMutationResult>(f.director.call(`/api/simulation/instances/${id}/debug/object-updates`,update));
+    expect(f.store.listEvents()).toHaveLength(0);
+    expect((await f.director.call(`/api/simulation/instances/${id}/debug/object-updates`,{...update,clientActionId:randomUUID()})).statusCode).toBe(409);
+    const action=edited.actions[0];
+    expect((await f.director.call(`/api/simulation/actions/${action.id}/send`,{})).statusCode).toBe(400);
+    await json(f.director.call(`/api/simulation/actions/${action.id}/send`,{instanceId:id,expectedRevision:edited.instance.revision}));
+    expect(f.store.listEvents()).toHaveLength(1);expect(f.store.listEvents()[0].scenarioInstanceId).toBe(id);
+    expect(await f.lab.scenario!.modeFor(id)).toBe('free_debug');
+    const before=await json<DirectorState>(f.director.call('/api/simulation/director'));
+    const restarted=await json<DirectorState>(f.director.call('/api/simulation/director/switch',switchInput(before,'free_debug',true)));
+    expect(restarted.activeInstanceId).not.toBe(id);
+    const old=await json<DebugState>(f.director.call(`/api/simulation/instances/${id}/debug`));expect(old.instance.status).toBe('frozen');expect(old.objects.find(item=>item.ref.objectId===road.ref.objectId)?.properties).toEqual({passability:'closed'});
+    expect((await f.director.call(`/api/simulation/instances/${id}/debug/object-updates`,update)).statusCode).toBe(409);
+    const next=await json<DebugState>(f.director.call(`/api/simulation/instances/${restarted.activeInstanceId}/debug`));expect(next.actions).toHaveLength(0);expect(next.objects.find(item=>item.name===road.name)?.properties).toEqual(road.properties);
+    const ended=await json<DirectorState>(f.director.call('/api/simulation/director/switch',switchInput(restarted,'scenario')));
+    expect(ended).toMatchObject({mode:'scenario',activeInstanceId:null});expect(f.store.listEvents()).toHaveLength(1);expect(f.fake.calls).toHaveLength(0);
+    const overall=await login(f.app,'seat-overall');expect((await overall.call('/api/simulation/director')).statusCode).toBe(403);
+    expect((await f.director.call('/api/simulation/object-updates',update)).statusCode).toBe(410);
+  },30000);
+  it('switches an actual scenario with unsent actions only after confirmation and leaves scenario history and tasks read-only',async()=>{
+    const f=await setup(),created=(await create(f)).result,id=created.instance.instanceId;await initialize(f,id);const active=await activate(f,created);
+    const preview=await json<ScenarioPreview>(f.director.call(`/api/simulation/instances/${id}/preview`,{}));
+    await json(f.director.call(`/api/simulation/instances/${id}/steps/${preview.step!.id}`,{clientActionId:randomUUID(),expectedRevision:active.instance.revision}));
+    const state=await json<DirectorState>(f.director.call('/api/simulation/director'));const request=switchInput(state,'free_debug');
+    expect((await f.director.call('/api/simulation/director/switch',{...request,confirmed:false})).statusCode).toBe(409);
+    expect((await json<DirectorState>(f.director.call('/api/simulation/director'))).activeInstanceId).toBe(id);
+    const next=await json<DirectorState>(f.director.call('/api/simulation/director/switch',request));expect(next.mode).toBe('free_debug');
+    const old=await json<ScenarioInstanceDetail>(f.director.call(`/api/simulation/instances/${id}`));expect(old.instance.status).toBe('frozen');expect(old.actions[0].sendState).toBe('unsent');
+    expect((await f.director.call(`/api/simulation/actions/${old.actions[0].id}/send`,{})).statusCode).toBe(409);
+    expect(f.store.listEvents()).toHaveLength(0);expect(f.lab.scenario!.isWritable(id)).toBe(false);
+  },30000);
+});
+
+it('persists a blocked director switch across restart and only resumes the exact explicit request',async()=>{
+  const f=await setup(),created=(await create(f)).result,id=created.instance.instanceId,tasks=await initialize(f,id);await activate(f,created);
+  const current=await json<DirectorState>(f.director.call('/api/simulation/director'));
+  const input={clientActionId:randomUUID(),mode:'free_debug',confirmed:true,expectedActiveRevision:current.activeRevision,expectedInstanceId:id,expectedRevision:current.activeInstance!.revision};
+  const release=f.lab.access!.acquire(tasks.tasks[0].taskId,'seat-overall');
+  try{
+    expect((await f.director.call('/api/simulation/director/switch',input)).statusCode).toBe(409);
+    expect(f.lab.scenario!.isWritable(id)).toBe(false);
+    const pending=await json<DirectorState>(f.director.call(`/api/simulation/director/operations/${input.clientActionId}`));expect(pending.pending).toEqual(input);expect(pending.activeInstanceId).toBe(id);
+    expect((await f.director.call('/api/simulation/director/switch',{...input,clientActionId:randomUUID()})).statusCode).toBe(409);
+    expect((await f.director.call('/api/simulation/director/switch',{...input,mode:'scenario'})).statusCode).toBe(409);
+    release();await f.app.close();
+    const fake=await fakeRuntime(f.config,()=>({text:'不得自动执行'})),lab=await PiLab.create(f.config,fake.runtime);
+    const app=await createApp(lab,false,{config:f.background,env},{config:f.context,env});cleanup.push(()=>app.close());
+    const client=await login(app,directorSeat);
+    expect(lab.scenario!.isWritable(id)).toBe(false);
+    const read=await json<DirectorState>(client.call('/api/simulation/director'));expect(read.pending).toEqual(input);expect(read.activeInstanceId).toBe(id);
+    expect((await json<ScenarioInstances>(client.call('/api/simulation/instances'))).items).toHaveLength(1);
+    const result=await json<DirectorState>(client.call('/api/simulation/director/switch',input));expect(result.mode).toBe('free_debug');expect(result.pending).toBeUndefined();expect(result.activeInstanceId).not.toBe(id);
+    expect(lab.scenario!.isWritable(result.activeInstanceId!)).toBe(true);expect(fake.calls).toHaveLength(0);
+  }finally{release();}
+},30000);

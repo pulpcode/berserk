@@ -1,5 +1,5 @@
 import {describe,expect,it} from 'vitest';
-import {parseOptions,removeTargetGeometry} from '../scripts/probe-source-annotations.js';
+import {main,parseOptions,removeTargetGeometry} from '../scripts/probe-source-annotations.js';
 
 describe('isolated source annotation probe',()=>{
   it('bounds live batches and rejects unrecognized options',()=>{
@@ -18,4 +18,8 @@ describe('isolated source annotation probe',()=>{
     expect(removeTargetGeometry({error:'unavailable'},'west')).toEqual({error:'unavailable'});
     expect(removeTargetGeometry(null,'west')).toBeNull();
   });
+});
+
+it('rejects retired real-model probe before preparing files or calling the model',async()=>{
+  await expect(main(['--prepare-only'])).rejects.toThrow('旧 map-*');
 });

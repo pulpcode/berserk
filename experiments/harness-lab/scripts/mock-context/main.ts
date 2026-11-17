@@ -44,6 +44,7 @@ const control = createServer(socket => {
       const args: unknown = JSON.parse(buffer.trim());
       if (!Array.isArray(args) || args.some(item => typeof item !== 'string')) throw new Error('无效控制指令。');
       const [action, value, enabled] = args as string[];
+      if(scenariosEnabled==='true'&&!['status','requests'].includes(action))throw new RequestError('SIMULATION_ENDPOINT_RETIRED','统一导演台已停用无轮次控制，请在 /director 明确选择轮次操作。',410);
       let result: unknown = {ok: true};
       if (action === 'reset') mock.reset();
       else if (action === 'advance' && ['intel', 'situation', 'unknown', 'contract', 'recovery'].includes(value)) mock.advance(value as MockStage);
