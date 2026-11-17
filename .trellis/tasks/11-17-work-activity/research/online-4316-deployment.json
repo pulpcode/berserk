@@ -1,0 +1,35 @@
+{
+  "updatedAt": "2026-11-17T06:29:56Z",
+  "release": "/home/ubuntu/axon-work-activity-4316-20261117",
+  "previousRelease": "/home/ubuntu/axon-input-predictions-4316-20261116",
+  "sourceArchiveSha256": "bf3c4e124d54674468332a1a480b736ba06ea1750e980b74a323b5857f0e9e37",
+  "filesVerified": 490,
+  "pid": 3160962,
+  "previousPid": 2942949,
+  "dataDir": "/home/ubuntu/axon-chat-c-preview-20261112/data",
+  "backup": "/home/ubuntu/axon-work-activity-4316-20261117/backup/before-work-activity",
+  "backupDigest": "02d40e64596cf6b10e424bb2e94c54e6fa6bddbb09b1e2d67412fb34aafe3911",
+  "backupFiles": 482,
+  "schemaMigrationNeeded": false,
+  "allAccountAndSkillTablesPreserved": true,
+  "historyPrefixesPreserved": 91,
+  "serviceSecretsUnchanged": true,
+  "frontendAssetsVerified": [
+    "/assets/index-CKt7vRP6.js",
+    "/assets/index-BrwqUUNW.css"
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "pid4315Unchanged": true,
+  "administratorPersonalOrganizationSkills": true,
+  "skillCreationFormAndConciseCopy": true,
+  "skillFlowOrderAndHeaderRow": true,
+  "conversationalAuthoringR3A": true,
+  "sourceBranch": "codex/input-predictions",
+  "sourceBaseCommit": "db61076",
+  "unifiedCreationAndManagementSkills": true,
+  "sourceWorkingTreeUncommitted": true,
+  "userAcceptance": "pending"
+}

@@ -1,0 +1,29 @@
+{
+  "updatedAt": "2026-11-16T15:29:11Z",
+  "updateId": "prediction-memory-20261116T152854Z",
+  "release": "/home/ubuntu/axon-input-predictions-4316-20261116",
+  "backup": "/home/ubuntu/axon-input-predictions-4316-20261116/frontend-updates/prediction-memory-20261116T152854Z/backup",
+  "sourceArchiveSha256": "48f92d489e4be0b330a830d6dcf53dc8e61e1021a50092c9b8e9a3b09aede872",
+  "filesVerified": 24,
+  "newAssets": [
+    "/assets/index-DKhptpbV.js",
+    "/assets/index-DuycM4OV.css"
+  ],
+  "pidsUnchanged": {
+    "4315": 2776215,
+    "4316": 2942949
+  },
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "serviceRestarted": false,
+  "acceptButtonRemoved": true,
+  "existingCandidateRetainedAcrossVisibility": true,
+  "dataTouched": false,
+  "perSessionMemoryCache": true,
+  "modelChangesPreserveCandidates": true,
+  "identityChangesClearCache": true,
+  "userAcceptance": "pending",
+  "modelsInvoked": 0
+}

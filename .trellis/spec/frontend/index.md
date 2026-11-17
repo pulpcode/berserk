@@ -17,6 +17,9 @@ This product targets desktop browsers only (user decision, 2026-10-13). Do not a
 ## Pre-Development and Quality Check
 
 Read [R4 Connectors and Remote MCP](../backend/connectors-r4.md) for fixed legacy business mappings, personal credentials, remote protocol/network admission, original confirmation/history and desktop connection selection.
+Read [Conversation Work Activity](../backend/work-activity.md) for the collapsible work panel, verified business facts, semantic interpretations, navigation authorization and memory-only analysis.
+
+Read [Next Input Suggestions](../backend/prompt-suggestions.md) for independent prediction, native placeholder display, input hiding/empty restoration, keyboard ownership and login-scoped preferences.
 
 Read [R3A Conversational Authoring](../backend/authoring-r3a.md) for request-scoped administrator methods, original chat confirmation, atomic draft receipts and manual-entry compatibility.
 

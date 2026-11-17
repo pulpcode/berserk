@@ -61,6 +61,10 @@ import {
   SessionManager, SettingsManager, defineTool, type AgentSession, type ToolDefinition,
 } from '@earendil-works/pi-coding-agent';
 import { configuredRuntime } from './model-runtime.js';
+import { generatePromptSuggestion, PROMPT_SUGGESTION_TIMEOUT_MS } from './prompt-suggestion.js';
+import type { PromptSuggestionRequest, PromptSuggestionResponse } from '../contracts/prompt-suggestions.js';
+import { generateWorkActivity, workActivityEvidence, WORK_ACTIVITY_TIMEOUT_MS } from './work-activity.js';
+import type { WorkActivityRequest, WorkActivityResponse, WorkActivityView } from '../contracts/work-activity.js';
 import { syntheticTrialToolNames } from './trial-tools.js';
 import { Type } from 'typebox';
 import type { ComposerSelection, LoadedComposerSelection, AgentInfo, ActivityOverview, AppInfo, PublicMessage, RequestResult, RequestState, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile, ModelSettings, ModelSettingsUpdate, ModelCatalog, ModelChoices, ModelProfile, CompactionSummary, CompactionDetail, UsageSummary, SubagentSummary } from '../contracts/index.js';
@@ -170,6 +174,8 @@ interface Active {
   preparedCommands?: Set<string>;
 }
 interface RecordState {
+  workAnalysis?: { owner: string; version: string; modelId: string; controller: AbortController; done: Promise<WorkActivityResponse> };
+  prediction?: { sourceRequestId: string; controller?: AbortController; done?: Promise<PromptSuggestionResponse> };
   expert?: ExpertRevision;
   binding?: ExpertBinding;
   intake?: MessageIntake;
@@ -429,6 +435,8 @@ export class PiLab {
     if (record.active || this.backgroundHooks?.isSessionReserved(id)) throw new RequestError('SESSION_BUSY', '当前会话正在处理或排队，请结束后再切换模型。', 409);
     if (record.warning) throw new RequestError('RECOVERY_REQUIRED', record.warning, 409);
     this.requestModel(modelId);
+    record.prediction?.controller?.abort();
+    record.workAnalysis?.controller.abort();
     const release = this.workspaces.acquireWrite(record.workspaceId, record.seatId);
     try {
       if (selectedModelId(record.manager.getBranch(), record.workspaceId, id) !== modelId) {
@@ -449,6 +457,7 @@ export class PiLab {
     this.settingsUpdating = true;
     try {
       const next = this.settings.prepare(input, id, create);
+      for (const record of this.records.values()) { record.prediction?.controller?.abort(); record.workAnalysis?.controller.abort(); }
       const config = { ...this.currentConfig, provider: next.provider, model: next.model, baseUrl: next.baseUrl, apiKey: next.apiKey,
         contextWindow: next.contextWindow, maxOutputTokens: next.maxOutputTokens, compactionReserveTokens: next.compactionReserveTokens,
         compactionKeepRecentTokens: next.compactionKeepRecentTokens, contextSource: next.contextSource, outputSource: next.outputSource, contextReady: next.contextReady, thinkingMode: next.thinkingMode };
@@ -740,6 +749,168 @@ export class PiLab {
 
   get(id: string, seatId?: string): SessionSnapshot {
     return this.snapshot(this.record(id, seatId));
+  }
+
+  private workActivityState(id: string, seatId?: string, userId?: string) {
+    const record = this.record(id, seatId);
+    this.requestGuard?.();
+    this.access?.assertCanUseWorkspace(record.seatId);
+    if (userId && this.access && this.access.workspaceIdentity(userId)?.seatId !== record.seatId) {
+      throw new RequestError('AUTH_REQUIRED', '登录已失效。', 401);
+    }
+    const workspace = this.workspaces.get(record.workspaceId, record.seatId);
+    const task = this.access?.get(workspace.taskSpaceId, record.seatId);
+    const personal = !!this.access?.isPersonalScope(record.seatId);
+    const candidates = personal ? [] : (this.collaboration?.list({ seatId: record.seatId }) ?? [])
+      .filter(work => work.taskSpaceId === workspace.taskSpaceId)
+      .map(work => this.collaboration!.read({ seatId: record.seatId }, work.id));
+    const snapshot = this.snapshot(record);
+    const facts = workActivityEvidence(snapshot, candidates, operationId => this.collaboration!.getAction({ seatId: record.seatId }, operationId));
+    const turn = snapshot.turns?.at(-1);
+    const source = turn?.status === 'succeeded' && turn.finalMessageId && record.result?.requestId === turn.requestId
+      ? { sourceRequestId: turn.requestId, finalMessageId: turn.finalMessageId } : null;
+    let reason: string | undefined;
+    if (!source) reason = '本对话尚无可分析的完整回复。';
+    if (record.active || record.warning || this.settingsUpdating || snapshot.backgroundJob || this.backgroundHooks?.isSessionReserved(id)
+      || snapshot.inputQueue?.items.some(item => item.status === 'pending') || snapshot.interactions?.some(item => item.status === 'pending')) reason = '对话处理结束后再识别工作。';
+    try {
+      if (task) this.access!.get(task.id, record.seatId, true);
+      if (record.binding) this.capabilities.assertAdmission(record.binding.expertRef, userId ?? record.binding.userId ?? `seat:${record.seatId}`, record.seatId);
+      this.requestModel(selectedModelId(record.manager.getBranch(), record.workspaceId, id));
+    } catch (error) {
+      if (!(error instanceof RequestError) || [401, 403, 404].includes(error.statusCode)) throw error;
+      reason = error.message;
+    }
+    // Model selection appends a native custom entry but is deliberately absent from this display version.
+    const version = createHash('sha256').update(JSON.stringify({ id, workspace: record.workspaceId, source,
+      active: snapshot.active, result: snapshot.lastResult?.requestId, task: task ? { revision: task.revision, state: task.state, readOnly: task.readOnly } : null,
+      linkedWorkItemId: snapshot.workItemId, evidence: facts.evidence, facts: facts.facts,
+      candidates: candidates.map(({ id, revision, title, goal, state, inputFiles, latestSubmissionId }) => ({ id, revision, title, goal, state, inputFiles, latestSubmissionId })).sort((a, b) => a.id.localeCompare(b.id)),
+    })).digest('hex');
+    const view: WorkActivityView = { version, source, canAnalyze: !reason,
+      ...(reason ? { reason } : {}), ...(snapshot.workItemId ? { linkedWorkItemId: snapshot.workItemId } : {}), ...facts };
+    return { record, view, candidates };
+  }
+
+  workActivity(id: string, seatId?: string, userId?: string): WorkActivityView {
+    return this.workActivityState(id, seatId, userId).view;
+  }
+
+  async analyzeWorkActivity(id: string, input: WorkActivityRequest, seatId?: string,
+    options: { signal: AbortSignal; userId?: string; assertIdentity?: () => void } = { signal: new AbortController().signal }): Promise<WorkActivityResponse> {
+    const inspect = () => {
+      options.assertIdentity?.();
+      const current = this.workActivityState(id, seatId, options.userId);
+      if (!current.view.canAnalyze || current.view.version !== input.version || current.view.source?.sourceRequestId !== input.sourceRequestId
+        || current.view.source.finalMessageId !== input.finalMessageId) throw new RequestError('WORK_ACTIVITY_STALE', '对话或工作信息已变化，请重新读取。', 409);
+      return current;
+    };
+    options.signal.throwIfAborted();
+    const state = inspect(), record = state.record;
+    const modelId = selectedModelId(record.manager.getBranch(), record.workspaceId, id);
+    const empty: WorkActivityResponse = { version: input.version, source: { sourceRequestId: input.sourceRequestId, finalMessageId: input.finalMessageId },
+      status: 'unavailable', items: [], coverage: 'partial', reason: '工作识别暂时不可用，可稍后重试。' };
+    const owner = options.userId ?? record.seatId;
+    const existing = record.workAnalysis;
+    if (existing && existing.owner === owner && existing.version === input.version && existing.modelId === modelId) {
+      const result = await existing.done;
+      options.signal.throwIfAborted(); inspect();
+      return result;
+    }
+    existing?.controller.abort();
+    const model = this.requestModel(modelId);
+    const controller = new AbortController();
+    const signal = AbortSignal.any([options.signal, controller.signal]);
+    const timer = setTimeout(() => controller.abort(), WORK_ACTIVITY_TIMEOUT_MS);
+    const check = () => {
+      inspect(); signal.throwIfAborted();
+      if (this.records.get(id) !== record || selectedModelId(record.manager.getBranch(), record.workspaceId, id) !== modelId
+        || this.settings.info(modelId).version !== model.version) throw new RequestError('WORK_ACTIVITY_STALE', '分析使用的模型已变化。', 409);
+    };
+    const done = (async (): Promise<WorkActivityResponse> => {
+      let release: (() => void) | undefined;
+      try {
+        release = await this.modelPermits?.acquire(signal);
+        check();
+        const result = await generateWorkActivity(model.runtime, model.config, state.view, state.candidates, signal);
+        check();
+        return result ? { ...empty, status: 'ready', ...result, reason: undefined } : empty;
+      } catch (error) {
+        // Even a failed/invalid completion must not hide a revoked identity behind a successful response.
+        try { inspect(); } catch (currentError) {
+          if (currentError instanceof RequestError && [401, 403, 404].includes(currentError.statusCode)) throw currentError;
+        }
+        if (error instanceof RequestError && [401, 403, 404].includes(error.statusCode)) throw error;
+        return empty;
+      } finally { clearTimeout(timer); release?.(); }
+    })();
+    const pending = { owner, version: input.version, modelId, controller, done };
+    record.workAnalysis = pending;
+    try { return await done; }
+    finally { if (record.workAnalysis === pending) record.workAnalysis = undefined; }
+  }
+
+  /** One ephemeral completion, outside the Agent loop and native history. */
+  async promptSuggestion(id: string, input: PromptSuggestionRequest, seatId?: string,
+    options: { signal: AbortSignal; userId?: string; assertIdentity?: () => void } = { signal: new AbortController().signal }): Promise<PromptSuggestionResponse> {
+    const record = this.record(id, seatId);
+    const inspect = () => {
+      options.signal.throwIfAborted();
+      options.assertIdentity?.();
+      this.requestGuard?.();
+      if (this.records.get(id) !== record) throw new RequestError('SUGGESTION_STALE', '会话状态已变化。', 409);
+      const workspace = this.workspaces.get(record.workspaceId, record.seatId);
+      this.access?.assertCanUseWorkspace(record.seatId);
+      if (workspace.taskSpaceId) this.access?.get(workspace.taskSpaceId, record.seatId, true);
+      if (options.userId && this.access && this.access.workspaceIdentity(options.userId)?.seatId !== record.seatId) {
+        throw new RequestError('AUTH_REQUIRED', '登录已失效。', 401);
+      }
+      if (record.binding) this.capabilities.assertAdmission(record.binding.expertRef, options.userId ?? record.binding.userId ?? `seat:${record.seatId}`, record.seatId);
+      if (this.settingsUpdating || record.active || record.warning || this.backgroundHooks?.isSessionReserved(id)
+        || record.result?.requestId !== input.sourceRequestId || record.result.status !== 'succeeded'
+        || selectedModelId(record.manager.getBranch(), record.workspaceId, id) !== input.expectedModelId) {
+        throw new RequestError('SUGGESTION_STALE', '当前回复或模型已变化。', 409);
+      }
+    };
+    inspect();
+    const snapshot = this.snapshot(record);
+    const turn = snapshot.turns?.at(-1);
+    if (turn?.requestId !== input.sourceRequestId || turn.status !== 'succeeded' || turn.finalMessageId !== input.finalMessageId
+      || snapshot.inputQueue?.items.some(item => item.status === 'pending') || snapshot.interactions?.some(item => item.status === 'pending')) {
+      throw new RequestError('SUGGESTION_STALE', '本轮没有可用的最终回复。', 409);
+    }
+    const empty: PromptSuggestionResponse = { sourceRequestId: input.sourceRequestId, finalMessageId: input.finalMessageId, modelId: input.expectedModelId, text: null };
+    if (record.prediction?.sourceRequestId === input.sourceRequestId) return empty;
+    const model = this.requestModel(input.expectedModelId);
+    const leaf = record.manager.getLeafId();
+    const controller = new AbortController();
+    const signal = AbortSignal.any([options.signal, controller.signal]);
+    const prediction: NonNullable<RecordState['prediction']> = { sourceRequestId: input.sourceRequestId, controller };
+    record.prediction = prediction;
+    const timer = setTimeout(() => controller.abort(), PROMPT_SUGGESTION_TIMEOUT_MS);
+    const check = () => {
+      signal.throwIfAborted(); inspect();
+      if (record.manager.getLeafId() !== leaf || this.settings.info(model.id).version !== model.version) {
+        throw new RequestError('SUGGESTION_STALE', '预测来源已变化。', 409);
+      }
+    };
+    prediction.done = (async () => {
+      let release: (() => void) | undefined;
+      try {
+        release = await this.modelPermits?.acquire(signal);
+        check();
+        const text = await generatePromptSuggestion(model.runtime, model.config, snapshot, input, signal);
+        check();
+        return { ...empty, text };
+      } catch (error) {
+        if (error instanceof RequestError && [401, 403, 404].includes(error.statusCode)) throw error;
+        return empty;
+      } finally {
+        clearTimeout(timer); release?.();
+        prediction.controller = undefined; prediction.done = undefined;
+      }
+    })();
+    return prediction.done;
   }
 
   submitInput(id: string, input: InputSubmission, seatId?: string, userId?: string): InputResult {
@@ -1597,6 +1768,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
   start(id: string, text: string, input: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] } = {}, seatId?: string, internal?: BackgroundRequestOptions, actorUserId?: string): { requestId: string; run: (listener: Listener) => Promise<void> } {
     if (this.settingsUpdating) throw settingsBusy();
     const record = this.record(id, seatId);
+    record.prediction?.controller?.abort();
     this.access?.assertCanUseWorkspace(record.seatId);
     const personalOnly = !!this.access?.isPersonalScope(record.seatId);
     if (personalOnly && (internal || input.contextRefs?.length || input.annotationRefs?.length)) throw new RequestError('FORBIDDEN', '个人空间不能引用业务任务或地图资料。', 403);
@@ -1639,6 +1811,9 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       } catch (error) { active.releaseTask(); throw error; }
     }
     if (!personalOnly) this.collaboration?.beginRequest(id, active.id);
+    // Auxiliary work analysis yields to an admitted foreground run, including after chat navigation.
+    if (!internal?.background) for (const other of this.records.values()) { other.workAnalysis?.controller.abort(); other.prediction?.controller?.abort(); }
+    else record.workAnalysis?.controller.abort();
     active.activatedSkills=new Map();
     record.active = active; record.result = null;
     record.statusUpdatedAt = new Date().toISOString();
@@ -1995,6 +2170,12 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
   }
 
   async close(): Promise<void> {
+    const predictions = [...this.records.values()].flatMap<Promise<PromptSuggestionResponse> | Promise<WorkActivityResponse>>(record => {
+      record.prediction?.controller?.abort();
+      record.workAnalysis?.controller.abort();
+      return [record.prediction?.done, record.workAnalysis?.done].filter((value): value is Promise<PromptSuggestionResponse> | Promise<WorkActivityResponse> => value !== undefined);
+    });
+    await Promise.allSettled(predictions);
     await Promise.all([...this.records.values(), ...this.serviceRecords.values()].map(async record => {
       if (record.active) {
         this.stop(record, record.active, 'cancelled');

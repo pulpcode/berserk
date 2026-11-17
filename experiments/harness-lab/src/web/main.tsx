@@ -1,3 +1,7 @@
+import { usePromptSuggestion, usePromptSuggestionPreference } from './usePromptSuggestion';
+import { PromptSuggestion } from './PromptSuggestion';
+import { useWorkActivity, useWorkActivityPreference } from './useWorkActivity';
+import { WorkActivityPanel } from './WorkActivityPanel';
 import type { AuthoringIntent, AuthoringReceipt } from '../contracts/authoring';
 import { CapabilityManagement } from './CapabilityManagement';
 import { SkillManagement } from './SkillLibrary';
@@ -53,6 +57,7 @@ const SituationView = lazy(()=>import('./situation/SituationView'));
 const Simulation = lazy(()=>import('./situation/Simulation'));
 const ScenarioDirector = lazy(()=>import('./ScenarioDirector'));
 import './styles.css';
+import './work-activity.css';
 
 function informationTaskFromLocation() {
   const match = /^\/tasks\/([^/]+)\/information$/.exec(location.pathname);
@@ -91,6 +96,10 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
   const { api, domId, storageKey } = useApi();
   const canCollaborate=identity?.canCollaborate!==false;
   const chat = useChat(canCollaborate);
+  const suggestionPreference = usePromptSuggestionPreference();
+  const workActivityPreference = useWorkActivityPreference();
+  const [workPanelOpen, setWorkPanelOpen] = useState(false);
+  const workPanelButton = useRef<HTMLButtonElement>(null);
   const noteNavigation = chat.noteNavigation;
   const navigationRequest = useRef(0);
   const consumedSessionLink = useRef('');
@@ -205,6 +214,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
   const scrollKey = chat.selected || `workspace:${chat.workspaceId}`;
   const composing = useRef(false);
   const referenceControl = useRef<ComposerReferenceHandle>(null);
+  const [referenceOpen, setReferenceOpen] = useState(false);
   const snapshot = chat.snapshots[chat.selected];
   const selectedActivity = chat.activities.find(session => session.id === chat.selected);
   const active = selectedActivity?.active || snapshot?.active;
@@ -236,6 +246,20 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
   const canSend = !legacyAuthoringPending && composerReady && snapshot?.expert?.availability.available !== false && !busy && !intakeWorking && !intakeUncertain && !loadingSession && !chat.loading && Boolean(chat.selectedModel?.configured && chat.selectedModel.contextReady) && !chat.modelSaving && !chat.modelsError && !chat.modelError && !snapshot?.recoveryWarning && Boolean(chat.draft.trim()) && !blockedAttachments;
   // A pending question/confirmation occupies the composer; drafts, attachments and the queue stay intact.
   const currentCard = canCollaborate && view === 'chat' ? currentInteraction(snapshot) : undefined;
+  const prediction = usePromptSuggestion({
+    sessionId: chat.selected, modelId: chat.selectedModelId, snapshot, completed: chat.completedForeground,
+    enabled: suggestionPreference.enabled, identityActive: seatActive, active: seatActive && view === 'chat', draft: chat.draft, setDraft: chat.setDraft, textarea,
+    ready: Boolean(composerReady && chat.selected && !busy && !loadingSession && !intakeWorking && !intakeUncertain && !pendingInputs.length
+      && !richDraft && !currentCard && chat.selectedModel?.configured && chat.selectedModel.contextReady && !chat.modelSaving
+      && !chat.modelsError && !chat.modelError && !snapshot?.recoveryWarning && snapshot?.expert?.availability.available !== false
+      && selectedActivity?.lastResult?.requestId === snapshot?.lastResult?.requestId && selectedActivity?.lastResult?.status === 'succeeded'),
+    invalidated: Boolean(busy || richDraft || currentCard || pendingInputs.length || intakeWorking || intakeUncertain || currentTask?.readOnly
+      || currentTask?.state === 'archived' || selectedActivity?.lastResult?.status && selectedActivity.lastResult.status !== 'succeeded'
+      || selectedActivity?.lastResult?.requestId && snapshot?.lastResult?.requestId && selectedActivity.lastResult.requestId !== snapshot.lastResult.requestId),
+    blocked: Boolean(referenceOpen || sidebarOpen || resourceOpen || filesOpen || workspaceForm || settingsOpen || taskPanel || compactionDetail || authoringManagement || draggingFiles),
+  });
+  const workActivity = useWorkActivity({ sessionId: chat.selected, modelId: chat.selectedModelId, activities: chat.activities,
+    identityActive: seatActive && canCollaborate, visible: seatActive && view === 'chat' && workPanelOpen, enabled: workActivityPreference.enabled });
   const composerControl = backgroundJob ? <button type="button" className="stop-button" disabled={backgroundStopping} onClick={() => void stopBackground()}><Square size={13} aria-hidden="true" />{backgroundStopping ? '正在停止' : backgroundJob.status === 'queued' ? '取消排队' : '停止后台分析'}</button>
     : busy ? <button type="button" className="stop-button composer-stop" aria-label={active?.status === 'stopping' ? '正在停止' : '停止回复'} title={active?.status === 'stopping' ? '正在停止' : '停止回复'} disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" /></button>
     : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>;
@@ -648,6 +672,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
         </>}
         {view === 'chat' && <span className="workspace-name" title={chat.workspace?.name}>{chat.workspace?.name}</span>}
         {canCollaborate && view === 'chat' && <div className="workspace-tools" role="group" aria-label="项目工具">
+          <button ref={workPanelButton} className="icon-button workspace-tool" aria-label="工作面板" title="工作面板" aria-expanded={workPanelOpen} aria-controls={domId('work-activity-panel')} onClick={() => setWorkPanelOpen(value => !value)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="5.5" cy="6.5" r="3" /><circle cx="5.5" cy="17.5" r="3" /><path d="M13 6.5h8M13 17.5h8" /></svg></button>
           {!personalOnly && <OpenSituationMap disabled={!chat.workspaceId || chat.loading}/>}
           {personalOnly && currentTask && <button className="icon-button workspace-tool" aria-label="空间说明" title="空间说明" onClick={() => setTaskPanel({task:currentTask,visibility:'private'})}><BookOpen size={20} aria-hidden="true" /></button>}
           {!personalOnly&&seats.length > 0 && (!identity || currentTask?.visibility==='public') && <button className="icon-button workspace-tool" aria-label="分派工作" title="分派工作" disabled={!composerReady} onClick={() => showWork(undefined, chat.workspaceId)}><Workflow size={20} strokeWidth={1.75} aria-hidden="true" /></button>}
@@ -666,7 +691,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
       {!personalOnly&&canCollaborate&&seatActive && view === 'simulation' && <Suspense fallback={<LoadingIndicator label="正在读取模拟控制…"/>}><Simulation/></Suspense>}
       {!personalOnly&&seatActive && view === 'scenario_director' && <Suspense fallback={<LoadingIndicator label="正在加载场景导演台…"/>}><ScenarioDirector identity={identity} allowed={Boolean(identity && mapConfig.data?.scenarioControlEnabled)} checking={!mapConfig.data && !mapConfig.error} permissionError={mapConfig.error} retryPermission={mapConfig.refresh} returnToWork={returnToWork} openTask={id=>showTaskInformation(id,'description')}/></Suspense>}
       {seatActive && view === 'capabilities' && <CapabilityCenter authoring={administratorAccount ? newChat : undefined} administration={Boolean(administratorAccount)} canCollaborate={canCollaborate} key={`${capabilityWorkspaceId || 'global'}:${capabilityExpertId || ''}`} workspaces={navigationWorkspaces.filter(workspace => taskMeta?.[workspace.id]?.state !== 'archived')} fixedWorkspaceId={capabilityWorkspaceId} initialExpertId={capabilityExpertId} create={createExpertChat} applySkill={applyLibrarySkill} applyConnector={applyLibraryConnector} domId={domId} />}
-      {view !== 'chat'||!canCollaborate ? null : <>
+      {view !== 'chat'||!canCollaborate ? null : <div className="chat-work-layout"><div className="chat-work-main">
       {snapshot?.workItemId && seats.length > 0 && <LinkedWork key={snapshot.workItemId} id={snapshot.workItemId} open={() => showWork(snapshot.workItemId)} />}
       <div id={domId('conversation')} className="conversation-scroll" ref={scroll} tabIndex={0} aria-label="对话内容" onScroll={() => {
         const element = scroll.current;
@@ -710,11 +735,15 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
             <ComposerInteractionCard key={currentCard.interactionId} interaction={currentCard} submission={chat.interactionSubmissions[currentCard.interactionId]} respond={chat.respondInteraction} query={chat.queryInteraction} composerInput={textarea} dockFocus={dockFocus} focusScope={interactionFocusScope} />
           </> : <form className={`composer${draggingFiles ? ' file-dragging' : ''}`} onDragOver={event => { if (fileLimits?.enabled && event.dataTransfer.types.includes('Files')) { event.preventDefault(); setDraggingFiles(true); } }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDraggingFiles(false); }} onDrop={event => { if (fileLimits?.enabled && event.dataTransfer.files.length) { event.preventDefault(); setDraggingFiles(false); uploadFiles(Array.from(event.dataTransfer.files)); } }} onSubmit={event => { event.preventDefault(); if (canQueue) void chat.inputQueue.submit(chat.selected, 'followUp'); else if (canSend) void chat.send(); }}>
             {!personalOnly && <MapReferenceChips key={chat.draftKey} sources={picks?.contextRefs || []} annotations={picks?.annotationRefs || []} removeSource={ref=>{if(!choosingNewSpace)chat.composerSelections.setContextRefs(chat.resolveDraftOwner(),(chat.composerSelections.current(chat.resolveDraftOwner()).contextRefs || []).filter(item=>refKey(item)!==refKey(ref)));}} removeAnnotation={index=>{if(!choosingNewSpace)chat.composerSelections.setAnnotationRefs(chat.resolveDraftOwner(),(chat.composerSelections.current(chat.resolveDraftOwner()).annotationRefs || []).filter((_,i)=>i!==index));}}/>}
-            <ComposerReferences key={`${chat.draftKey}:${seatActive}:${view}`} control={referenceControl} scope={chat.draftKey} workspaceId={chat.workspaceId} enabled={seatActive && view === 'chat' && !choosingNewSpace && !chat.loading && !busy} managementSkills={managementSkills} fileEnabled={Boolean(fileLimits?.enabled && chat.workspaceId)} text={chat.draft} textarea={textarea} selection={chat.composerSelections.all[chat.draftKey] || {}} setText={chat.setDraft} select={chat.setComposerSelection} selectConnectors={ids => { if (!busy && !choosingNewSpace) chat.composerSelections.setConnectorIds(chat.resolveDraftOwner(), ids); }} reference={file => !choosingNewSpace && chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 0)} upload={() => attachmentInput.current?.click()} />
+            <ComposerReferences key={`${chat.draftKey}:${seatActive}:${view}`} control={referenceControl} onOpenChange={setReferenceOpen} scope={chat.draftKey} workspaceId={chat.workspaceId} enabled={seatActive && view === 'chat' && !choosingNewSpace && !chat.loading && !busy} managementSkills={managementSkills} fileEnabled={Boolean(fileLimits?.enabled && chat.workspaceId)} text={chat.draft} textarea={textarea} selection={chat.composerSelections.all[chat.draftKey] || {}} setText={chat.setDraft} select={chat.setComposerSelection} selectConnectors={ids => { if (!busy && !choosingNewSpace) chat.composerSelections.setConnectorIds(chat.resolveDraftOwner(), ids); }} reference={file => !choosingNewSpace && chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 0)} upload={() => attachmentInput.current?.click()} />
             {attachmentList}
             {draggingFiles && <p className="attachment-notice">松开文件，上传到当前项目</p>}
-            <textarea id={domId('message-input')} aria-label="发送消息" ref={textarea} disabled={!composerReady} rows={1} value={chat.draft} placeholder="描述你的问题，或继续补充想法…" onChange={event => { chat.setDraft(event.target.value); const input = event.nativeEvent as InputEvent; if (composing.current || input.isComposing) return; referenceControl.current?.input(event.target.value, event.target.selectionStart, !composing.current && !input.isComposing && input.inputType !== 'insertFromPaste'); }} onPaste={() => referenceControl.current?.close()} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={event => { composing.current = false; referenceControl.current?.input(event.currentTarget.value, event.currentTarget.selectionStart, true); }} onClick={event => referenceControl.current?.caret(event.currentTarget.selectionStart, event.currentTarget.selectionEnd)} onKeyDown={event => {
+            <textarea id={domId('message-input')} aria-label="发送消息" ref={textarea} disabled={!composerReady} rows={1} value={chat.draft} placeholder={prediction.text || "描述你的问题，或继续补充想法…"} title={prediction.text} className={prediction.text ? "has-prompt-suggestion" : undefined} onChange={event => { prediction.edit(); chat.setDraft(event.target.value); const input = event.nativeEvent as InputEvent; if (composing.current || input.isComposing) return; referenceControl.current?.input(event.target.value, event.target.selectionStart, !composing.current && !input.isComposing && input.inputType !== 'insertFromPaste'); }} onPaste={() => referenceControl.current?.close()} onCompositionStart={() => { composing.current = true; prediction.startComposition(); }} onCompositionEnd={event => { composing.current = false; prediction.endComposition(); referenceControl.current?.input(event.currentTarget.value, event.currentTarget.selectionStart, true); }} onClick={event => referenceControl.current?.caret(event.currentTarget.selectionStart, event.currentTarget.selectionEnd)} onKeyDown={event => {
               if (!composing.current && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229 && referenceControl.current?.keyDown(event)) return;
+              if (!composing.current && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229 && !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                if (event.key === 'Tab' && prediction.text && prediction.accept()) { event.preventDefault(); return; }
+                if (event.key === 'Escape') prediction.dismiss();
+              }
               if (event.key === 'Enter' && !event.shiftKey && !composing.current && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) {
                 event.preventDefault();
                 if (event.ctrlKey || event.metaKey) return;
@@ -722,7 +751,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
                 else if (canSend) void chat.send();
               }
             }} />
-            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!canCollaborate || choosingNewSpace || chat.loading || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button>{snapshot?.expert && <SessionExpertIdentity expert={snapshot.expert} source={snapshot.expertDefaultSource} />}{picks?.authoring?.targetId && <span className="authoring-target" title={picks.authoring.targetId}>修改已选{picks.authoring.kind === 'expert' ? '专家' : '技能'}</span>}<ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{composerControl}</div>
+            <div className="composer-toolbar"><PromptSuggestion announcement={prediction.announcement} />{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!canCollaborate || choosingNewSpace || chat.loading || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button>{snapshot?.expert && <SessionExpertIdentity expert={snapshot.expert} source={snapshot.expertDefaultSource} />}{picks?.authoring?.targetId && <span className="authoring-target" title={picks.authoring.targetId}>修改已选{picks.authoring.kind === 'expert' ? '专家' : '技能'}</span>}<ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{composerControl}</div>
           </form>}
           {!currentCard && legacyAuthoringPending && <p className="attachment-notice" role="status">这份草稿使用旧创作方式，请重新选择本条消息的 Skill。<button type="button" onClick={() => referenceControl.current?.open('skills')}>选择 Skill</button></p>}
           {!currentCard && intakeNotice && <p className="attachment-notice" role="status">{intakeNotice}</p>}
@@ -730,7 +759,9 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
           {!currentCard && fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
         </div>
       </div>
-      </>}
+      </div>
+      {workPanelOpen && <WorkActivityPanel id={domId('work-activity-panel')} sessionId={chat.selected} seatId={seatId} visible={seatActive && view === 'chat'} personalOnly={personalOnly || seats.length === 0} tasks={directory.tasks} workspaces={chat.workspaces} seats={seats} activity={workActivity} enabled={workActivityPreference.enabled} close={() => { setWorkPanelOpen(false); workPanelButton.current?.focus(); }} openWork={id => showWork(id)} />}
+      </div>}
       </SituationWorkspace>
     </main>
     <SituationWorkspace active={view==='information'}>
@@ -740,7 +771,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
     {filesOpen && <FilesPanel key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} close={() => setFilesOpen(false)} upload={uploadFiles} executionAvailable={Boolean(fileLimits?.executionAvailable)} attachments={attachmentList} refreshKey={attachmentItems.filter(item => item.status === 'ready').map(item => item.id).join(',')} reference={file => !choosingNewSpace && chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 20)} />}
     {authoringManagement?.kind === 'expert' && <CapabilityManagement key={authoringManagement.targetId} initialExpertId={authoringManagement.targetId} close={() => setAuthoringManagement(undefined)} changed={() => {}} authoring={intent => { setAuthoringManagement(undefined); newChat(intent); }} />}
     {authoringManagement?.kind === 'skill' && <SkillManagement key={authoringManagement.targetId} skillId={authoringManagement.targetId} initialTab={authoringManagement.created ? 'policy' : 'files'} expectedDraftDigest={authoringManagement.created ? authoringManagement.draftDigest : undefined} close={() => setAuthoringManagement(undefined)} changed={() => {}} copy={id => { void copyManagedSkill(id); }} authoring={intent => { setAuthoringManagement(undefined); newChat(intent); }} />}
-    {settingsOpen && <SettingsPanel simulation={canCollaborate&&mapConfig.data?.simulationEnabled ? ()=>{setSettingsOpen(false);navigationRequest.current++;chat.noteNavigation();rememberPosition();history.pushState(null,'','/simulation');setView('simulation');} : undefined} identity={administratorAccount || identity} logout={logout} logoutError={logoutError} close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}
+    {settingsOpen && <SettingsPanel workActivity={canCollaborate ? workActivityPreference : undefined} suggestions={canCollaborate ? suggestionPreference : undefined} simulation={canCollaborate&&mapConfig.data?.simulationEnabled ? ()=>{setSettingsOpen(false);navigationRequest.current++;chat.noteNavigation();rememberPosition();history.pushState(null,'','/simulation');setView('simulation');} : undefined} identity={administratorAccount || identity} logout={logout} logoutError={logoutError} close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}
     {resourceOpen && <Resources key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} resources={currentResources} resourceError={resourceErrors[chat.workspaceId]} reloadResources={() => setResourceReload(value => value + 1)} instructions={instructions} close={() => setResourceOpen(false)} />}
     {compactionDetail && <CompactionPanel key={`${compactionDetail.sessionId}:${compactionDetail.entryId}`} {...compactionDetail} close={() => setCompactionDetail(undefined)} />}
     {canCollaborate&&taskPanel && identity && <TaskPanel personalOnly={personalOnly} key={taskPanel.task?.id || taskPanel.visibility} identity={identity} showInformation={showTaskInformation} {...taskPanel} close={()=>setTaskPanel(undefined)} saved={task=>{directory.saved(task);void chat.refreshActivity();if(taskPanel.startConversation)void chooseDraftSpace(`task:${task.id}`, false);}}/>}

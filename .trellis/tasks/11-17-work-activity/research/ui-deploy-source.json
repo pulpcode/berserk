@@ -1,0 +1,119 @@
+{
+  "archive": "axon-work-panel-ui-4316.tar.gz",
+  "sha256": "205f132c3ed5f870f4f68b425db5069ea98a8beb1350986523faad9b5fdd3ee2",
+  "release": "/home/ubuntu/axon-work-activity-4316-20261117",
+  "updateId": "work-panel-ui-20261117T065237Z",
+  "sourceFiles": [
+    "experiments/harness-lab/src/web/main.tsx",
+    "experiments/harness-lab/src/web/WorkActivityPanel.tsx",
+    "experiments/harness-lab/src/web/work-activity.css"
+  ],
+  "expectedPids": {
+    "4315": 2776215,
+    "4316": 3160962
+  },
+  "expectedPrevious": {
+    "experiments/harness-lab/src/web/main.tsx": "c4412c936c359cb605d29f1a5ba6394a47bcfc3f74d82fc2caac3fab639e9beb",
+    "experiments/harness-lab/src/web/WorkActivityPanel.tsx": "6e00e67ae6c73c14f1d0f6bda68ef57b26e1c089e1c3fe8ddd51716eb7468b92",
+    "experiments/harness-lab/src/web/work-activity.css": "2a880d5ac3f722c40238b72fb688d97934547f023b85e06f09eb689e04a44133",
+    "experiments/harness-lab/dist/index.html": "33b97a2a5eeea12eaae51c984c6c6f6d191c388eb946e6f42b769c9b5eb71623"
+  },
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "sha256": "5b28da4a81c514cdf678712648a4e6923088fad70af1efcb6dabf9a4cb7ac47c"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/WorkActivityPanel.tsx",
+      "sha256": "4dddcf0fc8319558eb3043920023fe6253f3d01ebf8614151847bcf2ed327a96"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/work-activity.css",
+      "sha256": "aac23768e2aecb2f07c34d7919e94adf95af44edf104191413ce70a5988f5dd4"
+    },
+    {
+      "path": "experiments/harness-lab/dist/favicon.ico",
+      "sha256": "70cfed088307c6feb4b1a0fb83cd82814752200dc98882880ed41e6341b309af"
+    },
+    {
+      "path": "experiments/harness-lab/dist/index.html",
+      "sha256": "3588dec0a2487894a6b08e105aa5dfe4b3776c63e9a76786a7c46b7740f87d41"
+    },
+    {
+      "path": "experiments/harness-lab/dist/brand/axon-wordmark.svg",
+      "sha256": "0daebb73e677c43bab0abc732a4994193fb719c270807d6bd4aa93acc09a5ccf"
+    },
+    {
+      "path": "experiments/harness-lab/dist/brand/axon-app-icon.svg",
+      "sha256": "2f4c6cf11781919a97a66ff94552b59dc6d867cb94333af5a4d2098132e3f3dd"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/maplibre-gl-worker-B8OLt8TZ.js",
+      "sha256": "ebbe01c8ccfa71f92e93248bc846a2e0d3dd871146e85691c20cf56d7ae08957"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/xf3013-2020.6.2.18-Cqk6x_Qf.svg",
+      "sha256": "ae1d10b417e10a7fdfe785c734bd46c4923d529de6e2f929c49ece9f480218d3"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/ScenarioDirector-Cz3pcHkI.css",
+      "sha256": "1d4467751b43fda3d3a93988e081e64f97d542b3f1aee9f5825e810b727cdef3"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/index-B9Lnn2C2.js",
+      "sha256": "f0502a260d97454bad5d2d77d7dad55d2bc63baa3a8e540f2535a50415af6383"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/Simulation-dH1ozNe3.js",
+      "sha256": "c7e0130975c4ea273b6feef7fedac0afd1f1bf0948c6b310a235ac1be390460a"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/LayerTree-zYurnW0S.js",
+      "sha256": "d7e3a62cc168aa686cf86f1556cf4e31e730a92ccd1aaeea29a8a2820b76f2cb"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/MapCanvas-JR8eJ17e.css",
+      "sha256": "448eaf0d47a4e154ca8da64bcaa05d8e5617fb1106012e28316e80d2316bed85"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/ScenarioDirector-DAAXDUzp.js",
+      "sha256": "d68604be42b7319fe07dab7c338a5b8a0b10518d9707da9cc9156f9df98870f6"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/SituationView-DK5tusa6.css",
+      "sha256": "02e97c922751a146c8c7e735bd576709a709ab65794ee8a1a2c88c5a1c929c53"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/index-DMoAkNGO.css",
+      "sha256": "c67e6de693fdabba16e4cd3365412703d8aff117fb5fa3295afe9e97611de9a5"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/SituationView-Ber_D4kx.js",
+      "sha256": "4ea2111a4c26d66baa6ed28638d0a4f3299701e0e1b54366642ca1bf07737035"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/AnnotationWorkspace-JfIOu6jN.js",
+      "sha256": "877325db2632e08d0710b93d4b581d00ab191e81b9845d0fde37bb8c0415b091"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/MapCanvas-CTRLi9RB.js",
+      "sha256": "90977ddcd0bc5efd30dd0e40896b0a48d6525901eafff9799fde260050584fa4"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/LayerTree-pVb4gqth.css",
+      "sha256": "a61a03137ca63a8d93341dba949ac050fdd70ac48d9bfaf9defb7827135a5dcb"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/AnnotationWorkspace-P-HeVHZn.css",
+      "sha256": "673c2e275bbb62024957167b8d84e4d3937509044ede948a02943f293e66dbf1"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/map-data-GAIS0TGu.js",
+      "sha256": "60f6e111dfd95d65c2cbdfbf8a8a37c6b3b375f201d25adb5536af616f0894a5"
+    },
+    {
+      "path": "experiments/harness-lab/dist/assets/index-D9-Zx310.js",
+      "sha256": "e796c171658753f63efe0cb3b3ef1be222e932af5efde5ef20efcac498eee072"
+    }
+  ]
+}

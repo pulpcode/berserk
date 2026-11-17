@@ -1,0 +1,33 @@
+{
+  "id": "work-activity",
+  "name": "work-activity",
+  "title": "会话工作识别与面板展示",
+  "description": "方案已提交，独立只读分析与工作面板已实现并完成自动验证，待用户测试；正式关联与执行上下文保持原边界。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "harness-lab",
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-11-17",
+  "completedAt": null,
+  "branch": "codex/input-predictions",
+  "base_branch": "codex/axon-r3a",
+  "worktree_path": "/Users/lau/.codex/worktrees/input-predictions/berserk",
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "experiments/harness-lab/src/contracts/work-activity.ts",
+    "experiments/harness-lab/src/pi/work-activity.ts",
+    "experiments/harness-lab/src/server/work-activity-routes.ts",
+    "experiments/harness-lab/src/web/useWorkActivity.ts",
+    "experiments/harness-lab/src/web/WorkActivityPanel.tsx",
+    ".trellis/spec/backend/work-activity.md"
+  ],
+  "notes": "2026-11-17 规划提交db61076；实现与独立审查完成，84项Vitest、24项浏览器测试、typecheck/lint/build/diff检查通过。真实模型两批各8/9，修正后两个定向样例通过，未宣称最终全量准确率。实现尚未提交Git，未部署4316，待用户测试、不归档；输入建议既有变更保留。 用户随后授权更新4316，已完成发布及登录/权限/只读接口检查，待用户测试。 6项UI反馈已实现，9项浏览器回归及类型/lint/构建通过；UI包已准备但本轮发布被自动审批拒绝（要求本轮发布授权），待用户确认，线上仍为上一版。 用户随后明确批准本轮发布，2026-11-17 14:56完成4316 UI热更新，24文件校验通过，4315/4316进程不变，数据未动，待用户测试。 三段直列已实施并于2026-11-17 15:29发布4316；10项浏览器测试和类型/lint/构建通过；已包含图标/标题/文案精简，待用户测试。 列表图标/字重/悬浮底色调整已于2026-11-17 15:47授权发布4316，24文件校验通过，服务进程不变，待用户测试。 2026-11-17 用户授权提交当前Git，当前实现及发布记录纳入阶段成果提交；不推送，用户验收待进行。",
+  "meta": {}
+}

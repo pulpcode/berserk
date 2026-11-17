@@ -14,7 +14,7 @@ import { commandRoutes } from './command-routes.js';
 import { continuousRoutes } from './continuous-routes.js';
 import { annotationRoutes } from './annotation-routes.js';
 import { annotationSelectionSchema } from '../pi/annotation-tools.js';
-import type { InputSubmission, InputAction } from '../contracts/index.js';
+import type { InputSubmission, InputAction, PromptSuggestionRequest } from '../contracts/index.js';
 import { contextRoutes } from './context-routes.js';
 import { WorkbenchService } from '../workbench/service.js';
 import { workbenchRoutes } from './workbench-routes.js';
@@ -39,6 +39,7 @@ import type { ComposerSelection, ModelSettingsUpdate } from '../contracts/index.
 import { fileRoutes } from './file-routes.js';
 import { apiScope } from './seat-scope.js';
 import { collaborationRoutes } from './collaboration-routes.js';
+import { workActivityRoutes } from './work-activity-routes.js';
 import { baseSchemaVersion } from '../access/schema.js';
 
 async function capabilityLibrary(): Promise<CapabilityLibrary> {
@@ -155,6 +156,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   const params = scope.params({ id: { type: 'string', pattern: '^[0-9a-f-]{36}$' } });
   await fileRoutes(app, lab.files, lab.config.fileLimits?.maxFileBytes ?? 100 * 1024 * 1024, scope);
   await collaborationRoutes(app, lab, scope);
+  await workActivityRoutes(app, lab, scope);
   app.get(`${scope.base}/context/catalog`, {schema: {querystring: {type: 'object', additionalProperties: false}}}, async request => {
     if (lab.contextUnavailable) throw new RequestError('CONTEXT_UNAVAILABLE', '业务资料配置不可用，请检查服务配置。', 503);
     return lab.context?.catalog(scope.seat(request)) ?? {systems: []};
@@ -240,6 +242,24 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   app.get<{ Params: { id: string; requestId: string } }>(`${scope.base}/sessions/:id/requests/:requestId/resources`, { schema: { params: scope.params({ id: uuid, requestId: uuid }) } }, async request => lab.getRequestResources(request.params.id, request.params.requestId, scope.seat(request)));
   app.get<{ Params: { id: string; compactionId: string } }>(`${scope.base}/sessions/:id/compactions/:compactionId`, { schema: { querystring: settingsQuery, params: resourceParams('compactionId') } }, async request => lab.getCompaction(request.params.id, request.params.compactionId, scope.seat(request)));
   app.get<{ Params: { id: string } }>(`${scope.base}/sessions/:id`, { schema: { params } }, async request => lab.get(request.params.id, scope.seat(request)));
+  app.post<{ Params: { id: string }; Body: PromptSuggestionRequest }>(`${scope.base}/sessions/:id/prompt-suggestion`, { schema: {
+    params, querystring: settingsQuery, body: { type: 'object', additionalProperties: false,
+      required: ['sourceRequestId', 'finalMessageId', 'expectedModelId'], properties: {
+        sourceRequestId: uuid, finalMessageId: { type: 'string', minLength: 1, maxLength: 160 }, expectedModelId: modelId,
+      } },
+  } }, async (request, reply) => {
+    const controller = new AbortController();
+    const abort = () => controller.abort();
+    request.raw.once('aborted', abort); reply.raw.once('close', abort);
+    try {
+      return await lab.promptSuggestion(request.params.id, request.body, scope.seat(request), {
+        signal: controller.signal, userId: lab.access ? workspaceIdentityOf(request).userId : undefined,
+        assertIdentity: () => { if (request.authValid && !request.authValid()) throw new RequestError('AUTH_REQUIRED', '登录已失效。', 401); },
+      });
+    } finally {
+      request.raw.removeListener('aborted', abort); reply.raw.removeListener('close', abort);
+    }
+  });
   app.put<{ Params: { id: string }; Body: { modelId: string } }>(`${scope.base}/sessions/:id/model`, { schema: {
     params, querystring: settingsQuery, body: { type: 'object', required: ['modelId'], additionalProperties: false, properties: { modelId } },
   } }, async request => lab.selectModel(request.params.id, request.body.modelId, scope.seat(request)));

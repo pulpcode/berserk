@@ -13,6 +13,9 @@ This directory contains guidelines for backend development. Fill in each file wi
 ## Pre-Development and Quality Check
 
 Read [R4 Connectors and Remote MCP](../backend/connectors-r4.md) for fixed legacy business mappings, personal credentials, remote protocol/network admission, original confirmation/history and desktop connection selection.
+Read [Conversation Work Activity](./work-activity.md) for the read-only work panel, independent semantic analysis, original receipt evidence and per-identity conversation caches.
+
+Read [Next Input Suggestions](./prompt-suggestions.md) for the scoped prediction endpoint, captured model completion, source freshness, cancellation and unchanged native history.
 
 Read [R3A Conversational Authoring](../backend/authoring-r3a.md) for request-scoped administrator methods, original chat confirmation, atomic draft receipts and manual-entry compatibility.
 

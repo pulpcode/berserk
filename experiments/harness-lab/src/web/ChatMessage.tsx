@@ -44,7 +44,7 @@ export function Message({ message, active, workspaceId, focusKey, focusTransfers
   const receipt = messageAuthoringReceipt(message);
   const changes = patchLineCounts(message.toolDetails?.patch);
   const ToolIcon = message.toolName === 'bash' ? Terminal : message.toolName === 'write' || message.toolName === 'edit' ? PencilLine : Wrench;
-  if (message.role === 'tool') return <details ref={focusRef as React.RefObject<HTMLDetailsElement>} className={`tool-result${message.isError && !cancelled ? ' failed' : ''}`}>
+  if (message.role === 'tool') return <details data-work-message-id={message.id} ref={focusRef as React.RefObject<HTMLDetailsElement>} className={`tool-result${message.isError && !cancelled ? ' failed' : ''}`}>
     <summary><ToolIcon size={15} aria-hidden="true" /><span>{message.resultMissing ? '未收到执行结果' : cancelled ? '命令已停止' : toolRunning ? `正在${action}` : mcp ? ({ success: '已调用工具', remote_error: '远端返回错误', input_required: '需要额外输入', unknown: '执行结果待核对', not_sent: '调用未发出' }[mcp.status]) : message.toolStatus === 'completed' || message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span>{subject && <span className="tool-subject" title={subject}>{subject}</span>}<ChevronDown size={14} aria-hidden="true" /></summary>
     {!message.isError&&!message.resultMissing&&message.toolName==='task_resource_query'&&resourceResultValid(message.resourceResult)&&<ResourceResultCard key={message.resourceResult.resultRef} result={message.resourceResult}/>}<EvidenceMapLinks messages={[message]}/><div className="tool-body">
       {mcp && <div className="mcp-tool-evidence"><dl className="confirmation-metadata"><dt>连接</dt><dd>{mcp.connectionName}</dd><dt>账号</dt><dd>{mcp.accountLabel}</dd><dt>工具</dt><dd>{mcp.toolName}</dd></dl><p>{{ success: '调用已完成。', remote_error: '远端返回错误。', input_required: '远端要求额外输入，本次未自动续发。', unknown: '执行结果待核对。', not_sent: '调用未发出。' }[mcp.status]}</p></div>}
@@ -57,7 +57,7 @@ export function Message({ message, active, workspaceId, focusKey, focusTransfers
       {message.toolDetails?.truncated && <p className="tool-output-notice">输出已截断{message.toolDetails.fullOutputPath ? `，完整日志：${message.toolDetails.fullOutputPath}` : ''}。</p>}
     </div>
   </details>;
-  return <article ref={focusRef} className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
+  return <article data-work-message-id={message.id} ref={focusRef} className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
     <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} /><AnnotationHistoryLinks message={message}/><EvidenceMapLinks messages={[message]}/>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <MarkdownEvidence.Provider value={evidence}><Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>{finalAnswer && <EvidenceMapLinks messages={requestMapEvidence(message,evidence)}/>}</MarkdownEvidence.Provider>}</div>
   </article>;
 }

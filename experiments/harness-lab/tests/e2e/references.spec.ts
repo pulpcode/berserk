@@ -7,6 +7,7 @@ import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime.js';
 
 // Browser -> actual local API -> Pi; the provider is deterministic, not live acceptance.
+// Reference assertions count Agent calls; no-tool input predictions have their own suite.
 async function setup(page: Page, maxAttachments = 20) {
   const dir = await mkdtemp(join(tmpdir(), 'axon-web-references-'));
   const roles = join(dir, 'roles'); await cp('fixtures/agents', roles, { recursive: true });
@@ -32,7 +33,7 @@ async function setup(page: Page, maxAttachments = 20) {
   await writeFile(join(files, 'plans', '方案.md'), '# 方案');
   await writeFile(join(files, '任务书.md'), '# 任务');
   await Promise.all(Array.from({ length: 22 }, (_, index) => writeFile(join(files, `资料${String(index).padStart(2, '0')}.txt`), '资料')));
-  return { lab, workspace, files, roles, controls, messages, paths, calls: fake.calls, close: async () => { await page.goto('about:blank'); await page.unrouteAll({ behavior: 'wait' }); await app.close(); await rm(dir, { recursive: true, force: true }); } };
+  return { lab, workspace, files, roles, controls, messages, paths, get calls() { return fake.calls.filter(call => Boolean(call.context.tools?.length)); }, close: async () => { await page.goto('about:blank'); await page.unrouteAll({ behavior: 'wait' }); await app.close(); await rm(dir, { recursive: true, force: true }); } };
 }
 const visible = (page: Page) => page.locator('[data-seat]:visible');
 const input = (page: Page) => visible(page).getByRole('textbox', { name: '发送消息' });

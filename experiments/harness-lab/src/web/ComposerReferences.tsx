@@ -39,8 +39,8 @@ export function SelectionHistory({ selections }: { selections?: LoadedComposerSe
   </div>{open && selections.skill && <Panel title={`本次使用的 Skill · ${selections.skill.name}`} close={() => setOpen(false)}><p>{selections.skill.description}</p><pre className="skill-content">{selections.skill.content}</pre></Panel>}</>;
 }
 
-export function ComposerReferences({ control, scope, workspaceId, enabled, fileEnabled, text, textarea, selection, setText, select, reference, upload, selectConnectors, managementSkills = [] }: {
-  managementSkills?: SkillInfo[]; control: Ref<ComposerReferenceHandle>; scope: string; workspaceId: string; enabled: boolean; fileEnabled: boolean;
+export function ComposerReferences({ control, scope, workspaceId, enabled, fileEnabled, text, textarea, selection, setText, select, reference, upload, selectConnectors, managementSkills = [], onOpenChange }: {
+  onOpenChange?: (open: boolean) => void; managementSkills?: SkillInfo[]; control: Ref<ComposerReferenceHandle>; scope: string; workspaceId: string; enabled: boolean; fileEnabled: boolean;
   text: string; textarea: RefObject<HTMLTextAreaElement | null>; selection: DraftSelection;
   setText: (value: string) => void; select: (kind: 'skill' | 'agent', value?: SkillInfo | AgentInfo) => void;
   selectConnectors: (ids: string[]) => void;
@@ -49,6 +49,8 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
   const { api, domId } = useApi();
   const [state, setState] = useState<Picker>();
   const picker = enabled && state?.scope === scope ? state : undefined;
+  const pickerOpen = Boolean(picker);
+  useLayoutEffect(() => { onOpenChange?.(pickerOpen); return () => onOpenChange?.(false); }, [onOpenChange, pickerOpen]);
   const root = useRef<HTMLDivElement>(null);
   const pendingCaret = useRef<{ scope: string; text: string; position: number } | undefined>(undefined);
   // Restore once with the controlled-text commit, before another keystroke can arrive.

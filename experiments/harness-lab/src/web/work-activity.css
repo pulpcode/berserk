@@ -1,0 +1,27 @@
+.chat-work-layout { position: relative; display: flex; flex: 1; min-width: 0; min-height: 0; }
+.chat-work-main { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
+.work-activity-panel { position: absolute; z-index: 8; top: 12px; right: 12px; display: flex; flex-direction: column; width: min(320px, calc(100% - 24px)); max-height: min(560px, calc(100% - 160px)); min-height: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: 0 6px 24px #18221c14, 0 1px 4px #18221c08; }
+.work-activity-close { position: absolute; top: 8px; right: 10px; }
+.work-activity-content > section:first-child > h3 { padding-right: 32px; }
+.work-activity-content { overflow: auto; padding: 4px 20px 16px; scroll-padding: 12px; }
+.work-activity-content .loading-indicator { min-height: 24px; justify-items: start; }
+.work-activity-content .loading-indicator-ring { width: 14px; height: 14px; }
+.work-activity-content > section { padding-top: 12px; }
+.work-activity-content > section + section { margin-top: 14px; border-top: 1px solid var(--line); }
+.work-activity-content h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 12px; font-weight: 500; color: var(--muted); }
+.work-activity-content h3 > span { font-variant-numeric: tabular-nums; }
+.work-activity-list { list-style: none; padding: 0; margin: 0 -8px; }
+.work-activity-list > li { display: flex; align-items: center; gap: 4px; min-width: 0; border-radius: 8px; }
+.work-activity-list > li:hover, .work-activity-list > li:focus-within { background: var(--faint); }
+.work-activity-link { display: flex; flex: 1; align-items: center; gap: 10px; min-width: 0; min-height: 34px; padding: 6px 8px; border: 0; border-radius: 8px; text-align: left; background: transparent; font-size: 13px; font-weight: 400; line-height: 22px; }
+.work-activity-link > span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.work-activity-list .work-activity-link:hover:not(:disabled), .work-activity-list .work-activity-link:active:not(:disabled) { background: transparent; }
+.work-activity-link > svg { flex-shrink: 0; color: var(--text); }
+.work-activity-caption, .work-activity-empty, .work-activity-error { margin: 6px 0 0; font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.work-activity-caption, .work-activity-empty { color: var(--muted); }
+.work-activity-error { color: var(--danger); }
+.work-activity-error > button { display: block; margin-top: 8px; min-height: 30px; padding: 4px 8px; font-size: 12px; }
+.work-activity-other > summary, .work-activity-submitted > summary { padding: 4px 0; font-size: 12px; color: var(--muted); cursor: pointer; }
+.work-activity-ignore { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 24px; height: 24px; min-height: 24px; margin-right: 6px; padding: 0; border: 0; background: transparent; color: var(--muted); opacity: 0; }
+.work-activity-item:hover .work-activity-ignore, .work-activity-item:focus-within .work-activity-ignore { opacity: 1; }
+.work-activity-other, .work-activity-submitted { margin-top: 8px; }

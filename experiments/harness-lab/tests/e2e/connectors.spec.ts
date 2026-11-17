@@ -121,7 +121,8 @@ test('two connector choices persist through reload and first send without leakin
     await expect(chips).toContainText('资料连接甲'); await expect(chips).toContainText('资料连接乙'); const sent = env.writes.find(item => item.path.endsWith('/messages'))!; expect(sent.body.connectorIds).toEqual([env.first.connection.connectorId, env.second.connection.connectorId]);
     await page.reload(); await expect(chips).toContainText('资料连接甲'); await expect(page.getByLabel('Axon 的回复')).toContainText('合成回复已完成'); await page.screenshot({ path: test.info().outputPath('connector-chips-1440.png') }); await page.setViewportSize({ width: 1060, height: 900 }); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await page.screenshot({ path: test.info().outputPath('connector-chips-1060.png') });
     await page.getByRole('button', { name: '新建对话', exact: true }).click(); await expect(page.getByLabel('本会话连接器', { exact: true })).toHaveCount(0); await expect(input(page)).toHaveValue('');
-    expect(env.fake.calls).toHaveLength(1);
+    // Input predictions use an independent tool-free model call; only one native chat turn was sent.
+    expect(env.fake.calls.filter(call => call.context.tools?.length)).toHaveLength(1);
   } finally { await env.close(); }
 });
 
@@ -148,7 +149,8 @@ test('running requests freeze connector changes and library staging preserves th
     const session = (await env.lab.list(env.workspace.id, 'one'))[0]; await connectors(page); await page.getByRole('button', { name: '查看连接器资料连接乙（名称较长的独立服务）', exact: true }).click(); const detail = page.locator('dialog.connector-detail-panel'); await detail.getByLabel('使用空间', { exact: true }).selectOption(env.workspace.id); await detail.getByRole('button', { name: '用于对话', exact: true }).click(); await expect(detail.getByRole('alert')).toContainText('正在执行');
     await detail.getByRole('button', { name: '关闭面板', exact: true }).click(); await page.goto(`/?session=${session.id}`); await expect(input(page)).toHaveValue('保留下一条独立草稿'); await page.getByRole('button', { name: '停止回复', exact: true }).click(); await expect(page.getByRole('button', { name: '移除连接器资料连接甲', exact: true })).toBeEnabled();
     await connectors(page); await page.getByRole('button', { name: '查看连接器资料连接乙（名称较长的独立服务）', exact: true }).click(); await detail.getByLabel('使用空间', { exact: true }).selectOption(env.workspace.id); await detail.getByRole('button', { name: '用于对话', exact: true }).click(); await expect(input(page)).toHaveValue('保留下一条独立草稿'); await expect(page.getByLabel('本会话连接器', { exact: true })).toContainText('资料连接乙');
-    expect(env.fake.calls).toHaveLength(1); expect(env.writes.filter(item => item.path.endsWith('/messages'))).toHaveLength(1);
+    // Input predictions use an independent tool-free model call; only one native chat turn was sent.
+    expect(env.fake.calls.filter(call => call.context.tools?.length)).toHaveLength(1); expect(env.writes.filter(item => item.path.endsWith('/messages'))).toHaveLength(1);
   } finally { await env.close(); }
 });
 
