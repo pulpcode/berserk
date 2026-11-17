@@ -1,4 +1,6 @@
 # 初步依赖核查
+
+> 本文保留当时的初步建议。产品方向以当前 `Axon_导演台整合方案_v0.1.md` 为准：互斥运行、确认后结束旧轮次、本轮删除旧页面地址且不兼容跳转。
 - 普通控制：src/web/situation/Simulation.tsx → server/context-routes.ts 的 /simulation、object-updates、report-updates、actions/:id/send → scripts/mock-context/control-api.ts。通过来源管理权和查询可见性校验；当前未直接要求controlScenarios/directorSeatId。
 - 场景控制：ScenarioDirector → server/scenario-routes.ts → mock-context/scenarios/control.ts。要求controlScenarios、指定directorSeatId、来源权限；任务准备还要求createPublicTask。
 - 两者共用simulation配置/控制服务，但来源、流程和权限不能仅按mock/scenario名字推断。普通控制读取同一simulation.sources；当前线上为scenario来源。probe-context/probe-task-plan/probe-situation-map及示例仍引用mock来源，不能直接停用。
@@ -11,3 +13,8 @@
 
 ## 线上只读核对
 notifications.json仅列scenario-intel-source、scenario-situation-source；普通control-api和场景control都按systemId从同一targets选择。此前按名称将mock来源等同普通模拟、scenario等同演练的解释不充分：当前两个UI发送可能走同一scenario来源。后台历史/规则/授权按source统计见online-source-dependencies.json，仍需保留这些依赖，不能直接删除mock来源。
+
+## 审阅补充方向
+本阶段同时完成情报/态势业务接入整合：各自包含查询和通知管理，运行来源四转二；旧来源保留历史身份，不长期保留写入口。前文“先保留再决定”是早期研究建议，以审阅稿6.3节为准。迁移必须列明凭证、规则、权限、去重和在途回执的处置，不能简单合并授权。
+
+用户进一步确认：后续仅两个有效来源标识，历史保留实际原始标识，不要求历史也只有两个；列表归类与底层身份分别处理。曾提出“历史也迁入两个标识”的解释已撤回，未实施该迁移。
