@@ -16,7 +16,7 @@ const ref = Type.Object({ skillId: targetId, revisionId: targetId, packageDigest
 export const authoringProposeSchema = Type.Object({
   kind, targetId: Type.Optional(targetId), summary: Type.String({minLength:1,maxLength:4000}),
   baseline: Type.Optional(Type.Object({ draftRevision: Type.Integer({ minimum: 1 }), digest }, strict)),
-  content: Type.Optional(Type.Object({ name: Type.Optional(text), description: Type.Optional(text), instructions: Type.Optional(text),
+  content: Type.Optional(Type.Object({ schemaVersion:Type.Optional(Type.Literal(2)),connectorRequirements:Type.Optional(Type.Array(Type.Object({connectorId:targetId,actions:Type.Array(Type.Object({name:targetId,contractDigest:digest},strict),{minItems:1,maxItems:128})},strict),{maxItems:8})),name: Type.Optional(text), description: Type.Optional(text), instructions: Type.Optional(text),
     skillIds: Type.Optional(Type.Array(targetId)), skillRefs: Type.Optional(Type.Array(ref)), allowedTools: Type.Optional(Type.Array(targetId)),
   }, strict)),
   methodBody: Type.Optional(text),

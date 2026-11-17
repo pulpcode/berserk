@@ -29,13 +29,13 @@ function filter(query:Query):InformationFilter {
 const ruleFields = {name:{type:'string',minLength:1,maxLength:100},sourceId:id,profileId:id,recipientSeatIds:{type:'array',minItems:1,maxItems:100,uniqueItems:true,items:id},supplementaryDelivery:body({candidateSeatIds:{type:'array',minItems:1,maxItems:100,uniqueItems:true,items:id}}),publicTaskId:uuid,enabled:{type:'boolean'}};
 const ruleRequired = ['name','sourceId','profileId','recipientSeatIds','enabled'];
 
-export async function backgroundRoutes(app:FastifyInstance, background?:BackgroundService, env:NodeJS.ProcessEnv = process.env) {
+export async function backgroundRoutes(app:FastifyInstance, background?:BackgroundService, env:NodeJS.ProcessEnv = process.env,resolveCredential?: (sourceId:string)=>string) {
   app.get('/api/information/access',request => background?.capabilities(identityOf(request)) ?? {enabled:false,sources:[],profiles:[],seats:[],canManageQueue:false,queue:{key:'queue',enabled:false,revision:1,updatedAt:new Date(0).toISOString()}});
   app.get<{Querystring:Query}>('/api/inbox',{schema:{querystring:listQuery}},request => background?.inbox(identityOf(request),filter(request.query)) ?? page([],filter(request.query)));
   if (!background) return;
   app.get<{Params:{id:string};Querystring:{clientActionId?:string}}>('/api/inbox/:id/handling',{schema:{params:params(),querystring:body({clientActionId:uuid},[])}},request => background.inboxHandling(identityOf(request),request.params.id,request.query.clientActionId));
   app.put<{Params:{id:string};Body:{state:'pending'|'completed';revision:number;clientActionId:string}}>('/api/inbox/:id/handling',{schema:{params:params(),querystring:empty,body:body({state:{enum:['pending','completed']},revision:{type:'integer',minimum:1},clientActionId:uuid})}},request => background.handleInbox(identityOf(request),request.params.id,request.body));
-  const sourceAuth = async (request:FastifyRequest) => {const sourceId = (request.params as {sourceId:string}).sourceId; authenticateSource(background.config,sourceId,request.headers.authorization,env);};
+  const sourceAuth = async (request:FastifyRequest) => {const sourceId = (request.params as {sourceId:string}).sourceId; authenticateSource(background.config,sourceId,request.headers.authorization,env,resolveCredential);};
   const integration = {config:{axonSource:true},onRequest:sourceAuth};
   app.post<{Params:{sourceId:string};Body:{name:string;size:number}}>('/api/integrations/:sourceId/uploads',{...integration,schema:{params:params({sourceId:id}),querystring:empty,body:body({name:{type:'string',minLength:1,maxLength:240},size:{type:'integer',minimum:0,maximum:background.files.maxBytes}})}},async (request,reply) => {
     background.assertReceiving(request.params.sourceId); return reply.code(201).send(await background.files.create(request.params.sourceId,request.body.name,request.body.size));

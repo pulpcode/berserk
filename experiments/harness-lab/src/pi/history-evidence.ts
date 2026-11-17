@@ -1,8 +1,10 @@
+import { isDeepStrictEqual } from 'node:util';
+import { MCP_ADMISSION, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, decodeMcpAdmission } from './mcp-history.js';
 import { managementSkillKind } from '../authoring/management-skills.js';
 import { EXPERT_BINDING, EXECUTION_MANIFEST, decodeExpertBinding, decodeExecutionManifest } from './capability-history.js';
 import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
 import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7, COMPOSER_INPUT_V8, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
-import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
+import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, AUTHORING_REQUESTED, AUTHORING_RESOLVED, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { ConversationTurn, PublicMessage, InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
 import { validCompactionSummary } from './compaction-history.js';
@@ -113,6 +115,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
   let currentRequestHasUser = false;
   let binding: ReturnType<typeof decodeExpertBinding> | undefined;
   const manifests = new Set<string>();
+  const mcpAdmissions = new Set<string>();
   let hasWork = false;
   for (const entry of entries) {
     if (entry.type === 'message' || entry.type === 'compaction' || entry.type === 'custom' && [RESOURCE_ENTRY, EXECUTION_MANIFEST].includes(entry.customType)) hasWork = true;
@@ -168,6 +171,14 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       manifests.add(manifest.requestId);
       continue;
     }
+    if (entry.customType === MCP_ADMISSION) {
+      const admission = decodeMcpAdmission(entry.data,workspaceId,parentSessionId);
+      if (readonly || admission.requestId !== currentRequest || currentRequestHasUser || mcpAdmissions.has(admission.requestId) || !manifests.has(admission.requestId)) throw stateError();
+      const manifestEntry = entries.find(e => e.type === 'custom' && e.customType === EXECUTION_MANIFEST && (e.data as {requestId?:unknown})?.requestId === admission.requestId);
+      const manifest = manifestEntry?.type === 'custom' ? decodeExecutionManifest(manifestEntry.data,workspaceId,parentSessionId) : undefined;
+      if (!manifest || manifest.mode !== 'interactive' || manifest.identity.userId !== admission.userId || !isDeepStrictEqual(manifest.tools.filter(name=>name.startsWith('mcp_')).sort(),admission.tools.map(tool=>tool.name).sort())) throw stateError();
+      mcpAdmissions.add(admission.requestId);continue;
+    }
     if (entry.customType === MODEL_SELECTION) {
       if (readonly) throw stateError();
       decodeModelSelection(entry.data, workspaceId, parentSessionId);
@@ -213,7 +224,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       if (!keys(data, ['requestId', 'skill']) || currentRequest !== data.requestId || !request || !skill(data.skill, true, request?.schemaVersion === 2 || request?.schemaVersion === 3, request?.schemaVersion === 3) || !object(data.skill) || !request.skills.some(item => item.id === (data.skill as Record<string, unknown>).id && item.hash === (data.skill as Record<string, unknown>).hash && item.version === (data.skill as Record<string, unknown>).version && item.packageDigest === (data.skill as Record<string,unknown>).packageDigest && item.revisionId === (data.skill as Record<string,unknown>).revisionId)) throw stateError();
     } else if (entry.customType === CHANGE_ENTRY) {
       if (readonly || !keys(data, ['requestId', 'change']) || currentRequest !== data.requestId || !requests.has(data.requestId) || !change(data.change)) throw stateError();
-    } else if (entry.customType === INTERACTION_REQUESTED || entry.customType === INTERACTION_RESOLVED || entry.customType === COMMAND_POLICY) {
+    } else if (entry.customType === INTERACTION_REQUESTED || entry.customType === INTERACTION_RESOLVED || entry.customType === COMMAND_POLICY || entry.customType === MCP_POLICY || entry.customType === MCP_REQUESTED || entry.customType === MCP_RESOLVED || entry.customType === AUTHORING_REQUESTED || entry.customType === AUTHORING_RESOLVED) {
       if (readonly || currentRequest !== data.requestId || !requests.has(data.requestId)) throw stateError();
     } else if (entry.customType === SUBAGENT_START || entry.customType === SUBAGENT_RESULT) {
       if (readonly || currentRequest !== data.requestId || !requests.has(data.requestId)) throw stateError();

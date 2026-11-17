@@ -5,7 +5,7 @@ export interface AuthoringIntent { kind: 'expert' | 'skill'; targetId?: string; 
 export interface AuthoringBaseline { draftRevision: number; digest: string }
 export type AuthoringCandidate = { kind: 'expert'; content: ExpertDraftContent } | { kind: 'skill'; files: SkillFileInput[]; requirements: Record<string, string> };
 export interface AuthoringProposal {
-  schemaVersion: 1;
+  schemaVersion: 1 | 2;
   proposalId: string;
   proposalDigest: string;
   ownerUserId: string;

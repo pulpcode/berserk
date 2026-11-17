@@ -1,3 +1,4 @@
+import { isMcpCallEvidence } from '../contracts/mcp.js';
 import { isAuthoringReceipt } from '../contracts/authoring.js';
 import type { PublicAssistantContent, PublicMessage, PublicToolDetails, PublicToolInput } from '../contracts/index.js';
 
@@ -33,6 +34,7 @@ export function publicToolInput(name: string, input: unknown): PublicToolInput |
 export function publicToolDetails(name: string, details: unknown, isError = false): PublicToolDetails | undefined {
   if (!object(details)) return undefined;
   const result: PublicToolDetails = {};
+  if (name.startsWith('mcp_') && isMcpCallEvidence(details.mcp)) result.mcp = structuredClone(details.mcp);
   if (['capability_authoring_save', 'capability_authoring_read'].includes(name) && !isError && isAuthoringReceipt(details.authoringReceipt)) result.authoringReceipt = structuredClone(details.authoringReceipt);
   if (name === 'edit' && !isError) {
     if (text(details.diff)) result.diff = details.diff;

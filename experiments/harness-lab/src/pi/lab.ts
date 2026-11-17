@@ -1,3 +1,5 @@
+import { RequestMcpTools } from './mcp-tools.js';
+import type { ConnectorService } from '../connectors/service.js';
 import { loadManagementSkills, managementSkillKind } from '../authoring/management-skills.js';
 import { AuthoringService, type AuthoringContext } from '../authoring/service.js';
 import type { AuthoringIntent } from '../contracts/authoring.js';
@@ -84,7 +86,7 @@ import { DockerExecutionService, type RequestSandbox } from '../execution/docker
 import { workspaceFileTools, writableFileTools } from './file-tools.js';
 import { FILE_INPUT, fileReferenceText, fileHistory } from './file-history.js';
 import { evaluateCommand } from '../execution/command-policy.js';
-import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionExtension, interactionHistory, interactionEvidence, decodeResponse, resolveInteraction, sameResponse } from './interactions.js';
+import { COMMAND_POLICY, interactionRecordType, interactionExtension, interactionHistory, interactionEvidence, decodeResponse, resolveInteraction, sameResponse } from './interactions.js';
 import type { Interaction, QuestionInteraction, ConfirmationInteraction } from '../contracts/index.js';
 import type { FileRef, FileOutput, BackgroundJobReservation } from '../contracts/index.js';
 
@@ -114,6 +116,7 @@ export interface PreprocessInput {
 export interface PreprocessReference { jobId: string; sessionId: string; directory: string; streamEpochId?: string; requestId?: string; contextPrincipal?: Extract<ContextPrincipal,{kind:'service'}> }
 interface RequestModel { id: string; config: LabConfig; runtime: ModelRuntime; version: string }
 interface Active {
+  mcp?: RequestMcpTools;
   authoring?: AuthoringIntent;
   releaseAuthoring?: () => void;
   authoringApprovals?: Map<string, { proposalId: string; interactionId: string; toolCallId: string }>;
@@ -228,6 +231,7 @@ export class PiLab {
   access?: AccessStore;
   scenario?: ScenarioScope;
   commands?: CommandService;
+  connectors?: ConnectorService;
   annotations?: AnnotationService;
   context?: ContextService;
   contextUnavailable = false;
@@ -289,6 +293,21 @@ export class PiLab {
       packageCatalog: () => lab.skills.list().filter(item=>!item.system&&item.available).map(item=>({id:item.skillId,name:item.name,description:item.description,revisionId:item.revisionId,packageDigest:item.packageDigest})),
       resolvePackage: async (ref,actor) => { const pkg=await lab.skills.resolveForManagement(ref,{userId:actor.userId,assertAdministrator:()=>requireCapabilityAdministrator(lab,actor)}); if(pkg.autoInvocationEligible===false)throw new RequestError('SKILL_MANUAL_ONLY','此技能的扩展调用条件尚未支持，不能作为自动专家依赖。',409); return skillRevision(packageMethod(pkg)); },
       assertPackage: ref => lab.skills.assertPublished(ref), tools: () => capabilityTools,
+      connectors: actor => {
+        if (!lab.connectors || !actor) return [];
+        const assertActive = () => requireCapabilityAdministrator(lab,actor);
+        return lab.connectors.list({...actor,assertActive,assertAdministrator:assertActive}).filter(item=>item.kind==='mcp').map(item=>{
+          const revision=lab.connectors!.revision(item.connectorId);
+          return {...item,tools:item.tools.filter(tool=>revision.exposedTools.some(action=>action.name===tool.name&&action.contractDigest===tool.contractDigest))};
+        });
+      },
+      assertConnectorRequirements: refs => {
+        if (!lab.connectors && refs.length) throw new RequestError('CONNECTOR_UNAVAILABLE','连接器模块不可用。',409);
+        for (const ref of refs) {
+          const revision=lab.connectors!.revision(ref.connectorId);
+          if (revision.kind!=='mcp' || ref.actions.some(action=>!revision.exposedTools.some(current=>current.name===action.name&&current.contractDigest===action.contractDigest))) throw new RequestError('CONNECTOR_CATALOG_CHANGED','连接器动作契约已变化，请重新核对专家引用。',409);
+        }
+      },
       seats: () => lab.access?.businessSeats().map(({id,name}) => ({id,name})) ?? [],
       reauthorize: (actor, scope) => scope ? authorizeExpertDefault(lab, actor, scope, true) : requireCapabilityAdministrator(lab, actor),
     }); } catch (error) { lab.capabilities.close(); database?.close(); throw error; }
@@ -963,7 +982,7 @@ export class PiLab {
     });
     // The reminder is transient provider input. Pi retains the unmodified user message.
     // Capture once so every tool-loop call uses the same request-start snapshot.
-    const requestReminder = `\n\n<host_request_instructions>
+    let requestReminder = `\n\n<host_request_instructions>
 宿主本轮提醒：下面是本次请求的完整通用和工作区指令快照，与系统消息中的 project_context 相同，仅本请求有效。当前规则以此为准；历史读写结果或助手承诺不能恢复已删除规则。工作区正文为空或 hash 为 null 表示本轮没有工作区约定，不继承历史回答的格式、装饰性标记或称呼，按当前用户要求正常回答。即使本轮保存新内容，也只在下一请求生效。自然回答用户，无需复述此提醒、hash 或加载机制。
 ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fileId, hash, content })))}
 </host_request_instructions>`;
@@ -990,7 +1009,9 @@ ${work ? `关联工作（本轮开始时的业务信息，操作前可用 work_i
             () => { throw new Error('任务判断未完成。'); })]
         : role || active.background ? [] : [interactionExtension(async (toolCallId, questions, signal) => {
         const item = { ...this.interactionBase(record, active, toolCallId, 'ask_user'), kind: 'question' as const, questions, status: 'pending' as const };
-        return await this.waitForInteraction(record, active, item, signal) as QuestionInteraction;
+        const resolved = await this.waitForInteraction(record, active, item, signal) as QuestionInteraction;
+        active.mcp?.acceptAnswer(resolved);
+        return resolved;
       }, Boolean(this.config.hitlDemoEnabled))],
       noExtensions: true, noSkills: true, noPromptTemplates: true, noThemes: true, noContextFiles: true,
       systemPrompt: `${!role && active.expert ? `你是${active.expert.name}，用中文帮助用户。` : '你是 Axon 的通用对话助手，用中文帮助用户。'}区分资料事实、用户要求和模型建议。${!role && active.expert?.instructions ? `\n<expert_instructions>\n${active.expert.instructions}\n</expert_instructions>` : ''}
@@ -1092,6 +1113,32 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         child => onUpdate?.({ content: [{ type: 'text', text: `${child.role}：${child.status}` }], details: { subagent: child } })),
     })]).filter(tool => (!active.service || (role ? role.tools : active.service.tools).includes(tool.name))
       && (!active.expert?.allowedTools || active.expert.allowedTools.includes(tool.name)));
+    if (!role && !active.background && !active.service && !authoring && this.executionMode !== 'trial' && this.connectors && active.actorUserId && this.access) {
+      const userId = active.actorUserId;
+      const workspace = this.workspaces.get(record.workspaceId,record.seatId);
+      const task = this.access.get(workspace.taskSpaceId,record.seatId);
+      const connectorPrincipal = {userId,seatId:record.seatId,workspaceKind:task.visibility === 'private' ? 'personal' as const : 'task' as const,assertActive:authorizeRequest};
+      const requirements = active.expert?.connectorRequirements;
+      let pendingTarget=!active.input?.connectorIds?.length && (requirements?.length ?? 0)>1;
+      let connectorIds = active.input?.connectorIds?.length ? active.input.connectorIds : requirements?.map(ref=>ref.connectorId) ?? [];
+      if (!connectorIds.length && active.expert?.expertId === GENERAL_EXPERT_ID) {
+        const candidates = this.connectors.catalog(connectorPrincipal).filter(item=>item.kind==='mcp' && item.credential.configured && this.connectors!.revision(item.connectorId).exposedTools.length>0);
+        if (candidates.length>1 && candidates.some(item=>!item.tools.some(tool=>tool.available))) throw new RequestError('CONNECTOR_TARGET_REQUIRED','有多个获准连接，请先在输入区的连接器选择中明确所需服务。',409);
+        if (candidates.length === 1) connectorIds = [candidates[0].connectorId];
+        else if (candidates.length > 1 && candidates.length<=8) {connectorIds=candidates.map(item=>item.connectorId);pendingTarget=true;}
+        else if(candidates.length>8) requestReminder+='\n外部服务候选较多，请用户先从输入区连接器选择中明确所需服务；不要猜测、广播或故障改投。';
+      }
+      if (connectorIds.length) {
+        if (active.expert?.expertId !== GENERAL_EXPERT_ID && !requirements) throw new RequestError('CONNECTOR_EXPERT_REQUIREMENT','当前专家尚未发布此连接器能力引用，请选择通用助手或更新专家。',409);
+        if (pendingTarget && active.expert?.allowedTools && !active.expert.allowedTools.includes('ask_user')) throw new RequestError('CONNECTOR_TARGET_REQUIRED','当前专家不能提问选择连接，请先在输入区的连接器选择中明确所需服务。',409);
+        active.mcp = await RequestMcpTools.create({service:this.connectors,principal:connectorPrincipal,connectorIds,requirements,pendingTarget,
+          controller:active.controller,manager:record.manager,workspaceId:record.workspaceId,requestId:active.id,seatId:record.seatId,
+          check:authorizeRequest,wait:(item,signal)=>this.waitForInteraction(record,active,item,signal),
+          fail:()=>this.stop(record,active,'failure','连接器回执未能持久化，请核对原调用；不会自动重发。')});
+        customTools.push(...active.mcp.tools());
+        if(pendingTarget)requestReminder+=`\n外部服务有多个候选，工具目前均未获目标授权。需要外部资料时先调用ask_user，questions必须原样使用以下宿主问题数组，真实回答才固定本请求唯一目标。选择不是操作批准，后续调用仍单独确认。不得广播或故障改投。问题数组：${JSON.stringify([active.mcp.selectionQuestion()])}`;
+      }
+    }
     const trialAdapters = this.executionMode === 'trial' ? this.extraTrialTools.filter(tool => (!role || role.tools.includes(tool.name))
       && (!active.expert?.allowedTools || active.expert.allowedTools.includes(tool.name))) : [];
     if (trialAdapters.some(adapter => customTools.some(tool => tool.name === adapter.name))) throw new RequestError('INVALID_INPUT', '试用工具不能覆盖宿主工具。');
@@ -1128,6 +1175,11 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         if (!record.service) this.access?.assertCanUseWorkspace(record.seatId);
         const { toolCall } = context;
         if (trialAdapterNames.has(toolCall.name)) return original;
+        if (active.mcp?.has(toolCall.name)) {
+          if(!active.mcp.targetAllowed(toolCall.name))return {block:true,reason:'此连接尚未被选为本请求目标。请先按宿主给定问题调用ask_user，用户选择后仍需单独确认调用。'};
+          const approved = await active.mcp.confirm(toolCall.name,toolCall.id,context.args,signal,toolCall.arguments);
+          return approved ? original : {block:true,reason:'用户未批准此次连接器调用，未发送业务参数。'};
+        }
         if (toolCall.name === 'skill_read') {
           const selected = snapshot.skills.find(skill => skill.id === (context.args as { id?: unknown }).id);
           if(selected?.autoInvocationEligible===false)throw new RequestError('SKILL_MANUAL_ONLY','此技能仅可由用户显式选择。',403);
@@ -1189,7 +1241,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
           ...(commandAction.attachment ? [`参考文件：${commandAction.attachment.name}`] : []),
         ].join('\n') : undefined;
         const item: ConfirmationInteraction = { ...this.interactionBase(record, active, toolCall.id, toolCall.name),
-          kind: 'confirmation', status: 'pending',
+          kind: 'confirmation', status: 'pending', ...(proposal?.schemaVersion===2 ? {schemaVersion:3 as const}:{}),
           action: { ...(proposal ? { authoring: { proposal } } : {}), ...(commandAction ? {commandReference: {id:commandAction.id,contentHash:commandAction.contentHash}} : {}), title: proposal ? `保存${proposal.candidate.kind === 'expert' ? '专家' : '技能'}草稿` : commandAction ? commandTitle : handoff?.title ?? (toolCall.name === 'bash' ? '执行命令' : '确认演示'), description: proposal?.summary ?? commandDescription ?? handoff?.description ?? policy.reason,
             ...(proposal || commandAction ? {} : toolCall.name === 'bash' ? { command: String(parameters.command), cwd: '/workspace' } : handoff ? { handoff } : { description: String(parameters.content) }), parameters },
           rule: { ruleId: policy.ruleId, reason: policy.reason, version: policy.version } };
@@ -1224,6 +1276,12 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       }
     };
     session.agent.afterToolCall = async context => {
+      if (active.mcp?.has(context.toolCall.name)) {
+        const actual = active.mcp.results.get(context.toolCall.id);
+        try { await originalAfter?.(context); } catch { this.stop(record,active,'failure','连接器结果处理失败，请核对原调用；不会自动重发。'); }
+        if (actual) return {content:actual.result.content,details:{...actual.result.details,commandPolicy:{decision:'ask',ruleId:'mcp.call',reason:'确认连接、账号、工具和本次外发参数后调用。',version:'1'},executionStarted:actual.result.details.mcp.sent},isError:actual.isError};
+        return undefined;
+      }
       if (trialAdapterNames.has(context.toolCall.name)) { authorizeRequest(); return await originalAfter?.(context); }
       const mapResult = isMapTool(context.toolCall.name) || context.toolCall.name === 'spatial_analyze' || context.toolCall.name === 'analysis_task_candidates' || context.toolCall.name === 'task_resource_query';
       const actualContent = mapResult ? structuredClone(context.result.content) : undefined;
@@ -1472,6 +1530,16 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     active.activatedSkills ??= new Map(); active.activatedSkills.set(skill.id,ref);
   }
 
+  refreshConnectorAccessGuards(): void {
+    if (this.context) {
+      try {for(const system of this.context.config.systems)this.connectors?.resolveLegacy({systemId:system.id});this.contextUnavailable=false;} catch {this.contextUnavailable=true;}
+    }
+    for (const record of this.records.values()) {
+      const active=record.active;if(!active?.mcp)continue;
+      try {active.mcp.assertCurrent();} catch {this.stop(record,active,'failure','连接器配置、账号或凭证已变化，已停止后续调用；已发出的请求请核对原结果。');}
+    }
+  }
+
   private checkCapability(record: RecordState, active: Active): void {
     this.requestGuard?.();
     if (active.authoring) this.authoringContext(record, active);
@@ -1546,6 +1614,8 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     if (methodKind && (input.skill!.revisionId !== undefined || input.skill!.packageDigest !== undefined || input.agent)) throw new RequestError('INVALID_INPUT', '管理 Skill 不能与技能包修订或子 Agent 混用。');
     if (input.authoring && input.skill && (!methodKind || methodKind !== input.authoring.kind)) throw new RequestError('INVALID_INPUT', '所选 Skill 与管理目标不匹配。');
     const authoring = input.authoring ?? (methodKind ? { kind: methodKind } : !input.skill && personalOnly && actorUserId && this.access?.accountIdentity(actorUserId)?.role === 'administrator' ? requestedAuthoring(text) : undefined);
+    if (input.connectorIds !== undefined && (!Array.isArray(input.connectorIds) || input.connectorIds.length > 8 || new Set(input.connectorIds).size !== input.connectorIds.length || input.connectorIds.some(id => typeof id !== 'string' || id.length > 160 || !id.trim()))) throw new RequestError('INVALID_INPUT','连接器选择无效。');
+    if (input.connectorIds?.length && (authoring || internal || this.executionMode === 'trial')) throw new RequestError('CONNECTOR_MODE_UNSUPPORTED','连接器仅用于普通前台对话。',403);
     if (authoring && (!personalOnly || internal || !actorUserId || this.access?.accountIdentity(actorUserId)?.role !== 'administrator' || !this.authoring)) throw new RequestError('FORBIDDEN', '能力创作仅限当前管理员本人的个人对话。', 403);
     const active: Active = { model, actorUserId, authoring, expert: record.expert, id: internal?.requestId ?? randomUUID(), background: internal?.background, status: 'responding', phase: 'preparing', acceptedAt: Date.now(),
       input: structuredClone(input), work: personalOnly ? undefined : this.collaboration?.workForSession({ seatId: record.seatId }, id),
@@ -1677,6 +1747,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
           identity: { seatId: record.seatId, ...(active.actorUserId ? { userId: active.actorUserId } : {}) }, mode: child ? 'delegated' : active.background ? 'background' : this.executionMode ?? 'interactive',
           tools: session.getActiveToolNames(), model: { id: active.model.id, version: active.model.version }, runtime: 'axon/pi-0.85.1' };
         record.manager.appendCustomEntry(EXECUTION_MANIFEST, manifest);
+        active.mcp?.record();
       }
       active.timings = { assemblyMs: performance.now() - assemblyStart, toolsMs: [] };
       if (active.files?.length) await session.sendCustomMessage({ customType: FILE_INPUT, display: false,
@@ -1779,6 +1850,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     } catch (error) {
       failure = error instanceof RequestError ? error.message : providerError(error instanceof Error ? error.message : '');
     } finally {
+      await active.mcp?.close();
       active.releaseAuthoring?.();
       clearTimeout(timer);
       if (active.reason && record.session) active.aborting ||= record.session.abort();
@@ -1849,7 +1921,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       const cancelled: Interaction = { ...interaction, status: 'cancelled', resolvedAt: new Date().toISOString(), reason: active.reason === 'timeout' ? '本次请求超时。' : active.reason === 'failure' ? '本次请求发生错误。' : '本次请求已停止。' };
       try {
         if (!record.persistenceFailed) {
-          record.manager.appendCustomEntry(INTERACTION_RESOLVED, { requestId: active.id, seatId: record.seatId, interaction: cancelled });
+          record.manager.appendCustomEntry(interactionRecordType(cancelled,true), { requestId: active.id, seatId: record.seatId, interaction: cancelled });
           active.onInteraction?.(cancelled);
         }
       } catch { /* persistence guard has already stopped this request */ }
@@ -1858,7 +1930,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     active.waiting = { interaction, resolve, reject, cleanup };
     active.controller.signal.addEventListener('abort', abort, { once: true }); signal?.addEventListener('abort', abort, { once: true });
     try {
-      record.manager.appendCustomEntry(INTERACTION_REQUESTED, { requestId: active.id, seatId: record.seatId, interaction });
+      record.manager.appendCustomEntry(interactionRecordType(interaction), { requestId: active.id, seatId: record.seatId, interaction });
       setPhase(record, active, interaction.kind === 'question' ? 'waiting_answer' : 'waiting_confirmation', interaction.toolName);
       active.onInteraction?.(interaction);
     } catch {
@@ -1889,7 +1961,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     this.checkCapability(record, active);
     const resolved = resolveInteraction(item, response);
     // Native append is synchronous: the first accepted response owns the transition before yielding.
-    record.manager.appendCustomEntry(INTERACTION_RESOLVED, { requestId: active.id, seatId: record.seatId, interaction: resolved });
+    record.manager.appendCustomEntry(interactionRecordType(resolved,true), { requestId: active.id, seatId: record.seatId, interaction: resolved });
     active.waiting = undefined; waiting.cleanup();
     setPhase(record, active, resolved.status === 'approved' ? 'tool' : 'preparing', resolved.status === 'approved' ? resolved.toolName : undefined);
     active.onInteraction?.(resolved); waiting.resolve(resolved);
@@ -1934,6 +2006,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     this.commands?.close();
     this.collaboration?.close();
     await this.skills?.close();
+    this.connectors?.close();
     this.capabilities?.close();
   }
 }

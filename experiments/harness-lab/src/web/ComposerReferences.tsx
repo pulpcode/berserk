@@ -1,12 +1,14 @@
 import { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type KeyboardEvent, type Ref, type RefObject } from 'react';
-import { ArrowLeft, BookOpen, Bot, ChevronRight, FileText, Folder, Upload, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, Bot, ChevronRight, FileText, Folder, Link, Upload, X } from 'lucide-react';
 import type { AgentInfo, LoadedComposerSelection, SkillFile, SkillInfo, WorkspaceResources } from '../contracts/index';
 import type { FileEntry, FileList } from '../contracts/files';
 import type { DraftSelection } from './useComposerSelections';
 import { useApi } from './api';
 import { Panel } from './Resources';
+import type { ConnectorSummary } from '../contracts/connectors';
+import { connectorReady } from './ConnectorLibrary';
 
-type Mode = 'categories' | 'files' | 'skills' | 'agents' | 'menu';
+type Mode = 'categories' | 'files' | 'skills' | 'agents' | 'menu' | 'connectors';
 type Picker = { scope: string; mode: Mode; query: string; directory: string; offset: number; index: number; fragment?: { start: number; end: number; text: string } };
 type Option = { kind: 'category'; mode: 'files' | 'agents'; name: string; description: string } | { kind: 'file'; file: FileEntry } | { kind: 'skill'; skill: SkillInfo } | { kind: 'agent'; agent: AgentInfo };
 export interface ComposerReferenceHandle {
@@ -37,10 +39,11 @@ export function SelectionHistory({ selections }: { selections?: LoadedComposerSe
   </div>{open && selections.skill && <Panel title={`本次使用的 Skill · ${selections.skill.name}`} close={() => setOpen(false)}><p>{selections.skill.description}</p><pre className="skill-content">{selections.skill.content}</pre></Panel>}</>;
 }
 
-export function ComposerReferences({ control, scope, workspaceId, enabled, fileEnabled, text, textarea, selection, setText, select, reference, upload, managementSkills = [] }: {
+export function ComposerReferences({ control, scope, workspaceId, enabled, fileEnabled, text, textarea, selection, setText, select, reference, upload, selectConnectors, managementSkills = [] }: {
   managementSkills?: SkillInfo[]; control: Ref<ComposerReferenceHandle>; scope: string; workspaceId: string; enabled: boolean; fileEnabled: boolean;
   text: string; textarea: RefObject<HTMLTextAreaElement | null>; selection: DraftSelection;
   setText: (value: string) => void; select: (kind: 'skill' | 'agent', value?: SkillInfo | AgentInfo) => void;
+  selectConnectors: (ids: string[]) => void;
   reference: (file: FileEntry) => boolean; upload: () => void;
 }) {
   const { api, domId } = useApi();
@@ -63,7 +66,7 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
   const detailRequest = useRef({ value: 0 });
   useEffect(() => { const request = detailRequest.current; request.value++; return () => { request.value++; }; }, [scope, enabled]);
   const pathQuery = splitPath(picker?.query || '', picker?.directory || '');
-  const queryKey = picker && picker.mode !== 'menu' && picker.mode !== 'categories' ? JSON.stringify([scope, workspaceId, picker.mode, pathQuery.path, pathQuery.search, picker.query, picker.offset, retry]) : '';
+  const queryKey = picker && picker.mode !== 'connectors' && picker.mode !== 'menu' && picker.mode !== 'categories' ? JSON.stringify([scope, workspaceId, picker.mode, pathQuery.path, pathQuery.search, picker.query, picker.offset, retry]) : '';
   const options: Option[] = picker?.mode === 'categories' ? [
     ...(fileEnabled ? [{ kind: 'category' as const, mode: 'files' as const, name: '项目文件或文件夹', description: '浏览当前项目，选择要引用的文件' }] : []),
     { kind: 'category', mode: 'agents', name: 'Agents', description: '选择参与本轮任务的只读角色' },
@@ -104,7 +107,7 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
   useEffect(() => {
     const input = textarea.current;
     if (!input) return;
-    if (picker && picker.mode !== 'menu') {
+    if (picker && picker.mode !== 'menu' && picker.mode !== 'connectors') {
       input.setAttribute('aria-controls', listId); input.setAttribute('aria-expanded', 'true'); input.setAttribute('aria-haspopup', 'listbox');
       if (options.length) input.setAttribute('aria-activedescendant', `${listId}-${index}`); else input.removeAttribute('aria-activedescendant');
     } else for (const attr of ['aria-controls', 'aria-expanded', 'aria-haspopup', 'aria-activedescendant']) input.removeAttribute(attr);
@@ -164,6 +167,7 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
     },
     keyDown: event => {
       if (!picker) return false;
+      if (picker.mode === 'connectors') { if (event.key === 'Escape') { event.preventDefault(); setState(undefined); return true; } return false; }
       if (picker.fragment && (['Home', 'End', 'ArrowLeft', 'ArrowRight'].includes(event.key) || ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a'))) { setState(undefined); return false; }
       if (event.key === 'Escape') { event.preventDefault(); setState(undefined); return true; }
       if (event.key === 'Enter') { event.preventDefault(); if (options[index]) choose(options[index]); return true; }
@@ -188,12 +192,14 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
       {selection.skill && <span className="selection-chip"><button type="button" title="查看 Skill 内容" aria-label={`查看 Skill：${selection.skill.name}`} onClick={() => void viewSkill(selection.skill!)}><BookOpen size={15} aria-hidden="true" />{selection.skill.name}</button><button type="button" aria-label="移除 Skill" disabled={!enabled} onClick={() => select('skill')}><X size={14} /></button></span>}
       {selection.agent && <span className="selection-chip" aria-label={`Agents：${selection.agent.name}`} title={selection.agent.description}><Bot size={15} aria-hidden="true" />{selection.agent.name}<button type="button" aria-label="移除 Agents" disabled={!enabled} onClick={() => select('agent')}><X size={14} /></button></span>}
     </div>}
+    {(selection.connectorIds?.length || 0) > 0 && <ConnectorChips ids={selection.connectorIds!} workspaceId={workspaceId} enabled={enabled} change={selectConnectors} />}
     {detailError?.scope === scope && <p className="attachment-notice" role="alert">{detailError.message}</p>}
     {picker && <div className={`reference-popover${picker.mode === 'categories' ? ' reference-categories' : ''}`} aria-label="选择引用" onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); setState(undefined); textarea.current?.focus(); } }}>
       {picker.mode === 'menu' ? <div className="reference-menu">
         {fileEnabled && <><button type="button" onClick={() => { setState(undefined); upload(); }}><Upload size={16} aria-hidden="true" />上传文件</button><button type="button" onClick={() => open('files')}><Folder size={16} aria-hidden="true" />引用文件</button></>}
+        <button type="button" disabled={!workspaceId} onClick={() => open('connectors')}><Link size={16} aria-hidden="true" />连接器</button>
         <button type="button" onClick={() => open('skills')}><BookOpen size={16} aria-hidden="true" />使用 Skill</button><button type="button" disabled={!workspaceId} onClick={() => open('agents')}><Bot size={16} aria-hidden="true" />Agents</button>
-      </div> : <>
+      </div> : picker.mode === 'connectors' ? <ConnectorPicker workspaceId={workspaceId} ids={selection.connectorIds || []} change={selectConnectors} close={() => { setState(undefined); textarea.current?.focus(); }} /> : <>
         {picker.mode !== 'categories' && <div className="reference-heading">
           <div className="reference-title">{picker.fragment?.text.startsWith('@') && <button type="button" className="icon-button" aria-label="返回类别" title="返回类别" onClick={backToCategories}><ArrowLeft size={16} /></button>}<strong>{picker.mode === 'skills' ? 'Skill' : picker.mode === 'agents' ? 'Agents' : '项目文件'}</strong>{picker.mode === 'agents' && <span className="reference-readonly">只读</span>}</div>
           <button type="button" className="icon-button" aria-label="关闭选择" onClick={() => { setState(undefined); textarea.current?.focus(); }}><X size={16} /></button>
@@ -214,4 +220,22 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
     </div>}
     {detail?.scope === scope && enabled && <Panel title={`Skill · ${detail.file.name}`} close={() => setDetail(undefined)}><p>{detail.file.description}</p><pre className="skill-content">{detail.file.content}</pre></Panel>}
   </div>;
+}
+
+function ConnectorChips({ ids, workspaceId, enabled, change }: { ids: string[]; workspaceId: string; enabled: boolean; change: (ids: string[]) => void }) {
+  const { api } = useApi();
+  const [catalog, setCatalog] = useState<ConnectorSummary[]>([]);
+  useEffect(() => { let live = true; void api<ConnectorSummary[]>(`/api/capabilities/connectors?${new URLSearchParams({ workspaceId })}`).then(items => { if (live) setCatalog(items); }).catch(() => {}); return () => { live = false; }; }, [api, workspaceId]);
+  return <div className="selection-chips" aria-label="本会话连接器">{ids.map(id => { const item = catalog.find(item => item.connectorId === id); const name = item?.name || '连接器暂不可用'; return <span key={id} className="selection-chip connector-selection-chip"><Link size={15} aria-hidden="true" /><span>{name}</span><button type="button" aria-label={`移除连接器${name}`} disabled={!enabled} onClick={() => change(ids.filter(value => value !== id))}><X size={14} aria-hidden="true" /></button></span>; })}</div>;
+}
+
+function ConnectorPicker({ workspaceId, ids, change, close }: { workspaceId: string; ids: string[]; change: (ids: string[]) => void; close: () => void }) {
+  const { api } = useApi();
+  const [catalog, setCatalog] = useState<ConnectorSummary[]>();
+  const [query, setQuery] = useState('');
+  const [error, setError] = useState('');
+  const [retry, setRetry] = useState(0);
+  useEffect(() => { let live = true; void api<ConnectorSummary[]>(`/api/capabilities/connectors?${new URLSearchParams({ workspaceId })}`).then(items => { if (live) { setCatalog(items.filter(item => item.kind === 'mcp')); setError(''); } }).catch(error => { if (live) setError(failure(error)); }); return () => { live = false; }; }, [api, workspaceId, retry]);
+  const visible = catalog?.filter(item => `${item.name} ${item.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  return <><div className="reference-heading"><strong>会话连接器</strong><button type="button" className="icon-button" aria-label="关闭选择" onClick={close}><X size={16} aria-hidden="true" /></button></div><input autoFocus type="search" aria-label="筛选连接器" placeholder="按名称或说明筛选" value={query} onChange={event => setQuery(event.target.value)} />{error ? <p role="alert">{error}<button type="button" onClick={() => setRetry(value => value + 1)}>重新读取</button></p> : !catalog ? <p role="status">正在读取…</p> : <div className="connector-picker-options" role="group" aria-label="可选连接器">{visible?.map(item => <label key={item.connectorId}><input type="checkbox" checked={ids.includes(item.connectorId)} disabled={!ids.includes(item.connectorId) && (!connectorReady(item) || ids.length >= 8)} onChange={event => change(event.target.checked ? [...ids, item.connectorId] : ids.filter(id => id !== item.connectorId))} /><span><strong>{item.name}</strong><small>{!connectorReady(item) ? item.auth.credentialSource === 'personal' && !item.credential.configured ? '请在能力中心配置本人凭证' : '当前不可用' : item.description}</small></span></label>)}{!visible?.length && <p>没有匹配的连接器</p>}</div>}<div className="connector-picker-footer"><button type="button" onClick={close}>完成选择</button></div></>;
 }

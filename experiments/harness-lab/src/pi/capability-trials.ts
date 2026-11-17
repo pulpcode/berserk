@@ -176,7 +176,7 @@ export class CapabilityTrials {
       if (needsFiles && !r.environment.fileEnvironmentAvailable && !this.options.optionalFileEnvironment) throw unavailable('试用需要文件执行环境，但受控Docker沙箱不可用。');
       const expert = await lab.capabilities.registerExpert({ expertId: r.expert.expertId, releaseVersion: r.expert.releaseVersion,
         name: r.expert.name, description: r.expert.description, instructions: r.expert.instructions, modes: r.expert.modes,
-        selectable: r.expert.selectable, system: r.expert.system, allowedTools: r.expert.allowedTools, skills: r.expert.skills });
+        selectable: r.expert.selectable, system: r.expert.system, ...(r.expert.connectorRequirements === undefined ? {} : {connectorRequirements:r.expert.connectorRequirements}), allowedTools: r.expert.allowedTools, skills: r.expert.skills });
       if (expert.digest !== r.expert.digest) throw unavailable('试用快照摘要不一致。');
       const session = await lab.createSession(undefined, 'trial-seat', undefined, undefined, undefined,
         { expertRef: { expertId: expert.expertId, revisionId: expert.revisionId }, expectedDigest: expert.digest, clientActionId: randomUUID() });
@@ -212,7 +212,7 @@ export class CapabilityTrials {
       r.trial.status = running.stop === 'interrupted' ? 'interrupted' : running.stop === 'revoked' ? 'failed' : running.stop === 'cancelled' ? 'cancelled' : success ? 'succeeded' : 'failed';
       r.trial.evidence = { tools, model: r.environment.model, runtime: runtimeName, success,
         fileEnvironmentVerified: needsFiles && r.environment.fileEnvironmentAvailable && r.calls.some(call => call.status === 'completed' && !call.isError && ['write', 'edit', 'bash', 'read'].includes(call.name.replaceAll('.', '_'))),
-        summary: success ? this.options.requireDeclaredToolCoverage === false ? '本次试用执行完成；仅代表本次记录，不作为技能发布条件。' : '代表性试用执行完成，仍需管理员确认。' : r.snapshot.lastResult?.message || '试用未通过，请检查执行记录及未验证能力。', unverified: [...missing, ...excluded.map(tool => `excluded:${tool}`), ...r.expert.allowedTools!.filter(tool => syntheticTrialToolNames.includes(tool)).map(tool => `${tool}:real-business-integration-and-schema`)] };
+        summary: success ? this.options.requireDeclaredToolCoverage === false ? '本次试用执行完成；仅代表本次记录，不作为技能发布条件。' : '代表性试用执行完成，仍需管理员确认。' : r.snapshot.lastResult?.message || '试用未通过，请检查执行记录及未验证能力。', unverified: [...(r.expert.connectorRequirements?.map(ref=>`connector:${ref.connectorId}:real-integration-not-executed`)??[]), ...missing, ...excluded.map(tool => `excluded:${tool}`), ...r.expert.allowedTools!.filter(tool => syntheticTrialToolNames.includes(tool)).map(tool => `${tool}:real-business-integration-and-schema`)] };
     } catch (error) {
       if (running.lab && running.sessionId) {
         try { r.snapshot = running.lab.get(running.sessionId); } catch { /* Preserve original error and the last validated snapshot. */ }

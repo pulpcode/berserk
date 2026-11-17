@@ -84,10 +84,10 @@ export async function loadBackgroundConfig(env: NodeJS.ProcessEnv = process.env)
   return config;
 }
 
-export function authenticateSource(config: BackgroundConfig, sourceId: string, authorization: string | undefined, env: NodeJS.ProcessEnv = process.env): BackgroundSourceConfig {
+export function authenticateSource(config: BackgroundConfig, sourceId: string, authorization: string | undefined, env: NodeJS.ProcessEnv = process.env, resolveCredential?: (sourceId:string)=>string): BackgroundSourceConfig {
   const source = config.sources.find(item => item.sourceId === sourceId);
   const supplied = authorization?.startsWith('Bearer ') ? authorization.slice(7) : '';
-  const expected = source && env[source.credentialRef];
+  const expected = source && (resolveCredential?resolveCredential(sourceId):env[source.credentialRef]);
   const left = Buffer.from(supplied), right = Buffer.from(expected || '');
   if (!source || !expected || !supplied || left.length !== right.length || !timingSafeEqual(left, right)) throw new RequestError('SOURCE_UNAUTHORIZED', '来源凭证无效。', 401);
   return source;

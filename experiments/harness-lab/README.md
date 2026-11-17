@@ -449,3 +449,21 @@ npm run migrate:skills:r3 -- --data-dir /absolute/data --backup-dir /absolute/ba
 `probe:skills:r3`验证真实配置模型/Docker；`probe:skills:scanner`验证真实扫描器；`probe:skills:rollback`使用真实R2代码与合成模型传输验证配对回退。`measure:skills:r3`测存储/元数据，`measure:skills:context`用原生Pi与明确标记的替身模型测准备时间；均不作SLO或业务集成认证。所有探针使用独立合成数据目录。
 
 R3A真实模型验收：`npm run probe:authoring:r3a`，使用现有配置和独立合成数据，无生产监听器。只自动批准探针中明确约定的合成候选；真实回执、原发布流程与正式使用分别核对。沿用 Node 原生 env-file 加载既有测试模型配置，凭据仅留在进程内存；不复制业务账号、工作区或历史。
+
+
+### R4 连接器与远程 MCP（待用户验收）
+
+连接器在原能力中心管理：通用 MCP 保存后保持停用，先主动发现工具，再选择开放动作和使用范围，最后启用。业务席位只能使用获准连接及配置本人的凭证；本人凭证可用于个人空间和原权限允许的公共任务，不会供其他席位或后台借用。管理员仍不能访问业务任务空间。
+
+新秘密需要 `LAB_CONNECTOR_KEY_FILE` 指向数据根之外、权限0600的外置密钥文件，格式为 `{"activeKeyId":"r4-v1","keys":{"r4-v1":"32字节随机密钥的base64"}}`。保留已有密钥版本；缺密钥时拒绝保存秘密，不降级明文。无认证 MCP 及原 tokenEnv 引用不要求新增明文存储。
+
+旧数据必须停服后先执行 dry-run，显式列出原外部配置及提供其环境凭证的文件，检查冲突后再 apply。相同业务类型的额外配置不会被取第一条、删除或自动合并。
+
+```sh
+npm run migrate:connectors:r4 -- --data-dir /absolute/data --backup-dir /absolute/backup-r4 --context-config /absolute/context.json --background-config /absolute/background.json --credential-file /absolute/service.env --dry-run
+npm run migrate:connectors:r4 -- --data-dir /absolute/data --backup-dir /absolute/backup-r4 --context-config /absolute/context.json --background-config /absolute/background.json --credential-file /absolute/service.env --apply --service-stopped
+```
+
+使用外置密钥时同时传 `--key-file /absolute/connector-keys.json`；凭证分散在多个文件时重复 `--credential-file`。备份包含完整 `backup/data`、外部配置/可用密钥/凭证 `backup/external` 与 `pairing.json`；回退配对旧程序及这份完整备份，另行保留R4活动数据。迁移后旧配置文件不覆盖数据库权威记录。
+
+`npm run probe:mcp:r4` 验证受控真实HTTP/SDK；`npm run probe:connectors:r4 -- --output-dir /absolute/isolated-report` 使用既有授权方舟配置验证模型闭环，清理合成数据且不使用生产账号或历史。两种协议、真实第三方、合成服务、模型调用与用户验收分别记录。当前支持2026-07-28及2025-11-25；用户已明确不接入Microsoft Learn，不为其扩展旧协议；公开探针使用Cloudflare文档MCP。

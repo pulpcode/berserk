@@ -52,7 +52,10 @@
     "probe:skills:scanner": "tsx scripts/probe-skills-scanner.ts",
     "probe:skills:rollback": "tsx scripts/probe-skills-r3-rollback.ts",
     "measure:skills:r3": "tsx scripts/measure-skills-r3.ts",
-    "measure:skills:context": "tsx scripts/measure-skills-context-r3.ts"
+    "measure:skills:context": "tsx scripts/measure-skills-context-r3.ts",
+    "migrate:connectors:r4": "tsx scripts/migrate-connectors-r4.ts",
+    "probe:mcp:r4": "tsx scripts/probe-mcp-r4.ts",
+    "probe:connectors:r4": "tsx --env-file-if-exists=.env.local scripts/probe-connectors-r4.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",
@@ -60,6 +63,7 @@
     "@fastify/cookie": "11.1.2",
     "@fastify/session": "11.1.3",
     "@fastify/static": "10.1.3",
+    "@modelcontextprotocol/client": "2.4.0",
     "@remixicon/react": "4.9.0",
     "@turf/area": "7.2.0",
     "@turf/boolean-intersects": "7.2.0",

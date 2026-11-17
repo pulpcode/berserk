@@ -1,0 +1,71 @@
+{
+  "node": "v24.14.0",
+  "sdk": "@modelcontextprotocol/client@2.4.0",
+  "ranAt": "2026-11-17T04:14:04.974Z",
+  "controlled": [
+    {
+      "label": "alpha",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "serverInfo": {
+        "name": "same-server-family",
+        "version": "1.0.0"
+      },
+      "toolNames": [
+        "lookup"
+      ],
+      "digest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+      "outcome": "success",
+      "callCount": 1,
+      "coldDiscoveryMs": 44.813717,
+      "cachedDiscoveryMs": 0.02153499999997166,
+      "firstCallMs": 11.600924999999961,
+      "catalogBytes": 580
+    },
+    {
+      "label": "beta",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "serverInfo": {
+        "name": "same-server-family",
+        "version": "1.0.0"
+      },
+      "toolNames": [
+        "lookup"
+      ],
+      "digest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+      "outcome": "success",
+      "callCount": 1,
+      "coldDiscoveryMs": 5.474478999999974,
+      "cachedDiscoveryMs": 0.02014499999995678,
+      "firstCallMs": 2.5847840000000133,
+      "catalogBytes": 580
+    },
+    {
+      "label": "legacy",
+      "protocolVersion": "2025-11-25",
+      "protocolEra": "legacy",
+      "serverInfo": {
+        "name": "same-server-family",
+        "version": "1.0.0"
+      },
+      "toolNames": [
+        "lookup"
+      ],
+      "digest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+      "outcome": "success",
+      "callCount": 1,
+      "coldDiscoveryMs": 20.01187200000004,
+      "cachedDiscoveryMs": 0.019629000000009,
+      "firstCallMs": 4.341501999999991,
+      "catalogBytes": 580
+    }
+  ],
+  "cancellation": {
+    "sampleCount": 1,
+    "afterServerReceived": true,
+    "status": "unknown",
+    "settledMs": 0.6513619999999491,
+    "noReplay": true
+  }
+}

@@ -1,3 +1,5 @@
+import { ConnectorLibrary } from './ConnectorLibrary';
+import type { ConnectorSummary } from '../contracts/connectors';
 import { CreationMethodDialog } from './CreationMethodDialog';
 import type { AuthoringIntent } from '../contracts/authoring';
 import { useEffect, useRef, useState } from 'react';
@@ -33,10 +35,11 @@ type LibraryTab = 'experts' | 'skills' | 'connectors';
 const libraryTabs = [{ id: 'experts', name: '专家', icon: Layers }, { id: 'skills', name: '技能', icon: Sparkles }, { id: 'connectors', name: '连接器', icon: Link }] as const;
 const managedState = (expert: ManagedExpertSummary) => expert.archived ? '已归档' : expert.state === 'disabled' ? '已停用' : expert.state === 'banned' ? '受限制' : expert.currentRevisionId ? '已发布' : '草稿';
 
-export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId, create, applySkill, domId, canCollaborate = true, administration = false, authoring }: {
+export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId, create, applySkill, applyConnector, domId, canCollaborate = true, administration = false, authoring }: {
   workspaces: Workspace[]; fixedWorkspaceId?: string; initialExpertId?: string; authoring?: (intent: AuthoringIntent) => void;
   create: (workspaceId: string, selection: Required<Pick<ExpertSessionSelection, 'expertRef' | 'expectedDigest'>>) => Promise<void>;
   applySkill?: (workspaceId: string, skill: SkillInfo) => Promise<void>;
+  applyConnector?: (workspaceId: string, connector: ConnectorSummary) => Promise<void>;
   domId: (id: string) => string; canCollaborate?: boolean; administration?: boolean;
 }) {
   const { api, storageKey } = useApi();
@@ -103,7 +106,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
       </div>
     </div>
     <div id={domId('capability-tabpanel')} role="tabpanel" aria-labelledby={domId(`capability-tab-${tab}`)} className="capability-tabpanel">
-      {tab !== 'skills' && <div className="capability-section-label"><h2>{tab === 'experts' ? '专业专家' : '连接器'}</h2>{count !== undefined && <span>{count} {tab === 'experts' ? '位专家' : '个连接器'}</span>}</div>}
+      {tab === 'experts' && <div className="capability-section-label"><h2>{tab === 'experts' ? '专业专家' : '连接器'}</h2>{count !== undefined && <span>{count} {tab === 'experts' ? '位专家' : '个连接器'}</span>}</div>}
       {tab === 'experts' && <>
         {error && <p className="resource-error" role="alert">{error}<button onClick={() => setReload(value => value + 1)}>重新读取</button></p>}
         {!(administration ? managed : experts) && !error && <LoadingIndicator label="正在读取专家目录…" />}
@@ -114,7 +117,7 @@ export function CapabilityCenter({ workspaces, fixedWorkspaceId, initialExpertId
         </nav>
       </>}
       {tab === 'skills' && <SkillLibrary authoring={authoring} administrator={administrator} query={query} refresh={reload} workspaces={workspaces.filter(workspace => !workspace.id.startsWith('task:'))} applySkill={applySkill} />}
-      {tab === 'connectors' && <LibraryEmpty icon={Link} title={search ? '没有找到相关连接器' : '暂无连接器'} />}
+      {tab === 'connectors' && <ConnectorLibrary administrator={administrator} query={query} refresh={reload} workspaces={workspaces.filter(workspace => !workspace.id.startsWith('task:'))} fixedWorkspaceId={fixedWorkspaceId} applyConnector={applyConnector} />}
     </div>
     {selected && !administration && <Panel title={detail?.name || '专家详情'} className="expert-detail-panel" close={() => { setSelected(''); setCollaborating(false); }}><div className="expert-detail" aria-label="专家详情" aria-busy={!detail && !detailError}>{detailError ? <p className="resource-error" role="alert">{detailError}<button onClick={() => setReload(value => value + 1)}>重新读取详情</button></p> : !detail ? <LoadingIndicator label="正在读取专家详情…" /> : <>
       <div className="expert-detail-heading"><div><h2>{detail.name}</h2></div><span className="expert-availability">{detail.availability.available ? '可协作' : '暂不可用'}</span></div>

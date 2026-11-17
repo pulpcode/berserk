@@ -6,6 +6,7 @@ import { MapReferenceChips } from './MapReferenceChips';
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, CircleAlert, Clapperboard, FolderOpen, Layers, LayoutDashboard, ListTodo, Map as MapIcon, Workflow, Menu, MessageSquare, Plus, Square, SquarePen } from 'lucide-react';
+import type { ConnectorSummary } from '../contracts/connectors';
 import type { SkillInfo, WorkspaceResources } from '../contracts/index';
 import { InputQueue } from './InputQueue';
 import { useChat } from './useChat';
@@ -454,7 +455,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
     const target = preferredWorkspaceId || (eligible.some(item => item.id === chat.workspaceId) ? chat.workspaceId : eligible[0]?.id || '');
     const owner = `workspace:${target.startsWith('task:') ? '' : target}`;
     const existing = chat.composerSelections.current(owner);
-    if (intent && (chat.drafts[owner]?.trim() || chat.attachments.current(owner).length || existing.skill || existing.agent || existing.authoring)
+    if (intent && (chat.drafts[owner]?.trim() || chat.attachments.current(owner).length || existing.skill || existing.agent || existing.authoring || existing.connectorIds?.length)
       && !confirm('这个空间有未发送的草稿。保留正文和附件，并将本条消息改用创建 Skill？')) return;
     rememberPosition(); let navigation = ++navigationRequest.current;
     chat.beginNew(target.startsWith('task:') ? '' : target); setView('chat'); setSidebarOpen(false); setCreationError('');
@@ -482,7 +483,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
     if (choosingNewSpace) return;
     if (target === chat.workspaceId) return target;
     const source = chat.composerSelections.current(chat.draftKey);
-    if (protect && (chat.draft.trim() || attachmentItems.length || source.skill || source.agent) && !confirm('当前草稿和附件会保留在原空间。切换到另一个空间？')) return;
+    if (protect && (chat.draft.trim() || attachmentItems.length || source.skill || source.agent || source.connectorIds?.length) && !confirm('当前草稿和附件会保留在原空间。切换到另一个空间？')) return;
     const navigation = ++navigationRequest.current; setChoosingNewSpace(true); setCreationError('');
     try {
       let id = target;
@@ -490,7 +491,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
       if (navigation !== navigationRequest.current) return;
       const destination = `workspace:${id}`;
       const current = chat.composerSelections.current(destination);
-      const emptyDestination = !chat.drafts[destination]?.trim() && !chat.attachments.current(destination).length && !current.skill && !current.agent && !current.authoring && !current.contextRefs?.length && !current.annotationRefs?.length;
+      const emptyDestination = !chat.drafts[destination]?.trim() && !chat.attachments.current(destination).length && !current.skill && !current.agent && !current.authoring && !current.contextRefs?.length && !current.annotationRefs?.length && !current.connectorIds?.length;
       if (emptyDestination && source.skill && managementSkills.some(item => item.id === source.skill!.id)) {
         chat.composerSelections.set(destination, 'skill', source.skill);
         if (source.authoring?.targetId) chat.composerSelections.setAuthoring(destination, source.authoring);
@@ -565,6 +566,20 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
     if (navigation !== navigationRequest.current) throw new Error('页面位置已变化，请在当前空间重新选择技能。');
     navigationRequest.current++; rememberPosition(); chat.selectWorkspace(workspaceId);
     chat.composerSelections.set(selected || `workspace:${workspaceId}`, 'skill', skill);
+    setView('chat'); setSidebarOpen(false);
+    history.pushState(null, '', selected ? `/?session=${encodeURIComponent(selected)}` : '/');
+  }
+  async function applyLibraryConnector(workspaceId: string, connector: ConnectorSummary) {
+    if (!canCollaborate || !chat.workspaces.some(workspace => workspace.id === workspaceId)) throw new Error('当前空间不可访问，请重新选择。');
+    const navigation = navigationRequest.current;
+    const selected = chat.selectedForWorkspace(workspaceId);
+    if (selected) { const value = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(selected)}`); if (value.active || value.backgroundJob) throw new Error('该对话正在执行，请等待完成后选择连接器。'); }
+    if (navigation !== navigationRequest.current) throw new Error('页面位置已变化，请在当前空间重新选择连接器。');
+    const owner = selected || `workspace:${workspaceId}`;
+    const ids = chat.composerSelections.current(owner).connectorIds || [];
+    if (ids.length >= 8 && !ids.includes(connector.connectorId)) throw new Error('每个对话最多选择 8 个连接器。');
+    navigationRequest.current++; rememberPosition(); chat.selectWorkspace(workspaceId);
+    chat.composerSelections.setConnectorIds(owner, [...ids, connector.connectorId]);
     setView('chat'); setSidebarOpen(false);
     history.pushState(null, '', selected ? `/?session=${encodeURIComponent(selected)}` : '/');
   }
@@ -650,7 +665,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
       {!personalOnly&&seatActive && view === 'situation' && <Suspense fallback={<LoadingIndicator label="正在加载态势地图…"/>}>{canCollaborate&&annotationMapTaskId?<AnnotationWorkspace key={`${annotationMapTaskId}:${annotationMapSessionId || ''}`} initial={annotationInitial} taskId={annotationMapTaskId} taskTitle={directory.tasks.find(task=>task.id===annotationMapTaskId)?.title} openTask={()=>showTaskInformation(annotationMapTaskId)} sessionId={annotationMapSessionId} taskContext={directory.tasks.find(task=>task.id===annotationMapTaskId)?.context} archived={Boolean(directory.tasks.find(task=>task.id===annotationMapTaskId)?.readOnly||directory.tasks.find(task=>task.id===annotationMapTaskId)?.state==='archived')} reference={referenceAnnotation} sourceReference={referenceMapObject} derive={deriveAnnotations} openSession={selectSession}/>:<SituationView readOnly={!canCollaborate} toolbarTarget={mapToolbarTarget} key={`${routeRevision}:${location.search}`} initial={parseMapHref(location.pathname+location.search)} reference={referenceMapObject}/>}</Suspense>}
       {!personalOnly&&canCollaborate&&seatActive && view === 'simulation' && <Suspense fallback={<LoadingIndicator label="正在读取模拟控制…"/>}><Simulation/></Suspense>}
       {!personalOnly&&seatActive && view === 'scenario_director' && <Suspense fallback={<LoadingIndicator label="正在加载场景导演台…"/>}><ScenarioDirector identity={identity} allowed={Boolean(identity && mapConfig.data?.scenarioControlEnabled)} checking={!mapConfig.data && !mapConfig.error} permissionError={mapConfig.error} retryPermission={mapConfig.refresh} returnToWork={returnToWork} openTask={id=>showTaskInformation(id,'description')}/></Suspense>}
-      {seatActive && view === 'capabilities' && <CapabilityCenter authoring={administratorAccount ? newChat : undefined} administration={Boolean(administratorAccount)} canCollaborate={canCollaborate} key={`${capabilityWorkspaceId || 'global'}:${capabilityExpertId || ''}`} workspaces={navigationWorkspaces.filter(workspace => taskMeta?.[workspace.id]?.state !== 'archived')} fixedWorkspaceId={capabilityWorkspaceId} initialExpertId={capabilityExpertId} create={createExpertChat} applySkill={applyLibrarySkill} domId={domId} />}
+      {seatActive && view === 'capabilities' && <CapabilityCenter authoring={administratorAccount ? newChat : undefined} administration={Boolean(administratorAccount)} canCollaborate={canCollaborate} key={`${capabilityWorkspaceId || 'global'}:${capabilityExpertId || ''}`} workspaces={navigationWorkspaces.filter(workspace => taskMeta?.[workspace.id]?.state !== 'archived')} fixedWorkspaceId={capabilityWorkspaceId} initialExpertId={capabilityExpertId} create={createExpertChat} applySkill={applyLibrarySkill} applyConnector={applyLibraryConnector} domId={domId} />}
       {view !== 'chat'||!canCollaborate ? null : <>
       {snapshot?.workItemId && seats.length > 0 && <LinkedWork key={snapshot.workItemId} id={snapshot.workItemId} open={() => showWork(snapshot.workItemId)} />}
       <div id={domId('conversation')} className="conversation-scroll" ref={scroll} tabIndex={0} aria-label="对话内容" onScroll={() => {
@@ -695,7 +710,7 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
             <ComposerInteractionCard key={currentCard.interactionId} interaction={currentCard} submission={chat.interactionSubmissions[currentCard.interactionId]} respond={chat.respondInteraction} query={chat.queryInteraction} composerInput={textarea} dockFocus={dockFocus} focusScope={interactionFocusScope} />
           </> : <form className={`composer${draggingFiles ? ' file-dragging' : ''}`} onDragOver={event => { if (fileLimits?.enabled && event.dataTransfer.types.includes('Files')) { event.preventDefault(); setDraggingFiles(true); } }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDraggingFiles(false); }} onDrop={event => { if (fileLimits?.enabled && event.dataTransfer.files.length) { event.preventDefault(); setDraggingFiles(false); uploadFiles(Array.from(event.dataTransfer.files)); } }} onSubmit={event => { event.preventDefault(); if (canQueue) void chat.inputQueue.submit(chat.selected, 'followUp'); else if (canSend) void chat.send(); }}>
             {!personalOnly && <MapReferenceChips key={chat.draftKey} sources={picks?.contextRefs || []} annotations={picks?.annotationRefs || []} removeSource={ref=>{if(!choosingNewSpace)chat.composerSelections.setContextRefs(chat.resolveDraftOwner(),(chat.composerSelections.current(chat.resolveDraftOwner()).contextRefs || []).filter(item=>refKey(item)!==refKey(ref)));}} removeAnnotation={index=>{if(!choosingNewSpace)chat.composerSelections.setAnnotationRefs(chat.resolveDraftOwner(),(chat.composerSelections.current(chat.resolveDraftOwner()).annotationRefs || []).filter((_,i)=>i!==index));}}/>}
-            <ComposerReferences key={`${chat.draftKey}:${seatActive}:${view}`} control={referenceControl} scope={chat.draftKey} workspaceId={chat.workspaceId} enabled={seatActive && view === 'chat' && !choosingNewSpace && !chat.loading && !busy} managementSkills={managementSkills} fileEnabled={Boolean(fileLimits?.enabled && chat.workspaceId)} text={chat.draft} textarea={textarea} selection={chat.composerSelections.all[chat.draftKey] || {}} setText={chat.setDraft} select={chat.setComposerSelection} reference={file => !choosingNewSpace && chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 0)} upload={() => attachmentInput.current?.click()} />
+            <ComposerReferences key={`${chat.draftKey}:${seatActive}:${view}`} control={referenceControl} scope={chat.draftKey} workspaceId={chat.workspaceId} enabled={seatActive && view === 'chat' && !choosingNewSpace && !chat.loading && !busy} managementSkills={managementSkills} fileEnabled={Boolean(fileLimits?.enabled && chat.workspaceId)} text={chat.draft} textarea={textarea} selection={chat.composerSelections.all[chat.draftKey] || {}} setText={chat.setDraft} select={chat.setComposerSelection} selectConnectors={ids => { if (!busy && !choosingNewSpace) chat.composerSelections.setConnectorIds(chat.resolveDraftOwner(), ids); }} reference={file => !choosingNewSpace && chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 0)} upload={() => attachmentInput.current?.click()} />
             {attachmentList}
             {draggingFiles && <p className="attachment-notice">松开文件，上传到当前项目</p>}
             <textarea id={domId('message-input')} aria-label="发送消息" ref={textarea} disabled={!composerReady} rows={1} value={chat.draft} placeholder="描述你的问题，或继续补充想法…" onChange={event => { chat.setDraft(event.target.value); const input = event.nativeEvent as InputEvent; if (composing.current || input.isComposing) return; referenceControl.current?.input(event.target.value, event.target.selectionStart, !composing.current && !input.isComposing && input.inputType !== 'insertFromPaste'); }} onPaste={() => referenceControl.current?.close()} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={event => { composing.current = false; referenceControl.current?.input(event.currentTarget.value, event.currentTarget.selectionStart, true); }} onClick={event => referenceControl.current?.caret(event.currentTarget.selectionStart, event.currentTarget.selectionEnd)} onKeyDown={event => {

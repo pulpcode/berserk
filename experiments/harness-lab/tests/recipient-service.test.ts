@@ -7,6 +7,7 @@ import type {FastifyInstance} from 'fastify';
 import {AccessStore} from '../src/access/store.js';
 import {openDatabase} from '../src/access/database.js';
 import {BackgroundStore} from '../src/background/store.js';
+import {BackgroundService} from '../src/background/service.js';
 import {parseBackgroundConfig} from '../src/background/config.js';
 import {createApp} from '../src/server/app.js';
 import {PiLab} from '../src/pi/lab.js';
@@ -41,9 +42,13 @@ async function setup(reply: (index:number) => Reply = index => index === 0 ? {to
   const background=parseBackgroundConfig({enabled:true,deliveryReviewSeatId:'overall',sources:[{sourceId:'intel',name:'情报来源',credentialRef:'INTEL_TOKEN',allowedProfileIds:['analysis'],allowedRecipientSeatIds:['overall','intelligence','planning','situation']}],profiles:[{id:'analysis',goal:'分析道路变化',tools:['source_read',tool],instructions:'',resources:[],...(scoped ? {contextScopeId:'review-scope'} : {})}]});
   const executor = createBackgroundExecutor(lab);
   let beforeRead: (() => Promise<void>) | undefined;
+  // R4 copies legacy input into its authority; revocation probes must change the live service config.
+  let runtimeBackground=background;
+  const initialize=BackgroundService.prototype.initialize;
+  const capture=vi.spyOn(BackgroundService.prototype,'initialize').mockImplementationOnce(function(this:BackgroundService){runtimeBackground=this.config;return initialize.call(this);});
   const app=await createApp(lab,false,{config:background,executor:{...executor,read:async job => {await beforeRead?.();return executor.read(job);}},env:{INTEL_TOKEN:'test-token-at-least-24-characters'}},scoped ? {
     config:{systems:[{id:'intel',name:'资料系统',adapter:'mock-information-http',baseUrl:'http://127.0.0.1:4401/intel',tokenEnv:'QUERY_TOKEN'}],scopes:[{id:'review-scope',name:'审批资料',systemIds:['intel'],seatIds:['overall','intelligence','planning','situation']}]},env:{QUERY_TOKEN:'test-read-only-context-token'},
-  } : undefined);cleanups.push(() => app.close());
+  } : undefined).finally(()=>capture.mockRestore());cleanups.push(() => app.close());
   function pauseRead(number = 1) {
     let reached!: () => void, release!: () => void;
     const entered = new Promise<void>(resolve => {reached = resolve;});
@@ -65,7 +70,7 @@ async function setup(reply: (index:number) => Reply = index => index === 0 ? {to
     await vi.waitFor(() => expect(store.listDeliveries(jobId).filter(d => d.status === 'delivered')).toHaveLength(1));
     return {job:store.getJob(jobId),rule:rule.json<InformationRule>()};
   }
-  return {app,lab,store,fake,overall,run,ruleInput,background,pauseRead};
+  return {app,lab,store,fake,overall,run,ruleInput,background:runtimeBackground,pauseRead};
 }
 
 describe('supplementary delivery through native Pi and authenticated routes',() => {

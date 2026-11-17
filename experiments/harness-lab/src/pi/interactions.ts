@@ -1,4 +1,6 @@
-import { authoringConfirmationSchema, validAuthoringConfirmation } from './authoring-history.js';
+import { MCP_ADMISSION, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, decodeMcpAdmission, decodeMcpPolicy, decodeMcpInteraction, mcpArgumentsDigest, type McpAdmissionRecord } from './mcp-history.js';
+import { isMcpCallEvidence } from '../contracts/mcp.js';
+import { authoringConfirmationSchema, authoringConfirmationSchemaV2, validAuthoringConfirmation } from './authoring-history.js';
 import { isAuthoringReceipt } from '../contracts/authoring.js';
 import { isDeepStrictEqual } from 'node:util';
 import { Type } from 'typebox';
@@ -13,6 +15,9 @@ import { RESOURCE_ENTRY, RESULT_ENTRY } from './resource-tools.js';
 export const COMMAND_POLICY = 'berserk.command-policy.v1';
 export const INTERACTION_REQUESTED = 'berserk.interaction.requested.v1';
 export const INTERACTION_RESOLVED = 'berserk.interaction.resolved.v1';
+export const AUTHORING_REQUESTED = 'berserk.interaction.requested.v3';
+export const AUTHORING_RESOLVED = 'berserk.interaction.resolved.v3';
+export const interactionRecordType = (item:Interaction,resolved=false) => item.schemaVersion===2 ? (resolved?MCP_RESOLVED:MCP_REQUESTED) : item.schemaVersion===3 ? (resolved?AUTHORING_RESOLVED:AUTHORING_REQUESTED) : (resolved?INTERACTION_RESOLVED:INTERACTION_REQUESTED);
 const strict = { additionalProperties: false };
 const id = Type.String({ minLength: 1, maxLength: 80 });
 const uuid = Type.String({ pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' });
@@ -48,6 +53,10 @@ const interactionSchema = Type.Union([
     rule: Type.Object({ ruleId: text, reason: text, version: text }, strict),
   }, strict),
 ]);
+const authoringInteractionSchema = Type.Object({...base,schemaVersion:Type.Literal(3),kind:Type.Literal('confirmation'),toolName:Type.Literal('capability_authoring_save'),
+  status:Type.Union(['pending','approved','rejected','cancelled','expired'].map(value=>Type.Literal(value))),
+  action:Type.Object({title:text,description:text,parameters:Type.Record(Type.String(),Type.Unknown()),authoring:authoringConfirmationSchemaV2},strict),
+  rule:Type.Object({ruleId:text,reason:text,version:text},strict)},strict);
 function invalid(): never { throw new RequestError('INVALID_INPUT', '交互回答格式不正确，请检查问题和选项。', 400); }
 export function validateQuestions(value: unknown): asserts value is { questions: QuestionInteraction['questions'] } {
   if (!Check(questionSchema, value)) invalid();
@@ -105,8 +114,8 @@ export function interactionExtension(ask: (toolCallId: string, questions: Questi
     });
   };
 }
-function decodeInteraction(value: unknown): Interaction {
-  if (!Check(interactionSchema, value)) throw stateError();
+function decodeInteraction(value: unknown, version=1): Interaction {
+  if (version===1 ? !Check(interactionSchema,value) : !Check(authoringInteractionSchema,value)) throw stateError();
   const item = structuredClone(value) as Interaction;
   if (!Number.isFinite(Date.parse(item.createdAt)) || (item.status === 'pending' ? item.resolvedAt !== undefined || item.reason !== undefined : !item.resolvedAt || !Number.isFinite(Date.parse(item.resolvedAt)))) throw stateError();
   if (item.kind === 'question') {
@@ -124,7 +133,7 @@ function decodeInteraction(value: unknown): Interaction {
         || item.action.description !== item.action.handoff.description) throw stateError();
     } else if (item.action.handoff !== undefined) throw stateError();
     if (item.toolName === 'capability_authoring_save') {
-      if (!validAuthoringConfirmation(item.action.authoring, item.sessionId, item.requestId) || !isDeepStrictEqual(item.action.parameters, {proposalId:item.action.authoring.proposal.proposalId}) || item.action.title !== (item.action.authoring.proposal.candidate.kind === 'expert' ? '保存专家草稿' : '保存技能草稿') || item.action.description !== item.action.authoring.proposal.summary || item.action.command !== undefined || item.action.cwd !== undefined) throw stateError();
+      if (!validAuthoringConfirmation(item.action.authoring, item.sessionId, item.requestId,version===3?2:1) || !isDeepStrictEqual(item.action.parameters, {proposalId:item.action.authoring.proposal.proposalId}) || item.action.title !== (item.action.authoring.proposal.candidate.kind === 'expert' ? '保存专家草稿' : '保存技能草稿') || item.action.description !== item.action.authoring.proposal.summary || item.action.command !== undefined || item.action.cwd !== undefined) throw stateError();
     } else if (item.action.authoring !== undefined) throw stateError();
     if ((item.toolName === 'simulation_command_send') !== (item.action.commandReference !== undefined)) throw stateError();
   }
@@ -138,6 +147,8 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
   const items = new Map<string, Interaction>();
   const calls = new Map<string, { name: string; arguments: Record<string, unknown> }>();
   const returned = new Set<string>();
+  const mcpParameters = new Map<string,Record<string,unknown>>();
+  const mcpAdmissions = new Map<string, McpAdmissionRecord>();
   const policies = new Map<string, { decision: string; ruleId: string; reason: string; version: string }>();
   const commandPolicies = new Map<string, CommandPolicyRecord>();
   let requestId: string | undefined;
@@ -151,6 +162,15 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
       const item = [...items.values()].find(item => item.requestId === requestId && item.toolCallId === result.toolCallId);
       const key = `${requestId}:${result.toolCallId}`;
       const policy = policies.get(key);
+      if (result.toolName.startsWith('mcp_')) {
+        const source = item?.kind === 'confirmation' ? item.action.mcp : undefined;
+        const evidence = (result.details as {mcp?:unknown} | undefined)?.mcp;
+        const executionStarted=(result.details as {executionStarted?:unknown} | undefined)?.executionStarted;
+        if (evidence !== undefined && (!isMcpCallEvidence(evidence) || !source || !isDeepStrictEqual(source, (({schemaVersion:_v,intentId:_i,status:_s,sent:_d,protocolVersion:_p,protocolEra:_e,...rest}) => { void _v;void _i;void _s;void _d;void _p;void _e;return rest; })(evidence)))) throw stateError();
+        if (isMcpCallEvidence(evidence) ? result.isError !== (evidence.status !== 'success') || executionStarted !== evidence.sent : executionStarted === true) throw stateError();
+        if (!result.isError && (!source || !policy || item?.status !== 'approved' || !isMcpCallEvidence(evidence))) throw stateError();
+        if (isMcpCallEvidence(evidence) && evidence.sent && item?.status !== 'approved') throw stateError();
+      }
       if (!result.isError && ((result.toolName === 'ask_user' && !item) || (['work_item_commit', 'work_item_action', 'simulation_command_send', 'capability_authoring_save'].includes(result.toolName) && (!item || !policy)) || (policy?.decision === 'ask' && (!item || item.status !== 'approved')))) throw stateError();
       const details = result.details as { commandPolicy?: unknown; executionStarted?: unknown; operationId?: unknown; id?: unknown; contentHash?: unknown; status?: unknown; authoringReceipt?: unknown } | undefined;
       if (!result.isError && result.toolName === 'work_item_action' && (item?.kind !== 'confirmation' || details?.operationId !== item.action.handoff?.operationId)) throw stateError();
@@ -178,6 +198,8 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
           if (item.status !== 'approved' && (!result.isError || details?.executionStarted === true)) throw stateError();
           if (item.status === 'approved') {
             item.execution = details?.executionStarted === true ? (result.isError ? 'failed' : 'succeeded') : 'not_started';
+            const mcp = (result.details as {mcp?:unknown} | undefined)?.mcp;
+            if (item.action.mcp && isMcpCallEvidence(mcp)) item.execution = mcp.status === 'unknown' ? 'unknown' : mcp.status === 'success' ? 'succeeded' : mcp.status === 'not_sent' ? 'not_started' : 'failed';
             if (!result.isError && item.toolName === 'simulation_command_send') {
               if (details?.status === 'unknown') item.execution = 'unknown';
               if (details?.status === 'rejected') item.execution = 'failed';
@@ -196,11 +218,24 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
         || (terminal.status === 'succeeded' && !returned.has(`${terminal.requestId}:${item.toolCallId}`))))) throw stateError();
       requestId = undefined; continue;
     }
-    if (entry.customType === COMMAND_POLICY) {
-      if (!Check(policySchema, entry.data)) throw stateError();
-      const data = entry.data; const key = `${requestId}:${data.toolCallId}`; const call = calls.get(key);
+    if (entry.customType === MCP_ADMISSION) {
+      const admission = decodeMcpAdmission(entry.data,workspaceId,sessionId);
+      if (admission.requestId !== requestId || mcpAdmissions.has(requestId)) throw stateError();
+      mcpAdmissions.set(requestId,admission);continue;
+    }
+    if (entry.customType === COMMAND_POLICY || entry.customType === MCP_POLICY) {
+      if (entry.customType === COMMAND_POLICY && !Check(policySchema, entry.data)) throw stateError();
+      const data = entry.customType === MCP_POLICY ? decodeMcpPolicy(entry.data) : entry.data as import('typebox').Static<typeof policySchema>; const key = `${requestId}:${data.toolCallId}`; const call = calls.get(key);
       if (!sessionId || data.sessionId !== sessionId || data.workspaceId !== workspaceId || data.requestId !== requestId || (seatId && data.seatId !== seatId)
-        || !call || call.name !== data.toolName || !isDeepStrictEqual(call.arguments, data.parameters) || policies.has(key)) throw stateError();
+        || !call || call.name !== data.toolName || (entry.customType===MCP_POLICY ? mcpArgumentsDigest(call.arguments)!==decodeMcpPolicy(entry.data).originalArgumentsDigest : !isDeepStrictEqual(call.arguments,data.parameters)) || policies.has(key)) throw stateError();
+      if (entry.customType === MCP_POLICY) {
+        const mcp = decodeMcpPolicy(entry.data);
+        if (!mcpAdmissions.get(String(requestId))?.tools.some(tool => tool.name === mcp.toolName && isDeepStrictEqual(tool.source,mcp.source))) throw stateError();
+        const admission=mcpAdmissions.get(String(requestId))!;
+        const targetQuestion=admission.targetQuestion;
+        if(targetQuestion && ![...items.values()].some(item=>item.kind==='question' && item.requestId===requestId && item.status==='answered' && returned.has(`${requestId}:${item.toolCallId}`) && isDeepStrictEqual(item.questions,[targetQuestion]) && item.answers?.length===1 && item.answers[0].questionId===targetQuestion.id && 'optionIds' in item.answers[0] && isDeepStrictEqual(item.answers[0].optionIds,[mcp.source.connectorId]))) throw stateError();
+        mcpParameters.set(key,mcp.parameters);
+      }
       policies.set(key, data.policy);
       if (data.toolName === 'bash') {
         if (typeof data.parameters.command !== 'string') throw stateError();
@@ -209,18 +244,22 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
       }
       continue;
     }
-    if (entry.customType !== INTERACTION_REQUESTED && entry.customType !== INTERACTION_RESOLVED) continue;
+    if (![INTERACTION_REQUESTED,INTERACTION_RESOLVED,MCP_REQUESTED,MCP_RESOLVED,AUTHORING_REQUESTED,AUTHORING_RESOLVED].includes(entry.customType)) continue;
     const data = entry.data as { requestId?: string; seatId?: string; interaction?: unknown };
     if (!data || typeof data !== 'object' || Object.keys(data).some(key => !['requestId', 'seatId', 'interaction'].includes(key)) || typeof data.seatId !== 'string' || !/^[a-zA-Z0-9_-]{1,64}$/.test(data.seatId) || (seatId && data.seatId !== seatId)) throw stateError();
-    const item = decodeInteraction(data.interaction);
+    const item = entry.customType === MCP_REQUESTED || entry.customType === MCP_RESOLVED ? decodeMcpInteraction(data.interaction) : decodeInteraction(data.interaction,entry.customType===AUTHORING_REQUESTED||entry.customType===AUTHORING_RESOLVED?3:1);
+    if (item.kind === 'confirmation' && item.action.mcp) {
+      const {argumentsDigest,...source} = item.action.mcp;
+      if (argumentsDigest !== mcpArgumentsDigest(item.action.parameters) || !mcpAdmissions.get(String(requestId))?.tools.some(tool => tool.name === item.toolName && isDeepStrictEqual(tool.source,source))) throw stateError();
+    }
     if (!sessionId || item.sessionId !== sessionId || item.workspaceId !== workspaceId || data.requestId !== requestId || item.requestId !== requestId) throw stateError();
     const call = calls.get(`${requestId}:${item.toolCallId}`);
     if (!call || call.name !== item.toolName) throw stateError();
     const previous = items.get(item.interactionId);
-    if (entry.customType === INTERACTION_REQUESTED) {
+    if (entry.customType === INTERACTION_REQUESTED || entry.customType === MCP_REQUESTED || entry.customType === AUTHORING_REQUESTED) {
       // An unresolved interaction from an earlier request is expired, not a live wait.
       if (previous || item.status !== 'pending' || [...items.values()].some(old => old.requestId === requestId && (old.status === 'pending' || old.toolCallId === item.toolCallId))) throw stateError();
-      if (item.kind === 'question' ? !isDeepStrictEqual(call.arguments, { questions: item.questions }) : !isDeepStrictEqual(call.arguments, item.action.parameters)) throw stateError();
+      if (item.kind === 'question' ? !isDeepStrictEqual(call.arguments, { questions: item.questions }) : !isDeepStrictEqual(item.action.mcp ? mcpParameters.get(`${requestId}:${item.toolCallId}`) : call.arguments, item.action.parameters)) throw stateError();
       if (item.kind === 'confirmation') {
         const policy = policies.get(`${requestId}:${item.toolCallId}`);
         if (!policy || policy.decision !== 'ask' || !isDeepStrictEqual(item.rule, { ruleId: policy.ruleId, reason: policy.reason, version: policy.version })) throw stateError();

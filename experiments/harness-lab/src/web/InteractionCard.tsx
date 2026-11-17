@@ -130,7 +130,7 @@ function confirmActionLabel(item: ConfirmationInteraction): string {
 }
 
 function CandidateContents({ candidate }: { candidate: AuthoringCandidate }) {
-  if (candidate.kind === 'expert') return <dl className="authoring-candidate-fields">{Object.entries(candidate.content).map(([key, value]) => <div key={key}><dt>{{name:'名称',description:'简介',instructions:'专业指令',skillIds:'原有技能引用',skillRefs:'固定技能引用',allowedTools:'工具范围'}[key] || key}</dt><dd><pre tabIndex={0}>{typeof value === 'string' ? value : JSON.stringify(value, null, 2)}</pre></dd></div>)}</dl>;
+  if (candidate.kind === 'expert') return <dl className="authoring-candidate-fields">{Object.entries(candidate.content).map(([key, value]) => <div key={key}><dt>{{name:'名称',description:'简介',instructions:'专业指令',skillIds:'原有技能引用',skillRefs:'固定技能引用',allowedTools:'工具范围',connectorRequirements:'连接器依赖'}[key] || key}</dt><dd><pre tabIndex={0}>{typeof value === 'string' ? value : JSON.stringify(value, null, 2)}</pre></dd></div>)}</dl>;
   return <>{candidate.files.map(file => {
     let content: string;
     try { content = new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(atob(file.contentBase64), value => value.charCodeAt(0))); }
@@ -140,7 +140,7 @@ function CandidateContents({ candidate }: { candidate: AuthoringCandidate }) {
 }
 
 function candidateChanges(candidate: AuthoringCandidate, before?: AuthoringCandidate): string[] {
-  if (candidate.kind === 'expert') return Object.keys(candidate.content).filter(key => !before || before.kind !== 'expert' || JSON.stringify(candidate.content[key as keyof typeof candidate.content]) !== JSON.stringify(before.content[key as keyof typeof before.content])).map(key => ({ name: '名称', description: '简介', instructions: '专业指令', skillIds: '原有技能引用', skillRefs: '固定技能引用', allowedTools: '工具范围' }[key] || key));
+  if (candidate.kind === 'expert') return Object.keys(candidate.content).filter(key => !before || before.kind !== 'expert' || JSON.stringify(candidate.content[key as keyof typeof candidate.content]) !== JSON.stringify(before.content[key as keyof typeof before.content])).map(key => ({ name: '名称', description: '简介', instructions: '专业指令', skillIds: '原有技能引用', skillRefs: '固定技能引用', allowedTools: '工具范围', connectorRequirements: '连接器依赖' }[key] || key));
   const previous = new Map(before?.kind === 'skill' ? before.files.map(file => [file.path, file.contentBase64]) : []);
   const current = new Map(candidate.files.map(file => [file.path, file.contentBase64]));
   return [...candidate.files.filter(file => previous.get(file.path) !== file.contentBase64).map(file => `${previous.has(file.path) ? '修改' : '新增'}：${file.path}`), ...[...previous.keys()].filter(path => !current.has(path)).map(path => `删除：${path}`)];
@@ -150,6 +150,7 @@ function ConfirmationDetails({ item }: { item: ConfirmationInteraction }) {
   return <>
     {item.action.handoff?.kind === 'assign' && <AssignmentAttachments files={item.action.handoff.files} />}
     <p className="confirmation-description">{item.action.description}</p>
+    {item.action.mcp && <div className="mcp-confirmation"><dl className="confirmation-metadata"><dt>连接</dt><dd>{item.action.mcp.connectionName}</dd><dt>账号</dt><dd>{item.action.mcp.accountLabel}</dd><dt>工具</dt><dd>{item.action.mcp.toolName}</dd></dl><h4>本次外发参数</h4><pre tabIndex={0} aria-label="本次外发参数">{JSON.stringify(item.action.parameters, null, 2)}</pre></div>}
     {item.action.authoring && <div className="authoring-confirmation"><dl className="confirmation-metadata"><dt>保存目标</dt><dd>{item.action.authoring.proposal.targetId || `新建${item.action.authoring.proposal.candidate.kind === 'expert' ? '专家' : '技能'}`}</dd><dt>当前基线</dt><dd>{item.action.authoring.proposal.baseline ? `草稿 ${item.action.authoring.proposal.baseline.draftRevision} · ${item.action.authoring.proposal.baseline.digest}` : '新建草稿'}</dd></dl><p>本次变更：{candidateChanges(item.action.authoring.proposal.candidate, item.action.authoring.proposal.before).join('、') || '内容未变化'}</p>{item.action.authoring.proposal.before && <details><summary>保存前的完整内容</summary><CandidateContents candidate={item.action.authoring.proposal.before} /></details>}<details><summary>查看完整候选</summary><CandidateContents candidate={item.action.authoring.proposal.candidate} /></details></div>}
     {item.action.handoff && item.action.handoff.kind !== 'assign' && item.action.handoff.files.length > 0 && <HandoffFiles files={item.action.handoff.files} />}
     {item.action.cwd !== undefined && <dl className="confirmation-metadata"><dt>工作目录</dt><dd><code>{item.action.cwd}</code></dd></dl>}

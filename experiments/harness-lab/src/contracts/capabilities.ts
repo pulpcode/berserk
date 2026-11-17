@@ -1,3 +1,4 @@
+import type { ConnectorRequirement } from './connectors.js';
 /** Shared capability data. Native conversation records are decoded only by src/pi. */
 export type CapabilityMode = 'interactive' | 'delegated' | 'background' | 'trial';
 export type CapabilityState = 'enabled' | 'disabled' | 'banned';
@@ -7,7 +8,7 @@ export interface SkillRevision {
   revisionId: string; digest: string; schemaVersion?: 2; packageDigest?: string; resourceRoot?: string;
 }
 export interface ExpertRevision extends ExpertRef {
-  schemaVersion: 1; releaseVersion: string; digest: string;
+  schemaVersion: 1 | 2; connectorRequirements?: ConnectorRequirement[]; releaseVersion: string; digest: string;
   name: string; description: string; instructions: string;
   modes: CapabilityMode[]; selectable: boolean; system: boolean;
   /** null retains the host's existing permission-filtered set; never grants new tools. */
@@ -23,7 +24,7 @@ export interface ExpertSummary extends ExpertRef {
   modes: CapabilityMode[]; dependencies: ExpertDependency[];
   availability: CapabilityAvailability;
 }
-export interface ExpertDetail extends ExpertSummary { instructions: string; allowedTools: string[] | null }
+export interface ExpertDetail extends ExpertSummary { connectorRequirements?: ConnectorRequirement[]; instructions: string; allowedTools: string[] | null }
 /** Browseable controlled methods; no workspace content or management authority. */
 export interface CapabilityLibrary { skills: Array<{ id: string; name: string; description: string }> }
 export interface ExpertBinding {

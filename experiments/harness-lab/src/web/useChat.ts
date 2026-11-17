@@ -553,7 +553,7 @@ export function useChat(enabled = true) {
 
   function hasDraft(id: string) {
     const selection = composerSelections.current(id);
-    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.authoring || selection.skill || selection.agent || selection.contextRefs?.length);
+    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.authoring || selection.skill || selection.agent || selection.contextRefs?.length || selection.annotationRefs?.length || selection.connectorIds?.length);
   }
 
   return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
@@ -575,7 +575,7 @@ export function useChat(enabled = true) {
     draft: drafts[draftKey] || '',
     // An input event from the previous render can arrive after first-session creation moved its draft.
     setDraft: (text: string) => draft(movedDrafts.current.get(draftKey) || draftKey, text),
-    recoverableSelectionDiffers: JSON.stringify(selectionInput(composerSelections.recovery[selected] || {})) !== JSON.stringify(selectionInput(composerSelections.all[draftKey] || {})),
+    recoverableSelectionDiffers: JSON.stringify(selectionInput({ ...composerSelections.recovery[selected], connectorIds: undefined })) !== JSON.stringify(selectionInput({ ...composerSelections.all[draftKey], connectorIds: undefined })),
     submitted: submitted[selected] || '', restoreSubmitted: () => { draft(draftKey, submittedRef.current[selected] || ''); composerSelections.restore(draftKey); },
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],
     pending: pending[selected] || false, error: errors[selected] || readErrors[selected] || errors[`workspace:${workspaceId}`] || errors[''] || '', refresh, bootstrap };

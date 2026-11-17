@@ -47,7 +47,7 @@ export class AuthoringService {
     this.auth(context);
     const experts = (await this.management.list()).map(item => ({ expertId: item.expertId, name: item.name, description: item.description, source: item.source, archived: item.archived }));
     this.auth(context);
-    return { ...this.management.catalog(), experts, skillAssets: this.skills.list() };
+    return { ...this.management.catalog(context.actor), experts, skillAssets: this.skills.list() };
   }
   async read(context: AuthoringContext, input: { kind: 'expert' | 'skill'; targetId: string }) {
     this.auth(context);
@@ -55,7 +55,7 @@ export class AuthoringService {
     this.select(context, input);
     if (input.kind === 'expert') {
       const detail = await this.management.get(input.targetId); this.auth(context);
-      const content = detail.draft?.content ?? (detail.current ? { name: detail.current.name, description: detail.current.description, instructions: detail.current.instructions, allowedTools: detail.current.allowedTools ?? [], skillIds: detail.current.skills.filter(s => s.schemaVersion !== 2).map(s => s.id), skillRefs: detail.current.skills.filter(s => s.schemaVersion === 2).map(s => ({ skillId: s.id, revisionId: s.revisionId, packageDigest: s.packageDigest! })) } : undefined);
+      const content = detail.draft?.content ?? (detail.current ? { name: detail.current.name, description: detail.current.description, instructions: detail.current.instructions, ...(detail.current.connectorRequirements === undefined ? {} : {schemaVersion:2 as const,connectorRequirements:detail.current.connectorRequirements}),allowedTools: detail.current.allowedTools ?? [], skillIds: detail.current.skills.filter(s => s.schemaVersion !== 2).map(s => s.id), skillRefs: detail.current.skills.filter(s => s.schemaVersion === 2).map(s => ({ skillId: s.id, revisionId: s.revisionId, packageDigest: s.packageDigest! })) } : undefined);
       return { kind: input.kind, targetId: input.targetId, readonly: !detail.draft || detail.expert.archived,
         ...(detail.draft ? { baseline: { draftRevision: detail.draft.draftRevision, digest: detail.draft.draftDigest } } : {}),
         candidate: content ? { kind: 'expert' as const, content } : undefined,
@@ -81,7 +81,7 @@ export class AuthoringService {
     const before = saved?.candidate as AuthoringCandidate | undefined;
     let candidate: AuthoringCandidate;
     if (input.kind === 'expert') {
-      if (input.files !== undefined || input.methodBody !== undefined || input.removePaths !== undefined || !strict(input.content, ['name', 'description', 'instructions', 'skillIds', 'skillRefs', 'allowedTools'])) throw invalid();
+      if (input.files !== undefined || input.methodBody !== undefined || input.removePaths !== undefined || !strict(input.content, ['schemaVersion','connectorRequirements','name', 'description', 'instructions', 'skillIds', 'skillRefs', 'allowedTools'])) throw invalid();
       const content = await this.management.prepareAuthoringContent(context.actor, { ...(before?.kind === 'expert' ? before.content : {}), ...input.content } as ExpertDraftContent);
       candidate = { kind: 'expert', content };
     } else {
@@ -103,7 +103,7 @@ export class AuthoringService {
       candidate = { kind: 'skill', files: fullFiles, requirements };
     }
     this.auth(context);
-    const value: Omit<AuthoringProposal, 'proposalDigest'> = { schemaVersion: 1, proposalId: randomUUID(), ownerUserId: context.actor.userId, sessionId: context.sessionId, requestId: context.requestId,
+    const value: Omit<AuthoringProposal, 'proposalDigest'> = { schemaVersion: candidate.kind === 'expert' && candidate.content.schemaVersion === 2 || before?.kind === 'expert' && before.content.schemaVersion === 2 ? 2 : 1, proposalId: randomUUID(), ownerUserId: context.actor.userId, sessionId: context.sessionId, requestId: context.requestId,
       ...(input.targetId ? { targetId: input.targetId, baseline: structuredClone(input.baseline!) } : {}), candidate, ...(before ? { before: structuredClone(before) } : {}), summary: input.summary, createdAt: new Date().toISOString() };
     const proposal = { ...value, proposalDigest: proposalDigest(value) };
     this.proposals.set(proposal.proposalId, proposal); this.latest.set(scope(context), proposal.proposalId);

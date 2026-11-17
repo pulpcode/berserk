@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-17",
+  "branch": "codex/axon-r4",
+  "baseCommit": "a3b9b887ab7cb26a1212d7b8bd543fb0d83b02f0",
+  "userAcceptance": "pending",
+  "technicalValidation": "passed",
+  "typecheck": "passed",
+  "lint": {
+    "errors": 0,
+    "existingWarnings": 2,
+    "boundaries": "passed"
+  },
+  "build": {
+    "status": "passed",
+    "existingChunkAdvisory": true
+  },
+  "unit": {
+    "command": "npm test -- --maxWorkers=4",
+    "files": 195,
+    "tests": 1966,
+    "initialPassed": 1961,
+    "initialFailed": 5,
+    "durationSeconds": 456,
+    "fixScope": "test fixtures only: actual authoritative background config and explicit R4 migration of old backup",
+    "affectedFullFilesRerun": 3,
+    "affectedTestsRerun": 42,
+    "rerunFailed": 0
+  },
+  "browser": {
+    "command": "npx playwright test tests/e2e/connectors.spec.ts tests/e2e/authoring.spec.ts tests/e2e/capability-management.spec.ts tests/e2e/administrator.spec.ts tests/e2e/hitl.spec.ts --workers=1",
+    "passed": 62,
+    "failed": 0,
+    "durationMinutes": 3.7,
+    "earlierConnectorCapabilityReferenceBatch": 22,
+    "newConnectorCases": 6,
+    "newDesktopScreenshots": 8,
+    "newMobileWork": false
+  },
+  "live": {
+    "node": "24.14.0",
+    "pi": "0.85.1",
+    "sdk": "@modelcontextprotocol/client@2.4.0",
+    "provider": "authorized Ark configuration",
+    "model": "deepseek-v4.1-flash",
+    "actualModelCallsAcrossFourRuns": 18,
+    "protocols": [
+      "2026-07-28",
+      "2025-11-25"
+    ],
+    "realPublicEndpoint": "https://docs.mcp.cloudflare.com/mcp",
+    "realPublicAction": "search_cloudflare_documentation",
+    "finalPublicModelCalls": 2,
+    "finalSourceHashMismatches": 0,
+    "temporaryTestOnlyProxyIp": "198.18.0.14",
+    "tlsHostnameVerification": true,
+    "microsoftLearn": "observed 2025-06-18 before user decision; rejected, not counted as passed; now explicitly excluded by user"
+  },
+  "gitCommit": null,
+  "push": false,
+  "productionDeployment": false,
+  "productionMigration": false
+}

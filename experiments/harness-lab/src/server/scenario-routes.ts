@@ -33,8 +33,10 @@ export function scenarioDirector(lab:PiLab,background:BackgroundService|undefine
 export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnType<typeof apiScope>,background:BackgroundService|undefined,env:NodeJS.ProcessEnv) {
   const simulation=lab.context?.config.simulation;
   if(!lab.access||!simulation?.enabled||!simulation.directorSeatId)return;
-  const runScope=new ScenarioScope(lab.context!.config,env);lab.scenario=runScope;lab.access.scenario=runScope;lab.context!.scenario=runScope;
-  const tasks=new ScenarioTasks(lab.config.dataDir,lab.access);await tasks.prepare(async(id,definitions,bootstrap)=>{
+  const runScope=new ScenarioScope(lab.context!.config,env,lab.connectors?input=>lab.connectors!.resolveLegacy(input):undefined);lab.scenario=runScope;lab.access.scenario=runScope;lab.context!.scenario=runScope;
+  const tasks=new ScenarioTasks(lab.config.dataDir,lab.access),bootstrapMutex=new Mutex();let initialized=false;
+  const initialize=()=>bootstrapMutex.run(async()=>{if(initialized)return;lab.connectors?.resolveLegacy({control:true});
+  await tasks.prepare(async(id,definitions,bootstrap)=>{
     const raw=contextRecord(await runScope.provenance(id),['instanceId','tasks','taskBootstrap','notifications','actions'],['instanceId','tasks']);
     const savedBootstrap=scenarioTaskBootstrap(raw.taskBootstrap);
     if(raw.instanceId!==id||JSON.stringify(savedBootstrap)!==JSON.stringify(bootstrap)||JSON.stringify(scenarioTaskDefinitions(raw.tasks,savedBootstrap))!==JSON.stringify(definitions))throw conflict('任务归属与已保存来源不一致。');
@@ -45,12 +47,17 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
   if(background)await runScope.reconcileLegacy(await Promise.all(background.store.listEvents().filter(event=>event.scenarioInstanceId===undefined&&simulation.sources.some(source=>source.sourceId===event.sourceId&&lab.context!.config.systems.some(system=>system.id===source.systemId&&system.scenarioClock===true))).map(async event=>({...event,text:await background.eventText(event)}))),(eventId,id)=>background.bindLegacyScenario(eventId,id));
   if(runScope.activeId()&&runScope.isWritable(runScope.activeId()!))await background?.activateRun(runScope.activeId()!);
 
+  initialized=true;});
+  try{await initialize();}catch(error){if(!(error instanceof RequestError&&['CONNECTOR_LEGACY_UNAVAILABLE','CONNECTOR_CREDENTIAL_REQUIRED'].includes(error.code)))throw error;}
+
   const mutex=new Mutex(),base=`${scope.base}/simulation`;
   const call=async(request:FastifyRequest,path:string,body?:Record<string,unknown>,includeActor=true)=>{
-    const {actor,config}=scenarioDirector(lab,background,request),token=env[config.tokenEnv];
+    scenarioDirector(lab,background,request);
+    await initialize();
+    const {actor,config}=scenarioDirector(lab,background,request),connection=lab.connectors?.resolveLegacy({control:true}),token=connection?.token??env[config.tokenEnv];
     if(!token)throw new RequestError('SIMULATION_UNAVAILABLE','场景控制凭证未配置。',503);
     const by:ScenarioActor={userId:actor.userId,seatId:actor.seatId};
-    return readContextJson(new URL(`${config.baseUrl}/control/${path}`),token,undefined,{maxBytes:2*1024*1024,method:body===undefined?'GET':'POST',...(body===undefined?{}:{body:includeActor?{...body,actor:by}:body})});
+    return readContextJson(new URL(`${connection?.endpoint??config.baseUrl}/control/${path}`),token,undefined,{maxBytes:2*1024*1024,method:body===undefined?'GET':'POST',...(body===undefined?{}:{body:includeActor?{...body,actor:by}:body})});
   };
   const status=async(request:FastifyRequest,id:string)=>{
     const raw=await call(request,`instances/${scenarioId(id)}`),r=contextRecord(raw,['instance','steps','timeline','objects','reports','actions','operations','taskDefinitions','taskBootstrap'],['instance','actions']);

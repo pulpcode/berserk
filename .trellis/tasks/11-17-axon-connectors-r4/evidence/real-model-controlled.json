@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "node": "v24.14.0",
+  "model": "deepseek-v4.1-flash",
+  "sdk": "@modelcontextprotocol/client@2.4.0",
+  "scope": "受控MCP、真实方舟模型、原Pi确认；不代表第三方业务或用户验收",
+  "durationMs": 15778.702571999998,
+  "records": [
+    {
+      "kind": "discovery",
+      "name": "R4-alpha",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 128.48011700000006
+    },
+    {
+      "kind": "discovery",
+      "name": "R4-beta",
+      "protocolVersion": "2025-11-25",
+      "protocolEra": "legacy",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 47.4814379999998
+    },
+    {
+      "kind": "model-loop",
+      "name": "R4-alpha",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "00325290-e03c-4141-93e5-d1b5040d7f5e",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "c10f76f9-f088-42a0-a3fa-5e2222f48eaf",
+        "connectorId": "388cc789-b465-428e-b43f-b65852685cdd",
+        "revisionId": "08db7b39-cfb9-4f35-b378-177b014c76d7",
+        "connectionName": "R4-alpha",
+        "accountLabel": "无需凭证",
+        "toolName": "lookup",
+        "contractDigest": "a6fb4e1f22486875aebe50a5e96d30f298f633b3881c77d7c6eae573e11e78ff",
+        "catalogDigest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "54b226190be2bebdef93cbd83de7189bc775b707bbecbe732e27332a578914a7",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2026-07-28",
+        "protocolEra": "modern"
+      },
+      "durationMs": 6704.306997,
+      "assembly": {
+        "assemblyMs": 78.29152900000008,
+        "toolsMs": [
+          54.284772000000885
+        ],
+        "firstTextMs": 4301
+      }
+    },
+    {
+      "kind": "model-loop",
+      "name": "R4-beta",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "b4f7c9df-d210-4dca-beb8-0e20f47a5d95",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "379fbbdc-5243-4dbe-a6ed-2c16302e5c58",
+        "connectorId": "f55c7937-af71-4958-9aa7-1160cc1d95dd",
+        "revisionId": "c0ab19ba-06fb-480e-a976-0aaa58821b70",
+        "connectionName": "R4-beta",
+        "accountLabel": "无需凭证",
+        "toolName": "lookup",
+        "contractDigest": "a6fb4e1f22486875aebe50a5e96d30f298f633b3881c77d7c6eae573e11e78ff",
+        "catalogDigest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "c85420e7eeea68f4a120e795f52df41fe4d7bf613bec289fa260f7e1d3e512b3",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2025-11-25",
+        "protocolEra": "legacy"
+      },
+      "durationMs": 7155.7292259999995,
+      "assembly": {
+        "assemblyMs": 27.52712199999951,
+        "toolsMs": [
+          41.74287100000038
+        ],
+        "firstTextMs": 4155
+      }
+    }
+  ],
+  "modelCalls": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_020c1415d4670828426039ca501dfd368d4cb29b",
+        "ask_user"
+      ],
+      "contextBytes": 9315
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_020c1415d4670828426039ca501dfd368d4cb29b",
+        "ask_user"
+      ],
+      "contextBytes": 11465
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_028ad2768690e406e839bfe028e8e67703731e19",
+        "ask_user"
+      ],
+      "contextBytes": 9311
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_028ad2768690e406e839bfe028e8e67703731e19",
+        "ask_user"
+      ],
+      "contextBytes": 11662
+    }
+  ]
+}

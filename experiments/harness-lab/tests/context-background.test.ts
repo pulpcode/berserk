@@ -174,7 +174,7 @@ describe('background multi-source permission and evidence integration', () => {
 
   it.each(['missing-scope', 'missing-context', 'unspecified-scope', 'assessment-without-scope'] as const)('isolates %s configuration failures from legacy queue management and execution', async contextFailure => {
     const f = await setup(contextFailure);
-    expect(Boolean(f.lab.context)).toBe(contextFailure !== 'missing-context');
+    expect(f.lab.contextUnavailable===true).toBe(contextFailure==='missing-context');
     const access = await f.a.call('/api/information/access'); expect(access.statusCode, access.body).toBe(200);
     const capabilities = access.json<InformationCapabilities>();
     expect(capabilities.profiles.find(profile => profile.id === 'analysis')).toMatchObject({configurationError: expect.any(String)});

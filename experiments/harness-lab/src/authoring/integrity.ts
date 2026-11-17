@@ -6,7 +6,7 @@ export interface AuthoringGrant { interactionId: string; toolCallId: string; ass
 export function proposalDigest(value: Omit<AuthoringProposal, 'proposalDigest'>): string { return capabilityDigest(value); }
 export function assertProposal(value: AuthoringProposal, userId: string, kind: 'expert' | 'skill'): void {
   const { proposalDigest: digest, ...body } = value;
-  if (value.schemaVersion !== 1 || value.ownerUserId !== userId || value.candidate.kind !== kind
+  if (![1,2].includes(value.schemaVersion) || value.schemaVersion===2 && (value.candidate.kind!=='expert' || value.candidate.content.schemaVersion!==2 || value.before!==undefined&&value.before.kind!=='expert') || value.ownerUserId !== userId || value.candidate.kind !== kind
     || !/^[0-9a-f]{8}-[0-9a-f-]{27}$/.test(value.proposalId) || !value.sessionId || !value.requestId
     || digest !== proposalDigest(body) || !!value.targetId !== !!value.baseline
     || value.baseline && (!Number.isSafeInteger(value.baseline.draftRevision) || value.baseline.draftRevision < 1 || !/^[0-9a-f]{64}$/.test(value.baseline.digest))) {

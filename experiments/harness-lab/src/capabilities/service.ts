@@ -1,3 +1,5 @@
+import { connectorRequirements } from './connector-requirements.js';
+import type { ConnectorRequirement } from '../contracts/connectors.js';
 import { createHash, randomUUID } from 'node:crypto';
 import { chmod, lstat, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -31,6 +33,7 @@ export const capabilityDigest = (value: unknown): string => createHash('sha256')
 export interface ControlledSkill { id: string; name: string; description: string; version: string; hash: string; content: string }
 export interface ControlledRole { name: string; description: string; tools: readonly string[]; systemPrompt: string; hash: string }
 export interface ExpertDefinition {
+  connectorRequirements?: ConnectorRequirement[];
   expertId: string; releaseVersion: string; name: string; description: string; instructions: string;
   modes: CapabilityMode[]; selectable: boolean; system: boolean; allowedTools: string[] | null;
   skills: ControlledSkill[];
@@ -64,7 +67,7 @@ export function expertRevision(value: ExpertDefinition): ExpertRevision {
     || (value.allowedTools !== null && (!Array.isArray(value.allowedTools) || value.allowedTools.some(tool => !idPattern.test(tool))))) throw invalid();
   const skills = value.skills.map(skillRevision).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   if (new Set(skills.map(skill => skill.id)).size !== skills.length) throw invalid();
-  const body = { schemaVersion: 1 as const, expertId: value.expertId, releaseVersion: value.releaseVersion,
+  const body = { schemaVersion: (value.connectorRequirements === undefined ? 1 : 2) as 1 | 2, ...(value.connectorRequirements === undefined ? {} : {connectorRequirements:connectorRequirements(value.connectorRequirements)}), expertId: value.expertId, releaseVersion: value.releaseVersion,
     name: value.name, description: value.description, instructions: value.instructions,
     modes: [...new Set(value.modes)].sort(), selectable: value.selectable, system: value.system,
     allowedTools: value.allowedTools === null ? null : [...new Set(value.allowedTools)].sort(), skills };
@@ -72,8 +75,8 @@ export function expertRevision(value: ExpertDefinition): ExpertRevision {
   return { ...body, revisionId: `rev-${digest}`, digest };
 }
 function decodeExpert(value: unknown): ExpertRevision {
-  if (!object(value) || !exactKeys(value, ['schemaVersion', 'expertId', 'revisionId', 'releaseVersion', 'digest', 'name', 'description', 'instructions', 'modes', 'selectable', 'system', 'allowedTools', 'skills'])
-    || value.schemaVersion !== 1 || !Array.isArray(value.skills) || !Array.isArray(value.modes)
+  if (!object(value) || !exactKeys(value, ['schemaVersion', 'expertId', 'revisionId', 'releaseVersion', 'digest', 'name', 'description', 'instructions', 'modes', 'selectable', 'system', 'allowedTools', 'skills', ...(value.schemaVersion === 2 ? ['connectorRequirements'] : [])])
+    || ![1,2].includes(Number(value.schemaVersion)) || value.schemaVersion === 2 && value.connectorRequirements === undefined || !Array.isArray(value.skills) || !Array.isArray(value.modes)
     || value.skills.some(skill => !object(skill) || !exactKeys(skill, ['id', 'name', 'description', 'version', 'hash', 'content', 'revisionId', 'digest', ...(skill.schemaVersion === 2 ? ['schemaVersion','packageDigest','resourceRoot'] : [])]))) throw invalid();
   try {
     const decoded = expertRevision(value as unknown as ExpertDefinition);
@@ -263,7 +266,7 @@ export class CapabilityService {
   async detail(expertId: string, principalId?: string, seatId?: string): Promise<ExpertDetail> {
     const revision = await this.current(expertId);
     if (!revision.selectable || !this.canUseSeat(expertId, seatId) || this.isArchived(expertId)) throw new RequestError('EXPERT_NOT_FOUND', '专家不存在或不可用。', 404);
-    return { ...this.summary(revision, principalId, seatId), instructions: revision.instructions, allowedTools: revision.allowedTools };
+    return { ...this.summary(revision, principalId, seatId), instructions: revision.instructions, allowedTools: revision.allowedTools, ...(revision.connectorRequirements === undefined ? {} : {connectorRequirements:revision.connectorRequirements}) };
   }
   sessionExpert(revision: ExpertRevision, principalId?: string, seatId?: string): SessionExpert {
     const current = this.db.prepare('SELECT current_revision FROM experts WHERE expert_id=?').get(revision.expertId);

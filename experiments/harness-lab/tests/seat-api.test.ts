@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { PiLab } from '../src/pi/lab.js';
 import { createApp } from '../src/server/app.js';
+import { migrateConnectorsR4 } from '../src/connectors/migration.js';
 import { loadConfig } from '../src/server/config.js';
 import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
 import type { WorkAction, WorkDetail, WorkReceipt } from '../src/contracts/collaboration.js';
@@ -140,6 +141,7 @@ describe('two test seats on one service', () => {
     const paths = [...histories, instructionPath, filePath];
     const before = await Promise.all(paths.map(path => readFile(join(config.dataDir, path))));
     const backup = join(parent, 'stopped-backup'); await cp(config.dataDir, backup, { recursive: true });
+    await migrateConnectorsR4({dataDir:backup,backupDir:join(parent,'r4-rollback-backup'),apply:true,serviceStopped:true});
     const upgradedConfig = { ...config, dataDir: backup, testSeats: [{ id: 'test-seat', name: 'A' }, { id: 'seat-b', name: 'B' }] };
     const fake = await fakeRuntime(upgradedConfig, () => ({ text: '新回复' }));
     const upgraded = await PiLab.create(upgradedConfig, fake.runtime); const app = await createApp(upgraded); cleanups.push(() => app.close());

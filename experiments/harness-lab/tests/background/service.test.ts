@@ -10,6 +10,7 @@ import { HandoffFiles } from '../../src/collaboration/files.js';
 import { ModelSettingsStore } from '../../src/server/model-settings.js';
 import * as backgroundRuntime from '../../src/pi/background-runner.js';
 import { BackgroundStore } from '../../src/background/store.js';
+import { BackgroundService } from '../../src/background/service.js';
 import { parseBackgroundConfig } from '../../src/background/config.js';
 import { PiLab } from '../../src/pi/lab.js';
 import { DockerExecutionService, type DockerRunner } from '../../src/execution/docker.js';
@@ -50,11 +51,15 @@ async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent
   const lab = await PiLab.create(config, fake.runtime, options.docker ? new DockerExecutionService({instanceId:dataDir},runner) : undefined);
   const background = catalog(); if (options.backlogLimit) background.backlogLimit = options.backlogLimit;
   if (options.docker) background.profiles[0].tools.push('bash');
-  const app = await createApp(lab, false, options.absent ? undefined : {config: background, env}); cleanup.push(() => app.close());
+  // R4 copies legacy input into its authority; revocation probes must change the live service config.
+  let runtimeBackground=background;
+  const initialize=BackgroundService.prototype.initialize;
+  const capture=vi.spyOn(BackgroundService.prototype,'initialize').mockImplementationOnce(function(this:BackgroundService){runtimeBackground=this.config;return initialize.call(this);});
+  const app = await createApp(lab, false, options.absent ? undefined : {config: background, env}).finally(()=>capture.mockRestore()); cleanup.push(() => app.close());
   const store = options.absent ? undefined : new BackgroundStore(lab.access!.db);
   if (store) for (const source of background.sources) store.grant('seat', 'a', source.sourceId, 'manage');
   const source = (url: string, payload?: object, sourceId = 'special') => app.inject({url: `/api/integrations/${sourceId}/${url}`, method: payload === undefined ? 'GET' : 'POST', headers: {authorization: `Bearer ${env[sourceId === 'special' ? 'SPECIAL_TOKEN' : 'OTHER_TOKEN']}`}, ...(payload === undefined ? {} : {payload})});
-  return {app, lab, config, background, store: store!, source, fake, dataDir, commands};
+  return {app, lab, config, background:runtimeBackground, store: store!, source, fake, dataDir, commands};
 }
 const message = (sourceMessageId: string = randomUUID(), uploadIds?: string[]) => ({sourceMessageId, title: '测试信息', text: '收到一份材料，需要核对时间与地点。', ...(uploadIds ? {uploadIds} : {})});
 async function createRule(a: Client, recipientSeatIds = ['a', 'b']) {

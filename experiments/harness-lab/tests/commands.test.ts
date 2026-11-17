@@ -1,8 +1,8 @@
 import { DatabaseSync } from 'node:sqlite';
 import { CommandService } from '../src/commands/service.js';
 import { commandHash } from '../src/commands/validation.js';
-import { randomUUID } from 'node:crypto';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { randomBytes, randomUUID } from 'node:crypto';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -35,11 +35,12 @@ async function login(app: FastifyInstance, seatId: string) {
   const headers = { cookie: response.cookies.map(c => `${c.name}=${c.value}`).join('; '), origin: 'http://localhost:4310', 'x-csrf-token': auth.csrf!, 'x-axon-view': auth.viewId! };
   return { auth, call: (url: string, payload?: object) => app.inject({ url, method: payload === undefined ? 'GET' : 'POST', headers, ...(payload === undefined ? {} : { payload }) }) };
 }
-async function setup(version = '4') {
+async function setup(version = '4', keyFile?: string) {
   const directory = await mkdtemp(join(tmpdir(), 'axon-commands-'));
   cleanup.push(() => rm(directory, { recursive: true, force: true }));
-  const env = { QUERY: 'command-query-token', CONTROL: 'command-control-token', INTEL: 'command-intel-source-token', SITUATION: 'command-situation-source-token' };
-  let source = createMockContextServer({ token: env.QUERY, controlToken: env.CONTROL, scenariosEnabled: true, databasePath: join(directory, 'source.sqlite') });
+  const env = { QUERY: 'command-query-token', CONTROL: 'command-control-token', INTEL: 'command-intel-source-token', SITUATION: 'command-situation-source-token', LAB_CONNECTOR_KEY_FILE:keyFile };
+  const sourceOptions = { token: env.QUERY, controlToken: env.CONTROL, scenariosEnabled: true, databasePath: join(directory, 'source.sqlite') };
+  let source = createMockContextServer(sourceOptions);
   const base = await source.listen(); cleanup.push(() => source.close());
   const config = testConfig(join(directory, 'axon'), { auth: { secret: 'command-test-secret-with-at-least-32-characters', sessionMs: 28800000 }, seatId: overall });
   const db = await openDatabase(config.dataDir), access = new AccessStore(db);
@@ -94,6 +95,7 @@ async function setup(version = '4') {
   const ref = (suffix: string, objectType = 'resource') => ({ systemId: 'situation' as const, objectType, objectId: `${a.run.instance.instanceId}-${suffix}` });
   const command: CommandInput = { vehicles: [ref('V01')], destination: ref('L01'), route: [ref('R03', 'road')], notes: '核对后下达支援安排' };
   return { get source() { return source; }, env, base, context, command, a, workspaceId, create, get lab() { return host.lab; }, get app() { return host.app; },
+    rotateControlToken: (token:string) => { sourceOptions.controlToken=token; },
     restartSource: async () => {
       await source.close();
       source = createMockContextServer({ token: env.QUERY, controlToken: env.CONTROL, scenariosEnabled: true, databasePath: join(directory, 'source.sqlite') });
@@ -496,6 +498,11 @@ describe('任务首页只读执行摘要', () => {
     f.context.commands!.enabled = false;
     await f.restart();
     const re = await login(f.app, overall);
+    // Historical files no longer override the authoritative R4 module on restart.
+    expect((await re.call(`/api/tasks/${f.a.taskId}/execution-summary`)).json<TaskExecutionSummary>().available).toBe(true);
+    const connectorActor={userId:f.lab.access!.identityForSeat(control)!.userId,seatId:control,assertActive:()=>{},assertAdministrator:()=>{}};
+    const controlConnection=f.lab.connectors!.list(connectorActor).find(item=>item.businessSlot==='simulation-control')!;
+    await f.lab.connectors!.lifecycle(connectorActor,controlConnection.connectorId,{action:'disable',expectedStateRevision:controlConnection.stateRevision,clientActionId:randomUUID()});
     expect((await re.call(`/api/tasks/${f.a.taskId}/execution-summary`)).json<TaskExecutionSummary>()).toMatchObject({ available: false, groups: [] });
   }, 30000);
 
@@ -653,3 +660,61 @@ describe('执行摘要重复派遣与边界', () => {
     } finally { db.close(); }
   }, 30000);
 });
+
+it('R4控制连接修订变化使旧确认失效，未发送的原指令保持prepared且不静默改投',async()=>{
+  const f=await setup('7'),{record,client}=await f.prepare();
+  const connectorActor={userId:f.lab.access!.identityForSeat(control)!.userId,seatId:control,assertActive:()=>{},assertAdministrator:()=>{}};
+  const connectors=f.lab.connectors!,current=connectors.detail(connectorActor,'legacy-simulation-control').revision;
+  const posts=f.source.requests.filter(request=>request.method==='POST'&&request.path.startsWith('/control/commands')).length;
+  await connectors.update(connectorActor,current.connectorId,{name:'控制维护新修订',description:current.description,endpoint:current.endpoint,auth:current.auth,approvedTargets:current.approvedTargets,policy:current.policy,exposedTools:current.exposedTools,expectedRevisionId:current.revisionId,clientActionId:randomUUID()});
+  const response=await client.call(`/api/commands/${record.id}/commit`,{confirm:true});
+  expect(response.statusCode,response.body).toBe(409);
+  expect(f.source.requests.filter(request=>request.method==='POST'&&request.path.startsWith('/control/commands'))).toHaveLength(posts);
+  expect(f.lab.commands!.read(control,record.id).status).toBe('prepared');
+},30000);
+
+it('R4原指令回查允许同目标改名和组织凭证轮换，地址变化拒绝且不重发',async()=>{
+  const keyRoot=await mkdtemp(join(tmpdir(),'axon-command-key-'));cleanup.push(()=>rm(keyRoot,{recursive:true,force:true}));
+  const keyFile=join(keyRoot,'keys.json');
+  await writeFile(keyFile,JSON.stringify({activeKeyId:'v1',keys:{v1:randomBytes(32).toString('base64')}}),{mode:0o600});
+  const f=await setup('7',keyFile),{record,client}=await f.prepare(),pending=await f.prepare();
+  const originalFetch=globalThis.fetch;
+  const lost=vi.spyOn(globalThis,'fetch').mockImplementation(async(input,init)=>{
+    const response=await originalFetch(input,init);
+    if(init?.method==='POST'&&String(input).endsWith('/control/commands'))throw Error('response lost after receiver commit');
+    return response;
+  });
+  try { expect((await client.call(`/api/commands/${record.id}/commit`,{confirm:true})).json<CommandRecord>().status).toBe('unknown'); }
+  finally {lost.mockRestore();}
+  const connectors=f.lab.connectors!,actor={userId:f.lab.access!.identityForSeat(control)!.userId,seatId:control,assertActive:()=>{},assertAdministrator:()=>{}};
+  const update=async(endpoint:string,name:string)=>{
+    const current=connectors.revision('legacy-simulation-control');
+    return connectors.update(actor,current.connectorId,{name,description:current.description,endpoint,auth:current.auth,approvedTargets:current.approvedTargets,policy:current.policy,exposedTools:current.exposedTools,expectedRevisionId:current.revisionId,clientActionId:randomUUID()});
+  };
+  const endpoint=connectors.revision('legacy-simulation-control').endpoint;
+  await update(endpoint,'控制连接改名');
+  await connectors.setCredential(actor,'legacy-simulation-control',{value:'rotated-organization-control-token',expectedVersion:1,clientActionId:randomUUID()},true);
+  f.rotateControlToken('rotated-organization-control-token');
+  const before=f.source.requests.length,posts=f.source.requests.filter(request=>request.method==='POST'&&request.path==='/control/commands').length;
+  await update(`${f.base}/replacement`,'同记录不同目标');
+  expect((await client.call(`/api/commands/${record.id}/reconcile`,{})).json<CommandRecord>().status).toBe('unknown');
+  expect(f.source.requests).toHaveLength(before);
+  await update(endpoint,'恢复原目标的新修订');
+  const reconciled=await client.call(`/api/commands/${record.id}/reconcile`,{});
+  expect(reconciled.statusCode,reconciled.body).toBe(200);
+  expect(reconciled.json<CommandRecord>()).toMatchObject({id:record.id,status:'received',execution:{commandId:record.id}});
+  expect(reconciled.json<CommandRecord>().executionError).toBeUndefined();
+  expect(f.source.requests.slice(before).filter(request=>request.path.startsWith(`/control/commands/${record.id}`)).every(request=>request.status===200)).toBe(true);
+  expect(f.source.requests.filter(request=>request.method==='POST'&&request.path==='/control/commands')).toHaveLength(posts);
+  const stale=await pending.client.call(`/api/commands/${pending.record.id}/commit`,{confirm:true});
+  expect(stale.statusCode,stale.body).toBe(409);
+  expect(f.lab.commands!.read(control,pending.record.id).status).toBe('prepared');
+  const summary=await f.lab.commands!.summary(overall,f.a.taskId);
+  expect(summary.groups.find(group=>group.id===record.id)?.status).toBe('current');
+  await update(`${f.base}/replacement`,'回查不可改投');
+  const beforeRefused=f.source.requests.length;
+  const refused=await client.call(`/api/commands/${record.id}/reconcile`,{});
+  expect(refused.json<CommandRecord>()).toMatchObject({id:record.id,status:'received',executionError:expect.any(String)});
+  expect(f.source.requests).toHaveLength(beforeRefused);
+  expect(f.source.requests.filter(request=>request.method==='POST'&&request.path==='/control/commands')).toHaveLength(posts);
+},30000);

@@ -1,7 +1,8 @@
+import type { ConnectorRequirement, ConnectorSummary } from './connectors.js';
 import type { SkillRef } from './skills.js';
 import type { ExpertRevision, ExpertRef, SkillRevision, CapabilityState } from './capabilities';
 
-export interface ExpertDraftContent { name: string; description: string; instructions: string; skillIds: string[]; skillRefs?: SkillRef[]; allowedTools: string[] }
+export interface ExpertDraftContent { schemaVersion?: 2; connectorRequirements?: ConnectorRequirement[]; name: string; description: string; instructions: string; skillIds: string[]; skillRefs?: SkillRef[]; allowedTools: string[] }
 export interface ExpertUsePolicy { mode: 'none' | 'all' | 'seats'; seatIds: string[]; revision: number }
 export interface ExpertDraft { expertId: string; draftRevision: number; draftDigest: string; content: ExpertDraftContent; baseRevisionId: string | null; updatedAt: string; updatedBy: string }
 export interface ValidationIssue { code: string; message: string; severity: 'error' | 'warning' }
@@ -14,7 +15,7 @@ export interface ManagedExpertSummary { expertId: string; name: string; descript
 export interface ManagedExpertDetail { expert: ManagedExpertSummary; draft: ExpertDraft | null; current: ExpertRevision | null; validations: ExpertValidation[]; trials: ExpertTrialRecord[]; publications: ExpertPublication[]; audit: ExpertAudit[] }
 export interface CapabilityToolOption { id: string; name: string; group: 'read' | 'files' | 'business'; requiresFileEnvironment?: boolean }
 export interface CapabilitySeatOption { id: string; name: string }
-export interface CapabilityManagementCatalog { tools: CapabilityToolOption[]; skills: Array<{id:string;name:string;description:string;revisionId?:string;packageDigest?:string}>; seats: CapabilitySeatOption[] }
+export interface CapabilityManagementCatalog { connectors?: ConnectorSummary[]; tools: CapabilityToolOption[]; skills: Array<{id:string;name:string;description:string;revisionId?:string;packageDigest?:string}>; seats: CapabilitySeatOption[] }
 export type ExpertDefaultChoice = { mode: 'inherit' } | { mode: 'general' } | { mode: 'expert'; expertId: string };
 export interface ExpertDefaultScope { kind: 'personal' | 'seat' | 'task'; id: string }
 export interface ExpertDefaultSetting { scope: ExpertDefaultScope; revision: number; choice: ExpertDefaultChoice }

@@ -39,13 +39,15 @@ export function Message({ message, active, workspaceId, focusKey, focusTransfers
   const cancelled = message.toolName === 'bash' && message.isError && /^命令已取消(?:。|；已保存文件不会回滚。)(?:\n已保留命令日志：\/logs\/[0-9a-f-]{36}\/[0-9a-f]{64}\.log)?$/.test(message.text);
   const toolRunning = message.toolStatus === 'running' || (!message.toolStatus && !message.text && active);
   const input = message.toolInput;
-  const subject = input?.command || input?.path || input?.pattern;
+  const mcp = message.toolDetails?.mcp;
+  const subject = mcp ? `${mcp.connectionName} · ${mcp.toolName}` : input?.command || input?.path || input?.pattern;
   const receipt = messageAuthoringReceipt(message);
   const changes = patchLineCounts(message.toolDetails?.patch);
   const ToolIcon = message.toolName === 'bash' ? Terminal : message.toolName === 'write' || message.toolName === 'edit' ? PencilLine : Wrench;
   if (message.role === 'tool') return <details ref={focusRef as React.RefObject<HTMLDetailsElement>} className={`tool-result${message.isError && !cancelled ? ' failed' : ''}`}>
-    <summary><ToolIcon size={15} aria-hidden="true" /><span>{message.resultMissing ? '未收到执行结果' : cancelled ? '命令已停止' : toolRunning ? `正在${action}` : message.toolStatus === 'completed' || message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span>{subject && <span className="tool-subject" title={subject}>{subject}</span>}<ChevronDown size={14} aria-hidden="true" /></summary>
+    <summary><ToolIcon size={15} aria-hidden="true" /><span>{message.resultMissing ? '未收到执行结果' : cancelled ? '命令已停止' : toolRunning ? `正在${action}` : mcp ? ({ success: '已调用工具', remote_error: '远端返回错误', input_required: '需要额外输入', unknown: '执行结果待核对', not_sent: '调用未发出' }[mcp.status]) : message.toolStatus === 'completed' || message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span>{subject && <span className="tool-subject" title={subject}>{subject}</span>}<ChevronDown size={14} aria-hidden="true" /></summary>
     {!message.isError&&!message.resultMissing&&message.toolName==='task_resource_query'&&resourceResultValid(message.resourceResult)&&<ResourceResultCard key={message.resourceResult.resultRef} result={message.resourceResult}/>}<EvidenceMapLinks messages={[message]}/><div className="tool-body">
+      {mcp && <div className="mcp-tool-evidence"><dl className="confirmation-metadata"><dt>连接</dt><dd>{mcp.connectionName}</dd><dt>账号</dt><dd>{mcp.accountLabel}</dd><dt>工具</dt><dd>{mcp.toolName}</dd></dl><p>{{ success: '调用已完成。', remote_error: '远端返回错误。', input_required: '远端要求额外输入，本次未自动续发。', unknown: '执行结果待核对。', not_sent: '调用未发出。' }[mcp.status]}</p></div>}
       {input?.command && <><h4>命令</h4><pre>{input.command}</pre></>}
       {input?.path && <><h4>路径</h4><pre>{input.path}</pre></>}
       {(input?.offset !== undefined || input?.limit !== undefined || input?.pattern) && <p className="tool-input-range">{[input.pattern && `查找：${input.pattern}`, input.offset !== undefined && `起始行：${input.offset}`, input.limit !== undefined && `行数：${input.limit}`].filter(Boolean).join(' · ')}</p>}

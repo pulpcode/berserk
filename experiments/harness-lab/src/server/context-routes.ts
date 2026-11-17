@@ -55,8 +55,9 @@ export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: Ret
   app.get<{Params:{systemId:string;reportId:string};Querystring:{revision?:string;taskId?:string}}>(`${scope.base}/context/reports/:systemId/:reportId`,{schema:{querystring:{...empty,properties:{...queryScope.properties,revision:{type:'string',pattern:'^[1-9][0-9]*$'}}}}},(request,reply) => readWithSignal(request,reply,signal=>readQuery(request,signal,'information_read',{systemId:request.params.systemId,reportId:request.params.reportId,...(request.query.revision ? {revision:Number(request.query.revision)} : {})})));
   const forward = async (request: FastifyRequest, path: string, body?: unknown) => {
     const config = simulation(request);
-    const token = env[config.tokenEnv]; if (!token) throw new RequestError('SIMULATION_UNAVAILABLE','模拟控制凭证未配置。',503);
-    return readContextJson(new URL(`${config.baseUrl}/control/${path}`),token,undefined,{method:body === undefined ? 'GET' : 'POST',body,...(path === 'state' ? {maxBytes:2 * 1024 * 1024} : {})});
+    const connection=lab.connectors?.resolveLegacy({control:true});
+    const token = connection?.token??env[config.tokenEnv]; if (!token) throw new RequestError('SIMULATION_UNAVAILABLE','模拟控制凭证未配置。',503);
+    return readContextJson(new URL(`${connection?.endpoint??config.baseUrl}/control/${path}`),token,undefined,{method:body === undefined ? 'GET' : 'POST',body,...(path === 'state' ? {maxBytes:2 * 1024 * 1024} : {})});
   };
   app.get(`${scope.base}/simulation`,{schema:{querystring:empty}},request => forward(request,'state'));
   app.post(`${scope.base}/simulation/object-updates`,{schema:{querystring:empty}},request => {

@@ -1,3 +1,4 @@
+import type { LegacyConnectionResolver } from '../connectors/legacy-config.js';
 import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { chmod, lstat, mkdir } from 'node:fs/promises';
@@ -15,13 +16,14 @@ interface StoredCommand extends CommandRecord {
   dedupKey: string;
   preparedByUserId: string;
   issuedByUserId?: string;
+  connector?: {connectorId:string;revisionId:string;credentialVersion:number};
 }
 const unavailable = () => new RequestError('COMMAND_UNAVAILABLE', '指挥接口暂不可用。', 503);
 
 /** Durable send intent. A lost response is queried, never automatically resent. */
 export class CommandService {
-  private constructor(private readonly db: DatabaseSync, private readonly lab: PiLab, private readonly env: NodeJS.ProcessEnv) {}
-  static async open(lab: PiLab, env: NodeJS.ProcessEnv = process.env) {
+  private constructor(private readonly db: DatabaseSync, private readonly lab: PiLab, private readonly env: NodeJS.ProcessEnv, private readonly connectionResolver?: LegacyConnectionResolver) {}
+  static async open(lab: PiLab, env: NodeJS.ProcessEnv = process.env, connectionResolver?: LegacyConnectionResolver) {
     const directory = join(lab.config.dataDir, 'commands');
     await mkdir(directory, { recursive: true, mode: 0o700 });
     await checkDirectory(directory);
@@ -39,7 +41,7 @@ export class CommandService {
         await atomicWrite(join(directory, '.initialized'), 'commands-v1\n');
       }
       if (db.prepare('PRAGMA user_version').get()?.user_version !== 1 || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw stateError();
-      const service = new CommandService(db, lab, env);
+      const service = new CommandService(db, lab, env, connectionResolver);
       for (const raw of db.prepare('SELECT body FROM commands').all()) {
         const record = service.decode(String(raw.body));
         if (record.status === 'prepared') service.save({ ...record, status: 'cancelled' });
@@ -61,6 +63,7 @@ export class CommandService {
       if (record.status !== 'received' || execution.commandId !== record.id
         || execution.rootCommandId !== (record.command.targetCommandId ?? record.id)) throw stateError();
     }
+    if(record.connector&&(!record.connector.connectorId||!record.connector.revisionId||!Number.isSafeInteger(record.connector.credentialVersion)||record.connector.credentialVersion<1))throw stateError();
     return record;
   }
   private validReceipt(value: unknown, record: Pick<StoredCommand, 'id' | 'contentHash'>): value is CommandReceipt {
@@ -85,8 +88,8 @@ export class CommandService {
     this.db.prepare('INSERT INTO commands VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET body=excluded.body').run(record.id, record.dedupKey, JSON.stringify(record));
   }
   private public(record: StoredCommand): CommandRecord {
-    const { scenarioInstanceId: _owner, dedupKey: _key, preparedByUserId: _preparedBy, issuedByUserId: _issuedBy, ...result } = record;
-    void _owner; void _key; void _preparedBy; void _issuedBy;
+    const { scenarioInstanceId: _owner, dedupKey: _key, preparedByUserId: _preparedBy, issuedByUserId: _issuedBy, connector:_connector, ...result } = record;
+    void _owner; void _key; void _preparedBy; void _issuedBy; void _connector;
     return structuredClone(result);
   }
   allowed(seatId: string) { return this.lab.access?.canIssueCommands(seatId) === true; }
@@ -135,6 +138,7 @@ export class CommandService {
       throw new RequestError('CONTEXT_FORBIDDEN', '当前身份无权访问本次业务资料范围。', 403);
     }
     if (!this.lab.scenario || !context.config.systems.some(system => system.id === 'situation' && system.scenarioClock === true)) throw unavailable();
+    try{this.connectionResolver?.({control:true});}catch(error){if(error instanceof RequestError&&['CONNECTOR_LEGACY_UNAVAILABLE','CONNECTOR_CREDENTIAL_REQUIRED'].includes(error.code))return{task};throw error;}
     return { task, context, config };
   }
   /** Shared source facts only. Unlike reconcile(), this read never changes a send or execution record. */
@@ -143,7 +147,8 @@ export class CommandService {
     const readOnly = task.state !== 'active' || task.scenarioInstanceId !== undefined && !this.lab.scenario?.isWritable(task.scenarioInstanceId);
     const result: TaskExecutionSummary = { available: Boolean(context && config), readOnly, queriedAt: new Date().toISOString(), complete: false, groups: [] };
     if (!context || !config) return result;
-    const token = this.env[config.tokenEnv];
+    const connection=this.connectionResolver?.({control:true});
+    const token = connection?.token??this.env[config.tokenEnv];
     if (!token) throw unavailable();
     const records = this.db.prepare("SELECT body FROM commands WHERE json_extract(body,'$.taskSpaceId')=? AND json_extract(body,'$.scenarioInstanceId')=? AND json_extract(body,'$.status')='received' ORDER BY rowid").all(task.id, task.scenarioInstanceId!)
       .map(row => this.decode(String(row.body))).filter(record => (record.command.action ?? 'dispatch') === 'dispatch');
@@ -193,7 +198,8 @@ export class CommandService {
         && value.vehicles.every(vehicle => expected.has(refKey(vehicle.vehicle))) && (value.status === 'refused' || value.vehicles.length === expected.size);
       if (execution && !validExecution(execution)) throw stateError();
       try {
-        const raw = await readContextJson(new URL(`${config.baseUrl}/control/commands/${encodeURIComponent(record.id)}/execution`), token, signal, { maxBytes: 4 * 1024 * 1024 });
+        this.assertConnection(record,connection);
+        const raw = await readContextJson(new URL(`${connection?.endpoint??config.baseUrl}/control/commands/${encodeURIComponent(record.id)}/execution`), token, signal, { maxBytes: 4 * 1024 * 1024 });
         sameAccess();
         const current = commandExecution(raw);
         if (!validExecution(current)) throw unavailable();
@@ -250,6 +256,7 @@ export class CommandService {
       if (stored.workspaceId !== workspaceId || stableCommand(stored.command) !== stableCommand(command)) throw new RequestError('COMMAND_CONFLICT', '操作编号已用于其他内容。', 409);
       return this.public(stored);
     }
+    const preparedConnection=this.connectionResolver?.({control:true});
     if (command.action === 'reroute' || command.action === 'cancel') {
       const target = this.owned(seatId, command.targetCommandId!, true);
       if (target.taskSpaceId !== task.id || (target.command.action ?? 'dispatch') !== 'dispatch' || target.status !== 'received') {
@@ -275,7 +282,9 @@ export class CommandService {
     const attachment = command.attachmentFileId ? await this.lab.collaboration!.referenceFile({ seatId }, command.attachmentFileId, task.id) : undefined;
     signal?.throwIfAborted();
     this.authorize(seatId, task.id);
-    const record: StoredCommand = { id: randomUUID(), taskSpaceId: task.id, workspaceId, seatId, seatName: actor.seatName, source,
+    const currentConnection=this.connectionResolver?.({control:true});
+    if(preparedConnection&&(preparedConnection.revisionId!==currentConnection?.revisionId||preparedConnection.credentialVersion!==currentConnection.credentialVersion))throw new RequestError('COMMAND_CONNECTION_CHANGED','指令准备期间连接或凭证已变化，请重新核对。',409);
+    const record: StoredCommand = { ...(preparedConnection?{connector:{connectorId:preparedConnection.connectorId,revisionId:preparedConnection.revisionId,credentialVersion:preparedConnection.credentialVersion}}:{}), id: randomUUID(), taskSpaceId: task.id, workspaceId, seatId, seatName: actor.seatName, source,
       command, ...(attachment ? { attachment } : {}), contentHash: commandHash(this.externalInput(command)), createdAt: new Date().toISOString(),
       status: 'prepared', scenarioInstanceId: task.scenarioInstanceId!, dedupKey, preparedByUserId: actor.userId };
     // The asynchronous source/file checks may race a repeated preparation.
@@ -298,13 +307,28 @@ export class CommandService {
     this.save({ ...record, status: 'cancelled' });
     return this.read(seatId, id);
   }
+  private assertConnection(record:StoredCommand,connection:ReturnType<LegacyConnectionResolver>|undefined,strictCredential=false):void {
+    if (!record.connector) return;
+    const changed = () => new RequestError('COMMAND_CONNECTION_CHANGED','指令连接已变化，请重新核对目标与原操作。',409);
+    if (!connection || record.connector.connectorId !== connection.connectorId) throw changed();
+    if (strictCredential) {
+      if (record.connector.revisionId !== connection.revisionId || record.connector.credentialVersion !== connection.credentialVersion) throw changed();
+    } else if (record.connector.revisionId !== connection.revisionId) {
+      // An explicit receipt read may use the current organization token at the same fixed target.
+      const original = this.lab.connectors?.revision(record.connector.connectorId,record.connector.revisionId);
+      if (!original || original.kind !== 'legacy' || original.businessSlot !== 'simulation-control'
+        || new URL(original.endpoint).href.replace(/\/$/,'') !== new URL(connection.endpoint).href.replace(/\/$/,'')) throw changed();
+    }
+  }
   private async call(record: StoredCommand, send: boolean, signal?: AbortSignal) {
     const { config } = this.authorize(record.seatId, record.taskSpaceId, send);
-    const token = this.env[config.tokenEnv];
+    const connection=this.connectionResolver?.({control:true});
+    const token = connection?.token??this.env[config.tokenEnv];
     if (!token) throw unavailable();
+    this.assertConnection(record,connection,send);
     const body: ExternalCommand = { commandId: record.id, scenarioInstanceId: record.scenarioInstanceId, taskId: record.taskSpaceId,
       issuedBy: { seatId: record.seatId, seatName: record.seatName }, command: this.externalInput(record.command), contentHash: record.contentHash };
-    const url = new URL(`${config.baseUrl}/control/commands${send ? '' : `/${encodeURIComponent(record.id)}`}`);
+    const url = new URL(`${connection?.endpoint??config.baseUrl}/control/commands${send ? '' : `/${encodeURIComponent(record.id)}`}`);
     const raw = await readContextJson(url, token, signal, { method: send ? 'POST' : 'GET', ...(send ? { body } : {}) });
     if (!this.validReceipt(raw, record)) throw unavailable();
     const receipt = raw;
@@ -317,6 +341,7 @@ export class CommandService {
     if (record.status === 'received' || record.status === 'unknown') return this.public(record);
     if (record.status !== 'prepared') throw new RequestError('COMMAND_CONFLICT', '指令已取消或结束，请核查原记录。', 409);
     signal?.throwIfAborted();
+    this.assertConnection(record,this.connectionResolver?.({control:true}),true);
     const sending: StoredCommand = { ...record, status: 'unknown', issuedByUserId: this.authorize(seatId, record.taskSpaceId).actor.userId };
     this.save(sending);
     try { await this.call(sending, true, signal); }
@@ -335,10 +360,12 @@ export class CommandService {
     const record = this.owned(seatId, id);
     if (record.status !== 'received') return this.public(record);
     const { config } = this.authorize(seatId, record.taskSpaceId, false);
-    const token = this.env[config.tokenEnv];
+    const connection=this.connectionResolver?.({control:true});
+    const token = connection?.token??this.env[config.tokenEnv];
     if (!token) throw unavailable();
     try {
-      const value = await readContextJson(new URL(`${config.baseUrl}/control/commands/${encodeURIComponent(id)}/execution`), token, signal, { maxBytes: 4 * 1024 * 1024 });
+      this.assertConnection(record,connection);
+      const value = await readContextJson(new URL(`${connection?.endpoint??config.baseUrl}/control/commands/${encodeURIComponent(id)}/execution`), token, signal, { maxBytes: 4 * 1024 * 1024 });
       const execution = commandExecution(value);
       if (execution.commandId !== id || execution.rootCommandId !== (record.command.targetCommandId ?? id)) {
         throw new RequestError('COMMAND_EXECUTION_INVALID', '执行进展与原指令不匹配。', 502);

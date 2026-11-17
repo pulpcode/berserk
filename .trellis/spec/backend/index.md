@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [R4 Connectors and Remote MCP](../backend/connectors-r4.md) for fixed legacy business mappings, personal credentials, remote protocol/network admission, original confirmation/history and desktop connection selection.
+
 Read [R3A Conversational Authoring](../backend/authoring-r3a.md) for request-scoped administrator methods, original chat confirmation, atomic draft receipts and manual-entry compatibility.
 
 Read [R3 Skill Packages](../backend/capabilities-r3.md) for full package identity, import, independent Skill publication, scanner reports, scoped runtime loading and compatibility.

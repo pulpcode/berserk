@@ -1,0 +1,49 @@
+.connector-library .capability-section-label > button { margin-left: auto; display: inline-flex; gap: 7px; align-items: center; }
+.connector-card .expert-card-heading { flex-wrap: wrap; }
+.connector-auth-state { display: block; color: var(--muted); font-size: 12px; margin: 0 0 14px; }
+.connector-tools { min-width: 0; font-size: 13px; margin: 0 0 18px; }
+.connector-tools > summary { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 9px 0; color: var(--text); }
+.connector-tools[open] > summary > svg { transform: rotate(180deg); }
+.connector-tools ul { padding: 0; margin: 5px 0; list-style: none; max-height: 280px; overflow: auto; }
+.connector-tools li { padding: 10px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.connector-tools p, .connector-tools small { font-size: 12px; line-height: 1.7; color: var(--muted); margin: 5px 0; }
+.resource-panel.connector-detail-panel { width: min(640px, calc(100vw - 64px)); }
+.resource-panel.connector-management-panel { width: min(760px, calc(100vw - 64px)); }
+.connector-management-state, .connector-tool-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 16px 0; }
+.connector-management-state > span { font-size: 13px; color: var(--muted); }
+.connector-editor-tabs { display: flex; gap: 8px; padding: 10px 0 18px; }
+.connector-editor-tabs button[aria-current="page"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.connector-form fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 16px; min-width: 0; }
+.connector-form label, .connector-credential label { display: grid; gap: 7px; font-size: 13px; }
+.connector-form input:not([type="checkbox"]), .connector-form select, .connector-form textarea, .connector-credential input, .connector-detail-panel select { box-sizing: border-box; width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: var(--control-radius); padding: 9px 10px; background: var(--surface); color: var(--text); font: inherit; }
+.connector-form .connector-checkbox, .connector-seat-choices label { display: flex; align-items: center; gap: 8px; }
+.connector-network { margin-top: 5px; }
+.connector-network > summary { cursor: pointer; margin-bottom: 12px; font-size: 13px; }
+.connector-network p, .connector-credential > p, .connector-discovery > p { color: var(--muted); font-size: 12px; line-height: 1.8; }
+.connector-tool-heading h3, .connector-credential h3 { margin: 0; font-size: 15px; }
+.connector-tool-heading button { display: inline-flex; align-items: center; gap: 6px; }
+.connector-tool-choice { display: flex !important; align-items: flex-start; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+.connector-tool-choice > input { margin-top: 4px; }
+.connector-tool-choice > span { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.connector-tool-choice strong, .connector-tool-choice small { display: block; line-height: 1.7; }
+.connector-tool-choice small { color: var(--muted); }
+.connector-tool-choice details { margin-top: 7px; }
+.connector-tool-choice summary { cursor: pointer; }
+.connector-tool-choice pre, .mcp-confirmation pre { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; font-size: 12px; }
+.connector-credential { border-top: 1px solid var(--line); padding-top: 20px; margin-top: 22px; }
+.connector-latest { border: 1px solid var(--line); padding: 15px; border-radius: 8px; margin-top: 20px; overflow-wrap: anywhere; }
+.connector-seat-choices { display: flex; flex-wrap: wrap; gap: 16px; }
+.connector-selection-chip { max-width: 100%; overflow-wrap: anywhere; }
+.connector-selection-chip > span { min-width: 0; overflow-wrap: anywhere; }
+.connector-picker-options { display: grid; max-height: 300px; overflow: auto; gap: 6px; padding: 5px; }
+.connector-picker-options > label { display: flex; align-items: flex-start; gap: 9px; border-radius: 7px; padding: 9px; cursor: pointer; }
+.connector-picker-options > label:focus-within, .connector-picker-options > label:hover { background: var(--faint); }
+.connector-picker-options > label > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.connector-picker-options small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+.connector-picker-footer { display: flex; justify-content: flex-end; padding-top: 10px; }
+.mcp-confirmation .confirmation-metadata { overflow-wrap: anywhere; }
+
+.connector-source-channel { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 20px; }
+.connector-source-channel > h3 { font-size: 14px; overflow-wrap: anywhere; }
+.connector-source-channel .connector-credential { border: 0; margin-top: 0; padding-top: 5px; }
+.reference-popover .connector-picker-options input[type="checkbox"] { width: 16px; height: 16px; flex: 0 0 16px; padding: 0; margin: 3px 0 0; accent-color: var(--accent); }
