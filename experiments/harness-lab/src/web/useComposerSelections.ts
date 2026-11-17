@@ -1,3 +1,4 @@
+import type { AuthoringIntent } from '../contracts/authoring';
 import { useCallback, useRef, useState } from 'react';
 import type { AgentInfo, ComposerSelection, SkillInfo } from '../contracts/index';
 import { useApi } from './api';
@@ -6,15 +7,18 @@ import { isAnnotationSelection } from './annotations/helpers';
 import type { ContextRef } from '../contracts/context';
 import { isRef, refKey } from './situation/evidence';
 
-export interface DraftSelection { skill?: SkillInfo; agent?: AgentInfo; contextRefs?: ContextRef[]; annotationRefs?: AnnotationSelection[] }
+export interface DraftSelection { connectorIds?: string[]; authoring?: AuthoringIntent; skill?: SkillInfo; agent?: AgentInfo; contextRefs?: ContextRef[]; annotationRefs?: AnnotationSelection[] }
 type SelectionMap = Record<string, DraftSelection>;
+function cleanConnectorIds(ids: unknown[]): string[] { return [...new Set(ids.filter((id): id is string => typeof id === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(id)))].slice(0, 8); }
 function load(key: string): SelectionMap {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(key) || '{}');
     if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
     return Object.fromEntries(Object.entries(value).filter(([, item]) => item && typeof item === 'object').map(([id, item]) => {
-      const { skill, agent, contextRefs, annotationRefs } = item as DraftSelection;
+      const { skill, agent, contextRefs, annotationRefs, authoring, connectorIds } = item as DraftSelection;
       return [id, {
+        ...(Array.isArray(connectorIds) ? { connectorIds: cleanConnectorIds(connectorIds) } : {}),
+        ...(authoring && ['expert', 'skill'].includes(authoring.kind) && (authoring.targetId === undefined || typeof authoring.targetId === 'string') ? { authoring } : {}),
         ...(Array.isArray(annotationRefs) ? {annotationRefs:annotationRefs.filter(isAnnotationSelection).slice(0,20)} : {}),
         ...(Array.isArray(contextRefs) ? {contextRefs: contextRefs.filter(isRef).slice(0,20)} : {}),
         ...(skill && ['id', 'name', 'description', 'version', 'hash'].every(key => typeof skill[key as keyof SkillInfo] === 'string') ? { skill } : {}),
@@ -25,7 +29,7 @@ function load(key: string): SelectionMap {
 }
 function save(key: string, value: SelectionMap) { try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* Keep in-memory editing usable. */ } }
 export function selectionInput(value: DraftSelection): ComposerSelection {
-  return { ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
+  return { ...(value.connectorIds?.length ? { connectorIds: [...value.connectorIds] } : {}), ...(value.authoring?.targetId && value.skill?.id === (value.authoring.kind === 'expert' ? 'expert-manager' : 'skill-creator') ? { authoring: value.authoring } : {}), ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash, ...(value.skill.revisionId ? { revisionId: value.skill.revisionId, packageDigest: value.skill.packageDigest } : {}) } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
 }
 export function useComposerSelections() {
   const { storageKey } = useApi();
@@ -41,19 +45,24 @@ export function useComposerSelections() {
     current.current = fn(current.current); setAll(current.current); save(key, current.current);
   }, [key, setAll]);
   const set = useCallback((owner: string, kind: 'skill' | 'agent', value?: SkillInfo | AgentInfo) => {
-    update(old => ({ ...old, [owner]: { ...old[owner], [kind]: value } }));
+    update(old => ({ ...old, [owner]: { ...old[owner], [kind]: value, ...(kind === 'skill' ? { authoring: undefined } : {}) } }));
   }, [update]);
+  const setAuthoring = useCallback((owner: string, authoring?: AuthoringIntent) => update(old => ({ ...old, [owner]: { ...old[owner], authoring } })), [update]);
   const setContextRefs = useCallback((owner: string, refs: ContextRef[]) => update(old => ({...old,[owner]:{...old[owner],contextRefs:[...new Map(refs.map(ref=>[refKey(ref),ref])).values()].slice(0,20)}})),[update]);
   const setAnnotationRefs = useCallback((owner:string,refs:AnnotationSelection[])=>update(old=>({...old,[owner]:{...old[owner],annotationRefs:[...new Map(refs.map(ref=>[JSON.stringify(ref),ref])).values()]}})),[update]);
+  const setConnectorIds = useCallback((owner: string, ids: string[]) => update(old => ({ ...old, [owner]: { ...old[owner], connectorIds: cleanConnectorIds(ids) } })), [update]);
   const move = useCallback((from: string, to: string) => update(old => ({ ...old, [to]: { ...old[from], ...old[to] }, [from]: {} })), [update]);
   const clearSubmitted = useCallback((owner: string) => {
     submitted.current = { ...submitted.current, [owner]: {} }; save(sentKey, submitted.current);
     recoverable.current = { ...recoverable.current, [owner]: {} }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
   }, [sentKey, recoveryKey, setRecovery]);
   const consume = useCallback((owner: string, value: DraftSelection) => {
-    submitted.current = { ...submitted.current, [owner]: value }; save(sentKey, submitted.current);
+    const messageSelection = { ...value }; delete messageSelection.connectorIds;
+    submitted.current = { ...submitted.current, [owner]: messageSelection }; save(sentKey, submitted.current);
     recoverable.current = { ...recoverable.current, [owner]: {} }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
     update(old => ({ ...old, [owner]: {
+      connectorIds: old[owner]?.connectorIds,
+      ...(old[owner]?.authoring !== value.authoring ? {authoring: old[owner]?.authoring} : {}),
       ...(old[owner]?.annotationRefs !== value.annotationRefs ? {annotationRefs:old[owner]?.annotationRefs} : {}),
       ...(old[owner]?.contextRefs !== value.contextRefs ? {contextRefs:old[owner]?.contextRefs} : {}),
       ...(old[owner]?.skill !== value.skill ? { skill: old[owner]?.skill } : {}),
@@ -62,16 +71,16 @@ export function useComposerSelections() {
   }, [sentKey, recoveryKey, update, setRecovery]);
   const recover = useCallback((owner: string, allowAutomatic: boolean) => {
     const value = submitted.current[owner];
-    if (!value?.skill && !value?.agent && !value?.contextRefs?.length && !value?.annotationRefs?.length) return;
+    if (!value?.authoring && !value?.skill && !value?.agent && !value?.contextRefs?.length && !value?.annotationRefs?.length) return;
     // Restore automatically only into empty slots; keep the original choice for
     // the existing explicit recovery action when a newer draft already exists.
     recoverable.current = { ...recoverable.current, [owner]: value }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
-    if (allowAutomatic) update(old => ({ ...old, [owner]: old[owner]?.skill || old[owner]?.agent || old[owner]?.contextRefs?.length || old[owner]?.annotationRefs?.length ? old[owner] : { ...value, ...old[owner] } }));
+    if (allowAutomatic) update(old => ({ ...old, [owner]: old[owner]?.authoring || old[owner]?.skill || old[owner]?.agent || old[owner]?.contextRefs?.length || old[owner]?.annotationRefs?.length ? old[owner] : { ...value, ...old[owner] } }));
     submitted.current = { ...submitted.current, [owner]: {} }; save(sentKey, submitted.current);
   }, [recoveryKey, sentKey, update, setRecovery]);
   const restore = useCallback((owner: string) => {
     const recovered = recoverable.current[owner];
-    update(old => ({ ...old, [owner]: recovered?.skill || recovered?.agent || recovered?.contextRefs?.length || recovered?.annotationRefs?.length ? recovered : submitted.current[owner] || {} }));
+    update(old => ({ ...old, [owner]: { ...(recovered?.authoring || recovered?.skill || recovered?.agent || recovered?.contextRefs?.length || recovered?.annotationRefs?.length ? recovered : submitted.current[owner] || {}), connectorIds: old[owner]?.connectorIds } }));
   }, [update]);
-  return { all, recovery, set, setContextRefs, setAnnotationRefs, move, consume, recover, restore, clearSubmitted, current: (owner: string) => current.current[owner] || {} };
+  return { all, recovery, set, setAuthoring, setContextRefs, setAnnotationRefs, setConnectorIds, move, consume, recover, restore, clearSubmitted, current: (owner: string) => current.current[owner] || {} };
 }

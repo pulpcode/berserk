@@ -1,0 +1,129 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/chat.spec.ts tests/e2e/access.spec.ts tests/e2e/capabilities.spec.ts --workers=2
+
+[WebServer] (node:61074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:61045) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 70 tests using 2 workers
+
+(node:61100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:61101) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:61100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:61101) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   2 tests/e2e/access.spec.ts:50:1 › empty seat choices cannot submit a login (3.2s)
+  ✓   1 tests/e2e/access.spec.ts:23:1 › seat login supports password visibility, errors, clearing and a narrow viewport (8.5s)
+  ✓   3 tests/e2e/access.spec.ts:80:1 › login, public/private task navigation, lazy workspace, archive and two independent seats (16.9s)
+  ✓   4 tests/e2e/access.spec.ts:92:1 › same-browser logout and identity change clear private drafts in both tabs (12.0s)
+  ✓   5 tests/e2e/access.spec.ts:100:1 › login reads the current CSRF token after another tab replaces the anonymous cookie (10.2s)
+  ✓   7 tests/e2e/access.spec.ts:227:1 › task catalog groups preserve disclosure and hide all space entries in the desktop rail (10.3s)
+  ✓   6 tests/e2e/access.spec.ts:115:1 › catalog managers maintain all work tasks while every seat owns its personal spaces (20.8s)
+  ✓   9 tests/e2e/access.spec.ts:359:1 › task read errors remain scoped instead of reporting a disconnected service (14.7s)
+  ✓   8 tests/e2e/access.spec.ts:323:1 › directory outages show one content status, preserve navigation and drafts, and recover without writes (16.8s)
+  ✓  11 tests/e2e/capabilities.spec.ts:35:1 › professional expert creation is empty, cancelable and retains existing conversation drafts (8.6s)
+  ✓  12 tests/e2e/capabilities.spec.ts:80:1 › a lost creation response is retried with the same action and does not create another session (5.2s)
+  ✓  13 tests/e2e/capabilities.spec.ts:103:1 › ordinary new conversation keeps the general assistant and uses an action ID (3.3s)
+  ✓  10 tests/e2e/access.spec.ts:380:1 › basemap preference survives logout and stays isolated between accounts (19.7s)
+  ✓  14 tests/e2e/capabilities.spec.ts:117:1 › a disabled expert retains its conversation and draft while sending is blocked (8.4s)
+  ✓  15 tests/e2e/chat.spec.ts:197:1 › resolved references stay visible during streaming, polling and navigation before completion (8.5s)
+  ✓  17 tests/e2e/chat.spec.ts:302:1 › 切换会话时流式回复仍归原会话，取消等待收敛 (4.0s)
+  ✓  16 tests/e2e/chat.spec.ts:257:1 › 中文输入、独立草稿、多轮消息与刷新不重发 (7.3s)
+  ✓  19 tests/e2e/chat.spec.ts:349:1 › 实际工具结果可查看，窄屏与抽屉键盘可用 (2.9s)
+  ✓  18 tests/e2e/chat.spec.ts:328:1 › 活动请求刷新后查询直到结束，失败保留输入 (9.5s)
+  ✓  20 tests/e2e/chat.spec.ts:374:1 › GFM 回复渲染语义表格，窄屏可滚动且刷新保留 (5.1s)
+  ✓  22 tests/e2e/chat.spec.ts:444:1 › Agent 更新期间保留草稿，冲突可查看、人工合并，再次冲突仍校验版本 (3.4s)
+  ✓  21 tests/e2e/chat.spec.ts:399:1 › 工作区隔离运行中的流、会话历史、选择与草稿，新建工作区可发送 (5.5s)
+  ✓  24 tests/e2e/chat.spec.ts:543:1 › 窄屏指令对照、键盘保存、IME 与只读 Skill (2.9s)
+  ✓  23 tests/e2e/chat.spec.ts:492:1 › 查看、放弃与刷新不写文件，失败和工作区旧响应不覆盖草稿 (4.5s)
+  ✓  25 tests/e2e/chat.spec.ts:584:1 › 指令初次读取失败可恢复，存储不可用仍能编辑并清空保存 (2.3s)
+  ✓  26 tests/e2e/chat.spec.ts:611:1 › 首条消息创建会话等待期间切区，新输入和请求仍归原工作区 (2.6s)
+  ✓  27 tests/e2e/chat.spec.ts:645:1 › 失败请求不展示调试资料入口，准备失败恢复草稿且刷新不重发 (4.8s)
+  ✓  28 tests/e2e/chat.spec.ts:676:1 › 分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除 (5.3s)
+  ✓  30 tests/e2e/chat.spec.ts:811:1 › DSH sidebar hover stays inside a short desktop viewport and closes on scroll, blur or hidden rows (4.6s)
+  ✓  29 tests/e2e/chat.spec.ts:725:1 › DSH sidebar places one status before aligned titles, shows pending labels and delayed hover details (7.6s)
+  ✓  32 tests/e2e/chat.spec.ts:884:1 › 切换会话保留阅读位置，阅读旧内容不误标新回复已读 (4.1s)
+  ✓  31 tests/e2e/chat.spec.ts:859:1 › 旧动态请求不覆盖新流状态，更新失败保留状态并可恢复 (7.0s)
+  ✓  33 tests/e2e/chat.spec.ts:912:1 › 窄屏可从侧栏进入其他工作区，会话列表折叠可用且页面不溢出 (1.6s)
+  ✓  34 tests/e2e/chat.spec.ts:931:1 › 动态先发现新工作区，创建响应随后返回时只保留一个分组 (3.0s)
+  ✓  35 tests/e2e/chat.spec.ts:952:1 › 刷新后摘要先于正文到达，停止按钮等待同一请求的正文快照就绪 (3.4s)
+  ✓  36 tests/e2e/chat.spec.ts:974:1 › 新建对话先选项目，取消不创建，折叠项目加号直接创建且不抢回后续导航 (2.2s)
+  ✓  37 tests/e2e/chat.spec.ts:1012:1 › 模型设置保存后更新模型，密钥只写且关闭后清空，手机窗口不溢出 (2.4s)
+  ✓  38 tests/e2e/chat.spec.ts:1056:1 › 模型配置读取可重试，冲突和失败保留填写内容并要求读取后手动保存 (2.2s)
+  ✓  40 tests/e2e/chat.spec.ts:1142:1 › 未知模型参数阻止发送并保留历史草稿，补填后不自动重发 (1.8s)
+  ✓  39 tests/e2e/chat.spec.ts:1096:1 › 跨项目创建失败可见，切换会话保护后续选择，手机新建聚焦输入且设置遮挡不误读 (3.0s)
+  ✓  41 tests/e2e/chat.spec.ts:1170:1 › 容量参数来源、模型切换清空与冲突草稿保护，375px高级设置可用 (2.0s)
+  ✓  42 tests/e2e/chat.spec.ts:1207:1 › 压缩状态跨项目可见，摘要完成不终结请求或产生未读，停止优先且忽略迟到事件 (2.0s)
+  ✓  43 tests/e2e/chat.spec.ts:1241:1 › 历史摘要详情只读且不替换原文，摘要属于历史请求并可在窄屏查看 (1.9s)
+  ✓  45 tests/e2e/chat.spec.ts:1301:1 › 子任务按实际角色在所属请求内显示，结果替代工具正文且可键盘展开 (1.8s)
+  ✓  46 tests/e2e/chat.spec.ts:1345:1 › 子任务完成不结束父请求或产生蓝点，跨项目草稿独立并拒绝外来子事件 (1.7s)
+  ✓  47 tests/e2e/chat.spec.ts:1379:1 › 停止覆盖活动子任务，迟到进度不覆盖停止或父终态 (1.5s)
+  ✓  44 tests/e2e/chat.spec.ts:1272:1 › 刷新压缩中的会话只查询状态，最终失败可见且保留下一轮草稿 (7.9s)
+  ✓  49 tests/e2e/chat.spec.ts:1448:1 › 子事件不抢阅读位置或输入焦点，断线后查询恢复且不重复发送 (3.0s)
+  ✓  50 tests/e2e/chat.spec.ts:1483:1 › 启动工作区归属读取完成前保护输入，随后文字归入初始会话且可发送 (1.6s)
+  ✓  51 tests/e2e/chat.spec.ts:1521:1 › 可靠成功后折叠连续过程，确认错误与成果保持顺序且手动展开跨会话稳定 (1.6s)
+  ✓  48 tests/e2e/chat.spec.ts:1409:1 › 刷新查询恢复子卡片，手机安全Markdown与中断状态可读且不重发 (10.7s)
+  ✓  52 tests/e2e/chat.spec.ts:1553:1 › 完成不会自动折叠有焦点的过程，也不重置手动展开 (3.1s)
+  ✓  54 tests/e2e/chat.spec.ts:1594:1 › 后台完成后返回向上阅读会话不自动收起新过程段 (1.8s)
+  ✓  55 tests/e2e/chat.spec.ts:1613:50 › 流式说明保留在过程之外并保持link焦点 (3.3s)
+  ✓  53 tests/e2e/chat.spec.ts:1574:1 › 向上阅读时完成保留展开与阅读位置，旧快照无终态依据不隐藏过程 (6.3s)
+  ✓  56 tests/e2e/chat.spec.ts:1613:50 › 流式说明保留在过程之外并保持table焦点 (3.4s)
+  ✓  57 tests/e2e/chat.spec.ts:1636:1 › 尾部说明保持在过程之外且焦点稳定，运行中手动查看详情在完成时保留 (3.4s)
+  ✓  58 tests/e2e/chat.spec.ts:1666:1 › 桌面侧边栏可用键盘折叠展开，保留草稿且不影响手机抽屉 (2.1s)
+  ✓  59 tests/e2e/chat.spec.ts:1711:1 › 交付文件卡分组有序、默认折叠四项、固定下载且各宽度无溢出 (2.1s)
+  ✓  61 tests/e2e/chat.spec.ts:1863:1 › 折叠侧栏顶部默认显示 Logo，悬停或键盘聚焦切换为展开图标 (1.5s)
+  ✓  62 tests/e2e/chat.spec.ts:1896:3 › 显式对话链接后新建对话不会被旧 session 参数抢回 (1.7s)
+  ✓  63 tests/e2e/chat.spec.ts:1896:3 › 显式对话链接后切换项目不会被旧 session 参数抢回 (1.3s)
+  ✘  60 tests/e2e/chat.spec.ts:1788:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 (6.9s)
+(node:61623) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  64 tests/e2e/chat.spec.ts:1933:1 › 首轮处理中动态标题更新后，流事件和详情轮询不会恢复新会话标题 (6.8s)
+  ✓  65 tests/e2e/chat.spec.ts:1964:1 › 追加消息消费事件分隔连续回复，刷新后的原生历史保持同样顺序 (3.9s)
+  ✓  66 tests/e2e/chat.spec.ts:1995:1 › 地图聚焦时继续接收回复但不误标已读，返回对话保留草稿与阅读位置 (2.5s)
+  ✓  67 tests/e2e/chat.spec.ts:2026:1 › B首批：思考和工具原序展示，真实累积输出更新且手动展开不被完成收起 (5.6s)
+  ✓  68 tests/e2e/chat.spec.ts:2055:1 › B首批：完成耗时入口收起过程但保留回复，展开查看原生diff且刷新保持内容 (4.7s)
+  ✓  70 tests/e2e/chat.spec.ts:2094:1 › B首批：结构化流替换旧delta，工具累积输出不重复且终态保持披露身份 (2.0s)
+  ✓  69 tests/e2e/chat.spec.ts:2080:1 › B首批：用户补充禁止整轮跨越折叠，纯文本不生成空过程 (2.2s)
+
+
+  1) tests/e2e/chat.spec.ts:1788:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 ──────────────────────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.sidebar button:visible')
+    Expected: 3
+    Received: 4
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.sidebar button:visible') with timeout 5000ms
+      - waiting for locator('.sidebar button:visible')
+        14 × locator resolved to 4 elements
+           - unexpected value "4"
+
+
+      1810 |     await expect(projects.locator('.workspace-entry')).toHaveCount(32);
+      1811 |     await expect(projects.locator('.workspace-entry:visible')).toHaveCount(0);
+    > 1812 |     await expect(page.locator('.sidebar button:visible')).toHaveCount(3);
+           |                                                           ^
+      1813 |     await expect(page.getByRole('button', { name: '新建项目', exact: true })).toBeHidden();
+      1814 |     await expect(page.getByRole('button', { name: '进入项目：默认工作区', exact: true })).toBeHidden();
+      1815 |     await expect(page.getByRole('button', { name: '进入项目：另一工作区', exact: true })).toBeHidden();
+        at /Users/lau/.codex/worktrees/axon-r1-experts/berserk/experiments/harness-lab/tests/e2e/chat.spec.ts:1812:59
+
+    Error Context: test-results/chat-折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/chat-折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/chat-折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/chat.spec.ts:1788:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 ───────────────────────────────────────
+  69 passed (3.3m)

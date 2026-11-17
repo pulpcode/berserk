@@ -1,0 +1,96 @@
+{
+  "recordedAt": "2026-11-16T09:44:49.030931+00:00",
+  "checkpointHead": "0e96ad1c24233db6bce7ccb91416d3500b3cb0a8",
+  "mergeHead": "33e9ae34fa8a5d9ce311393cffb8bb1113069406",
+  "node": "v24.14.0",
+  "sourceFrozen": true,
+  "integrationFix": {
+    "file": "experiments/harness-lab/src/web/CapabilityManagement.tsx",
+    "line": 68,
+    "change": "Builtin-copy guidance now states expert trials are optional."
+  },
+  "verification": {
+    "unit": {
+      "exitCode": 0,
+      "files": 11,
+      "tests": 89,
+      "seconds": 67.5,
+      "log": "merge-optional-unit.log",
+      "maxWorkers": 1,
+      "fileParallelism": false
+    },
+    "browserFirst": {
+      "exitCode": 1,
+      "testsExecuted": 0,
+      "reason": "Sandbox EPERM while Vite attempted localhost:5193 listen.",
+      "log": "merge-optional-browser-first.log"
+    },
+    "browser": {
+      "exitCode": 0,
+      "tests": 10,
+      "duration": "1.3m",
+      "log": "merge-optional-browser.log",
+      "workers": 1,
+      "webPort": 5193,
+      "authoringApiPort": 4310,
+      "outsideSandboxForLocalListeners": true
+    },
+    "scopedLint": {
+      "exitCode": 0,
+      "warnings": 0,
+      "log": "merge-optional-eslint.log"
+    },
+    "globalTypeLintBuild": "Parent owns final checks after this source freeze; not claimed by this review.",
+    "visual": [
+      "Current ready-1060 and published-1440 browser screenshots inspected; controls visible and no horizontal overflow."
+    ]
+  },
+  "sha256": {
+    ".trellis/spec/backend/authoring-r3a.md": "be98d08a40e698e77ec49dfe348d2884c23c4e0133d8a591380a6f16930b03a1",
+    ".trellis/spec/backend/capabilities-r2.md": "9ce1e39e74b2ac5c56c0b7097d3b86c9552ede2f08733ed067e8c670b49b8927",
+    ".trellis/spec/backend/capabilities-r3.md": "b7a4fd9fa3b3001a4261b5e3b8d7e1ac2c84f3c3bad85b784d07edbf0b90dac7",
+    ".trellis/spec/frontend/harness-lab.md": "db0db349c6e9e06ed0a686fb8c115869003faffd071359779272b23c6cde6777",
+    "experiments/harness-lab/fixtures/skills/expert-manager/SKILL.md": "83bc0550d86c68a477b11a188657fc38b14164807a83d7113ee82e6d31512ef3",
+    "experiments/harness-lab/fixtures/skills/skill-creator/SKILL.md": "d713e008fd26359342b9349c17250d7e1d227361e814db8ed2911858abcdc1df",
+    "experiments/harness-lab/package.json": "f418ac32b20386beeb000e52350aae1433d84718a193b198ccca38e2e5e759ef",
+    "experiments/harness-lab/playwright.config.ts": "99c154d71543b54a8e99e9bdeb322dbc817fc9441b6bef7d4f193b7d34204ca3",
+    "experiments/harness-lab/src/authoring/management-skills.ts": "c6a7d3b78b287f879a73584d415652898b7a3fd95ca888ffd947af3c0a0c1748",
+    "experiments/harness-lab/src/authoring/service.ts": "323f68ace8542073e0fba8fa635dd93823c35d1f6bb832dfc2eb689f2283d1c8",
+    "experiments/harness-lab/src/capabilities/management.ts": "82e73cdd95d00b868121117b26c70e27df3dd031b3c850c7603a097f27ae4ec4",
+    "experiments/harness-lab/src/contracts/capability-management.ts": "3a2bc675a8bf8aacbd734a04c17972810b9421aac2e9e18b36f202c36b8d5a8b",
+    "experiments/harness-lab/src/pi/authoring-tools.ts": "67a8780806677f5a0c77642d320d966f52983351af5639d4657a727d7ce43d31",
+    "experiments/harness-lab/src/pi/composer-input.ts": "9cfa9cc9c8ba1313bd59d76d5086a689b0a70aa20b9a1e18666df2e4e2cc5475",
+    "experiments/harness-lab/src/pi/history-evidence.ts": "2deb8dc68bfe7b3874dcc8f98a896a2a7bb88ff36f02e979ca884422bf4c62bd",
+    "experiments/harness-lab/src/pi/lab.ts": "d52d69d5dcfc475a52f0d7cc388a0765d6d05d1f38423a56841abd80ac905b8e",
+    "experiments/harness-lab/src/pi/resource-tools.ts": "22027060016e6136d526d3aa495eb68f917990758efe4bbba61a4b225c17c6cd",
+    "experiments/harness-lab/src/server/app.ts": "9eb034de7a618423b753cbd57ed9965de7adb493ff6f51a9923e238b53959cff",
+    "experiments/harness-lab/src/server/capability-management-routes.ts": "6b4c20ec5f4f1b9f5cb011e6f8ab7b15a1a618e3e3971f71e1163b9ba3762f2e",
+    "experiments/harness-lab/src/web/CapabilityCenter.tsx": "b237d681e183196970d356cc1ed5c135a766ec5c1d68b2d2c25cb108bc459d92",
+    "experiments/harness-lab/src/web/CapabilityManagement.tsx": "12c20c1cf2177c5245881dbe02de7c3ea4829f75b74c82f95d46960cd251efb7",
+    "experiments/harness-lab/src/web/ComposerReferences.tsx": "01a8403940f9312f7aa960c7db3c0ba93946fb12d1ecb1fbdc28693093a31c38",
+    "experiments/harness-lab/src/web/CreationMethodDialog.tsx": "c9f466e56e89cbf11fb9f01ac551e3b887e483472df066ef3ea47ef2d0cb5625",
+    "experiments/harness-lab/src/web/ExpertTrial.tsx": "cd057347543cd8171d2d0de8bd348394ca0bd1707ca1b742754ddfe1d7a3bb74",
+    "experiments/harness-lab/src/web/NewSession.tsx": "5b04d9652bb600fbbc76ad397c590b90a668ca57bc3fe30f4fca2419780142bc",
+    "experiments/harness-lab/src/web/SkillLibrary.tsx": "2d00240ab8982415f69e8d0acde6cae6ea18632a93d84af34294f48d41f5518c",
+    "experiments/harness-lab/src/web/main.tsx": "8a2ebb4737f916dc3fb559659475f146c9bd6779867d2780e02a61b4b3c64542",
+    "experiments/harness-lab/src/web/useChat.ts": "cf6bf0a0be40bdc3fd51cf88820a6f13c60704af23df279a02e86b2626d93c98",
+    "experiments/harness-lab/src/web/useComposerSelections.ts": "2f4ce1daa0f34a1e6b115c68f4976b8f620c98478ab4a406c8105c1f8b2587b3",
+    "experiments/harness-lab/tests/authoring-projection.test.ts": "c18d6121a58ae69182b1c3ed3ad6417c4ccfda7aaa13f5715944c95a3854b817",
+    "experiments/harness-lab/tests/authoring-storage.test.ts": "372dda5837e603a0e7242c43872548e16aed3b371ca28966337d82f745ff2b01",
+    "experiments/harness-lab/tests/capability-management-api.test.ts": "bb33bdd0be06fa9f889d059f0737e933647435034ed5a63a276e1eba36f9f213",
+    "experiments/harness-lab/tests/capability-management-security.test.ts": "251019f7a11c7a4b937cc75f8ada62ac6e4005505804262defb3e8da9defe146",
+    "experiments/harness-lab/tests/capability-management.test.ts": "1886900141c6b5bffc4ecb6ad2329854448f4146b2ed6fd03b1dc697cbdd5d7b",
+    "experiments/harness-lab/tests/e2e/access.spec.ts": "ff05e266a43e9099ec01c5f14574fecd407a1814305516dfa219039ddc99fef8",
+    "experiments/harness-lab/tests/e2e/administrator.spec.ts": "c99f0eaa8bd5d41214e63955e03a0346b4f2fc28cf257b9e2ac1ef80a57f7424",
+    "experiments/harness-lab/tests/e2e/authoring.spec.ts": "de29a3751225af5525d225cb97dcbf2792943e215daa4b93a32a08bafbceb122",
+    "experiments/harness-lab/tests/e2e/capability-management.spec.ts": "b0e8a213cc6dc9355c6be6df1c1287b9ed74fd8cb921fd88961df726c5d20787",
+    "experiments/harness-lab/tests/pi/authoring-history.test.ts": "74e7e6bcba05460d4dd559c014442307fe22cff8cb572c1a73bbc3e635926674",
+    "experiments/harness-lab/tests/pi/authoring.test.ts": "53b123bbafb7463f8b1d2ed4008d19e2eba1d057de8a3573e848142c7a27893b",
+    "experiments/harness-lab/tests/pi/composer-input.test.ts": "55e947f8b8ee8e0fb1ee4489b2e2cab9ef0225046a4fb6983ffe9ff0015387d4",
+    "experiments/harness-lab/tests/pi/management-skill-review.test.ts": "41cab0e718d03684aaadeb7852337337fa9336611c8de1bc447277c112774d8b",
+    "experiments/harness-lab/tests/pi/management-skills.test.ts": "6a8cd164d28898e500bd2087cac38510508a23649b7fe1e9386313af0a29d762",
+    "experiments/harness-lab/tests/pi/recovery.test.ts": "c2de5531f6753405d45ba344a9c7f3e6e7e2fe3efb5ce9258f5f29730456f0c8",
+    "experiments/harness-lab/vite.config.ts": "847529f0deecc3f9075c351fb3911444ffab24034ff470bcbbb6d326da8d183f",
+    "experiments/harness-lab/vitest.config.ts": "19127df9908d6dd97f5034d6c0e32e7625ac72d3a09c9c5899ae4e345cef1cfa"
+  }
+}

@@ -1,3 +1,8 @@
+import type { McpCallEvidence } from './mcp.js';
+export type * from './prompt-suggestions.js';
+import type { AuthoringIntent, AuthoringReceipt } from './authoring.js';
+import type { SessionExpert } from './capabilities.js';
+export type * from './capabilities.js';
 import type { TaskDiscovery } from './continuous.js';
 import type { ResourceResult } from './resource-results.js';
 import type { SpatialResult } from './spatial.js';
@@ -10,7 +15,16 @@ import type { FileRef, FileOutput } from './files.js';
 export type * from './files.js';
 export type * from './collaboration.js';
 export interface SourceInfo { id: string; title: string; description: string; hash: string }
+export interface PublicAssistantContent { id: string; type: 'text' | 'thinking'; text: string }
+export interface PublicToolInput { path?: string; offset?: number; limit?: number; pattern?: string; command?: string }
+export interface PublicToolDetails { mcp?: McpCallEvidence; authoringReceipt?: AuthoringReceipt; diff?: string; patch?: string; firstChangedLine?: number; truncated?: boolean; fullOutputPath?: string }
 export interface PublicMessage {
+  /** Stable presentation identity shared by live and persisted assistant blocks. */
+  presentationId?: string;
+  content?: PublicAssistantContent[];
+  toolInput?: PublicToolInput;
+  toolDetails?: PublicToolDetails;
+  toolStatus?: 'running' | 'completed';
   id: string;
   role: 'user' | 'assistant' | 'tool';
   text: string;
@@ -64,6 +78,8 @@ export interface ConversationTurn {
   requestId: string;
   status: RequestResult['status'];
   finalMessageId?: string;
+  startedAt?: string;
+  completedAt?: string;
 }
 export interface SessionSummary { id: string; workspaceId: string; workItemId?: string; title: string; updatedAt: string }
 /** Host queue projection only; never appended to native conversation history. */
@@ -91,6 +107,8 @@ export interface InputAction {
 }
 export interface InputResult { receipt: InputReceipt | null; queue: InputQueueState }
 export interface SessionSnapshot extends SessionSummary {
+  expert?: SessionExpert;
+  expertDefaultSource?: 'explicit' | 'task' | 'personal' | 'seat' | 'general';
   inputQueue?: InputQueueState;
   modelId?: string;
   backgroundJob?: BackgroundJobReservation;
@@ -169,11 +187,13 @@ export type StreamEvent = {
   | { type: 'input.consumed'; submissionId: string; text: string }
   | { type: 'context.compaction_started'; reason: CompactionReason }
   | { type: 'context.compaction_completed'; compaction: CompactionSummary }
-  | { type: 'resources.loaded'; resources: WorkspaceResources }
+  | { type: 'resources.loaded'; resources: WorkspaceResources; selections?: LoadedComposerSelection; attachments?: FileRef[] }
   | { type: 'instructions.updated'; change: InstructionUpdate }
   | { type: 'text.delta'; delta: string }
-  | { type: 'tool.started'; toolCallId: string; toolName: string }
-  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null; taskDiscovery?: TaskDiscovery | null }
+  | { type: 'assistant.updated'; message: PublicMessage }
+  | { type: 'tool.started'; toolCallId: string; toolName: string; toolInput?: PublicToolInput }
+  | { type: 'tool.updated'; toolCallId: string; toolName: string; text: string; toolDetails?: PublicToolDetails }
+  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; toolInput?: PublicToolInput; toolDetails?: PublicToolDetails; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null; taskDiscovery?: TaskDiscovery | null }
   | { type: 'interaction.updated'; interaction: Interaction }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'files.output'; file: FileOutput }
@@ -191,15 +211,15 @@ export interface InstructionUpdate {
   fileId: 'workspace'; status: 'updated' | 'unchanged'; previousHash: string | null;
   hash: string; effectiveFrom: 'next_request';
 }
-export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string }
+export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string; schemaVersion?: 2; revisionId?: string; packageDigest?: string; resourceRoot?: string; autoInvocationEligible?: boolean }
 export interface SkillFile extends SkillInfo { content: string }
 export interface AgentInfo { name: string; description: string; hash: string }
-export interface ComposerSelection { annotationRefs?: AnnotationSelection[]; contextRefs?: ContextRef[]; skill?: { id: string; hash: string }; agent?: { name: string; hash: string } }
+export interface ComposerSelection { connectorIds?: string[]; authoring?: AuthoringIntent; annotationRefs?: AnnotationSelection[]; contextRefs?: ContextRef[]; skill?: { id: string; hash: string; revisionId?: string; packageDigest?: string }; agent?: { name: string; hash: string } }
 export interface LoadedComposerSelection { annotationContext?: AnnotationContext; annotationRefs?: LoadedAnnotationSelection[]; context?: LoadedContextSelection; skill?: SkillFile; agent?: AgentInfo }
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
 export type RequestResourcesRecord = { task?: {id:string;title:string;goal:string;visibility:'public'|'private'}; compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
   status: 'available'; requestId: string; workspaceId: string; instructions: InstructionFile[];
-  skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
+  schemaVersion?: 2 | 3; skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
 } | { status: 'unavailable'; requestId: string; message: string });
 
 export type CompactionReason = 'threshold' | 'overflow' | 'unknown';

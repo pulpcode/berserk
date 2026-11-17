@@ -1,0 +1,28 @@
+{
+  "legacyPlaceholderCandidates": [
+    {
+      "skillId": "skill-4890c079-70d0-48c4-b865-4ce4bf1eb60d",
+      "draftRevision": 1,
+      "stateRevision": 0,
+      "archived": false,
+      "currentRevisionId": null,
+      "exactLegacyPlaceholder": true,
+      "packageDigest": "773032adb7e49144bfc018c58dd81fd6901d1cc6a7b9048e80468ce19fda706d",
+      "auditActions": [
+        "created"
+      ],
+      "createdAt": [
+        "2026-11-16T00:56:07.960Z"
+      ],
+      "relatedCounts": {
+        "r3_skill_publications": 0,
+        "r3_skill_packages": 0,
+        "r3_skill_policies": 0
+      },
+      "runtimeReferenceFiles": []
+    }
+  ],
+  "pid4316": [
+    "2758959"
+  ]
+}

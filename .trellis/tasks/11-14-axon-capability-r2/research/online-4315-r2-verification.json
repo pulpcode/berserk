@@ -1,0 +1,56 @@
+{
+  "verifiedAt": "2026-11-14T11:36:31.406370+00:00",
+  "release": "/home/ubuntu/axon-r2-release-4315-20261114",
+  "sourceArchiveSha256": "d3e6b9e807e87aa5b13973f4b7d1305291ff01b25a148b94c17da14ca8fa851b",
+  "businessAccountsPasswordsSeatsRolesTasksUnchanged": true,
+  "noDraftWorkspaceOrTaskCreatedByLoginAndReads": true,
+  "schemaVersion": 24,
+  "accountCount": 6,
+  "businessSeatCount": 6,
+  "businessChecks": [
+    {
+      "seat": "seat-overall",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true,
+      "sessionCount": 11
+    },
+    {
+      "seat": "seat-intelligence",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true,
+      "sessionCount": 2
+    },
+    {
+      "seat": "seat-planning",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true,
+      "sessionCount": 1
+    },
+    {
+      "seat": "seat-situation",
+      "originalPasswordLogin": true,
+      "administrator": false,
+      "catalogAndHistoryReadable": true,
+      "sessionCount": 1
+    }
+  ],
+  "assets": [
+    {
+      "asset": "/assets/index-BI2_IHui.js",
+      "sha256": "50cd280bcf960e7b31aa13b65840682eaf6cc1d100a93016cb5ca12200b312d7"
+    },
+    {
+      "asset": "/assets/index-Cy63HFoM.css",
+      "sha256": "4c0c3900305036c1a3b2c9fb598df5c1e77e088ab6c69e5d66f21b073ecbb2f3"
+    }
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "r1UserAcceptance": "pending",
+  "r2UserAcceptance": "pending"
+}

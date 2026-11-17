@@ -1,0 +1,153 @@
+{
+  "probeExit": 0,
+  "containers": [
+    {
+      "networkMode": "none",
+      "readonlyRootfs": true,
+      "user": "1000:1000",
+      "capDrop": [
+        "ALL"
+      ],
+      "securityOpt": [
+        "no-new-privileges"
+      ],
+      "memory": 805306368,
+      "nanoCpus": 1000000000,
+      "pidsLimit": 96,
+      "mounts": [
+        {
+          "destination": "/input",
+          "rw": false
+        },
+        {
+          "destination": "/rules",
+          "rw": false
+        }
+      ],
+      "environmentNames": [
+        "SEMGREP_ENABLE_VERSION_CHECK",
+        "HOME",
+        "LANG",
+        "SEMGREP_SEND_METRICS",
+        "PATH",
+        "GPG_KEY",
+        "PYTHON_VERSION",
+        "PYTHON_SHA256",
+        "PYTHONDONTWRITEBYTECODE",
+        "MPLCONFIGDIR",
+        "PYTHONPATH"
+      ]
+    },
+    {
+      "networkMode": "none",
+      "readonlyRootfs": true,
+      "user": "1000:1000",
+      "capDrop": [
+        "ALL"
+      ],
+      "securityOpt": [
+        "no-new-privileges"
+      ],
+      "memory": 805306368,
+      "nanoCpus": 1000000000,
+      "pidsLimit": 96,
+      "mounts": [
+        {
+          "destination": "/rules",
+          "rw": false
+        },
+        {
+          "destination": "/input",
+          "rw": false
+        }
+      ],
+      "environmentNames": [
+        "SEMGREP_SEND_METRICS",
+        "SEMGREP_ENABLE_VERSION_CHECK",
+        "HOME",
+        "LANG",
+        "PATH",
+        "GPG_KEY",
+        "PYTHON_VERSION",
+        "PYTHON_SHA256",
+        "PYTHONDONTWRITEBYTECODE",
+        "MPLCONFIGDIR",
+        "PYTHONPATH"
+      ]
+    },
+    {
+      "networkMode": "none",
+      "readonlyRootfs": true,
+      "user": "1000:1000",
+      "capDrop": [
+        "ALL"
+      ],
+      "securityOpt": [
+        "no-new-privileges"
+      ],
+      "memory": 805306368,
+      "nanoCpus": 1000000000,
+      "pidsLimit": 96,
+      "mounts": [
+        {
+          "destination": "/input",
+          "rw": false
+        },
+        {
+          "destination": "/rules",
+          "rw": false
+        }
+      ],
+      "environmentNames": [
+        "HOME",
+        "LANG",
+        "SEMGREP_SEND_METRICS",
+        "SEMGREP_ENABLE_VERSION_CHECK",
+        "PATH",
+        "GPG_KEY",
+        "PYTHON_VERSION",
+        "PYTHON_SHA256",
+        "PYTHONDONTWRITEBYTECODE",
+        "MPLCONFIGDIR",
+        "PYTHONPATH"
+      ]
+    },
+    {
+      "networkMode": "none",
+      "readonlyRootfs": true,
+      "user": "1000:1000",
+      "capDrop": [
+        "ALL"
+      ],
+      "securityOpt": [
+        "no-new-privileges"
+      ],
+      "memory": 805306368,
+      "nanoCpus": 1000000000,
+      "pidsLimit": 96,
+      "mounts": [
+        {
+          "destination": "/input",
+          "rw": false
+        },
+        {
+          "destination": "/rules",
+          "rw": false
+        }
+      ],
+      "environmentNames": [
+        "SEMGREP_SEND_METRICS",
+        "SEMGREP_ENABLE_VERSION_CHECK",
+        "HOME",
+        "LANG",
+        "PATH",
+        "GPG_KEY",
+        "PYTHON_VERSION",
+        "PYTHON_SHA256",
+        "PYTHONDONTWRITEBYTECODE",
+        "MPLCONFIGDIR",
+        "PYTHONPATH"
+      ]
+    }
+  ]
+}

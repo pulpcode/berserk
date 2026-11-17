@@ -1,0 +1,59 @@
+{
+  "updatedAt": "2026-11-14T08:09:50.225649+00:00",
+  "release": "/home/ubuntu/axon-r2-admin-4316-20261114",
+  "sourceArchiveSha256": "957a78256bfa55b4b979a25a8d848eecd9110a6d223002b4f4744e0c1eb004a4",
+  "schemaVersion": 24,
+  "accountsAndSeatsAndTaskRecordsUnchanged": true,
+  "newAdministratorAccounts": 0,
+  "administratorGrants": 0,
+  "businessChecks": [
+    {
+      "seat": "seat-overall",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "default": "inherit",
+      "sessionsReadable": true
+    },
+    {
+      "seat": "seat-intelligence",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "default": "inherit",
+      "sessionsReadable": true
+    },
+    {
+      "seat": "seat-planning",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "default": "inherit",
+      "sessionsReadable": true
+    },
+    {
+      "seat": "seat-situation",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "default": "inherit",
+      "sessionsReadable": true
+    }
+  ],
+  "adminLoginEntryServed": true,
+  "assets": [
+    {
+      "asset": "/assets/index-Cu1sYmN6.js",
+      "sha256": "dacfcd5008c8056a55ab3a21ba74381ec440cddc9814e6209c75469c02c21df4"
+    },
+    {
+      "asset": "/assets/index-Kc0RClVv.css",
+      "sha256": "2831665af6661ad6e422e4a398424df057c152293aaff1ee5f1d0995d0ec0f13"
+    }
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "r2UserAcceptance": "pending"
+}

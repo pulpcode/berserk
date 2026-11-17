@@ -1,0 +1,58 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/capability-management.spec.ts --workers=1
+
+[WebServer] (node:77994) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:77940) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:78085) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78085) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/capability-management.spec.ts:54:1 › admin creates and checks a draft without calling a model; shared conflicts preserve local edits (6.1s)
+  ✘  2 tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate (11.1s)
+(node:78264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  3 tests/e2e/capability-management.spec.ts:135:1 › ordinary user cannot see expert management and can explicitly choose general as personal default (3.6s)
+
+
+  1) tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: '专家管理', exact: true }).getByText('管理员已确认本次试用。发布时仍会核对当前草稿与依赖。', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('dialog', { name: '专家管理', exact: true }).getByText('管理员已确认本次试用。发布时仍会核对当前草稿与依赖。', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: '专家管理', exact: true }).getByText('管理员已确认本次试用。发布时仍会核对当前草稿与依赖。', { exact: true })
+
+
+      100 |     await dialog.getByRole('checkbox', { name: '我已检查代表性任务结果、实际工具和未验证项目。', exact: true }).check();
+      101 |     await dialog.getByRole('button', { name: '确认试用通过', exact: true }).click();
+    > 102 |     await expect(dialog.getByText('管理员已确认本次试用。发布时仍会核对当前草稿与依赖。', { exact: true })).toBeVisible();
+          |                                                                                   ^
+      103 |     await dialog.getByLabel('发布说明', { exact: true }).fill('首个经过隔离试用的配置。');
+      104 |     await dialog.getByRole('checkbox', { name: '我已核对配置、试用结果和使用范围，确认发布。', exact: true }).check();
+      105 |     await dialog.getByRole('button', { name: '发布新版本', exact: true }).click();
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/capability-management.spec.ts:102:83
+
+    Error Context: test-results/capability-management-repr-8ad5e-al-defaults-remain-separate/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/capability-management-repr-8ad5e-al-defaults-remain-separate/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/capability-management-repr-8ad5e-al-defaults-remain-separate/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate 
+  2 passed (33.1s)

@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceHashes": [
+    {
+      "path": "src/pi/lab.ts",
+      "sha256": "0692ea9fdbe4e3600b5319764e5a8ab83967b233a7c2944875a5c5452991807d"
+    },
+    {
+      "path": "src/pi/mcp-tools.ts",
+      "sha256": "8907a874c091f346f8956211c300cf9005bcb3b42ad9e095749145f691617f59"
+    },
+    {
+      "path": "src/pi/mcp-history.ts",
+      "sha256": "9725741118ea2ca46626a37ae47283aa3b23f07617cd7ea371e029fc4b48b4e6"
+    },
+    {
+      "path": "src/pi/interactions.ts",
+      "sha256": "6322df9cd2e169ac77f68c38cdeac230303f81b48c3467222c8af8c15b4ca045"
+    },
+    {
+      "path": "src/pi/history-evidence.ts",
+      "sha256": "0e7cc9df2a03df582e5b38a3eab379af2c8495182d192079b9ab450733796438"
+    },
+    {
+      "path": "src/connectors/remote.ts",
+      "sha256": "b8a6f24585f6f3fd4f277279cc57a85d3f619b568d03c3f1b4f6dd493f6af197"
+    },
+    {
+      "path": "src/connectors/network.ts",
+      "sha256": "0dc5ec9e9789dbf3af7f980cc11d1ac26c4ac0e387d0b71a2992e1a4d4176763"
+    },
+    {
+      "path": "src/connectors/schema.ts",
+      "sha256": "c638a5457526e1dc88205936063a714a3f7b6bb29832fea7a4bc4cd796ca48f4"
+    },
+    {
+      "path": "src/connectors/service.ts",
+      "sha256": "c0f0ccb83950567d83d3f5cb64a2eacc19ee23b6c7d6b59e6143b271026a4052"
+    },
+    {
+      "path": "src/contracts/mcp.ts",
+      "sha256": "03c7a1f6cd9413ba1f41cf44c3f65f8db48df7312b3d7c87fc6f3be45ac12375"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "dd5ad52edfc85abe0daf1f8f398446a61579dc63603e23f9a091caad7ea0bc22"
+    }
+  ],
+  "node": "v24.14.0",
+  "model": "deepseek-v4.1-flash",
+  "sdk": "@modelcontextprotocol/client@2.4.0",
+  "scope": "受控双服务及Cloudflare公开文档MCP、真实方舟模型、原Pi确认；不代表用户验收",
+  "publicNetwork": {
+    "endpoint": "https://docs.mcp.cloudflare.com/mcp",
+    "tlsVerification": "native HTTPS certificate and hostname validation retained",
+    "temporaryApprovedIp": "198.18.0.14"
+  },
+  "durationMs": 24922.955783,
+  "records": [
+    {
+      "kind": "discovery",
+      "name": "R4-alpha",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 207.8948949999999
+    },
+    {
+      "kind": "discovery",
+      "name": "R4-beta",
+      "protocolVersion": "2025-11-25",
+      "protocolEra": "legacy",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 262.12052200000016
+    },
+    {
+      "kind": "discovery",
+      "name": "Cloudflare 官方文档",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "tools": [
+        "search_cloudflare_documentation",
+        "migrate_pages_to_workers_guide"
+      ],
+      "catalogBytes": 2175,
+      "durationMs": 1589.1599699999997
+    },
+    {
+      "kind": "model-loop",
+      "name": "Cloudflare 官方文档",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "302d257f-daf4-404c-93b9-c786b856d0df",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "d96ff3b7-8692-40ed-a9b3-a3b451be8fea",
+        "connectorId": "d546aa81-6284-45f9-8c1b-021c40cfbbf7",
+        "revisionId": "a195a0da-09a9-4312-b2a4-31d4e227f5ad",
+        "connectionName": "Cloudflare 官方文档",
+        "accountLabel": "无需凭证",
+        "toolName": "search_cloudflare_documentation",
+        "contractDigest": "bc47fa5f04ddf433508022be7b7d2290a426ecbaae4226e49a6b73f2f5ba48ec",
+        "catalogDigest": "80659c60314984e58c007d383fd04dabf47fe0c357cb9cc9564c0932d9e0efda",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "01eb82a3aa029d67c7b37393667b45029c72bd186b69c36d97363480bd4b31d7",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2026-07-28",
+        "protocolEra": "modern"
+      },
+      "durationMs": 20691.815478,
+      "assembly": {
+        "assemblyMs": 160.189026,
+        "toolsMs": [
+          6250.174042000001
+        ],
+        "firstTextMs": 10589
+      }
+    }
+  ],
+  "modelCalls": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_07ae0799c52db40d06535698eec7ab6326e49420",
+        "ask_user"
+      ],
+      "contextBytes": 10035
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_07ae0799c52db40d06535698eec7ab6326e49420",
+        "ask_user"
+      ],
+      "contextBytes": 40814
+    }
+  ],
+  "publicTarget": "https://docs.mcp.cloudflare.com/mcp",
+  "temporaryApprovedIp": "198.18.0.14",
+  "tlsHostnameVerification": true
+}

@@ -10,6 +10,7 @@ import { HandoffFiles } from '../../src/collaboration/files.js';
 import { ModelSettingsStore } from '../../src/server/model-settings.js';
 import * as backgroundRuntime from '../../src/pi/background-runner.js';
 import { BackgroundStore } from '../../src/background/store.js';
+import { BackgroundService } from '../../src/background/service.js';
 import { parseBackgroundConfig } from '../../src/background/config.js';
 import { PiLab } from '../../src/pi/lab.js';
 import { DockerExecutionService, type DockerRunner } from '../../src/execution/docker.js';
@@ -34,7 +35,7 @@ async function login(app: FastifyInstance, name: string) {
   return {auth, headers, call: (url: string, payload?: object, method: 'POST' | 'PUT' = 'POST') => app.inject({url, method: payload === undefined ? 'GET' : method, headers, ...(payload === undefined ? {} : {payload})})};
 }
 type Client = Awaited<ReturnType<typeof login>>;
-async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent?: boolean; backlogLimit?: number; docker?: boolean} = {}) {
+async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent?: boolean; backlogLimit?: number; docker?: boolean; modePolicies?: boolean} = {}) {
   const dataDir = await mkdtemp(join(tmpdir(), 'axon-background-api-')); cleanup.push(() => rm(dataDir, {recursive: true, force: true}));
   const db = await openDatabase(dataDir); const access = new AccessStore(db);
   for (const username of ['a', 'b']) await access.saveAccount({username, displayName: username, seatId: username, seatName: `席位 ${username}`, password: 'test-password-123', createPublicTask: true, manageModelSettings: username === 'a'});
@@ -50,11 +51,16 @@ async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent
   const lab = await PiLab.create(config, fake.runtime, options.docker ? new DockerExecutionService({instanceId:dataDir},runner) : undefined);
   const background = catalog(); if (options.backlogLimit) background.backlogLimit = options.backlogLimit;
   if (options.docker) background.profiles[0].tools.push('bash');
-  const app = await createApp(lab, false, options.absent ? undefined : {config: background, env}); cleanup.push(() => app.close());
+  if(options.modePolicies){background.sources[0].operationPolicies={scenario:'special',free_debug:'other'};background.sources[0].allowedRecipientSeatIds=['a'];background.sources[1].retired=true;background.sources[1].allowedRecipientSeatIds=['b'];background.sources[1].allowedProfileIds=['debug'];background.profiles.push({...background.profiles[0],id:'debug',name:'自由调试方案'});}
+  // R4 copies legacy input into its authority; revocation probes must change the live service config.
+  let runtimeBackground=background;
+  const initialize=BackgroundService.prototype.initialize;
+  const capture=vi.spyOn(BackgroundService.prototype,'initialize').mockImplementationOnce(function(this:BackgroundService){runtimeBackground=this.config;return initialize.call(this);});
+  const app = await createApp(lab, false, options.absent ? undefined : {config: background, env}).finally(()=>capture.mockRestore()); cleanup.push(() => app.close());
   const store = options.absent ? undefined : new BackgroundStore(lab.access!.db);
   if (store) for (const source of background.sources) store.grant('seat', 'a', source.sourceId, 'manage');
   const source = (url: string, payload?: object, sourceId = 'special') => app.inject({url: `/api/integrations/${sourceId}/${url}`, method: payload === undefined ? 'GET' : 'POST', headers: {authorization: `Bearer ${env[sourceId === 'special' ? 'SPECIAL_TOKEN' : 'OTHER_TOKEN']}`}, ...(payload === undefined ? {} : {payload})});
-  return {app, lab, config, background, store: store!, source, fake, dataDir, commands};
+  return {app, lab, config, background:runtimeBackground, store: store!, source, fake, dataDir, commands};
 }
 const message = (sourceMessageId: string = randomUUID(), uploadIds?: string[]) => ({sourceMessageId, title: '测试信息', text: '收到一份材料，需要核对时间与地点。', ...(uploadIds ? {uploadIds} : {})});
 async function createRule(a: Client, recipientSeatIds = ['a', 'b']) {
@@ -535,4 +541,26 @@ it('aggregates all authorized sources before stable paging, deduplicates multi-t
   expect((await a.call('/api/workbench/items?kind=information')).json().items[0].tasks).toEqual([{id:first.id,title:first.title}]);
   vi.spyOn(context.lab.collaboration!,'list').mockImplementationOnce(() => {throw new Error('database read unavailable');});
   expect((await a.call('/api/workbench/items')).json()).toMatchObject({sections:{work:'error',information:'available'},counts:{actionable:null,following:null,done:null,all:null},items:[{kind:'information'}]});
+});
+
+
+it('free debug freezes original policy ACL/profile/recipients without granting scenario access, and retired wire IDs remain receipt-only', async()=>{
+  const {app,lab,store,source}=await setup({modePolicies:true});
+  store.revoke('seat','a','other');store.grant('seat','b','other','manage');
+  const a=await login(app,'a'),b=await login(app,'b');
+  await createRule(a,['a']);
+  const debugRule=await b.call('/api/information/rules',{clientActionId:randomUUID(),name:'自由调试',sourceId:'other',profileId:'debug',recipientSeatIds:['b'],enabled:true});expect(debugRule.statusCode,debugRule.body).toBe(200);
+  const run=`run-${randomUUID()}`;let mode:'scenario'|'free_debug'='free_debug';
+  lab.scenario={verifyIncoming:async()=>run,modeFor:async()=>mode,isWritable:()=>true,assertWritable:()=>{},activeId:()=>run} as unknown as NonNullable<PiLab['scenario']>;
+  const control=store.getControl('queue',true);store.setControl('queue',control.revision,false);
+  const debugInput={...message(),scenarioInstanceId:run},accepted=await source('events',debugInput);expect(accepted.statusCode,accepted.body).toBe(202);
+  const debug=store.getEvent(accepted.json().eventId),debugJob=store.getJob(debug.initialJobId!);expect(debug).toMatchObject({sourceId:'special',policySourceId:'other'});expect(debugJob).toMatchObject({sourceId:'special',policySourceId:'other',ruleSnapshot:{rule:{sourceId:'other',recipientSeatIds:['b']},profile:{id:'debug'}}});
+  expect((await a.call(`/api/information/events/${debug.id}`)).statusCode).toBe(404);expect((await b.call(`/api/information/events/${debug.id}`)).statusCode).toBe(200);
+  expect((await a.call('/api/information/jobs')).json().items).toHaveLength(0);expect((await b.call('/api/information/jobs')).json().items).toHaveLength(1);
+  mode='scenario';const scene=await source('events',{...message(),scenarioInstanceId:run});expect(scene.statusCode,scene.body).toBe(202);const event=store.getEvent(scene.json().eventId);expect(event.policySourceId).toBe('special');
+  expect((await b.call(`/api/information/events/${event.id}`)).statusCode).toBe(404);expect((await a.call(`/api/information/events/${event.id}`)).statusCode).toBe(200);expect((await b.call(`/api/information/events/${debug.id}`)).statusCode).toBe(200);
+  const paused=store.getControl('source:special',true);store.setControl('source:special',paused.revision,false);expect((await source('events',debugInput)).statusCode).toBe(202);
+  expect((await source('events',message(),'other')).statusCode).not.toBe(202);
+  expect((await b.call('/api/information/sources/other',{accepting:true,revision:0},'PUT')).statusCode).toBe(410);
+  expect(()=>new BackgroundStore(lab.access!.db)).not.toThrow();
 });

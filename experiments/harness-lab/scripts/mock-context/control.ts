@@ -1,9 +1,9 @@
 import { createConnection } from 'node:net';
 
+const args = process.argv.slice(2);
+if(args.length!==1||!['status','requests'].includes(args[0]))throw new Error('仅支持只读 status | requests。旧 reset/advance/event/unavailable 控制入口已停用；请以导演身份进入 /director，确认切换自由调试后在指定轮次中编辑或发送通知。');
 const path = process.env.MOCK_CONTEXT_CONTROL_SOCKET;
 if (!path) throw new Error('请配置运行中的模拟服务使用的 MOCK_CONTEXT_CONTROL_SOCKET。');
-const args = process.argv.slice(2);
-if (!args.length) throw new Error('用法：control.ts reset | advance intel/situation/unknown/contract/recovery | event E1/E2/E3/E4 | unavailable intel/situation on/off | requests | status');
 const result = await new Promise<string>((resolve, reject) => {
   const socket = createConnection(path); let body = '';
   socket.setTimeout(5_000, () => socket.destroy(new Error('模拟控制请求超时。')));

@@ -1,0 +1,202 @@
+import { connectorRequirements } from './connector-requirements.js';
+import type { ConnectorRequirement } from '../contracts/connectors.js';
+import type { AuthoringProposal, AuthoringReceipt } from '../contracts/authoring.js';
+import { assertProposal, authoringReceipt, type AuthoringGrant } from '../authoring/integrity.js';
+import type { SkillRef } from '../contracts/skills.js';
+import type { SkillRevision } from '../contracts/capabilities.js';
+import { randomUUID } from 'node:crypto';
+import { join } from 'node:path';
+import type { DatabaseSync } from 'node:sqlite';
+import type { ExpertRef, ExpertRevision } from '../contracts/capabilities.js';
+import type { CapabilityManagementCatalog, CapabilityToolOption, CapabilitySeatOption, ExpertDraftContent, ExpertDraft, ExpertValidation, ExpertTrialRecord, ExpertTrialEvidence, ExpertPublication, ExpertUsePolicy, ManagedExpertDetail, ManagedExpertSummary, ManagementActor, PublishExpertInput, ExpertDefaultScope, ExpertDefaultSetting, ExpertDefaultChoice, ResolvedExpertDefault, ExpertAudit, ExpertImpact } from '../contracts/capability-management.js';
+import { RequestError } from '../contracts/errors.js';
+import { Mutex, readControlled } from '../resources/files.js';
+import { CapabilityService, capabilityDigest, expertRevision, skillRevision, GENERAL_EXPERT_ID, type ControlledSkill } from './service.js';
+
+const conflict = (message = '配置已变化，请查看最新内容后重试。') => new RequestError('CAPABILITY_CONFLICT', message, 409);
+const invalid = (message = '专家配置无效。') => new RequestError('INVALID_INPUT', message);
+const missing = () => new RequestError('EXPERT_NOT_FOUND', '专家不存在或不可用。', 404);
+const now = () => new Date().toISOString();
+const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const parse = <T>(row: Record<string, unknown> | undefined): T | undefined => row ? JSON.parse(String(row.data)) as T : undefined;
+export interface CapabilityManagementOptions {
+  connectors?: (actor?:ManagementActor) => NonNullable<CapabilityManagementCatalog['connectors']>;
+  assertConnectorRequirements?: (refs:ConnectorRequirement[])=>void;
+  skills: () => ControlledSkill[]; tools: () => CapabilityToolOption[]; seats: () => CapabilitySeatOption[];
+  packageCatalog?: () => CapabilityManagementCatalog['skills'];
+  resolvePackage?: (ref: SkillRef, actor: ManagementActor) => Promise<SkillRevision>;
+  assertPackage?: (ref: SkillRef) => void;
+  reauthorize?: (actor: ManagementActor, scope?: ExpertDefaultScope) => void;
+  /** Only the stopped migration command may upgrade an existing R1 data root. */
+  allowMigration?: boolean;
+}
+export function initializeR2Schema(db: DatabaseSync): void {
+  const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
+  if (version === 2) {
+    for (const table of ['r2_experts','r2_drafts','r2_validations','r2_trials','r2_publications','r2_actions','r2_audit','r2_policies','r2_defaults']) db.prepare(`SELECT 1 FROM ${table} LIMIT 1`).get();
+    return;
+  }
+  if (version !== 1) throw conflict('不支持的能力库版本。');
+  db.exec(`BEGIN IMMEDIATE;
+    CREATE TABLE r2_experts(expert_id TEXT PRIMARY KEY, archived INTEGER NOT NULL CHECK(archived IN (0,1)), created_at TEXT NOT NULL, created_by TEXT NOT NULL, state_revision INTEGER NOT NULL DEFAULT 0);
+    CREATE TABLE r2_drafts(expert_id TEXT PRIMARY KEY REFERENCES r2_experts(expert_id), data TEXT NOT NULL CHECK(json_valid(data)));
+    CREATE TABLE r2_validations(id TEXT PRIMARY KEY, expert_id TEXT NOT NULL REFERENCES r2_experts(expert_id), data TEXT NOT NULL CHECK(json_valid(data)));
+    CREATE TABLE r2_trials(id TEXT PRIMARY KEY, expert_id TEXT NOT NULL REFERENCES r2_experts(expert_id), data TEXT NOT NULL CHECK(json_valid(data)));
+    CREATE TABLE r2_publications(id TEXT PRIMARY KEY, expert_id TEXT NOT NULL REFERENCES r2_experts(expert_id), release_version TEXT NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)), UNIQUE(expert_id,release_version));
+    CREATE TABLE r2_actions(actor_id TEXT NOT NULL, action_id TEXT NOT NULL, input_digest TEXT NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)), PRIMARY KEY(actor_id,action_id));
+    CREATE TABLE r2_audit(id TEXT PRIMARY KEY, expert_id TEXT NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)));
+    CREATE TABLE r2_policies(expert_id TEXT PRIMARY KEY REFERENCES r2_experts(expert_id), data TEXT NOT NULL CHECK(json_valid(data)));
+    CREATE TABLE r2_defaults(scope_kind TEXT NOT NULL CHECK(scope_kind IN ('personal','seat','task')), scope_id TEXT NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)), PRIMARY KEY(scope_kind,scope_id));
+    PRAGMA user_version=2; COMMIT;`);
+}
+
+/** Workflow shared by HTTP forms and controlled management callers. */
+export class CapabilityManagement {
+  private readonly lock = new Mutex();
+  private constructor(readonly capabilities: CapabilityService, private readonly options: CapabilityManagementOptions) {}
+  static async open(capabilities: CapabilityService, options: CapabilityManagementOptions): Promise<CapabilityManagement> {
+    const marker = await readControlled(join(capabilities.directory,'r2-migration.json'),32*1024*1024,true);
+    if (marker) {
+      const value = JSON.parse(marker) as {schemaVersion?:number;stage?:string;sourceDir?:string;backupDir?:string;backupDigest?:string;files?:unknown};
+      if (value.schemaVersion!==1 || !['prepared','completed'].includes(value.stage??'') || typeof value.sourceDir!=='string' || typeof value.backupDir!=='string' || !/^[0-9a-f]{64}$/.test(value.backupDigest??'') || !Array.isArray(value.files)) throw conflict('R2迁移记录异常，请保留现场。');
+      if (value.stage!=='completed') throw new RequestError('CAPABILITY_R2_MIGRATION_REQUIRED','R2迁移尚未完成，请停服后按原参数继续。',409);
+    }
+    if (Number(capabilities.db.prepare('PRAGMA user_version').get()?.user_version) === 1 && !options.allowMigration
+      && !capabilities.createdNew) throw new RequestError('CAPABILITY_R2_MIGRATION_REQUIRED','请先对旧能力数据执行停服备份及R2迁移。',409);
+    initializeR2Schema(capabilities.db); return new CapabilityManagement(capabilities, options);
+  }
+  private get db() { return this.capabilities.db; }
+  private auth(actor: ManagementActor, scope?: ExpertDefaultScope) { if (!actor.userId) throw new RequestError('FORBIDDEN','请登录后继续。',403); this.options.reauthorize?.(actor,scope); }
+  private packageRefs(skills: SkillRevision[]): {skillRefs?: SkillRef[]} {
+    const refs=skills.filter(skill=>skill.schemaVersion===2).map(skill=>({skillId:skill.id,revisionId:skill.revisionId,packageDigest:skill.packageDigest!}));
+    return refs.length?{skillRefs:refs}:{};
+  }
+  catalog(actor?:ManagementActor): CapabilityManagementCatalog { return { ...(this.options.connectors ? {connectors:this.options.connectors(actor)} : {}), tools:this.options.tools().map(item=>({...item})),skills:[...this.options.skills().map(({id,name,description})=>({id,name,description})),...(this.options.packageCatalog?.()??[])],seats:this.options.seats().map(item=>({...item})) }; }
+  private tx<T>(operation:()=>T):T { this.db.exec('BEGIN IMMEDIATE');try{const result=operation();this.db.exec('COMMIT');return result;}catch(error){this.db.exec('ROLLBACK');throw error;} }
+  private prior<T>(actor:ManagementActor,id:string,input:unknown):T|undefined {
+    if(!uuid.test(id))throw invalid('操作标识无效。');const row=this.db.prepare('SELECT input_digest,data FROM r2_actions WHERE actor_id=? AND action_id=?').get(actor.userId,id);if(!row)return;
+    if(row.input_digest!==capabilityDigest(input))throw conflict('同一操作标识不能用于不同参数。');return JSON.parse(String(row.data)) as T;
+  }
+  private receipt(actor:ManagementActor,id:string,input:unknown,result:unknown) { this.db.prepare('INSERT INTO r2_actions VALUES(?,?,?,?)').run(actor.userId,id,capabilityDigest(input),JSON.stringify(result)); }
+  private audit(actor:ManagementActor,expertId:string,action:string,details:unknown) {const item:ExpertAudit={auditId:randomUUID(),expertId,actorId:actor.userId,action,createdAt:now(),details};this.db.prepare('INSERT INTO r2_audit VALUES(?,?,?)').run(item.auditId,expertId,JSON.stringify(item));}
+  private managed(id:string,allowArchived=false) {
+    const row=this.db.prepare('SELECT archived,state_revision FROM r2_experts WHERE expert_id=?').get(id);if(!row){if(this.db.prepare('SELECT 1 FROM experts WHERE expert_id=?').get(id))throw new RequestError('BUILTIN_READ_ONLY','系统内置专家只读，可复制为新的组织专家。',409);throw missing();}
+    if(row.archived&&!allowArchived)throw conflict('此专家已归档，不能继续修改。');return row;
+  }
+  private draft(id:string,expected?:number):ExpertDraft {const item=parse<ExpertDraft>(this.db.prepare('SELECT data FROM r2_drafts WHERE expert_id=?').get(id));if(!item)throw missing();if(expected!==undefined&&expected!==item.draftRevision)throw conflict();return item;}
+  private content(value:ExpertDraftContent):ExpertDraftContent {
+    if(!value||Object.keys(value).some(key=>!['schemaVersion','connectorRequirements','name','description','instructions','skillIds','skillRefs','allowedTools'].includes(key))||typeof value.name!=='string'||!value.name.trim()||value.name.length>120||typeof value.description!=='string'||!value.description.trim()||value.description.length>2000||typeof value.instructions!=='string'||!value.instructions.trim()||Buffer.byteLength(value.instructions)>65536||!Array.isArray(value.skillIds)||!value.skillIds.every(id=>typeof id==='string')||!Array.isArray(value.allowedTools)||!value.allowedTools.every(id=>typeof id==='string'))throw invalid();
+    if(value.skillRefs!==undefined && (!Array.isArray(value.skillRefs)||value.skillRefs.some(ref=>!ref||Object.keys(ref).some(key=>!['skillId','revisionId','packageDigest'].includes(key))||typeof ref.skillId!=='string'||typeof ref.revisionId!=='string'||!/^[0-9a-f]{64}$/.test(ref.packageDigest))||new Set(value.skillRefs.map(ref=>ref.skillId)).size!==value.skillRefs.length||value.skillRefs.some(ref=>value.skillIds.includes(ref.skillId))))throw invalid();
+    if (value.schemaVersion !== undefined && value.schemaVersion !== 2 || value.schemaVersion === 2 && value.connectorRequirements === undefined) throw invalid();
+    return {...(value.connectorRequirements === undefined ? {} : {schemaVersion:2 as const,connectorRequirements:connectorRequirements(value.connectorRequirements)}),...(value.skillRefs?.length?{skillRefs:[...value.skillRefs].sort((a,b)=>a.skillId.localeCompare(b.skillId))}:{}),name:value.name.trim(),description:value.description.trim(),instructions:value.instructions,skillIds:[...new Set(value.skillIds)].sort(),allowedTools:[...new Set(value.allowedTools)].sort()};
+  }
+  private saveDraft(draft:ExpertDraft) {this.db.prepare('INSERT INTO r2_drafts VALUES(?,?) ON CONFLICT(expert_id) DO UPDATE SET data=excluded.data').run(draft.expertId,JSON.stringify(draft));}
+  policy(id:string):ExpertUsePolicy {return parse<ExpertUsePolicy>(this.db.prepare('SELECT data FROM r2_policies WHERE expert_id=?').get(id))??{mode:'all',seatIds:[],revision:0};}
+  async list():Promise<ManagedExpertSummary[]> {const ids=new Set([...this.db.prepare('SELECT expert_id FROM experts').all(),...this.db.prepare('SELECT expert_id FROM r2_experts').all()].map(row=>String(row.expert_id)));return Promise.all([...ids].sort().map(async id=>(await this.get(id)).expert));}
+  async get(id:string):Promise<ManagedExpertDetail> {
+    const managed=this.db.prepare('SELECT archived,state_revision FROM r2_experts WHERE expert_id=?').get(id);const row=this.db.prepare('SELECT current_revision FROM experts WHERE expert_id=?').get(id);if(!managed&&!row)throw missing();
+    const current=row?await this.capabilities.resolve({expertId:id,revisionId:String(row.current_revision)}):null;const draft=managed?this.draft(id):null;
+    const all=<T>(table:string)=>this.db.prepare(`SELECT data FROM ${table} WHERE expert_id=? ORDER BY rowid DESC`).all(id).map(item=>JSON.parse(String(item.data)) as T);
+    const storedStates=current?this.db.prepare("SELECT state FROM states WHERE asset_id=? AND (revision_id='' OR revision_id=?)").all(id,current.revisionId):[];
+    const state=storedStates.some(row=>row.state==='banned')?'banned':managed?.archived||storedStates.some(row=>row.state==='disabled')?'disabled':'enabled';
+    return {expert:{expertId:id,name:draft?.content.name??current!.name,description:draft?.content.description??current!.description,source:managed?'organization':'builtin',stateRevision:Number(managed?.state_revision??0),archived:!!managed?.archived,currentRevisionId:current?.revisionId??null,releaseVersion:current?.releaseVersion??null,draftRevision:draft?.draftRevision??null,state,policy:this.policy(id)},draft,current,validations:all<ExpertValidation>('r2_validations'),trials:all<ExpertTrialRecord>('r2_trials'),publications:all<ExpertPublication>('r2_publications'),audit:all<ExpertAudit>('r2_audit')};
+  }
+  async create(actor:ManagementActor,input:{clientActionId:string;copyFrom?:{expertId:string;revisionId?:string}}):Promise<ManagedExpertDetail> {
+    this.auth(actor);return this.lock.run(async()=>{this.auth(actor);const key={action:'create',...input};const prior=this.prior<{expertId:string}>(actor,input.clientActionId,key);if(prior)return this.get(prior.expertId);
+      let content:ExpertDraftContent={name:'未命名专家',description:'请描述专家的职责与适用场景。',instructions:'请填写专家的工作方法及交付要求。',skillIds:[],allowedTools:[]};
+      if(input.copyFrom){const source=input.copyFrom.revisionId?await this.capabilities.resolve(input.copyFrom as ExpertRef):await this.capabilities.current(input.copyFrom.expertId);if(!source.modes.includes('interactive'))throw invalid('仅可复制交互主专家。');content={name:`${source.name}（副本）`.slice(0,120),description:source.description,instructions:source.instructions||'请填写专家的工作方法及交付要求。',skillIds:source.skills.filter(skill=>skill.schemaVersion!==2).map(skill=>skill.id),...this.packageRefs(source.skills),...(source.connectorRequirements === undefined ? {} : {schemaVersion:2 as const,connectorRequirements:source.connectorRequirements}),allowedTools:source.allowedTools??this.options.tools().map(tool=>tool.id)};}
+      this.auth(actor);const id=`expert-${randomUUID()}`;const draft:ExpertDraft={expertId:id,draftRevision:1,draftDigest:capabilityDigest(content),content,baseRevisionId:null,updatedAt:now(),updatedBy:actor.userId};
+      this.tx(()=>{this.db.prepare('INSERT INTO r2_experts(expert_id,archived,created_at,created_by) VALUES(?,0,?,?)').run(id,now(),actor.userId);this.saveDraft(draft);this.db.prepare('INSERT INTO r2_policies VALUES(?,?)').run(id,JSON.stringify({mode:'none',seatIds:[],revision:0}));this.audit(actor,id,'created',{copyFrom:input.copyFrom??null});this.receipt(actor,input.clientActionId,key,{expertId:id});});return this.get(id);
+    });
+  }
+  async save(actor:ManagementActor,id:string,input:{expectedDraftRevision:number;content:ExpertDraftContent}):Promise<ExpertDraft> {
+    this.auth(actor);this.managed(id);const content=this.content(input.content);return this.lock.run(async()=>{this.auth(actor);this.managed(id);const prior=this.draft(id,input.expectedDraftRevision);const next={...prior,draftRevision:prior.draftRevision+1,draftDigest:capabilityDigest(content),content,updatedAt:now(),updatedBy:actor.userId};this.tx(()=>{this.saveDraft(next);this.audit(actor,id,'draft_saved',{from:prior.draftRevision,to:next.draftRevision});});return next;});
+  }
+  async prepareAuthoringContent(actor:ManagementActor,value:ExpertDraftContent):Promise<ExpertDraftContent> {
+    this.auth(actor);const content=this.content(value);const catalog=this.catalog(actor);
+    if(content.allowedTools.some(id=>!catalog.tools.some(tool=>tool.id===id))||content.skillIds.some(id=>!this.options.skills().some(skill=>skill.id===id)))throw invalid('请只引用真实目录中的工具与技能。');
+    for(const ref of content.skillRefs??[]){if(!this.options.resolvePackage)throw invalid('当前技能引用不可用。');await this.options.resolvePackage(ref,actor);this.auth(actor);}
+    for(const id of content.skillIds){const skill=this.options.skills().find(value=>value.id===id)!;if(!this.capabilities.assetAvailability(id,skillRevision(skill).revisionId).available)throw invalid('技能不可用。');}
+    if (content.connectorRequirements !== undefined) this.options.assertConnectorRequirements?.(content.connectorRequirements);
+    this.auth(actor);return content;
+  }
+  authoringReceipt(actor:ManagementActor,proposalId:string):AuthoringReceipt|undefined {
+    this.auth(actor);if(!uuid.test(proposalId))throw invalid();const row=this.db.prepare('SELECT data FROM r2_actions WHERE actor_id=? AND action_id=?').get(actor.userId,proposalId);if(!row)return;const receipt=JSON.parse(String(row.data)) as AuthoringReceipt;
+    return receipt.schemaVersion===1&&receipt.proposalId===proposalId&&receipt.ownerUserId===actor.userId&&receipt.kind==='expert'?receipt:undefined;
+  }
+  async saveAuthoring(actor:ManagementActor,value:AuthoringProposal,grant:AuthoringGrant):Promise<AuthoringReceipt> {
+    const proposal=structuredClone(value);assertProposal(proposal,actor.userId,'expert');
+    return this.lock.run(async()=>{grant.assertAuthorized?.();this.auth(actor);const key={action:'authoring',proposal};const old=this.prior<AuthoringReceipt>(actor,proposal.proposalId,key);if(old)return old;
+      const candidate=proposal.candidate;if(candidate.kind!=='expert')throw invalid();const content=await this.prepareAuthoringContent(actor,candidate.content);
+      if(capabilityDigest(content)!==capabilityDigest(candidate.content))throw invalid('候选尚未规范化，请重新提出保存。');
+      grant.assertAuthorized?.();this.auth(actor);let prior:ExpertDraft|undefined;
+      if(proposal.targetId){this.managed(proposal.targetId);prior=this.draft(proposal.targetId,proposal.baseline!.draftRevision);if(prior.draftDigest!==proposal.baseline!.digest)throw conflict();}
+      const id=proposal.targetId??`expert-${randomUUID()}`,digest=capabilityDigest(content);
+      const draft:ExpertDraft=prior&&prior.draftDigest===digest?prior:{expertId:id,draftRevision:prior?prior.draftRevision+1:1,draftDigest:digest,content,baseRevisionId:prior?.baseRevisionId??null,updatedAt:now(),updatedBy:actor.userId};
+      const result=authoringReceipt(proposal,id,draft.draftRevision,draft.draftDigest,grant);
+      this.tx(()=>{grant.assertAuthorized?.();this.auth(actor);if(!prior){this.db.prepare('INSERT INTO r2_experts(expert_id,archived,created_at,created_by) VALUES(?,0,?,?)').run(id,now(),actor.userId);this.db.prepare('INSERT INTO r2_policies VALUES(?,?)').run(id,JSON.stringify({mode:'none',seatIds:[],revision:0}));}
+        this.saveDraft(draft);this.audit(actor,id,prior?'authoring_saved':'created',{proposalId:proposal.proposalId,proposalDigest:proposal.proposalDigest,sessionId:proposal.sessionId,requestId:proposal.requestId});this.receipt(actor,proposal.proposalId,key,result);});return result;
+    });
+  }
+  async restore(actor:ManagementActor,id:string,input:{revisionId:string;expectedDraftRevision:number;clientActionId:string}):Promise<ExpertDraft> {
+    this.auth(actor);this.managed(id);return this.lock.run(async()=>{this.auth(actor);const key={action:'restore',expertId:id,...input};const existing=this.prior<ExpertDraft>(actor,input.clientActionId,key);if(existing)return existing;const revision=await this.capabilities.resolve({expertId:id,revisionId:input.revisionId});this.auth(actor);this.managed(id);const prior=this.draft(id,input.expectedDraftRevision);const content=this.content({name:revision.name,description:revision.description,instructions:revision.instructions,skillIds:revision.skills.filter(skill=>skill.schemaVersion!==2).map(skill=>skill.id),...this.packageRefs(revision.skills),...(revision.connectorRequirements === undefined ? {} : {schemaVersion:2 as const,connectorRequirements:revision.connectorRequirements}),allowedTools:revision.allowedTools??[]});const next={...prior,content,draftRevision:prior.draftRevision+1,draftDigest:capabilityDigest(content),updatedAt:now(),updatedBy:actor.userId};this.tx(()=>{this.saveDraft(next);this.audit(actor,id,'history_to_draft',{revisionId:input.revisionId});this.receipt(actor,input.clientActionId,key,next);});return next;});
+  }
+  async validate(actor:ManagementActor,id:string,input:{expectedDraftRevision:number}):Promise<ExpertValidation> {
+    this.auth(actor);this.managed(id);const draft=this.draft(id,input.expectedDraftRevision);const skills=this.options.skills();const tools=this.options.tools();const issues:ExpertValidation['issues']=[];
+    for(const skillId of draft.content.skillIds)if(!skills.some(skill=>skill.id===skillId))issues.push({code:'SKILL_UNKNOWN',message:`未登记技能：${skillId}`,severity:'error'});
+    for(const tool of draft.content.allowedTools){const item=tools.find(item=>item.id===tool);if(!item)issues.push({code:'TOOL_UNKNOWN',message:`未登记工具：${tool}`,severity:'error'});else if(item.group==='business'||item.group==='files')issues.push({code:`TOOL_RISK:${tool}`,message:`请核对${item.group==='business'?'业务动作':'文件作业'}能力：${item.name}`,severity:'warning'});}
+    const selected=skills.filter(skill=>draft.content.skillIds.includes(skill.id)).map(skillRevision);for(const skill of selected){const state=this.capabilities.assetAvailability(skill.id,skill.revisionId);if(!state.available)issues.push({code:'SKILL_UNAVAILABLE',message:`技能不可用：${skill.name}`,severity:'error'});}
+    for(const ref of draft.content.skillRefs??[]) {
+      try {if(!this.options.resolvePackage)throw invalid();selected.push(await this.options.resolvePackage(ref,actor));}
+      catch {issues.push({code:'SKILL_UNAVAILABLE',message:`技能修订不存在或不可引用：${ref.skillId}`,severity:'error'});}
+    }
+    if (draft.content.connectorRequirements !== undefined) {try {this.options.assertConnectorRequirements?.(draft.content.connectorRequirements);if (!this.options.assertConnectorRequirements && draft.content.connectorRequirements.length) throw invalid();} catch {issues.push({code:'CONNECTOR_CONTRACT_CHANGED',message:'连接器或开放动作已变化，请重新核对引用。',severity:'error'});}issues.push({code:'CONNECTOR_NOT_TRIALED',message:'外部连接器不在隔离试用中执行，正式调用需独立授权和确认。',severity:'warning'});}
+    const item:ExpertValidation={validationId:randomUUID(),expertId:id,draftRevision:draft.draftRevision,draftDigest:draft.draftDigest,valid:!issues.some(issue=>issue.severity==='error'),policyDigest:capabilityDigest(tools.filter(tool=>draft.content.allowedTools.includes(tool.id)).sort((a,b)=>a.id.localeCompare(b.id))),issues,skills:selected,tools:[...draft.content.allowedTools],createdAt:now()};this.auth(actor);this.draft(id,draft.draftRevision);this.tx(()=>{this.db.prepare('INSERT INTO r2_validations VALUES(?,?,?)').run(item.validationId,id,JSON.stringify(item));this.audit(actor,id,'validated',{validationId:item.validationId,valid:item.valid});});return item;
+  }
+  private validation(id:string,validationId:string,draft:ExpertDraft):ExpertValidation {
+    const item=parse<ExpertValidation>(this.db.prepare('SELECT data FROM r2_validations WHERE id=? AND expert_id=?').get(validationId,id));if(!item?.valid||item.draftDigest!==draft.draftDigest||item.draftRevision!==draft.draftRevision)throw conflict('请对当前草稿重新校验。');
+    if (draft.content.connectorRequirements !== undefined) this.options.assertConnectorRequirements?.(draft.content.connectorRequirements);
+    if(item.policyDigest!==capabilityDigest(this.options.tools().filter(tool=>item.tools.includes(tool.id)).sort((a,b)=>a.id.localeCompare(b.id))))throw conflict('工具策略已变化，请重新检查配置。');const current=this.options.skills();for(const skill of item.skills){if(skill.schemaVersion===2){this.options.assertPackage?.({skillId:skill.id,revisionId:skill.revisionId,packageDigest:skill.packageDigest!});continue;}const controlled=current.find(value=>value.id===skill.id);if(!controlled||skillRevision(controlled).digest!==skill.digest||!this.capabilities.assetAvailability(skill.id,skill.revisionId).available)throw conflict('技能依赖已变化，请重新检查配置。');}for(const tool of item.tools)if(!this.options.tools().some(value=>value.id===tool))throw conflict('工具目录已变化，请重新检查配置。');return item;
+  }
+  async prepareTrial(actor:ManagementActor,id:string,input:{expectedDraftRevision:number;validationId:string;input:string;clientActionId:string}):Promise<{trial:ExpertTrialRecord;expert:ExpertRevision}> {
+    this.auth(actor);if(!input.input.trim()||input.input.length>20000)throw invalid('请输入有效的合成试用任务。');return this.lock.run(async()=>{this.auth(actor);const key={action:'trial',expertId:id,...input};const old=this.prior<{trial:ExpertTrialRecord;expert:ExpertRevision}>(actor,input.clientActionId,key);if(old)return {...old,trial:this.getTrial(actor,old.trial.trialId)};this.managed(id);const draft=this.draft(id,input.expectedDraftRevision);const validation=this.validation(id,input.validationId,draft);const expert=expertRevision({expertId:id,releaseVersion:'trial',name:draft.content.name,description:draft.content.description,instructions:draft.content.instructions,modes:['interactive'],selectable:false,system:false,...(draft.content.connectorRequirements === undefined ? {} : {connectorRequirements:draft.content.connectorRequirements}),allowedTools:draft.content.allowedTools,skills:validation.skills});const trial:ExpertTrialRecord={trialId:randomUUID(),expertId:id,ownerId:actor.userId,draftDigest:draft.draftDigest,validationId:validation.validationId,status:'prepared',input:input.input,createdAt:now()};this.tx(()=>{this.db.prepare('INSERT INTO r2_trials VALUES(?,?,?)').run(trial.trialId,id,JSON.stringify(trial));this.audit(actor,id,'trial_prepared',{trialId:trial.trialId});this.receipt(actor,input.clientActionId,key,{trial,expert});});return {trial,expert};});
+  }
+  getTrial(actor:ManagementActor,id:string):ExpertTrialRecord {this.auth(actor);const trial=parse<ExpertTrialRecord>(this.db.prepare('SELECT data FROM r2_trials WHERE id=?').get(id));if(!trial||trial.ownerId!==actor.userId)throw missing();return trial;}
+  readTrial(actor:ManagementActor,id:string):ExpertTrialRecord {return this.getTrial(actor,id);}
+  recordTrialResult(actor:ManagementActor,id:string,input:{status:ExpertTrialRecord['status'];evidence?:ExpertTrialEvidence}):ExpertTrialRecord {
+    const prior=parse<ExpertTrialRecord>(this.db.prepare('SELECT data FROM r2_trials WHERE id=?').get(id));if(!prior||prior.ownerId!==actor.userId)throw missing();if(input.status==='running'||input.status==='succeeded')this.auth(actor);if(!['prepared','running'].includes(prior.status))throw conflict('试用已结束，不能覆盖原结果。');if(!['running','succeeded','failed','cancelled','interrupted'].includes(input.status))throw invalid();if(input.status==='succeeded'&&(!input.evidence?.success||!input.evidence.model||!input.evidence.runtime))throw invalid('缺少实际试用证据。');const next={...prior,status:input.status,...(input.evidence?{evidence:input.evidence}:{}),...(input.status!=='running'?{completedAt:now()}:{})};this.tx(()=>{this.db.prepare('UPDATE r2_trials SET data=? WHERE id=?').run(JSON.stringify(next),id);this.audit(actor,prior.expertId,'trial_result',{trialId:id,status:next.status});});return next;
+  }
+  confirmTrial(actor:ManagementActor,id:string,input:{approved:boolean;reason:string;clientActionId:string}):ExpertTrialRecord {
+    this.auth(actor);const key={action:'confirm_trial',trialId:id,...input};const existing=this.prior<ExpertTrialRecord>(actor,input.clientActionId,key);if(existing)return existing;const prior=this.getTrial(actor,id);const draft=this.draft(prior.expertId);this.validation(prior.expertId,prior.validationId,draft);if(prior.draftDigest!==draft.draftDigest||prior.status!=='succeeded'||!prior.evidence?.success)throw conflict('当前草稿尚无成功试用证据。');if(!input.reason.trim())throw invalid('请填写试用结论说明。');const {confirmedAt: _oldAt,confirmedBy: _oldBy,...unconfirmed}=prior;void _oldAt;void _oldBy;const next:ExpertTrialRecord={...unconfirmed,...(input.approved?{confirmedAt:now(),confirmedBy:actor.userId}:{}),decision:{approved:input.approved,reason:input.reason,by:actor.userId,at:now()}};this.tx(()=>{this.db.prepare('UPDATE r2_trials SET data=? WHERE id=?').run(JSON.stringify(next),id);this.audit(actor,prior.expertId,'trial_confirmed',{trialId:id,reason:input.reason});this.receipt(actor,input.clientActionId,key,next);});return next;
+  }
+  async publish(actor:ManagementActor,id:string,input:PublishExpertInput):Promise<ExpertPublication> {
+    this.auth(actor);if(!input.releaseNotes.trim()||input.releaseNotes.length>4000)throw invalid('请填写发布说明。');return this.lock.run(async()=>{this.auth(actor);
+      const key={action:'publish',expertId:id,...input};const prior=this.prior<ExpertPublication>(actor,input.clientActionId,key);if(prior)return prior;this.managed(id);const draft=this.draft(id,input.expectedDraftRevision);const validation=this.validation(id,input.validationId,draft);if(!Array.isArray(input.acceptedRiskCodes)||validation.issues.filter(issue=>issue.severity==='warning').some(issue=>!input.acceptedRiskCodes.includes(issue.code)))throw conflict('请逐项确认当前配置风险。');const trial=input.trialId===undefined?undefined:this.getTrial(actor,input.trialId);
+      if(trial&&(trial.expertId!==id||trial.draftDigest!==draft.draftDigest||trial.validationId!==input.validationId||trial.status!=='succeeded'||!trial.confirmedAt||!trial.evidence?.success||trial.decision?.approved===false))throw conflict('关联试用需要当前草稿的成功结果和管理员确认。');const policy=this.policy(id);if(policy.mode==='none'||policy.mode==='seats'&&!policy.seatIds.length)throw conflict('发布前请明确选择可使用的业务席位。');this.checkSeats(policy);
+      const row=this.db.prepare('SELECT current_revision FROM experts WHERE expert_id=?').get(id);const currentId=row?String(row.current_revision):null;if(currentId!==input.expectedCurrentRevisionId)throw conflict('已发布版本已变化，请重新核对。');const current=currentId?await this.capabilities.resolve({expertId:id,revisionId:currentId}):null;
+      if(current&&capabilityDigest({name:current.name,description:current.description,instructions:current.instructions,skillIds:current.skills.filter(skill=>skill.schemaVersion!==2).map(skill=>skill.id).sort(),...this.packageRefs(current.skills),...(current.connectorRequirements === undefined ? {} : {schemaVersion:2 as const,connectorRequirements:current.connectorRequirements}),allowedTools:current.allowedTools})===draft.draftDigest&&capabilityDigest(current.skills)===capabilityDigest(validation.skills))throw conflict('草稿与当前发布内容一致，无需重复发布。');const count=Number(this.db.prepare('SELECT COUNT(*) AS n FROM r2_publications WHERE expert_id=?').get(id)?.n??0);const releaseVersion=`1.0.${count}`;
+      await this.capabilities.registerExpert({expertId:id,releaseVersion,name:draft.content.name,description:draft.content.description,instructions:draft.content.instructions,modes:['interactive'],selectable:true,system:false,...(draft.content.connectorRequirements === undefined ? {} : {connectorRequirements:draft.content.connectorRequirements}),allowedTools:draft.content.allowedTools,skills:validation.skills},value=>{
+        this.auth(actor);this.managed(id);this.draft(id,input.expectedDraftRevision);this.validation(id,input.validationId,draft);if(trial){const latestTrial=this.getTrial(actor,trial.trialId);if(!latestTrial.confirmedAt||latestTrial.decision?.approved===false||latestTrial.status!=='succeeded')throw conflict('试用结论已变化。');}const latestPolicy=this.policy(id);this.checkSeats(latestPolicy);if(latestPolicy.mode==='none'||latestPolicy.mode==='seats'&&!latestPolicy.seatIds.length)throw conflict('使用范围已关闭。');
+        const publication:ExpertPublication={publicationId:randomUUID(),expertId:id,revisionId:value.revisionId,digest:value.digest,releaseVersion,releaseNotes:input.releaseNotes,draftDigest:draft.draftDigest,validationId:validation.validationId,...(trial?{trialId:trial.trialId}:{}),publishedAt:now(),publishedBy:actor.userId};this.db.prepare('INSERT INTO r2_publications VALUES(?,?,?,?)').run(publication.publicationId,id,releaseVersion,JSON.stringify(publication));this.saveDraft({...draft,baseRevisionId:value.revisionId});this.audit(actor,id,'published',{revisionId:value.revisionId,releaseVersion});this.receipt(actor,input.clientActionId,key,publication);
+      });return this.prior<ExpertPublication>(actor,input.clientActionId,key)!;
+    });
+  }
+  private checkSeats(policy:Pick<ExpertUsePolicy,'mode'|'seatIds'>) {if(!['none','all','seats'].includes(policy.mode)||!Array.isArray(policy.seatIds)||policy.seatIds.some(id=>typeof id!=='string'||!this.options.seats().some(seat=>seat.id===id)))throw invalid('使用范围包含无效或无业务资格的席位。');if(policy.mode!=='seats'&&policy.seatIds.length)throw invalid('全部或未开放范围不能同时指定席位。');}
+  setPolicy(actor:ManagementActor,id:string,input:{expectedRevision:number;mode:ExpertUsePolicy['mode'];seatIds:string[];clientActionId:string}):ExpertUsePolicy {
+    this.auth(actor);const key={action:'policy',expertId:id,...input};const prior=this.prior<ExpertUsePolicy>(actor,input.clientActionId,key);if(prior)return prior;this.managed(id);this.checkSeats(input);const current=this.policy(id);if(current.revision!==input.expectedRevision)throw conflict();const next:ExpertUsePolicy={mode:input.mode,seatIds:[...new Set(input.seatIds)].sort(),revision:current.revision+1};this.tx(()=>{this.auth(actor);this.db.prepare('UPDATE r2_policies SET data=? WHERE expert_id=?').run(JSON.stringify(next),id);this.audit(actor,id,'policy_changed',{before:current,after:next});this.receipt(actor,input.clientActionId,key,next);});this.capabilities.refreshAccessGuards();return next;
+  }
+  async setLifecycle(actor:ManagementActor,id:string,input:{action:'disable'|'enable'|'archive';revisionId?:string;reason:string;clientActionId:string;expectedCurrentRevisionId:string|null;expectedStateRevision:number}):Promise<ManagedExpertDetail> {
+    this.auth(actor);const key={operation:'lifecycle',expertId:id,...input};const prior=this.prior<{expertId:string}>(actor,input.clientActionId,key);if(prior)return this.get(prior.expertId);const managed=this.managed(id);const pointer=this.db.prepare('SELECT current_revision FROM experts WHERE expert_id=?').get(id);if(Number(managed.state_revision)!==input.expectedStateRevision||(pointer?String(pointer.current_revision):null)!==input.expectedCurrentRevisionId)throw conflict('专家状态或发布版本已变化，请重新查看。');if(!input.reason.trim()||!['disable','enable','archive'].includes(input.action))throw invalid('请选择操作并填写原因。');if(input.revisionId&&!this.db.prepare('SELECT 1 FROM revisions WHERE expert_id=? AND revision_id=?').get(id,input.revisionId))throw missing();const states=this.db.prepare("SELECT state FROM states WHERE asset_id=? AND (revision_id='' OR revision_id=?)").all(id,input.revisionId??'');if(states.some(row=>row.state==='banned'))throw conflict('普通启停不能覆盖紧急封禁。');if(input.action==='enable'&&!this.db.prepare("SELECT 1 FROM states WHERE asset_id=? AND revision_id=? AND state='disabled'").get(id,input.revisionId??''))throw conflict('目标并未普通停用。');
+    this.tx(()=>{this.auth(actor);this.capabilities.setState({expertId:id,revisionId:input.revisionId},input.action==='enable'?'enabled':'disabled',input.reason);this.db.prepare('UPDATE r2_experts SET state_revision=state_revision+1,archived=? WHERE expert_id=?').run(input.action==='archive'?1:0,id);this.audit(actor,id,input.action,{revisionId:input.revisionId??null,reason:input.reason});this.receipt(actor,input.clientActionId,key,{expertId:id});});return this.get(id);
+  }
+  impact(id:string):ExpertImpact {return {activeRequests:this.capabilities.activeRequestCount(id),defaultReferences:this.db.prepare('SELECT data FROM r2_defaults').all().filter(row=>{const value=JSON.parse(String(row.data)) as ExpertDefaultSetting;return value.choice.mode==='expert'&&value.choice.expertId===id;}).length,dependentExperts:null};}
+  private scope(scope:ExpertDefaultScope) {if(!scope||!['personal','seat','task'].includes(scope.kind)||typeof scope.id!=='string'||!scope.id||scope.id.length>160)throw invalid();}
+  getDefault(scope:ExpertDefaultScope):ExpertDefaultSetting {this.scope(scope);return parse<ExpertDefaultSetting>(this.db.prepare('SELECT data FROM r2_defaults WHERE scope_kind=? AND scope_id=?').get(scope.kind,scope.id))??{scope,revision:0,choice:{mode:'inherit'}};}
+  async saveDefault(actor:ManagementActor,scope:ExpertDefaultScope,input:{expectedRevision:number;choice:ExpertDefaultChoice;clientActionId:string}):Promise<ExpertDefaultSetting> {
+    this.auth(actor,scope);this.scope(scope);return this.lock.run(async()=>{this.auth(actor,scope);const key={action:'default',scope,...input};const prior=this.prior<ExpertDefaultSetting>(actor,input.clientActionId,key);if(prior)return prior;if(!input.choice||!['inherit','general','expert'].includes(input.choice.mode)||Object.keys(input.choice).some(k=>!['mode','expertId'].includes(k)))throw invalid();if(input.choice.mode==='expert'){const expert=await this.capabilities.current(input.choice.expertId);if(!expert.selectable)throw invalid();this.capabilities.assertAdmission(expert,scope.kind==='seat'?undefined:actor.userId,scope.kind==='seat'?scope.id:actor.seatId);}this.auth(actor,scope);const current=this.getDefault(scope);if(current.revision!==input.expectedRevision)throw conflict();const next={scope,revision:current.revision+1,choice:input.choice};this.tx(()=>{this.db.prepare('INSERT INTO r2_defaults VALUES(?,?,?) ON CONFLICT(scope_kind,scope_id) DO UPDATE SET data=excluded.data').run(scope.kind,scope.id,JSON.stringify(next));this.audit(actor,input.choice.mode==='expert'?input.choice.expertId:GENERAL_EXPERT_ID,'default_changed',{scope,before:current.choice,after:input.choice});this.receipt(actor,input.clientActionId,key,next);});return next;});
+  }
+  async resolveDefault(input:{userId?:string;seatId:string;taskId?:string}):Promise<ResolvedExpertDefault> {
+    const scopes:ExpertDefaultScope[]=[...(input.taskId?[{kind:'task' as const,id:input.taskId}]:[]),...(input.userId?[{kind:'personal' as const,id:input.userId}]:[]),{kind:'seat',id:input.seatId}];for(const scope of scopes){const choice=this.getDefault(scope).choice;if(choice.mode==='inherit')continue;const id=choice.mode==='general'?GENERAL_EXPERT_ID:choice.expertId;try{const expert=await this.capabilities.current(id);this.capabilities.assertAdmission(expert,input.userId??`seat:${input.seatId}`,input.seatId);return {source:scope.kind,expertRef:{expertId:expert.expertId,revisionId:expert.revisionId},digest:expert.digest,name:expert.name};}catch{throw new RequestError('EXPERT_DEFAULT_UNAVAILABLE',`${scope.kind==='task'?'任务':scope.kind==='personal'?'个人':'席位'}默认专家不可用，请修改设置或显式选择其他专家。`,409);}}
+    const expert=await this.capabilities.current();this.capabilities.assertAdmission(expert,input.userId??`seat:${input.seatId}`,input.seatId);return {source:'general',expertRef:{expertId:expert.expertId,revisionId:expert.revisionId},digest:expert.digest,name:expert.name};
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "axon-connectors-r4",
+  "name": "axon-connectors-r4",
+  "title": "R4连接器规范化与远程MCP",
+  "description": "R4既有业务单实例纳管及通用远程MCP，个人凭证可用于本人原权限内任务、不共享。",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-17",
+  "completedAt": null,
+  "branch": "codex/axon-r4",
+  "base_branch": "codex/axon-r3a",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/spec/backend/connectors-r4.md",
+    "experiments/harness-lab/src/connectors",
+    "experiments/harness-lab/src/pi/mcp-tools.ts",
+    "experiments/harness-lab/src/web/ConnectorLibrary.tsx"
+  ],
+  "notes": "R4实施和技术验证完成，详见verification.md；本人凭证仅个人及原权限内本人公共任务，禁止借用。全量195文件1966项覆盖，首轮5个旧夹具失败修复后3整文件42项通过；最终浏览器62通过；方舟/Cloudflare真实闭环及源摘要通过。用户验收pending；用户已明确不接入Microsoft Learn，不扩展其旧协议；无生产部署/迁移/提交推送。",
+  "meta": {},
+  "baseCommit": "a3b9b887ab7cb26a1212d7b8bd543fb0d83b02f0",
+  "userAcceptance": "pending",
+  "technicalValidation": "passed",
+  "verificationReport": "verification.md",
+  "serviceDecisions": {
+    "microsoftLearn": "excluded_by_user",
+    "publicVerificationTarget": "Cloudflare documentation MCP",
+    "protocolVersions": [
+      "2026-07-28",
+      "2025-11-25"
+    ]
+  }
+}

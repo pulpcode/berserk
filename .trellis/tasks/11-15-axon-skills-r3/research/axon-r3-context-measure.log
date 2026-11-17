@@ -1,0 +1,16 @@
+(node:11163) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/src/server/model-settings.ts:16
+const stateError = () => new RequestError('MODEL_SETTINGS_INVALID', '本地模型配置无法安全读取，请检查配置文件后重启服务。', 503);
+                         ^
+
+RequestError: 本地模型配置无法安全读取，请检查配置文件后重启服务。
+    at stateError (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/src/server/model-settings.ts:16:26)
+    at ModelSettingsStore.open (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/src/server/model-settings.ts:117:21)
+    at async PiLab.create (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/src/pi/lab.ts:251:22)
+    at async <anonymous> (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/scripts/measure-skills-context-r3.ts:19:12) {
+  code: 'MODEL_SETTINGS_INVALID',
+  statusCode: 503
+}
+
+Node.js v24.14.0

@@ -1,0 +1,528 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:7842) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7841) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/skill-package-guards.test.ts (5 tests | 5 failed) 2188ms
+   × manual-only extensions suppress autonomous invocation while explicit user selection still delivers exact body 426ms
+   × on-demand package loading supplies exact method body and native read evidence only after the actual tool call 373ms
+   × loaded request handles ordinary-disable using current authorization and original package 348ms
+   × loaded request handles policy-withdrawal using current authorization and original package 479ms
+   × a selected package reaches only the matching readonly child with the fixed body and no execution tools 560ms
+(node:7850) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7977) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8136) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8151) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8253) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8466) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/collaboration.test.ts (37 tests | 6 failed) 47306ms
+     × reads old prepare/commit completed history and continues with only the new tool registered 952ms
+     × reads old prepare/commit waiting history and continues with only the new tool registered 1298ms
+     × reads old prepare/commit approved history and continues with only the new tool registered 1234ms
+     × SIGKILL waiting business commit preserves native unknown effects and queryable business truth 3278ms
+     × SIGKILL before business commit preserves native unknown effects and queryable business truth 2794ms
+     × SIGKILL after business commit preserves native unknown effects and queryable business truth 2824ms
+(node:8497) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8521) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8545) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8636) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8763) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8778) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8845) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8859) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/background/crash.test.ts (5 tests | 5 failed) 16239ms
+   × SIGKILL at before_commit retains the real database/native-history boundary without replay 3359ms
+   × SIGKILL at queued retains the real database/native-history boundary without replay 2928ms
+   × SIGKILL at claimed retains the real database/native-history boundary without replay 3094ms
+   × SIGKILL at native_finished retains the real database/native-history boundary without replay 3356ms
+   × SIGKILL at succeeded_pending retains the real database/native-history boundary without replay 3500ms
+(node:8926) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8972) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9035) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9175) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9176) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9211) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9213) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9297) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9442) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9509) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9512) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9581) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9586) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9628) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9639) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/capability-lab.test.ts (11 tests | 1 failed) 9539ms
+     × reads migrated legacy history without writing or claiming a past revision, then binds only explicit future work 635ms
+(node:9644) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9653) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9676) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9706) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9796) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9797) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9855) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9906) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9927) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9950) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9953) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9966) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9969) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9989) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9993) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9999) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10004) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10011) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10125) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10143) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10147) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10151) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10156) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10157) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10170) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10186) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10184) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10189) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10201) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10214) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/skills-api.test.ts (1 test | 1 failed) 3338ms
+   × authenticated skill import, optional publication and scoped trial keep management separate from use authority 3336ms
+(node:10219) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/continuous-crash.test.ts (1 test | 1 failed) 2951ms
+   × retains actual SIGKILL inputs and published baseline; resumes once with a fresh native session 2949ms
+(node:10221) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10235) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10241) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10243) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10253) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10257) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10267) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10274) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10281) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10289) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10290) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10297) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/file-tools.test.ts (9 tests | 1 failed) 2774ms
+     × routes read/write/edit/ls/find through virtual cwd and exposes only readonly tools to children 17ms
+(node:10330) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10540) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10594) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10599) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10601) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/migration.test.ts (4 tests | 1 failed) 1551ms
+     × requires migration and backup, preserves native IDs/files, resumes history and ignores unbound files 606ms
+(node:10604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10606) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10610) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10611) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10613) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10616) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10619) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10783) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10789) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10791) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10795) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10799) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/skills-review.test.ts (7 tests | 2 failed) 929ms
+   × late scanner completion after close cannot write into a removed data root 71ms
+   × published method metadata is available without loading resources and policy notifications follow the committed state 70ms
+(node:10802) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10806) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10810) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10811) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10814) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10818) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10825) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10846) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10851) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10865) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10875) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10879) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/continuous-crash.test.ts > retains actual SIGKILL inputs and published baseline; resumes once with a fresh native session
+Error: 技能包缺失或摘要异常。
+ ❯ invalid src/skills/service.ts:16:19
+     14| const conflict=()=>new RequestError('SKILL_CONFLICT','技能已更新，请刷新后重试。',4…
+     15| const missing=()=>new RequestError('SKILL_NOT_FOUND','技能不存在或不可用。',404);
+     16| const invalid=()=>new RequestError('SKILL_STATE_INVALID','技能包缺失或摘要异常。'…
+       |                   ^
+     17| const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1…
+     18| const decode=<T>(row:Record<string,unknown>|undefined):T|undefined=>ro…
+ ❯ SkillService.blob src/skills/service.ts:83:551
+ ❯ SkillService.registerBuiltins src/skills/service.ts:106:623
+ ❯ PiLab.create src/pi/lab.ts:285:5
+ ❯ tests/continuous-crash.test.ts:37:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  tests/skills-api.test.ts > authenticated skill import, optional publication and scoped trial keep management separate from use authority
+AssertionError: expected 200 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 200
+
+ ❯ tests/skills-api.test.ts:42:157
+     40|     const id = imported.skill.skillId; const url = `${root}/${id}`;
+     41|     expect((await call(admin, `${url}/draft`, { expectedDraftRevision:…
+     42|     expect((await call(admin,`${url}/policy`,{expectedRevision:0,mode:…
+       |                                                                                                                                                             ^
+     43|     await ok(admin, `${url}/policy`, { expectedRevision: 0, mode: 'sea…
+     44|     // Publish has no trialId, scanId, zero-finding or approval depend…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  tests/skills-review.test.ts > late scanner completion after close cannot write into a removed data root
+AssertionError: expected "prepare" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st prepare call:
+
+    Array [
+      "INSERT INTO r3_skill_scans(id,skill_id,data) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET data=excluded.data",
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/skills-review.test.ts:38:21
+     36|   finish(report);
+     37|   await new Promise(resolve=>setTimeout(resolve,20));
+     38|   expect(write).not.toHaveBeenCalled();
+       |                     ^
+     39|   write.mockRestore();
+     40| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  tests/skills-review.test.ts > published method metadata is available without loading resources and policy notifications follow the committed state
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/skills-review.test.ts:105:27
+    103|     await service.setPolicy(actor,id,policyInput);
+    104|     await service.setPolicy(actor,id,policyInput);
+    105|     expect(policyUpdates).toBe(1);
+       |                           ^
+    106|     const published=await service.publish(actor,id,{expectedDraftRevis…
+    107|     const methodHash=fileHash(Buffer.from(files[0].contentBase64,'base…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  tests/background/crash.test.ts > SIGKILL at before_commit retains the real database/native-history boundary without replay
+ FAIL  tests/background/crash.test.ts > SIGKILL at queued retains the real database/native-history boundary without replay
+ FAIL  tests/background/crash.test.ts > SIGKILL at claimed retains the real database/native-history boundary without replay
+ FAIL  tests/background/crash.test.ts > SIGKILL at native_finished retains the real database/native-history boundary without replay
+ FAIL  tests/background/crash.test.ts > SIGKILL at succeeded_pending retains the real database/native-history boundary without replay
+Error: 技能包缺失或摘要异常。
+ ❯ invalid src/skills/service.ts:16:19
+     14| const conflict=()=>new RequestError('SKILL_CONFLICT','技能已更新，请刷新后重试。',4…
+     15| const missing=()=>new RequestError('SKILL_NOT_FOUND','技能不存在或不可用。',404);
+     16| const invalid=()=>new RequestError('SKILL_STATE_INVALID','技能包缺失或摘要异常。'…
+       |                   ^
+     17| const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1…
+     18| const decode=<T>(row:Record<string,unknown>|undefined):T|undefined=>ro…
+ ❯ SkillService.blob src/skills/service.ts:83:551
+ ❯ SkillService.registerBuiltins src/skills/service.ts:106:623
+ ❯ PiLab.create src/pi/lab.ts:285:5
+ ❯ tests/background/crash.test.ts:45:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  tests/pi/capability-lab.test.ts > expert capability integration through real Pi sessions > reads migrated legacy history without writing or claiming a past revision, then binds only explicit future work
+AssertionError: expected Error: 请停服备份后执行R3技能迁移。 { …(2) } to match object { Object (code) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "CAPABILITY_R2_MIGRATION_REQUIRED",
++ RequestError {
++   "code": "SKILL_MIGRATION_REQUIRED",
+  }
+
+ ❯ tests/pi/capability-lab.test.ts:209:52
+    207|     await expect(PiLab.create(config, fake.runtime)).rejects.toMatchOb…
+    208|     await migrateCapabilities({ dataDir, backupDir: join(root, 'backup…
+    209|     await expect(PiLab.create(config, fake.runtime)).rejects.toMatchOb…
+       |                                                    ^
+    210|     await migrateCapabilityManagement({dataDir,backupDir:join(root,'ba…
+    211|     const lab = await PiLab.create(config, fake.runtime); cleanup.push…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  tests/pi/collaboration.test.ts > Pi collaboration tools and native HITL > reads old prepare/commit completed history and continues with only the new tool registered
+ FAIL  tests/pi/collaboration.test.ts > Pi collaboration tools and native HITL > reads old prepare/commit waiting history and continues with only the new tool registered
+ FAIL  tests/pi/collaboration.test.ts > Pi collaboration tools and native HITL > reads old prepare/commit approved history and continues with only the new tool registered
+Error: 请停服备份后执行R3技能迁移。
+ ❯ SkillService.open src/skills/service.ts:46:63
+     44|       db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL');
+     45|       if(!db.prepare("SELECT 1 FROM sqlite_master WHERE name='r3_skill…
+     46|         if(!options.createdNew&&!options.allowMigration)throw new Requ…
+       |                                                               ^
+     47|         initializeSkillSchema(db);
+     48|       }
+ ❯ PiLab.create src/pi/lab.ts:278:18
+ ❯ tests/pi/collaboration.test.ts:372:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+ FAIL  tests/pi/collaboration.test.ts > Pi collaboration tools and native HITL > SIGKILL waiting business commit preserves native unknown effects and queryable business truth
+ FAIL  tests/pi/collaboration.test.ts > Pi collaboration tools and native HITL > SIGKILL before business commit preserves native unknown effects and queryable business truth
+ FAIL  tests/pi/collaboration.test.ts > Pi collaboration tools and native HITL > SIGKILL after business commit preserves native unknown effects and queryable business truth
+Error: 技能包缺失或摘要异常。
+ ❯ invalid src/skills/service.ts:16:19
+     14| const conflict=()=>new RequestError('SKILL_CONFLICT','技能已更新，请刷新后重试。',4…
+     15| const missing=()=>new RequestError('SKILL_NOT_FOUND','技能不存在或不可用。',404);
+     16| const invalid=()=>new RequestError('SKILL_STATE_INVALID','技能包缺失或摘要异常。'…
+       |                   ^
+     17| const uid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1…
+     18| const decode=<T>(row:Record<string,unknown>|undefined):T|undefined=>ro…
+ ❯ SkillService.blob src/skills/service.ts:83:551
+ ❯ SkillService.registerBuiltins src/skills/service.ts:106:623
+ ❯ PiLab.create src/pi/lab.ts:285:5
+ ❯ tests/pi/collaboration.test.ts:454:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/23]⎯
+
+ FAIL  tests/pi/file-tools.test.ts > Pi public file factories > routes read/write/edit/ls/find through virtual cwd and exposes only readonly tools to children
+AssertionError: expected [ 'read', 'ls', 'grep', 'find' ] to deeply equal [ 'read', 'ls', 'find' ]
+
+- Expected
++ Received
+
+  [
+    "read",
+    "ls",
++   "grep",
+    "find",
+  ]
+
+ ❯ tests/pi/file-tools.test.ts:73:49
+     71|   it('routes read/write/edit/ls/find through virtual cwd and exposes o…
+     72|     const env = await setup();
+     73|     expect(env.readonly.map(tool => tool.name)).toEqual(['read', 'ls',…
+       |                                                 ^
+     74|     expect(env.writable.map(tool => tool.name)).toEqual(['write', 'edi…
+     75|     await env.call('write', { path: 'report.md', content: '原始内容\n' });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/23]⎯
+
+ FAIL  tests/pi/migration.test.ts > explicit stopped-service migration > requires migration and backup, preserves native IDs/files, resumes history and ignores unbound files
+Error: 请停服备份后执行R3技能迁移。
+ ❯ SkillService.open src/skills/service.ts:46:63
+     44|       db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL');
+     45|       if(!db.prepare("SELECT 1 FROM sqlite_master WHERE name='r3_skill…
+     46|         if(!options.createdNew&&!options.allowMigration)throw new Requ…
+       |                                                               ^
+     47|         initializeSkillSchema(db);
+     48|       }
+ ❯ PiLab.create src/pi/lab.ts:278:18
+ ❯ tests/pi/migration.test.ts:51:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/23]⎯
+
+ FAIL  tests/pi/skill-package-guards.test.ts > manual-only extensions suppress autonomous invocation while explicit user selection still delivers exact body
+ FAIL  tests/pi/skill-package-guards.test.ts > on-demand package loading supplies exact method body and native read evidence only after the actual tool call
+ FAIL  tests/pi/skill-package-guards.test.ts > loaded request handles ordinary-disable using current authorization and original package
+ FAIL  tests/pi/skill-package-guards.test.ts > loaded request handles policy-withdrawal using current authorization and original package
+ FAIL  tests/pi/skill-package-guards.test.ts > a selected package reaches only the matching readonly child with the fixed body and no execution tools
+Error: 账号或席位已变化，请重新登录。
+ ❯ capabilityIdentity src/server/capability-authorization.ts:9:60
+      7| export function capabilityIdentity(lab: PiLab, actor: ManagementActor)…
+      8|   const identity = lab.access?.accountIdentity(actor.userId);
+      9|   if (!identity || identity.seatId !== actor.seatId) throw new Request…
+       |                                                            ^
+     10|   return identity;
+     11| }
+ ❯ requireCapabilityAdministrator src/server/capability-authorization.ts:13:3
+ ❯ Object.reauthorize src/pi/lab.ts:279:29
+ ❯ SkillService.auth src/skills/service.ts:58:75
+ ❯ src/skills/service.ts:84:150
+ ❯ Mutex.run src/resources/files.ts:73:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/23]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 2 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: attempt to write a readonly database
+ ❯ SkillService.write src/skills/service.ts:60:203
+
+ ❯ src/skills/service.ts:101:537
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_SQLITE_ERROR', errcode: 1032, errstr: 'attempt to write a readonly database' }
+This error originated in "tests/skills-core.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "explicit migration dry run preserves bytes, resumes after schema commit, and old data remains paired". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: attempt to write a readonly database
+ ❯ SkillService.write src/skills/service.ts:60:203
+
+ ❯ src/skills/service.ts:101:537
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_SQLITE_ERROR', errcode: 1032, errstr: 'attempt to write a readonly database' }
+This error originated in "tests/skills-review.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "late scanner completion after close cannot write into a removed data root". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  9 failed | 163 passed (172)
+      Tests  23 failed | 1775 passed (1798)
+     Errors  2 errors
+   Start at  11:15:39
+   Duration  656.09s (transform 5.72s, setup 0ms, import 163.57s, tests 1120.34s, environment 20ms)
+

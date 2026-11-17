@@ -1,0 +1,75 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:41383) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:41382) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | tests/admin-personal-skills.test.ts > administrator uses a published package in personal native chat with readonly resources and no business access
+执行沙盒暂不可用，文件执行不会回退到宿主；普通聊天仍可使用。
+
+stderr | tests/admin-personal-skills.test.ts > administrator personal use bypasses only business scope and preserves lifecycle, account denial and corrupt-state checks
+执行沙盒暂不可用，文件执行不会回退到宿主；普通聊天仍可使用。
+
+ ❯ tests/admin-personal-skills.test.ts (4 tests | 2 failed) 10656ms
+   × administrator uses a published package in personal native chat with readonly resources and no business access 4207ms
+   × administrator personal use bypasses only business scope and preserves lifecycle, account denial and corrupt-state checks 2298ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/admin-personal-skills.test.ts > administrator uses a published package in personal native chat with readonly resources and no business access
+AssertionError: {"error":{"code":"INVALID_INPUT","message":"请填写名称，任务空间还需要目标说明。"}}: expected 400 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 400
+
+ ❯ value tests/admin-personal-skills.test.ts:61:158
+     59|   type User = Awaited<ReturnType<typeof login>>;
+     60|   const call = (user: User, url: string, payload?: object) => app.inje…
+     61|   async function value<T>(user: User, url: string, payload?: object) {…
+       |                                                                                                                                                              ^
+     62|   async function personal(user: User) {
+     63|     const task = await value<TaskSpace>(user, '/api/tasks', { title: '…
+ ❯ tests/admin-personal-skills.test.ts:89:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/admin-personal-skills.test.ts > administrator personal use bypasses only business scope and preserves lifecycle, account denial and corrupt-state checks
+AssertionError: expected { schemaVersion: 2, …(11) } to match object { …(10) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "packageDigest": "95e85142ef555eb5a53d26591f086d8646d5731da966b7fb8cc0bf7d5fd231c6",
+-   "publicationId": "395e8d0b-ee71-4036-94b7-851837c3e8cb",
+-   "publishedAt": "2026-11-15T06:06:07.357Z",
+-   "publishedBy": "28005b7c-6786-424d-a2f9-252bd383d1f5",
+-   "releaseNotes": "个人使用不要求开放业务席位",
+    "releaseVersion": "1.0.0",
+    "revisionId": "skpkg-11c7dddd4b7c875c6b790f057ff24fb95e079564f942ae3de6dc07cc9e7081dd",
+-   "scanId": "b475227c-8473-4903-8ed8-5043bfa193e1",
+-   "scanState": "not_applicable",
+    "skillId": "skill-9d156fc0-8afb-48c9-ad9c-8561309a53a5",
+  }
+
+ ❯ tests/admin-personal-skills.test.ts:119:50
+    117|   const admin = await login('admin'), identity = admin.identity as Adm…
+    118|   const ref = await publish('seats'), principal = { userId: adminId, s…
+    119|   await expect(lab.skills.resolve(ref, principal)).resolves.toMatchObj…
+       |                                                  ^
+    120|   await lab.skills.setPolicy(actor, ref.skillId, { expectedRevision: 1…
+    121|   await expect(lab.skills.resolve(ref, principal)).resolves.toMatchObj…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 3 passed (5)
+   Start at  14:05:55
+   Duration  16.15s (transform 3.59s, setup 0ms, import 10.19s, tests 15.96s, environment 0ms)
+

@@ -1,0 +1,158 @@
+[WebServer] (node:78254) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:78222) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 76 tests using 1 worker
+
+(node:78267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/e2e/chat.spec.ts:197:1 › resolved references stay visible during streaming, polling and navigation before completion (9.5s)
+  ✓   2 tests/e2e/chat.spec.ts:257:1 › 中文输入、独立草稿、多轮消息与刷新不重发 (6.2s)
+  ✓   3 tests/e2e/chat.spec.ts:301:1 › 切换会话时流式回复仍归原会话，取消等待收敛 (2.4s)
+  ✓   4 tests/e2e/chat.spec.ts:327:1 › 活动请求刷新后查询直到结束，失败保留输入 (8.1s)
+  ✓   5 tests/e2e/chat.spec.ts:348:1 › 实际工具结果可查看，窄屏与抽屉键盘可用 (1.8s)
+  ✓   6 tests/e2e/chat.spec.ts:373:1 › GFM 回复渲染语义表格，窄屏可滚动且刷新保留 (4.9s)
+  ✓   7 tests/e2e/chat.spec.ts:398:1 › 工作区隔离运行中的流、会话历史、选择与草稿，新建工作区可发送 (4.3s)
+  ✓   8 tests/e2e/chat.spec.ts:443:1 › Agent 更新期间保留草稿，冲突可查看、人工合并，再次冲突仍校验版本 (3.0s)
+  ✓   9 tests/e2e/chat.spec.ts:491:1 › 查看、放弃与刷新不写文件，失败和工作区旧响应不覆盖草稿 (4.2s)
+  ✓  10 tests/e2e/chat.spec.ts:542:1 › 窄屏指令对照、键盘保存、IME 与只读 Skill (2.4s)
+  ✓  11 tests/e2e/chat.spec.ts:583:1 › 指令初次读取失败可恢复，存储不可用仍能编辑并清空保存 (1.9s)
+  ✓  12 tests/e2e/chat.spec.ts:610:1 › 首条消息创建会话等待期间切区，新输入和请求仍归原工作区 (2.2s)
+  ✓  13 tests/e2e/chat.spec.ts:644:1 › 失败请求不展示调试资料入口，准备失败恢复草稿且刷新不重发 (4.3s)
+  ✓  14 tests/e2e/chat.spec.ts:675:1 › 分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除 (5.1s)
+  ✓  15 tests/e2e/chat.spec.ts:724:1 › DSH sidebar places one status before aligned titles, shows pending labels and delayed hover details (7.5s)
+  ✓  16 tests/e2e/chat.spec.ts:810:1 › DSH sidebar hover stays inside a short desktop viewport and closes on scroll, blur or hidden rows (5.5s)
+  ✓  17 tests/e2e/chat.spec.ts:858:1 › 旧动态请求不覆盖新流状态，更新失败保留状态并可恢复 (7.1s)
+  ✓  18 tests/e2e/chat.spec.ts:883:1 › 切换会话保留阅读位置，阅读旧内容不误标新回复已读 (4.6s)
+  ✓  19 tests/e2e/chat.spec.ts:911:1 › 窄屏可从侧栏进入其他工作区，会话列表折叠可用且页面不溢出 (1.6s)
+  ✓  20 tests/e2e/chat.spec.ts:930:1 › 动态先发现新工作区，创建响应随后返回时只保留一个分组 (3.5s)
+  ✓  21 tests/e2e/chat.spec.ts:951:1 › 刷新后摘要先于正文到达，停止按钮等待同一请求的正文快照就绪 (3.5s)
+  ✓  22 tests/e2e/chat.spec.ts:973:1 › 新建对话页内选空间，离开不创建，项目加号同页且首次发送不抢回后续导航 (2.6s)
+  ✓  23 tests/e2e/chat.spec.ts:1013:1 › 模型设置保存后更新模型，密钥只写且关闭后清空，手机窗口不溢出 (2.3s)
+  ✓  24 tests/e2e/chat.spec.ts:1057:1 › 模型配置读取可重试，冲突和失败保留填写内容并要求读取后手动保存 (2.2s)
+  ✓  25 tests/e2e/chat.spec.ts:1097:1 › 跨项目创建失败可见，切换会话保护后续选择，手机新建聚焦输入且设置遮挡不误读 (3.3s)
+  ✓  26 tests/e2e/chat.spec.ts:1144:1 › 未知模型参数阻止发送并保留历史草稿，补填后不自动重发 (2.1s)
+  ✓  27 tests/e2e/chat.spec.ts:1172:1 › 容量参数来源、模型切换清空与冲突草稿保护，375px高级设置可用 (2.2s)
+  ✓  28 tests/e2e/chat.spec.ts:1209:1 › 压缩状态跨项目可见，摘要完成不终结请求或产生未读，停止优先且忽略迟到事件 (2.2s)
+  ✓  29 tests/e2e/chat.spec.ts:1243:1 › 历史摘要详情只读且不替换原文，摘要属于历史请求并可在窄屏查看 (1.9s)
+  ✓  30 tests/e2e/chat.spec.ts:1274:1 › 刷新压缩中的会话只查询状态，最终失败可见且保留下一轮草稿 (8.7s)
+  ✓  31 tests/e2e/chat.spec.ts:1303:1 › 子任务按实际角色在所属请求内显示，结果替代工具正文且可键盘展开 (1.8s)
+  ✓  32 tests/e2e/chat.spec.ts:1347:1 › 子任务完成不结束父请求或产生蓝点，跨项目草稿独立并拒绝外来子事件 (2.1s)
+  ✓  33 tests/e2e/chat.spec.ts:1381:1 › 停止覆盖活动子任务，迟到进度不覆盖停止或父终态 (2.3s)
+  ✓  34 tests/e2e/chat.spec.ts:1411:1 › 刷新查询恢复子卡片，手机安全Markdown与中断状态可读且不重发 (11.4s)
+  ✓  35 tests/e2e/chat.spec.ts:1450:1 › 子事件不抢阅读位置或输入焦点，断线后查询恢复且不重复发送 (3.3s)
+  ✓  36 tests/e2e/chat.spec.ts:1485:1 › 启动工作区归属读取完成前保护输入，随后文字归入初始会话且可发送 (1.9s)
+  ✓  37 tests/e2e/chat.spec.ts:1523:1 › 可靠成功后折叠连续过程，确认错误与成果保持顺序且手动展开跨会话稳定 (1.9s)
+  ✓  38 tests/e2e/chat.spec.ts:1555:1 › 完成不会自动折叠有焦点的过程，也不重置手动展开 (3.4s)
+  ✓  39 tests/e2e/chat.spec.ts:1576:1 › 向上阅读时完成保留展开与阅读位置，旧快照无终态依据不隐藏过程 (5.9s)
+  ✓  40 tests/e2e/chat.spec.ts:1596:1 › 后台完成后返回向上阅读会话不自动收起新过程段 (1.8s)
+  ✓  41 tests/e2e/chat.spec.ts:1615:50 › 流式说明保留在过程之外并保持link焦点 (4.1s)
+  ✓  42 tests/e2e/chat.spec.ts:1615:50 › 流式说明保留在过程之外并保持table焦点 (3.6s)
+  ✓  43 tests/e2e/chat.spec.ts:1638:1 › 尾部说明保持在过程之外且焦点稳定，运行中手动查看详情在完成时保留 (4.0s)
+  ✓  44 tests/e2e/chat.spec.ts:1668:1 › 桌面侧边栏可用键盘折叠展开，保留草稿且不影响手机抽屉 (2.2s)
+  ✓  45 tests/e2e/chat.spec.ts:1713:1 › 交付文件卡分组有序、默认折叠四项、固定下载且各宽度无溢出 (2.6s)
+  ✘  46 tests/e2e/chat.spec.ts:1790:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 (4.5s)
+(node:78901) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  47 tests/e2e/chat.spec.ts:1871:1 › 折叠侧栏顶部默认显示 Logo，悬停或键盘聚焦切换为展开图标 (2.8s)
+  ✓  48 tests/e2e/chat.spec.ts:1904:3 › 显式对话链接后新建对话不会被旧 session 参数抢回 (2.6s)
+  ✓  49 tests/e2e/chat.spec.ts:1904:3 › 显式对话链接后切换项目不会被旧 session 参数抢回 (1.9s)
+  ✓  50 tests/e2e/chat.spec.ts:1940:1 › 首轮处理中动态标题更新后，流事件和详情轮询不会恢复新会话标题 (7.4s)
+  ✓  51 tests/e2e/chat.spec.ts:1971:1 › 追加消息消费事件分隔连续回复，刷新后的原生历史保持同样顺序 (4.1s)
+  ✓  52 tests/e2e/chat.spec.ts:2002:1 › 地图聚焦时继续接收回复但不误标已读，返回对话保留草稿与阅读位置 (2.5s)
+  ✓  53 tests/e2e/chat.spec.ts:2033:1 › B首批：思考和工具原序展示，真实累积输出更新且手动展开不被完成收起 (5.4s)
+  ✓  54 tests/e2e/chat.spec.ts:2062:1 › B首批：完成耗时入口收起过程但保留回复，展开查看原生diff且刷新保持内容 (4.3s)
+  ✓  55 tests/e2e/chat.spec.ts:2087:1 › B首批：用户补充禁止整轮跨越折叠，纯文本不生成空过程 (2.7s)
+  ✓  56 tests/e2e/chat.spec.ts:2101:1 › B首批：结构化流替换旧delta，工具累积输出不重复且终态保持披露身份 (2.6s)
+  ✓  57 tests/e2e/files.spec.ts:76:1 › cancelled commands show stopped while nonzero exits, timeouts and cleanup failures remain failures after reload (4.3s)
+  ✓  58 tests/e2e/files.spec.ts:103:1 › upload stays with its original session, restores references after refresh, removal keeps workspace bytes (7.3s)
+  ✓  59 tests/e2e/files.spec.ts:125:1 › failed upload blocks sending, explicit retry verifies status, cancelled upload does not submit (2.1s)
+  ✓  60 tests/e2e/files.spec.ts:144:1 › project switching isolates files and file panel works on narrow screens without executing HTML (2.6s)
+  ✓  61 tests/e2e/files.spec.ts:166:1 › uncertain upload response is checked without duplicate transfer and same names expose actual path (2.8s)
+  ✓  62 tests/e2e/files.spec.ts:177:1 › workspace draft attachments follow the captured first session while later navigation wins (3.4s)
+  ✓  63 tests/e2e/files.spec.ts:189:1 › drag and drop has keyboard alternative and never fetches Markdown remote images (3.6s)
+  ✓  64 tests/e2e/files.spec.ts:203:1 › historical references inspect only on demand, changed and missing files never imply preserved originals (5.5s)
+  ✓  65 tests/e2e/files.spec.ts:217:1 › pending cancellation stays owned by the project draft when opening the new conversation page (3.5s)
+(node:78901) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  66 tests/e2e/references.spec.ts:55:1 › typed references select using keyboard, preserve prose, show historical Skill and do not call model before send (9.9s)
+  ✓  67 tests/e2e/references.spec.ts:96:1 › IME, Escape, outside click and pasted paths remain plain text; menu allows replacement and removal (5.4s)
+  ✓  68 tests/e2e/references.spec.ts:123:1 › file picker browses directories and pagination, shares upload count and deduplicates the same ordinary path (8.5s)
+  ✓  69 tests/e2e/references.spec.ts:150:1 › seat-scoped drafts survive refresh, delayed directories cannot leak, and first creation migrates selections once (12.5s)
+  ✓  70 tests/e2e/references.spec.ts:179:1 › 375px picker and Skill dialog remain contained with keyboard focus (4.8s)
+  ✓  71 tests/e2e/references.spec.ts:201:1 › changed selection fails before model work and preserves all inputs until explicit correction (8.0s)
+  ✓  72 tests/e2e/references.spec.ts:225:1 › workspace navigation preserves separate drafts and dismisses stale pickers without selecting late results (7.4s)
+  ✘  73 tests/e2e/references.spec.ts:252:1 › Chinese composition filters the browsed directory and caret movement abandons the trigger safely (10.3s)
+(node:79463) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79463) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  74 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (新的目标) (10.3s)
+  ✓  75 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (原始目标) (11.8s)
+  ✓  76 tests/e2e/references.spec.ts:311:1 › @ opens categories without loading file or agent lists and supports returning between categories (7.3s)
+
+
+  1) tests/e2e/chat.spec.ts:1790:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 ──────────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 150
+    Received: 0
+
+      1856 |     await expect(resources).toBeEnabled();
+      1857 |     await page.getByRole('button', { name: '展开侧边栏', exact: true }).click();
+    > 1858 |     expect(await projects.evaluate(element => element.scrollTop)).toBe(scrollTop);
+           |                                                                   ^
+      1859 |     await expect(page.getByRole('button', { name: '展开项目：另一工作区', exact: true })).toHaveAttribute('aria-expanded', 'false');
+      1860 |     await expect(page.getByRole('button', { name: '新建项目', exact: true })).toBeVisible();
+      1861 |     await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/chat.spec.ts:1858:67
+
+    Error Context: ../../../../../../../../private/tmp/axon-r3a-creation-chat-files-refs/chat-折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-r3a-creation-chat-files-refs/chat-折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-r3a-creation-chat-files-refs/chat-折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/references.spec.ts:252:1 › Chinese composition filters the browsed directory and caret movement abandons the trigger safely
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-seat]:visible').getByRole('option', { name: /方案.md/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-seat]:visible').getByRole('option', { name: /方案.md/ }) with timeout 5000ms
+      - waiting for locator('[data-seat]:visible').getByRole('option', { name: /方案.md/ })
+        - waiting for navigation to finish...
+        - navigated to "http://127.0.0.1:5201/"
+
+
+      270 |     await input(page).pressSequentially('@plans/');
+      271 |     await visible(page).getByRole('option', { name: /^项目文件或文件夹/ }).click();
+    > 272 |     await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible();
+          |                                                                        ^
+      273 |     await visible(page).getByRole('button', { name: '上一级' }).click();
+      274 |     await expect(input(page)).toHaveValue('请查看 @');
+      275 |     await visible(page).getByRole('button', { name: '返回类别' }).click();
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/references.spec.ts:272:72
+
+    Error Context: ../../../../../../../../private/tmp/axon-r3a-creation-chat-files-refs/references-Chinese-composi-5e8f7-abandons-the-trigger-safely/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-r3a-creation-chat-files-refs/references-Chinese-composi-5e8f7-abandons-the-trigger-safely/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-r3a-creation-chat-files-refs/references-Chinese-composi-5e8f7-abandons-the-trigger-safely/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests/e2e/chat.spec.ts:1790:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 ───────────────────────────────────────
+    tests/e2e/references.spec.ts:252:1 › Chinese composition filters the browsed directory and caret movement abandons the trigger safely
+  74 passed (6.3m)

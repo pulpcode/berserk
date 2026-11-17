@@ -30,6 +30,7 @@ export function workspaceFileTools(sandbox: RequestSandbox) {
       },
     } })),
     defineTool(createLsToolDefinition('/workspace', { operations: { exists: path => sandbox.exists(path), stat: path => sandbox.stat(path), readdir: path => sandbox.readdir(path) } })),
+    defineTool({name:'grep',label:'搜索文件内容',description:'在/workspace、只读/logs或当前请求已激活的/skills中搜索文本；不读取其他宿主路径。',parameters:Type.Object({pattern:Type.String({minLength:1,maxLength:1024}),path:Type.Optional(Type.String({maxLength:4096})),glob:Type.Optional(Type.String({maxLength:1024})),ignoreCase:Type.Optional(Type.Boolean()),literal:Type.Optional(Type.Boolean()),limit:Type.Optional(Type.Integer({minimum:1,maximum:1000}))},{additionalProperties:false}),executionMode:'sequential',execute:async(_id,params)=>{const path=params.path??'/workspace';const resolved=path.startsWith('/')?path:`/workspace/${path}`;const result=await sandbox.grep(resolved,params);return{content:[{type:'text' as const,text:JSON.stringify(result)}],details:result};}}),
     defineTool(createFindToolDefinition('/workspace', { operations: { exists: path => sandbox.exists(path), glob: (pattern, cwd, options) => sandbox.glob(pattern, cwd, options) } })),
   ];
 }

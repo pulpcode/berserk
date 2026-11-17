@@ -1,0 +1,17 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/skills.spec.ts --grep policy and publication --workers=1 --output=/private/tmp/axon-r3-cas-ui-results
+
+[WebServer] (node:25176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:25148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:25182) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25182) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/skills.spec.ts:60:1 › policy and publication saves retain their viewed baselines across background detail refreshes (5.3s)
+
+  1 passed (12.9s)

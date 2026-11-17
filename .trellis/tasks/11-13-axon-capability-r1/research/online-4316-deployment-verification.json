@@ -1,0 +1,109 @@
+{
+  "url": "http://49.232.156.14:4316",
+  "checks": [
+    {
+      "seat": "overall",
+      "path": "/api/capabilities/experts",
+      "ok": true,
+      "result": [
+        {
+          "expertId": "synthesis-expert",
+          "revisionId": "rev-b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+          "name": "资料综合专家（示范）",
+          "description": "读取资料、交叉核对来源，形成有依据的综合结论并复核缺口。",
+          "releaseVersion": "1.0.0",
+          "digest": "b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+          "modes": [
+            "interactive"
+          ],
+          "dependencies": [
+            {
+              "id": "review",
+              "name": "结果检查",
+              "revisionId": "skill-624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18",
+              "releaseVersion": "1",
+              "digest": "624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18"
+            },
+            {
+              "id": "synthesis",
+              "name": "资料综合写作",
+              "revisionId": "skill-cbdbcedc0afb55ce7a1b3f1a37e2f53c42a1d423cef85361f663a815350c06e4",
+              "releaseVersion": "1",
+              "digest": "cbdbcedc0afb55ce7a1b3f1a37e2f53c42a1d423cef85361f663a815350c06e4"
+            }
+          ],
+          "availability": {
+            "available": true,
+            "state": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "seat": "overall",
+      "path": "/api/capabilities/access",
+      "ok": true,
+      "result": {
+        "administrator": false
+      }
+    },
+    {
+      "seat": "intelligence",
+      "path": "/api/capabilities/experts",
+      "ok": true,
+      "result": [
+        {
+          "expertId": "synthesis-expert",
+          "revisionId": "rev-b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+          "name": "资料综合专家（示范）",
+          "description": "读取资料、交叉核对来源，形成有依据的综合结论并复核缺口。",
+          "releaseVersion": "1.0.0",
+          "digest": "b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c",
+          "modes": [
+            "interactive"
+          ],
+          "dependencies": [
+            {
+              "id": "review",
+              "name": "结果检查",
+              "revisionId": "skill-624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18",
+              "releaseVersion": "1",
+              "digest": "624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18"
+            },
+            {
+              "id": "synthesis",
+              "name": "资料综合写作",
+              "revisionId": "skill-cbdbcedc0afb55ce7a1b3f1a37e2f53c42a1d423cef85361f663a815350c06e4",
+              "releaseVersion": "1",
+              "digest": "cbdbcedc0afb55ce7a1b3f1a37e2f53c42a1d423cef85361f663a815350c06e4"
+            }
+          ],
+          "availability": {
+            "available": true,
+            "state": "enabled"
+          }
+        }
+      ]
+    },
+    {
+      "seat": "intelligence",
+      "path": "/api/capabilities/access",
+      "ok": true,
+      "result": {
+        "administrator": false
+      }
+    },
+    {
+      "asset": "/assets/index-BOgmMxY5.js",
+      "sha256": "f56f25f5cea163de16ca36727ee604e3bb5478e50043f984055d75a130b5da18",
+      "ok": true
+    },
+    {
+      "asset": "/assets/index-BOHQP8Kz.css",
+      "sha256": "8704c6661d7e9b9d73a75f67b5241949b497f3e2173bd52d42e6e67b6104b847",
+      "ok": true
+    }
+  ],
+  "migration": "completed",
+  "legacySessionCount": 34
+}

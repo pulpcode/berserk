@@ -1,0 +1,3 @@
+import { migrateSkillsR3 } from '../src/skills/migration.js';
+const args=process.argv.slice(2);const value=(key:string)=>{const index=args.indexOf(key);return index>=0?args[index+1]:undefined;};
+try{const dataDir=value('--data-dir'),backupDir=value('--backup-dir'),apply=args.includes('--apply');if(!dataDir||!backupDir||apply===args.includes('--dry-run'))throw Error('用法：--data-dir ABS --backup-dir ABS (--dry-run | --apply --service-stopped)');console.info(JSON.stringify(await migrateSkillsR3({dataDir,backupDir,apply,serviceStopped:args.includes('--service-stopped')}),null,2));}catch(error){console.error(error instanceof Error?error.message:'技能包迁移失败，请保留数据和备份。');process.exitCode=1;}

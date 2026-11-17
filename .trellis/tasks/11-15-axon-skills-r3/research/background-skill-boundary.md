@@ -1,0 +1,9 @@
+# R3组织技能与后台边界修正
+
+需求来源v0.3第9.3节：后台沿既有Profile/固定技能兼容路径，不自动投放组织技能，R5再统一。父代理定位seat_analysis通过lab.start(background:true)进入普通资源snapshot，而非startPreprocess的固定Profile资源分支，导致组织技能目录被自动带入。
+
+最小修正：ResourceService.snapshot增加最后一个内部includeDynamic布尔参数，默认true保持前台；PiLab后台传false，使其不调用动态catalog或动态resolver。若后台有schema2固定依赖则明确SKILL_BACKGROUND_UNSUPPORTED，不能静默删除依赖继续。PiLab.start在创建请求和模型调用前拒绝后台schema2/组织技能显式选择，以及绑定此类依赖的专家；后台服务/子快照亦在模型前防御性拒绝schema2。未改变Profile解析、旧四项内置、旧历史或前台入口，也不清洗/改写既有会话历史内容。
+
+新测试tests/pi/skill-background-boundary.test.ts4/4通过4.39秒：前台组织技能仍在真实Pi模型catalog/toolenum；后台只有四项旧内置且无组织技能正文/元数据；显式组织技能两种输入形状均零模型；组织依赖专家后台明确拒绝且不读取动态包；旧内置显式选择保持真实正文且不调用动态提供器。定向ESLint与diffcheck通过。首轮3/4的唯一失败是测试把多层JSON转义的provider文本与原始多行正文直接比较，改为同时验证实际native正文和provider已加载语义后通过，没有改变产品断言。原失败日志保留。
+
+此为真实方舟探针源码快照之后的明确产品差异；不得将此前真实探针写成包含此补丁。父代理统一最终检查。执行镜像helper未变，仍4bcd42bb3a7ac7b6ac0bfd7f60e5726f9e946801a1d0a6faff856c1d8b9b9aef。

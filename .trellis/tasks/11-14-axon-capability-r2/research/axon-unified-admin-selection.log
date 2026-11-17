@@ -1,0 +1,17 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/administrator.spec.ts --grep an administrator card --workers=1 --output=/private/tmp/axon-unified-admin-selection-results
+
+[WebServer] (node:13814) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:13778) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:13825) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13825) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/administrator.spec.ts:123:1 › an administrator card opens the selected expert configuration without creating another draft (7.7s)
+
+  1 passed (22.9s)

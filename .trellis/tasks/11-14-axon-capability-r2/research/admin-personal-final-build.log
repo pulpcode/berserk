@@ -1,0 +1,33 @@
+
+> @berserk/harness-lab@0.1.0 build
+> vite build --configLoader runner
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 2940 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                   0.62 kB │ gzip:   0.40 kB
+dist/assets/xf3013-2020.6.2.18-Cqk6x_Qf.svg       6.95 kB │ gzip:   2.43 kB
+dist/assets/maplibre-gl-worker-B8OLt8TZ.js      468.84 kB
+dist/assets/LayerTree-pVb4gqth.css                2.29 kB │ gzip:   0.76 kB
+dist/assets/SituationView-DK5tusa6.css            7.43 kB │ gzip:   1.75 kB
+dist/assets/ScenarioDirector-Cz3pcHkI.css        13.63 kB │ gzip:   2.85 kB
+dist/assets/AnnotationWorkspace-P-HeVHZn.css     14.83 kB │ gzip:   3.24 kB
+dist/assets/MapCanvas-JR8eJ17e.css               83.02 kB │ gzip:  10.52 kB
+dist/assets/index-Cy63HFoM.css                  129.70 kB │ gzip:  23.67 kB
+dist/assets/LayerTree-vP5_fA6G.js                 4.00 kB │ gzip:   1.55 kB
+dist/assets/map-data-CoMkNwJp.js                  4.75 kB │ gzip:   2.28 kB
+dist/assets/Simulation-7uL6eFQF.js                7.95 kB │ gzip:   3.20 kB
+dist/assets/SituationView-CtQaQmpU.js            18.02 kB │ gzip:   7.22 kB
+dist/assets/index-D9-Zx310.js                    39.39 kB │ gzip:   7.37 kB
+dist/assets/ScenarioDirector-DWwYXTCO.js         42.27 kB │ gzip:  12.82 kB
+dist/assets/AnnotationWorkspace-DRAPBiF_.js      62.61 kB │ gzip:  20.29 kB
+dist/assets/index-BI2_IHui.js                   955.53 kB │ gzip: 290.42 kB
+dist/assets/MapCanvas-CQzMIrpa.js             1,149.93 kB │ gzip: 297.28 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 8.12s

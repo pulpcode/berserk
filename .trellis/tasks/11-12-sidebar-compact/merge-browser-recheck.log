@@ -1,0 +1,16 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/chat.spec.ts -g 折叠侧栏仅保留全局入口|桌面侧边栏可用键盘|折叠侧栏顶部 --workers=1
+
+[WebServer] (node:61772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:61791) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/chat.spec.ts:1666:1 › 桌面侧边栏可用键盘折叠展开，保留草稿且不影响手机抽屉 (2.5s)
+  ✓  2 tests/e2e/chat.spec.ts:1788:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 (3.5s)
+  ✓  3 tests/e2e/chat.spec.ts:1866:1 › 折叠侧栏顶部默认显示 Logo，悬停或键盘聚焦切换为展开图标 (1.7s)
+
+  3 passed (12.0s)

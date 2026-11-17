@@ -1,0 +1,198 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/chat.spec.ts tests/e2e/hitl.spec.ts tests/e2e/recovery.spec.ts tests/e2e/references.spec.ts tests/e2e/message-queue.spec.ts tests/e2e/files.spec.ts tests/e2e/capabilities.spec.ts --workers=2
+
+[WebServer] (node:2456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:2428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 136 tests using 2 workers
+
+(node:2502) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2503) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2502) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:2503) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓    2 tests/e2e/capabilities.spec.ts:80:1 › a lost creation response is retried with the same action and does not create another session (6.7s)
+  ✓    3 tests/e2e/capabilities.spec.ts:103:1 › ordinary new conversation keeps the general assistant and uses an action ID (2.7s)
+  ✓    1 tests/e2e/capabilities.spec.ts:35:1 › professional expert creation is empty, cancelable and retains existing conversation drafts (9.4s)
+  ✓    5 tests/e2e/chat.spec.ts:197:1 › resolved references stay visible during streaming, polling and navigation before completion (7.7s)
+  ✓    4 tests/e2e/capabilities.spec.ts:117:1 › a disabled expert retains its conversation and draft while sending is blocked (8.0s)
+  ✓    7 tests/e2e/chat.spec.ts:302:1 › 切换会话时流式回复仍归原会话，取消等待收敛 (3.9s)
+[WebServer] 10:29:00 PM [vite] http proxy error: /api/sessions/A
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:4310
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+  ✓    6 tests/e2e/chat.spec.ts:257:1 › 中文输入、独立草稿、多轮消息与刷新不重发 (7.6s)
+  ✓    9 tests/e2e/chat.spec.ts:349:1 › 实际工具结果可查看，窄屏与抽屉键盘可用 (2.8s)
+  ✓    8 tests/e2e/chat.spec.ts:328:1 › 活动请求刷新后查询直到结束，失败保留输入 (9.0s)
+  ✓   10 tests/e2e/chat.spec.ts:374:1 › GFM 回复渲染语义表格，窄屏可滚动且刷新保留 (4.9s)
+  ✓   12 tests/e2e/chat.spec.ts:444:1 › Agent 更新期间保留草稿，冲突可查看、人工合并，再次冲突仍校验版本 (5.4s)
+  ✓   11 tests/e2e/chat.spec.ts:399:1 › 工作区隔离运行中的流、会话历史、选择与草稿，新建工作区可发送 (8.0s)
+  ✓   14 tests/e2e/chat.spec.ts:543:1 › 窄屏指令对照、键盘保存、IME 与只读 Skill (5.0s)
+  ✓   13 tests/e2e/chat.spec.ts:492:1 › 查看、放弃与刷新不写文件，失败和工作区旧响应不覆盖草稿 (8.3s)
+  ✓   15 tests/e2e/chat.spec.ts:584:1 › 指令初次读取失败可恢复，存储不可用仍能编辑并清空保存 (3.9s)
+  ✓   16 tests/e2e/chat.spec.ts:611:1 › 首条消息创建会话等待期间切区，新输入和请求仍归原工作区 (4.8s)
+  ✓   17 tests/e2e/chat.spec.ts:645:1 › 失败请求不展示调试资料入口，准备失败恢复草稿且刷新不重发 (7.3s)
+  ✘   18 tests/e2e/chat.spec.ts:676:1 › 分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除 (8.3s)
+(node:3194) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   19 tests/e2e/chat.spec.ts:718:1 › DSH sidebar places one status before aligned titles, shows pending labels and delayed hover details (8.1s)
+  ✓   20 tests/e2e/chat.spec.ts:804:1 › DSH sidebar hover stays inside a short desktop viewport and closes on scroll, blur or hidden rows (5.8s)
+  ✓   21 tests/e2e/chat.spec.ts:852:1 › 旧动态请求不覆盖新流状态，更新失败保留状态并可恢复 (7.9s)
+  ✓   23 tests/e2e/chat.spec.ts:905:1 › 窄屏可从侧栏进入其他工作区，会话列表折叠可用且页面不溢出 (2.5s)
+  ✓   22 tests/e2e/chat.spec.ts:877:1 › 切换会话保留阅读位置，阅读旧内容不误标新回复已读 (5.6s)
+  ✓   24 tests/e2e/chat.spec.ts:924:1 › 动态先发现新工作区，创建响应随后返回时只保留一个分组 (3.3s)
+  ✓   25 tests/e2e/chat.spec.ts:945:1 › 刷新后摘要先于正文到达，停止按钮等待同一请求的正文快照就绪 (3.4s)
+  ✓   26 tests/e2e/chat.spec.ts:967:1 › 新建对话先选项目，取消不创建，折叠项目加号直接创建且不抢回后续导航 (3.5s)
+  ✓   27 tests/e2e/chat.spec.ts:1005:1 › 模型设置保存后更新模型，密钥只写且关闭后清空，手机窗口不溢出 (4.0s)
+  ✓   28 tests/e2e/chat.spec.ts:1049:1 › 模型配置读取可重试，冲突和失败保留填写内容并要求读取后手动保存 (3.3s)
+  ✓   30 tests/e2e/chat.spec.ts:1135:1 › 未知模型参数阻止发送并保留历史草稿，补填后不自动重发 (3.0s)
+  ✓   29 tests/e2e/chat.spec.ts:1089:1 › 跨项目创建失败可见，切换会话保护后续选择，手机新建聚焦输入且设置遮挡不误读 (4.9s)
+  ✓   31 tests/e2e/chat.spec.ts:1163:1 › 容量参数来源、模型切换清空与冲突草稿保护，375px高级设置可用 (3.0s)
+  ✓   32 tests/e2e/chat.spec.ts:1200:1 › 压缩状态跨项目可见，摘要完成不终结请求或产生未读，停止优先且忽略迟到事件 (3.6s)
+  ✓   33 tests/e2e/chat.spec.ts:1234:1 › 历史摘要详情只读且不替换原文，摘要属于历史请求并可在窄屏查看 (3.1s)
+  ✓   35 tests/e2e/chat.spec.ts:1294:1 › 子任务按实际角色在所属请求内显示，结果替代工具正文且可键盘展开 (2.6s)
+  ✓   36 tests/e2e/chat.spec.ts:1338:1 › 子任务完成不结束父请求或产生蓝点，跨项目草稿独立并拒绝外来子事件 (2.6s)
+  ✓   34 tests/e2e/chat.spec.ts:1265:1 › 刷新压缩中的会话只查询状态，最终失败可见且保留下一轮草稿 (8.4s)
+  ✓   37 tests/e2e/chat.spec.ts:1372:1 › 停止覆盖活动子任务，迟到进度不覆盖停止或父终态 (3.6s)
+  ✓   39 tests/e2e/chat.spec.ts:1441:1 › 子事件不抢阅读位置或输入焦点，断线后查询恢复且不重复发送 (4.5s)
+  ✓   40 tests/e2e/chat.spec.ts:1476:1 › 启动工作区归属读取完成前保护输入，随后文字归入初始会话且可发送 (2.3s)
+  ✓   41 tests/e2e/chat.spec.ts:1514:1 › 可靠成功后折叠连续过程，确认错误与成果保持顺序且手动展开跨会话稳定 (2.1s)
+  ✓   38 tests/e2e/chat.spec.ts:1402:1 › 刷新查询恢复子卡片，手机安全Markdown与中断状态可读且不重发 (13.5s)
+  ✓   42 tests/e2e/chat.spec.ts:1546:1 › 完成不会自动折叠有焦点的过程，也不重置手动展开 (3.7s)
+  ✓   44 tests/e2e/chat.spec.ts:1587:1 › 后台完成后返回向上阅读会话不自动收起新过程段 (2.6s)
+  ✓   43 tests/e2e/chat.spec.ts:1567:1 › 向上阅读时完成保留展开与阅读位置，旧快照无终态依据不隐藏过程 (6.8s)
+  ✓   45 tests/e2e/chat.spec.ts:1606:50 › 流式说明保留在过程之外并保持link焦点 (4.4s)
+  ✓   46 tests/e2e/chat.spec.ts:1606:50 › 流式说明保留在过程之外并保持table焦点 (4.5s)
+  ✓   47 tests/e2e/chat.spec.ts:1629:1 › 尾部说明保持在过程之外且焦点稳定，运行中手动查看详情在完成时保留 (5.6s)
+  ✓   48 tests/e2e/chat.spec.ts:1659:1 › 桌面侧边栏可用键盘折叠展开，保留草稿且不影响手机抽屉 (2.7s)
+  ✓   49 tests/e2e/chat.spec.ts:1704:1 › 交付文件卡分组有序、默认折叠四项、固定下载且各宽度无溢出 (3.1s)
+  ✓   50 tests/e2e/chat.spec.ts:1781:1 › 折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦点 (3.5s)
+  ✓   51 tests/e2e/chat.spec.ts:1835:1 › 折叠侧栏顶部默认显示 Logo，悬停或键盘聚焦切换为展开图标 (2.5s)
+  ✓   52 tests/e2e/chat.spec.ts:1868:3 › 显式对话链接后新建对话不会被旧 session 参数抢回 (3.0s)
+  ✓   53 tests/e2e/chat.spec.ts:1868:3 › 显式对话链接后切换项目不会被旧 session 参数抢回 (2.4s)
+  ✓   55 tests/e2e/chat.spec.ts:1936:1 › 追加消息消费事件分隔连续回复，刷新后的原生历史保持同样顺序 (5.4s)
+  ✓   54 tests/e2e/chat.spec.ts:1905:1 › 首轮处理中动态标题更新后，流事件和详情轮询不会恢复新会话标题 (7.9s)
+  ✓   56 tests/e2e/chat.spec.ts:1967:1 › 地图聚焦时继续接收回复但不误标已读，返回对话保留草稿与阅读位置 (3.6s)
+  ✓   58 tests/e2e/chat.spec.ts:2027:1 › B首批：完成耗时入口收起过程但保留回复，展开查看原生diff且刷新保持内容 (3.1s)
+  ✓   57 tests/e2e/chat.spec.ts:1998:1 › B首批：思考和工具原序展示，真实累积输出更新且手动展开不被完成收起 (5.9s)
+  ✓   60 tests/e2e/chat.spec.ts:2066:1 › B首批：结构化流替换旧delta，工具累积输出不重复且终态保持披露身份 (3.2s)
+  ✓   59 tests/e2e/chat.spec.ts:2052:1 › B首批：用户补充禁止整轮跨越折叠，纯文本不生成空过程 (3.7s)
+  ✓   61 tests/e2e/files.spec.ts:76:1 › cancelled commands show stopped while nonzero exits, timeouts and cleanup failures remain failures after reload (5.4s)
+  ✓   63 tests/e2e/files.spec.ts:125:1 › failed upload blocks sending, explicit retry verifies status, cancelled upload does not submit (2.4s)
+  ✓   62 tests/e2e/files.spec.ts:103:1 › upload stays with its original session, restores references after refresh, removal keeps workspace bytes (8.7s)
+  ✓   64 tests/e2e/files.spec.ts:144:1 › project switching isolates files and file panel works on narrow screens without executing HTML (2.8s)
+  ✓   65 tests/e2e/files.spec.ts:166:1 › uncertain upload response is checked without duplicate transfer and same names expose actual path (2.6s)
+  ✓   67 tests/e2e/files.spec.ts:189:1 › drag and drop has keyboard alternative and never fetches Markdown remote images (2.8s)
+  ✓   66 tests/e2e/files.spec.ts:177:1 › workspace draft attachments follow the captured first session while later navigation wins (3.8s)
+  ✓   69 tests/e2e/files.spec.ts:217:1 › pending cancellation follows an attachment moved from project draft into a newly created session (3.8s)
+  ✓   68 tests/e2e/files.spec.ts:203:1 › historical references inspect only on demand, changed and missing files never imply preserved originals (5.4s)
+  ✓   70 tests/e2e/hitl.spec.ts:70:1 › a pending question occupies the composer as the only operable form, without a redundant stop control (1.8s)
+  ✓   71 tests/e2e/hitl.spec.ts:84:1 › a multi-question card pages through questions and keeps drafts across pages (2.8s)
+  ✓   72 tests/e2e/hitl.spec.ts:106:1 › a question card collapses to its title bar without freeing the composer (2.4s)
+  ✓   73 tests/e2e/hitl.spec.ts:120:1 › a pending confirmation occupies the composer without a collapse option and keeps actions reachable (2.2s)
+  ✓   74 tests/e2e/hitl.spec.ts:140:1 › pending cards are handled one at a time in record order and the composer returns after the last (3.6s)
+  ✓   75 tests/e2e/hitl.spec.ts:165:1 › an accepted answer exits the card at once, keeps the running request, and preserves the composer draft (2.7s)
+  ✓   76 tests/e2e/hitl.spec.ts:181:1 › focus moves from the composer into the card and returns after the answer (3.0s)
+  ✓   78 tests/e2e/hitl.spec.ts:217:29 › assignment card shows 0 actual attachments before the description and preserves them after refresh (5.1s)
+  ✓   77 tests/e2e/hitl.spec.ts:198:1 › an approved confirmation shows in-progress only while its own tool is executing (8.3s)
+  ✓   80 tests/e2e/hitl.spec.ts:249:13 › claim confirmation names its action and does not show assignment attachment warnings (2.8s)
+  ✓   79 tests/e2e/hitl.spec.ts:217:29 › assignment card shows 2 actual attachments before the description and preserves them after refresh (5.8s)
+  ✓   81 tests/e2e/hitl.spec.ts:249:13 › submit confirmation names its action and does not show assignment attachment warnings (2.4s)
+  ✓   82 tests/e2e/hitl.spec.ts:249:13 › review confirmation names its action and does not show assignment attachment warnings (2.7s)
+  ✓   83 tests/e2e/hitl.spec.ts:266:4 › pending confirmation is fully reviewable on desktop (2.2s)
+  ✓   84 tests/e2e/hitl.spec.ts:266:4 › pending confirmation is fully reviewable on mobile (2.4s)
+  ✓   85 tests/e2e/hitl.spec.ts:286:1 › confirmation without a command keeps a generic explicit approval action (2.3s)
+  ✓   86 tests/e2e/hitl.spec.ts:306:13 › approved confirmation history keeps no execution evidence visible while collapsed (3.7s)
+  ✓   87 tests/e2e/hitl.spec.ts:306:13 › approved confirmation history keeps succeeded visible while collapsed (3.7s)
+  ✓   88 tests/e2e/hitl.spec.ts:306:13 › approved confirmation history keeps failed visible while collapsed (3.6s)
+  ✓   89 tests/e2e/hitl.spec.ts:306:13 › approved confirmation history keeps unknown visible while collapsed (3.7s)
+  ✓   90 tests/e2e/hitl.spec.ts:306:13 › approved confirmation history keeps not_started visible while collapsed (3.6s)
+  ✓   91 tests/e2e/hitl.spec.ts:306:13 › rejected confirmation history keeps no execution evidence visible while collapsed (3.7s)
+  ✓   92 tests/e2e/hitl.spec.ts:306:13 › cancelled confirmation history keeps no execution evidence visible while collapsed (3.8s)
+  ✓   93 tests/e2e/hitl.spec.ts:306:13 › expired confirmation history keeps no execution evidence visible while collapsed (3.6s)
+  ✓   94 tests/e2e/hitl.spec.ts:339:53 › restart expires question without reopening old controls or resending chat (6.3s)
+  ✓   95 tests/e2e/hitl.spec.ts:339:53 › restart expires confirmation without reopening old controls or resending chat (6.2s)
+  ✓   97 tests/e2e/hitl.spec.ts:403:1 › custom text is exclusive with choices and skip never sends draft answers (6.9s)
+  ✓   96 tests/e2e/hitl.spec.ts:363:1 › question drafts survive switch and refresh, submit exact answers once without IME auto-send (8.5s)
+  ✓   98 tests/e2e/hitl.spec.ts:421:1 › uncertain response requires GET before manual retry and keeps answers on read failure (3.2s)
+  ✓   99 tests/e2e/hitl.spec.ts:437:1 › uncertain confirmation must be queried before explicit retry and approval does not imply execution (3.0s)
+  ✓  100 tests/e2e/hitl.spec.ts:468:52 › confirmation lost reconciles first accepted decision without repost (4.9s)
+  ✓  101 tests/e2e/hitl.spec.ts:468:52 › confirmation conflict reconciles first accepted decision without repost (4.2s)
+  ✓  102 tests/e2e/hitl.spec.ts:480:1 › stop and expired history disable decisions; approved unknown results stay distinct (6.4s)
+  ✓  103 tests/e2e/hitl.spec.ts:492:1 › SSE question receives attention without unread dot or animation; mobile command wraps (6.0s)
+  ✓  104 tests/e2e/hitl.spec.ts:512:1 › arbitrary question IDs remain editable when session storage is unavailable (3.2s)
+  ✓  105 tests/e2e/hitl.spec.ts:528:1 › accepted stream failure and waiting refresh never restore the already sent message into the composer (7.5s)
+  ✓  106 tests/e2e/hitl.spec.ts:556:59 › confirmation cards align with reply content at desktop and narrow widths (6.2s)
+  ✓  107 tests/e2e/hitl.spec.ts:556:59 › question cards align with reply content at desktop and narrow widths (2.9s)
+  ✓  108 tests/e2e/hitl.spec.ts:587:1 › querying an unaccepted first card keeps its order and its answer draft (4.2s)
+  ✓  109 tests/e2e/hitl.spec.ts:603:1 › same-name confirmations without exact running identity keep a neutral execution state (3.2s)
+  ✓  110 tests/e2e/hitl.spec.ts:616:1 › leaving a focused card for another session does not transfer focus into the new composer (2.2s)
+  ✓  111 tests/e2e/hitl.spec.ts:626:1 › a card arriving after the user clicks outside the input does not steal reading focus (2.6s)
+  ✓  113 tests/e2e/hitl.spec.ts:663:1 › several approved commands keep distinct compact summaries and exact expanded commands (3.4s)
+  ✓  112 tests/e2e/hitl.spec.ts:643:1 › per-question skip keeps other drafts and final selection never auto-submits (5.6s)
+(node:3194) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  114 tests/e2e/message-queue.spec.ts:80:1 › lost acceptance response is queried after reload without reposting; queue actions fit a narrow desktop window (5.8s)
+  ✓  115 tests/e2e/message-queue.spec.ts:42:1 › queue keeps identical submissions independent, supports 引导 / undo / takeback and restores on stop (5.7s)
+  ✓  116 tests/e2e/message-queue.spec.ts:104:1 › late acknowledgement preserves a retyped draft and composition never submits (3.5s)
+  ✓  117 tests/e2e/recovery.spec.ts:51:1 › interrupted saved input stays in history; only an explicit new message continues the session (7.6s)
+  ✓  118 tests/e2e/recovery.spec.ts:76:1 › interruption preserves independent draft, attachments and focus across switch and refresh (5.6s)
+  ✓  119 tests/e2e/recovery.spec.ts:98:1 › interrupted preparation restores only unrecorded input and attachments without sending (4.0s)
+  ✓  120 tests/e2e/recovery.spec.ts:106:1 › unrecorded input recovery never replaces a newer draft without an explicit click (3.6s)
+  ✓  121 tests/e2e/recovery.spec.ts:117:1 › hard recovery warning remains blocking even with an interrupted result (3.8s)
+  ✓  123 tests/e2e/recovery.spec.ts:145:1 › continued requests keep child cards at their own tool positions when call IDs repeat (4.6s)
+  ✓  122 tests/e2e/recovery.spec.ts:126:1 › missing tool evidence remains unknown after a successful new reply (7.9s)
+  ✓  125 tests/e2e/recovery.spec.ts:165:45 › file outputs remain request-scoped when call IDs repeat (old output saved=true) (4.7s)
+  ✓  124 tests/e2e/recovery.spec.ts:165:45 › file outputs remain request-scoped when call IDs repeat (old output saved=false) (4.8s)
+  ✓  127 tests/e2e/references.spec.ts:96:1 › IME, Escape, outside click and pasted paths remain plain text; menu allows replacement and removal (4.4s)
+  ✓  126 tests/e2e/references.spec.ts:55:1 › typed references select using keyboard, preserve prose, show historical Skill and do not call model before send (7.6s)
+  ✓  128 tests/e2e/references.spec.ts:123:1 › file picker browses directories and pagination, shares upload count and deduplicates the same ordinary path (5.7s)
+  ✓  130 tests/e2e/references.spec.ts:179:1 › 375px picker and Skill dialog remain contained with keyboard focus (2.9s)
+  ✓  129 tests/e2e/references.spec.ts:150:1 › seat-scoped drafts survive refresh, delayed directories cannot leak, and first creation migrates selections once (10.2s)
+  ✓  131 tests/e2e/references.spec.ts:201:1 › changed selection fails before model work and preserves all inputs until explicit correction (4.8s)
+  ✓  133 tests/e2e/references.spec.ts:252:1 › Chinese composition filters the browsed directory and caret movement abandons the trigger safely (5.3s)
+  ✓  132 tests/e2e/references.spec.ts:225:1 › workspace navigation preserves separate drafts and dismisses stale pickers without selecting late results (6.4s)
+  ✓  134 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (新的目标) (8.0s)
+  ✓  135 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (原始目标) (8.0s)
+  ✓  136 tests/e2e/references.spec.ts:311:1 › @ opens categories without loading file or agent lists and supports returning between categories (4.0s)
+
+
+  1) tests/e2e/chat.spec.ts:676:1 › 分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除 ──────────────────────────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "会话 A",
+        "会话 B",
+    -   "会话 D",
+        "会话 C",
+    +   "会话 D",
+      ]
+
+      710 |     await expect(page.locator('.conversation-indicator.failed')).toHaveCount(1);
+      711 |     const finalOrder = await page.locator('.workspace-groups .session-item').allTextContents();
+    > 712 |     expect(originalOrder.map(text => text.slice(0, 4))).toEqual(finalOrder.map(text => text.slice(0, 4)));
+          |                                                         ^
+      713 |     expect(mock.counts.sends).toBe(0);
+      714 |     expect(mock.counts.cancels).toEqual([]);
+      715 |   } finally { await mock.close(); }
+        at /Users/lau/.codex/worktrees/axon-r1-experts/berserk/experiments/harness-lab/tests/e2e/chat.spec.ts:712:57
+
+    Error Context: test-results/chat-分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/chat-分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/chat-分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/chat.spec.ts:676:1 › 分组侧栏不显示汇总数字，未打开会话保留状态，未读查看后清除 ───────────────────────────────────
+  135 passed (5.7m)

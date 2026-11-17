@@ -281,7 +281,21 @@ macOS 优先使用已安装的 Chrome；其他环境需先准备 Playwright Chro
 
 ## 业务任务与账号入口
 
-正式启动默认要求登录。一个启用账号固定绑定一个席位；任务空间的说明对启用席位可见，文件／会话仍按任务 × 席位分别保存。个人空间仅所属席位可访问和管理，每个启用席位均可创建自己的空间。任务空间内的工作分派、成果提交与验收继续使用原有确认流程。
+正式启动默认要求登录。一个启用的业务账号固定绑定一个席位；任务空间的说明对启用席位可见，文件／会话仍按任务 × 席位分别保存。个人空间仅所属席位可访问和管理，每个启用席位均可创建自己的空间。任务空间内的工作分派、成果提交与验收继续使用原有确认流程。
+
+系统“管理员”使用独立账号，无需绑定任何席位。总体席继续承担业务职责；其名称、任务或模型权限均不会授予管理员身份。管理员与普通业务用户共用“下拉选择身份＋密码”的登录表单；管理员作为用户选项，登录后进入同一 Axon 界面的能力中心，专家页提供“创建专家”入口。管理员可新建对话并使用账号独有的个人空间和文件，不访问公共任务空间或其他用户的私有资料。管理员账号仍不绑定业务席位，其个人范围不加入业务席位目录。能力中心共用专家、技能、连接器三类页面；技能支持受控内置目录与R3组织技能包，连接器未接入时展示真实空状态。
+
+已有登录数据需先停止服务，完成完整备份和独立账号迁移。迁移仅保留原有账号、密码、业务权限与显式管理员授权，不自动创建管理员。新安装若只需管理员，先执行 `initialize` 准备空登录目录，不创建虚拟席位，然后同样迁移和开通：
+
+```bash
+# 仅全新、尚未初始化的登录数据根需要这一行
+npm run access:admin -- initialize --data-dir /绝对路径/数据目录 --service-stopped
+npm run migrate:access:administrators -- --data-dir /绝对路径/数据目录 --backup-dir /绝对路径/独立迁移备份 --dry-run
+npm run migrate:access:administrators -- --data-dir /绝对路径/数据目录 --backup-dir /绝对路径/独立迁移备份 --apply --service-stopped
+npm run access:admin -- administrator --data-dir /绝对路径/数据目录 --username system-admin --name 系统管理员 --service-stopped
+```
+
+管理员密码仅通过交互终端隐蔽输入，不接受命令行或管道，也没有默认密码。迁移中断时登录服务会拒绝启动；使用原数据根和同一备份参数重试。迁移后的账号库 schema 为19—24，旧程序不能打开；回退须配对旧程序与迁移前完整数据备份，并另行保留新数据。`capabilities:admin grant|revoke|list` 兼容管理同一系统管理员角色，角色存储为账号级 `account_roles`，不属于业务席位。
 
 本期不迁移难以对应的旧实验项目。需要重新初始化时，先停止服务，再备份完整数据根：
 
@@ -411,3 +425,45 @@ npm run background:admin -- grant --data-dir /绝对路径/数据目录 --source
 总体席在“工作待办”或“工作总览 → 待批准投递”查看分析与建议，可在候选内调整并批准，或不予补充。每项分析只作一次决定；已批准不代表已送达，发送失败沿原投递入口重试，无需重跑模型。普通收件可展开“为何收到”。
 
 真实模型验证：`npm run probe:recipients` 使用独立临时目录、合成四席位和资料，保留全部调用及判断；不会部署、发送生产消息或改写模型结果。工具调用通过、审批通过和判断质量分别记录；不进行多种分析架构的对比实验。
+
+
+## R3 技能包
+
+管理员点击“创建专家／创建技能”，在同一方式弹窗中选择手动创建或通过 Skill 创建。后者进入与侧栏相同的新对话草稿页，在页面中选择或新建授权空间，通过原 Skill 标签中的 expert-manager／skill-creator 和原操作确认保存真实草稿；保存后留在对话，主动打开原管理。打开页面或选 Skill 不会创建会话；首次发送才沿原机制创建。同一空间保留自己的草稿和附件，切换空间不搬附件。也可在已有本人个人对话通过原 Skill 选择或明确请求发起创建／修改，一次操作一个目标；管理请求只提供受控草稿工具，不提供发布、授权、Shell或业务写入。手动创建和技能导入保留，不依赖模型。手动新建技能先填写名称、简介和可选使用说明，确认后一次创建完整草稿；取消不写入。内容保存成功后进入使用范围，保存范围后进入检查与发布并检查格式；发布仍须明确确认，成功后查看发布历史。保存失败或冲突时保留输入和当前步骤。日常方法编辑使用表单，包内文件及原始源码可展开编辑，保留导入的扩展字段和资源；归档技能在管理员目录的“已归档”中折叠展示。
+
+能力中心的技能页提供创建、复制、Markdown/单技能ZIP导入、文件草稿、格式检查、自动静态扫描、可选隔离试用、发布、历史、使用范围及普通启停。内置技能只读可复制，保留原中文显示名与旧正文/摘要；组织技能固定完整包修订，脚本或模板变更也改变包摘要。发布无需成功扫描或试用记录，基础格式、完整性、当前管理员与发布基线仍须有效。专家隔离试用同样可选，未试用或试用未通过不单独阻止发布；当前配置检查、风险确认、使用范围、发布说明及管理员发布确认仍必需。
+
+组织技能的业务使用范围为未开放/全部业务席位/指定席位。无席位管理员可管理、隔离试用，并在自己的个人对话中使用已发布且启用的组织技能，无需先向业务席位开放。草稿、停用/归档/封禁、账号拒绝与当前身份失效仍受守卫约束；管理员仍不能访问业务任务空间或业务工具。普通用户在已有空间选择技能，不自动发送；专家引用固定修订。当前请求按需装载获准包到只读`/skills`，输出在`/workspace`。包声明不扩大工具或业务权限。后台Profile/席位分析仍沿用既有内置路径，组织技能后台接入留R5；不会自动投放或静默丢弃固定依赖。
+
+已有R2数据须停服后显式迁移，先dry-run并保留独立完整备份：
+
+```bash
+npm run migrate:skills:r3 -- --data-dir /absolute/data --backup-dir /absolute/backups/before-r3 --dry-run
+npm run migrate:skills:r3 -- --data-dir /absolute/data --backup-dir /absolute/backups/before-r3 --apply --service-stopped
+```
+
+迁移可重入，不改旧revisionId/digest或Pi JSONL，不重跑任务。回退必须将R2程序与迁移前完整备份副本配对，另行保留R3活动数据。认证库不因本次技能包升级改动。
+
+默认扫描使用单独的`berserk-skill-scanner:r3-semgrep-1.182.0`镜像，禁网、非root、只读输入/规则及受限资源；工具、规则来源及有界限额配置见[scripts/skills-scanner](scripts/skills-scanner/README.md)。执行技能资源需包含当前`execution-image/files.py`的新执行镜像，不能原地覆盖共享旧标签。缺扫描工具如实失败，不阻断合法发布；缺执行能力不回退宿主执行。没有试用时只显示未试用，不分析额外环境缺口。
+
+`probe:skills:r3`验证真实配置模型/Docker；`probe:skills:scanner`验证真实扫描器；`probe:skills:rollback`使用真实R2代码与合成模型传输验证配对回退。`measure:skills:r3`测存储/元数据，`measure:skills:context`用原生Pi与明确标记的替身模型测准备时间；均不作SLO或业务集成认证。所有探针使用独立合成数据目录。
+
+R3A真实模型验收：`npm run probe:authoring:r3a`，使用现有配置和独立合成数据，无生产监听器。只自动批准探针中明确约定的合成候选；真实回执、原发布流程与正式使用分别核对。沿用 Node 原生 env-file 加载既有测试模型配置，凭据仅留在进程内存；不复制业务账号、工作区或历史。
+
+
+### R4 连接器与远程 MCP（待用户验收）
+
+连接器在原能力中心管理：通用 MCP 保存后保持停用，先主动发现工具，再选择开放动作和使用范围，最后启用。业务席位只能使用获准连接及配置本人的凭证；本人凭证可用于个人空间和原权限允许的公共任务，不会供其他席位或后台借用。管理员仍不能访问业务任务空间。
+
+新秘密需要 `LAB_CONNECTOR_KEY_FILE` 指向数据根之外、权限0600的外置密钥文件，格式为 `{"activeKeyId":"r4-v1","keys":{"r4-v1":"32字节随机密钥的base64"}}`。保留已有密钥版本；缺密钥时拒绝保存秘密，不降级明文。无认证 MCP 及原 tokenEnv 引用不要求新增明文存储。
+
+旧数据必须停服后先执行 dry-run，显式列出原外部配置及提供其环境凭证的文件，检查冲突后再 apply。相同业务类型的额外配置不会被取第一条、删除或自动合并。
+
+```sh
+npm run migrate:connectors:r4 -- --data-dir /absolute/data --backup-dir /absolute/backup-r4 --context-config /absolute/context.json --background-config /absolute/background.json --credential-file /absolute/service.env --dry-run
+npm run migrate:connectors:r4 -- --data-dir /absolute/data --backup-dir /absolute/backup-r4 --context-config /absolute/context.json --background-config /absolute/background.json --credential-file /absolute/service.env --apply --service-stopped
+```
+
+使用外置密钥时同时传 `--key-file /absolute/connector-keys.json`；凭证分散在多个文件时重复 `--credential-file`。备份包含完整 `backup/data`、外部配置/可用密钥/凭证 `backup/external` 与 `pairing.json`；回退配对旧程序及这份完整备份，另行保留R4活动数据。迁移后旧配置文件不覆盖数据库权威记录。
+
+`npm run probe:mcp:r4` 验证受控真实HTTP/SDK；`npm run probe:connectors:r4 -- --output-dir /absolute/isolated-report` 使用既有授权方舟配置验证模型闭环，清理合成数据且不使用生产账号或历史。两种协议、真实第三方、合成服务、模型调用与用户验收分别记录。当前支持2026-07-28及2025-11-25；用户已明确不接入Microsoft Learn，不为其扩展旧协议；公开探针使用Cloudflare文档MCP。

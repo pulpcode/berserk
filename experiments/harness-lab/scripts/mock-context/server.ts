@@ -66,6 +66,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
   const changeCursor = (seq: number) => `situation-${epoch}-seq-${seq}`;
   const head = () => changeCursor(100 + changes.length);
   function reset() {
+    if(scenarios)throw fail('SIMULATION_ENDPOINT_RETIRED','请通过导演台重开自由调试轮次。',410);
     if(options.instanceId)throw fail('INVALID_STAGE','地图实例请使用新的数据目录，不能重置编号。');
     epoch = randomUUID(); intelGeneration = situationGeneration = 0;
     reportData = reports(); objectData = initialObjects(); changes = []; intelAsOf = situationAsOf = at('09:00'); unavailable.clear(); save();
@@ -77,6 +78,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
     situationGeneration++; situationAsOf = at(time);
   }
   function advance(stage: MockStage) {
+    if(scenarios)throw fail('SIMULATION_ENDPOINT_RETIRED','请通过导演台修改指定自由调试轮次。',410);
     if(options.instanceId)throw fail('INVALID_STAGE','地图实例使用 HTTP 控制修改。');
     if (stage === 'intel') {
       if (!reportData.some(r => r.reportId === 'report-west-01' && r.revision === 2)) { reportData.push(updatedReport()); intelGeneration++; if (intelAsOf < at('09:20')) intelAsOf = at('09:20'); }
@@ -103,6 +105,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
     save();
   }
   function event(name: MockEventName): MockNotification {
+    if(scenarios)throw fail('SIMULATION_ENDPOINT_RETIRED','请在指定轮次保存并显式发送通知。',410);
     if (name === 'E1') return {sourceMessageId: 'intel-msg-0001', title: '西区通道限制信息更新',
       text: '报告 report-west-01 更新至修订 2。关联对象 situation/road/road-west-01；限制时段为 2026-10-01T09:20:00+08:00 至 2026-10-01T10:10:00+08:00。请查询报告正文及历史。', subjectId: 'report-west-01', occurredAt: at('09:20')};
     if (name === 'E2') return {sourceMessageId: 'situation-msg-0001', title: '西区可用车辆更新',
@@ -204,7 +207,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
       if(isControl&&!options.controlToken)throw fail('NOT_FOUND','控制未启用。',404);
       const supplied = Buffer.from(req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : ''), expected = Buffer.from(isControl ? options.controlToken! : options.token);
       if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) throw fail('UNAUTHORIZED', '查询凭证无效。', 401);
-      if(isControl) {const url=new URL(path,'http://127.0.0.1');if(scenarios && /^\/control\/commands(?:\/|$)/.test(url.pathname))body=await scenarios.commands(req,url);else if(scenarios?.handlesControl(url.pathname))body=await scenarios.control(req,url);else {if(url.search)throw fail('INVALID_ARGUMENT','控制接口不接受查询参数。');body=await control(req,url.pathname);}} else {
+      if(isControl) {const url=new URL(path,'http://127.0.0.1');if(scenarios && /^\/control\/commands(?:\/|$)/.test(url.pathname))body=await scenarios.commands(req,url);else if(scenarios?.handlesControl(url.pathname))body=await scenarios.control(req,url);else {if(scenarios&&req.method!=='GET')throw fail('SIMULATION_ENDPOINT_RETIRED','旧模拟写接口已停用，请使用带轮次的导演台操作。',410);if(url.search)throw fail('INVALID_ARGUMENT','控制接口不接受查询参数。');body=await control(req,url.pathname);}} else {
         if (method !== 'GET') throw fail('INVALID_ARGUMENT', '只支持只读 GET。');
         const url=new URL(path,'http://127.0.0.1'),systemId=url.pathname.startsWith('/intel/')?'intel':url.pathname.startsWith('/situation/')?'situation':undefined;
         if(systemId&&unavailable.has(systemId))throw fail('UNAVAILABLE','来源暂不可用。',503);

@@ -2,7 +2,7 @@ import {beforeEach, expect, it, vi} from 'vitest';
 import type {ConfirmationInteraction, HandoffFile, Upload, WorkAction, WorkActionInput, WorkDetail} from '../src/contracts/index.js';
 import type {MapTrialManifest} from '../scripts/probe-situation-map.js';
 import {mapTrialRequest} from '../scripts/probe-situation-map.js';
-import {verifyConfirmation} from '../scripts/probe-agent-framework.js';
+import {main,verifyConfirmation} from '../scripts/probe-agent-framework.js';
 
 vi.mock('../scripts/probe-situation-map.js',()=>({mapTrialRequest:vi.fn(),mapTrialAuth:vi.fn(),startMapTrial:vi.fn()}));
 const request=vi.mocked(mapTrialRequest);
@@ -78,4 +78,9 @@ it('rejects a changed review decision',async()=>{
 
 it('rejects a non-work confirmation before any prepared-action lookup',async()=>{
   const test=fixture('assign');test.item.toolName='bash';await expect(test.verify()).rejects.toThrow();expect(request).not.toHaveBeenCalled();
+});
+
+it('rejects retired real-model probe before creating an environment or querying APIs',async()=>{
+  await expect(main(['--prepare-only'])).rejects.toThrow('旧 map-*');
+  expect(request).not.toHaveBeenCalled();
 });

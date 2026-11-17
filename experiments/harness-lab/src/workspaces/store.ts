@@ -131,30 +131,35 @@ export class WorkspaceStore {
     try { validateIndex(parseJsonStrict(disk!)); } catch { throw stateError(); }
     if (disk !== JSON.stringify(this.index, null, 2)) throw stateError();
     authorize?.();
-    await atomicWrite(join(this.dataDir, 'workspace-index.json'), JSON.stringify(next, null, 2));
+    await atomicWrite(join(this.dataDir, 'workspace-index.json'), JSON.stringify(next, null, 2), undefined, {
+      beforeRename: async () => { authorize?.(); },
+    });
     this.index = next;
   }
   async create(name: string, taskSpaceId?: string, seatId = this.seatId): Promise<Workspace> {
     return this.lock.run(() => this.createUnlocked(name, taskSpaceId, seatId));
   }
   private async createUnlocked(name: string, taskSpaceId: string | undefined, seatId: string): Promise<Workspace> {
-    this.access?.assertCanCollaborate(seatId);
+    this.access?.assertCanUseWorkspace(seatId);
     if (this.access) { if (!taskSpaceId) throw new RequestError('TASK_REQUIRED', '请先创建任务。', 400); this.access.get(taskSpaceId, seatId, true); }
     name = name.trim();
     if (!name || name.length > 60 || !/^[a-zA-Z0-9_-]{1,64}$/.test(seatId)) throw new RequestError('INVALID_INPUT', '工作区名称或席位无效。');
     if (taskSpaceId && (!UUID.test(taskSpaceId) || this.index.workspaces.some(item => item.taskSpaceId === taskSpaceId && item.seatId === seatId))) throw stateError();
     const workspace = newWorkspace(name, undefined, seatId, taskSpaceId);
     await prepareWorkspace(this.dataDir, workspace);
-    await this.commit({ ...this.index, defaultWorkspaceId: this.index.defaultWorkspaceId || workspace.id, workspaces: [...this.index.workspaces, workspace] });
+    await this.commit({ ...this.index, defaultWorkspaceId: this.index.defaultWorkspaceId || workspace.id, workspaces: [...this.index.workspaces, workspace] }, () => {
+      this.access?.assertCanUseWorkspace(seatId);
+      this.access?.get(workspace.taskSpaceId, seatId, true);
+    });
     const { id, createdAt } = workspace;
     return { id, name, createdAt, taskSpaceId: workspace.taskSpaceId, seatId: workspace.seatId };
   }
   async bind(sessionId: string, workspaceId: string, seatId = this.seatId) {
     return this.lock.run(async () => {
-      this.access?.assertCanCollaborate(seatId);
+      this.access?.assertCanUseWorkspace(seatId);
       this.get(workspaceId, seatId);
       if (!UUID.test(sessionId) || this.index.sessionBindings[sessionId]) throw stateError();
-      await this.commit({ ...this.index, sessionBindings: { ...this.index.sessionBindings, [sessionId]: workspaceId } }, () => this.access?.assertCanCollaborate(seatId));
+      await this.commit({ ...this.index, sessionBindings: { ...this.index.sessionBindings, [sessionId]: workspaceId } }, () => this.access?.assertCanUseWorkspace(seatId));
     });
   }
 }

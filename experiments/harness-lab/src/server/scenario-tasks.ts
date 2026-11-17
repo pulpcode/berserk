@@ -1,3 +1,4 @@
+import type { DirectorSwitchInput } from '../contracts/director.js';
 import { randomUUID } from 'node:crypto';
 import { mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -6,9 +7,10 @@ import type { Identity } from '../contracts/access.js';
 import type { ScenarioTaskDefinition, ScenarioTaskInitialization, ScenarioTaskBootstrap } from '../contracts/scenarios.js';
 import { RequestError } from '../contracts/errors.js';
 import { atomicWrite, checkDirectory, parseJsonStrict, readControlled } from '../resources/files.js';
-import { contextRecord, contextText } from '../context/validation.js';
+import { contextInteger, contextRecord, contextText } from '../context/validation.js';
 import { scenarioTaskBootstrap, scenarioTaskDefinitions } from '../scenario/task-definitions.js';
 
+export interface DirectorTransition { input:DirectorSwitchInput; userId:string; state:'pending'|'complete'; pauseId:string; finishId:string; createId:string; activateId:string; nextInstanceId?:string; phase:'ending'|'starting'|'complete' }
 interface TaskEntry extends ScenarioTaskDefinition { clientActionId: string; taskId?: string }
 interface RunTasks { schemaVersion: 1|2; taskBootstrap?: ScenarioTaskBootstrap; instanceId: string; userId: string; operationId: string; tasks: TaskEntry[] }
 export interface ActivationReceipt { operationId: string; instanceId: string; previousInstanceId: string | null; userId: string; inputHash: string; state: 'pending' | 'complete' }
@@ -116,6 +118,23 @@ export class ScenarioTasks {
     const rows=this.access.db.prepare("SELECT id FROM task_spaces WHERE json_extract(data,'$.scenarioInstanceId')=?").all(id);
     for(const row of rows){check();const task=this.access.get(String(row.id),actor.seatId);if(task.state==='active'&&!blocked(task.id))this.access.update(actor,task.id,task.revision,{state:'archived'},()=>blocked(task.id),true);}
   }
+  async directorTransition():Promise<DirectorTransition|null> {
+    await this.ready;const raw=await readControlled(join(this.directory,'.director-transition.json'),16384,true);if(raw===null)return null;
+    const parsed=contextRecord(parseJsonStrict(raw),['input','userId','state','pauseId','finishId','createId','activateId','nextInstanceId','phase'],['input','userId','state','pauseId','finishId','createId','activateId','phase']);
+    contextRecord(parsed.input,['clientActionId','mode','expectedActiveRevision','expectedInstanceId','expectedRevision','confirmed','restart'],['clientActionId','mode','expectedActiveRevision','expectedInstanceId','expectedRevision','confirmed']);
+    const value=parsed as unknown as DirectorTransition;
+    if(!value||!['pending','complete'].includes(value.state)||!['ending','starting','complete'].includes(value.phase)||!value.input||!['scenario','free_debug'].includes(value.input.mode)||value.input.confirmed!==true)throw conflict('导演切换记录无效，请核对备份。');
+    for(const id of [value.userId,value.input.clientActionId,value.pauseId,value.finishId,value.createId,value.activateId])uuid(id);
+    contextInteger(value.input.expectedActiveRevision,0);if(value.input.expectedRevision!==null)contextInteger(value.input.expectedRevision);
+    if((value.input.expectedInstanceId===null)!==(value.input.expectedRevision===null)||value.input.restart!==undefined&&typeof value.input.restart!=='boolean'||value.input.restart===true&&value.input.mode!=='free_debug'||(value.state==='complete')!==(value.phase==='complete')||value.state==='complete'&&value.input.mode==='free_debug'&&!value.nextInstanceId)throw conflict('导演切换记录状态不一致。');
+    if(value.nextInstanceId)scenarioId(value.nextInstanceId);if(value.input.expectedInstanceId!==null)scenarioId(value.input.expectedInstanceId);
+    return value;
+  }
+  async saveDirectorTransition(value:DirectorTransition) {await this.ready;await atomicWrite(join(this.directory,'.director-transition.json'),JSON.stringify(value));}
+  async archiveOwned(actor:Identity,id:string,blocked:(id:string)=>boolean,check:()=>void) {
+    const rows=this.access.db.prepare("SELECT id FROM task_spaces WHERE json_extract(data,'$.scenarioInstanceId')=?").all(id);
+    for(const row of rows){check();const task=this.access.get(String(row.id),actor.seatId);if(task.state==='active'&&!blocked(task.id))this.access.update(actor,task.id,task.revision,{state:'archived'},()=>blocked(task.id),true);}
+  }
   async activation(): Promise<ActivationReceipt | null> {
     await this.ready;const text=await readControlled(join(this.directory,'.activation.json'),8192,true);if(text===null)return null;
     const r=contextRecord(parseJsonStrict(text),['operationId','instanceId','previousInstanceId','userId','inputHash','state'],['operationId','instanceId','previousInstanceId','userId','inputHash','state']);
@@ -124,6 +143,7 @@ export class ScenarioTasks {
   }
   async saveActivation(receipt: ActivationReceipt) { await this.ready;await atomicWrite(join(this.directory,'.activation.json'),JSON.stringify(receipt)); }
   async assertSettled(operationId?: string) {
+    const transition=await this.directorTransition();if(transition?.state==='pending'&&transition.input.clientActionId!==operationId)throw conflict('导演台切换尚未完成，请先核对或继续原请求。');
     const receipt=await this.activation();if(receipt?.state==='pending'&&receipt.operationId!==operationId)throw conflict('上次激活尚未核对，请先查询原操作回执或重试相同激活。');
   }
 }

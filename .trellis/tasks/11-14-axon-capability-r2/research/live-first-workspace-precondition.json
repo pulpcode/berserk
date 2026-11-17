@@ -1,0 +1,332 @@
+{
+  "passed": false,
+  "failure": "POST /api/sessions: {\"error\":{\"code\":\"WORKSPACE_NOT_FOUND\",\"message\":\"工作区不存在。\"}}\n\n404 !== 200\n",
+  "dataDir": "/tmp/axon-r2-live-sIYb3i",
+  "elapsedMs": 16613,
+  "model": {
+    "provider": "volcengine-agent-plan",
+    "id": "deepseek-v4.1-flash"
+  },
+  "attempts": 4,
+  "checks": [
+    "普通账号管理写入403",
+    "真实方舟+Docker：非发布草稿隔离试用、实际读写/下载、人工确认、正式会话索引不污染",
+    "发布幂等，重试不产生第二个版本"
+  ],
+  "calls": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "toolNames": [
+        "skill_read",
+        "read",
+        "write",
+        "file_output"
+      ],
+      "systemHash": "42d744d8dcfa406267aea9534aa0df3c3751833306619220d3e7c997a58c9e2b",
+      "revisionOne": true,
+      "revisionTwo": false
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "toolNames": [
+        "skill_read",
+        "read",
+        "write",
+        "file_output"
+      ],
+      "systemHash": "42d744d8dcfa406267aea9534aa0df3c3751833306619220d3e7c997a58c9e2b",
+      "revisionOne": true,
+      "revisionTwo": false
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "toolNames": [
+        "skill_read",
+        "read",
+        "write",
+        "file_output"
+      ],
+      "systemHash": "42d744d8dcfa406267aea9534aa0df3c3751833306619220d3e7c997a58c9e2b",
+      "revisionOne": true,
+      "revisionTwo": false
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "toolNames": [
+        "skill_read",
+        "read",
+        "write",
+        "file_output"
+      ],
+      "systemHash": "42d744d8dcfa406267aea9534aa0df3c3751833306619220d3e7c997a58c9e2b",
+      "revisionOne": true,
+      "revisionTwo": false
+    }
+  ],
+  "records": [
+    {
+      "trial": {
+        "trial": {
+          "trialId": "3729130b-774b-40f2-9c65-9c87f03eaf37",
+          "expertId": "expert-f584959b-3328-4847-b2ef-8a4d63f5912b",
+          "ownerId": "0a59f7a3-7193-46ce-b7fb-3f386db41884",
+          "draftDigest": "aaa0da57240f021cd05165ff9f7308eb5c4fe22ac5c9c7e5e118f53e17ad8e83",
+          "validationId": "a2bab9c5-008f-4be7-8e5c-71d97988d181",
+          "status": "succeeded",
+          "input": "本次仅为合成数据试用。请先实际调用skill_read读取review，实际read读取附件sample.csv，核对10+20=30，然后用write生成trial-summary.md，内容含“总数量：30”，最后必须调用file_output交付该文件。不要使用bash，不查询真实业务。",
+          "createdAt": "2026-11-14T05:07:38.486Z",
+          "evidence": {
+            "tools": [
+              "skill_read",
+              "read",
+              "write",
+              "file_output"
+            ],
+            "model": "volcengine-agent-plan/deepseek-v4.1-flash",
+            "runtime": "axon/pi-0.85.1",
+            "success": true,
+            "fileEnvironmentVerified": true,
+            "summary": "代表性试用执行完成，仍需管理员确认。",
+            "unverified": []
+          },
+          "completedAt": "2026-11-14T05:07:52.374Z"
+        },
+        "snapshot": {
+          "id": "75a0a340-e992-49c8-9971-0edee98827f8",
+          "workspaceId": "03d8e9f6-a60e-44dc-ab95-2cf33fba62f4",
+          "title": "本次仅为合成数据试用。请先实际调用skill_read读取review，实际re",
+          "updatedAt": "2026-11-14T05:07:52.360Z",
+          "expertDefaultSource": "explicit",
+          "expert": {
+            "expertId": "expert-f584959b-3328-4847-b2ef-8a4d63f5912b",
+            "revisionId": "rev-73877b2e5a015d70ae13fa9be97d49e6f3116dec24a51f54a51b548f0234b202",
+            "name": "R2线上合成核对专家",
+            "description": "只用于R2隔离验收的合成数据核对",
+            "releaseVersion": "trial",
+            "digest": "73877b2e5a015d70ae13fa9be97d49e6f3116dec24a51f54a51b548f0234b202",
+            "modes": [
+              "interactive"
+            ],
+            "dependencies": [
+              {
+                "id": "review",
+                "name": "结果检查",
+                "revisionId": "skill-624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18",
+                "releaseVersion": "1",
+                "digest": "624e54eee96aea5f818827f7f13397a0f3f2c942c06c0218549a0f3dc8991c18"
+              }
+            ],
+            "availability": {
+              "available": true,
+              "state": "enabled"
+            },
+            "currentRevisionId": "rev-73877b2e5a015d70ae13fa9be97d49e6f3116dec24a51f54a51b548f0234b202",
+            "updateAvailable": false
+          },
+          "modelId": "default",
+          "inputQueue": {
+            "revision": 2,
+            "available": false,
+            "reason": "当前回复已结束。",
+            "items": []
+          },
+          "messages": [
+            {
+              "id": "4eebc885",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "user",
+              "text": "本次仅为合成数据试用。请先实际调用skill_read读取review，实际read读取附件sample.csv，核对10+20=30，然后用write生成trial-summary.md，内容含“总数量：30”，最后必须调用file_output交付该文件。不要使用bash，不查询真实业务。",
+              "attachments": [
+                {
+                  "path": "sample.csv",
+                  "name": "sample.csv",
+                  "size": 34,
+                  "hash": "61929330a5d72d2985f2eed8b3ac33a1fe0c750bcd493e75d78eb61c7cd33928"
+                }
+              ]
+            },
+            {
+              "id": "218ee42d",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "assistant",
+              "text": "我会按你要求的顺序执行：先读取 review 方法，再读取 sample.csv，然后核对算式，最后写入文件并交付。",
+              "presentationId": "4f1659d2-008d-4778-9938-510be426ddc6:assistant:0",
+              "content": [
+                {
+                  "id": "4f1659d2-008d-4778-9938-510be426ddc6:assistant:0:content:0",
+                  "type": "text",
+                  "text": "我会按你要求的顺序执行：先读取 review 方法，再读取 sample.csv，然后核对算式，最后写入文件并交付。"
+                }
+              ]
+            },
+            {
+              "id": "59452148",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "tool",
+              "text": "{\"id\":\"review\",\"name\":\"结果检查\",\"description\":\"根据资料检查草稿的事实、约束与可执行性。\",\"version\":\"1\",\"hash\":\"513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904\",\"content\":\"---\\nname: review\\ndescription: 根据资料检查草稿的事实、约束与可执行性。\\n---\\n核对草稿是否符合用户目标和已读取资料，逐项检查事实、来源、约束遗漏与执行责任。\\n输出“问题与依据”“修订建议”和“仍待确认”三个部分；没有问题时如实说明。引用资料 ID，不把建议伪装成事实。\\n本 Skill 不授权更改工作区指令；只在用户明确要求时才可另行执行指令编辑。\\n\"}",
+              "toolName": "skill.read",
+              "toolCallId": "call_00_kjbn8bm0vd08mcyubft8wj7l",
+              "toolStatus": "completed",
+              "isError": false
+            },
+            {
+              "id": "2d7e4f83",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "tool",
+              "text": "项目,数量\n苹果,10\n香蕉,20\n",
+              "toolName": "read",
+              "toolCallId": "call_01_sw75sn263tpaxlj7ewi0kvtr",
+              "toolStatus": "completed",
+              "toolInput": {
+                "path": "/workspace/sample.csv"
+              },
+              "isError": false
+            },
+            {
+              "id": "d4447389",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "assistant",
+              "text": "",
+              "presentationId": "4f1659d2-008d-4778-9938-510be426ddc6:assistant:1",
+              "content": [
+                {
+                  "id": "4f1659d2-008d-4778-9938-510be426ddc6:assistant:1:content:0",
+                  "type": "thinking",
+                  "text": "Now verify 10+20=30. Yes. Write file with review-method outputs, include \"总数量：30\".\n\nNote: 资料事实 from sample.csv (no ID given other than filename). Apply review method: problems/basis, revision suggestions, pending confirmations.\n\nSimplify: sample.csv has only two rows, no header issues. Pending confirmations: whether summary should include other fields, whether unit needed.\n\nWrite file."
+                }
+              ]
+            },
+            {
+              "id": "fe156d23",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "tool",
+              "text": "Successfully wrote to /workspace/trial-summary.md",
+              "toolName": "write",
+              "toolCallId": "call_00_pofm9i1gjmhrhnbxx0m5ebe6",
+              "toolStatus": "completed",
+              "toolInput": {
+                "path": "/workspace/trial-summary.md"
+              },
+              "isError": false
+            },
+            {
+              "id": "510a5511",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "tool",
+              "text": "文件已提供下载：trial-summary.md（1337 字节）。",
+              "toolName": "file_output",
+              "toolCallId": "call_00_7f6vhrarg27gmt77hdf30fn3",
+              "toolStatus": "completed",
+              "toolInput": {
+                "path": "/workspace/trial-summary.md"
+              },
+              "isError": false
+            },
+            {
+              "id": "daa94d25",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "role": "assistant",
+              "text": "已按你要求的步骤全部实际执行完成：\n\n1. **skill_read('review')**：实际读取成功（版本 v1），已按其中要求执行复核，即输出“问题与依据”“修订建议”“仍待确认”三部分。\n2. **read('/workspace/sample.csv')**：实际读取成功，内容为表头“项目,数量”，两行数据“苹果,10”和“香蕉,20”。\n3. **核对 10+20=30**：与文件数据一致，结论成立，未发现事实性问题。\n4. **write 生成 /workspace/trial-summary.md**：写入成功，正文含“总数量：30”，并记录了资料事实、核对结果和 review 复核三部分。\n5. **file_output 交付**：已提供下载 sample 摘要文件 trial-summary.md（1337 字节）。\n\n需要说明的几点：\n- 资料事实：数量 10 和 20 均来自 sample.csv 当前内容；文件中没有单位、统计口径和项目编码字段。\n- 模型建议（非事实）：若要用于正式统计，建议补充单位和口径后再核对；是否给 30 标注单位，需要你确认。\n- 本次仅为合成数据试用，未使用 bash，未查询或调用任何真实业务接口，因此对“正式下发/成果提交”类效果不做任何真实性保证。",
+              "presentationId": "4f1659d2-008d-4778-9938-510be426ddc6:assistant:3",
+              "content": [
+                {
+                  "id": "4f1659d2-008d-4778-9938-510be426ddc6:assistant:3:content:0",
+                  "type": "text",
+                  "text": "已按你要求的步骤全部实际执行完成：\n\n1. **skill_read('review')**：实际读取成功（版本 v1），已按其中要求执行复核，即输出“问题与依据”“修订建议”“仍待确认”三部分。\n2. **read('/workspace/sample.csv')**：实际读取成功，内容为表头“项目,数量”，两行数据“苹果,10”和“香蕉,20”。\n3. **核对 10+20=30**：与文件数据一致，结论成立，未发现事实性问题。\n4. **write 生成 /workspace/trial-summary.md**：写入成功，正文含“总数量：30”，并记录了资料事实、核对结果和 review 复核三部分。\n5. **file_output 交付**：已提供下载 sample 摘要文件 trial-summary.md（1337 字节）。\n\n需要说明的几点：\n- 资料事实：数量 10 和 20 均来自 sample.csv 当前内容；文件中没有单位、统计口径和项目编码字段。\n- 模型建议（非事实）：若要用于正式统计，建议补充单位和口径后再核对；是否给 30 标注单位，需要你确认。\n- 本次仅为合成数据试用，未使用 bash，未查询或调用任何真实业务接口，因此对“正式下发/成果提交”类效果不做任何真实性保证。"
+                }
+              ]
+            }
+          ],
+          "active": null,
+          "turns": [
+            {
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "status": "succeeded",
+              "startedAt": "2026-11-14T05:07:38.868Z",
+              "completedAt": "2026-11-14T05:07:52.360Z",
+              "finalMessageId": "daa94d25"
+            }
+          ],
+          "interactions": [],
+          "fileOutputs": [
+            {
+              "downloadId": "53903a59-7612-4aa7-a994-307ddbaab8a3",
+              "workspaceId": "03d8e9f6-a60e-44dc-ab95-2cf33fba62f4",
+              "sessionId": "75a0a340-e992-49c8-9971-0edee98827f8",
+              "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+              "toolCallId": "call_00_7f6vhrarg27gmt77hdf30fn3",
+              "createdAt": "2026-11-14T05:07:48.340Z",
+              "path": "trial-summary.md",
+              "name": "trial-summary.md",
+              "size": 1337,
+              "hash": "92476e637b41cc9b305ae0f3fcaa4306562fad226560c6f276b27282720dfb2c"
+            }
+          ],
+          "lastResult": {
+            "requestId": "4f1659d2-008d-4778-9938-510be426ddc6",
+            "status": "succeeded",
+            "compactionIds": [],
+            "compactions": [],
+            "usageSummary": {
+              "modelAttempts": 4,
+              "replyAttempts": 4,
+              "compactionAttempts": 0,
+              "toolCalls": 4,
+              "unknownUsageAttempts": 0,
+              "actual": {
+                "input": 3369,
+                "output": 916,
+                "cacheRead": 8192,
+                "cacheWrite": 0,
+                "totalTokens": 12477
+              }
+            }
+          }
+        },
+        "calls": [
+          {
+            "toolCallId": "call_00_kjbn8bm0vd08mcyubft8wj7l",
+            "name": "skill.read",
+            "status": "completed",
+            "output": "{\"id\":\"review\",\"name\":\"结果检查\",\"description\":\"根据资料检查草稿的事实、约束与可执行性。\",\"version\":\"1\",\"hash\":\"513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904\",\"content\":\"---\\nname: review\\ndescription: 根据资料检查草稿的事实、约束与可执行性。\\n---\\n核对草稿是否符合用户目标和已读取资料，逐项检查事实、来源、约束遗漏与执行责任。\\n输出“问题与依据”“修订建议”和“仍待确认”三个部分；没有问题时如实说明。引用资料 ID，不把建议伪装成事实。\\n本 Skill 不授权更改工作区指令；只在用户明确要求时才可另行执行指令编辑。\\n\"}",
+            "isError": false
+          },
+          {
+            "toolCallId": "call_01_sw75sn263tpaxlj7ewi0kvtr",
+            "name": "read",
+            "status": "completed",
+            "output": "项目,数量\n苹果,10\n香蕉,20\n",
+            "isError": false
+          },
+          {
+            "toolCallId": "call_00_pofm9i1gjmhrhnbxx0m5ebe6",
+            "name": "write",
+            "status": "completed",
+            "output": "Successfully wrote to /workspace/trial-summary.md",
+            "isError": false
+          },
+          {
+            "toolCallId": "call_00_7f6vhrarg27gmt77hdf30fn3",
+            "name": "file_output",
+            "status": "completed",
+            "output": "文件已提供下载：trial-summary.md（1337 字节）。",
+            "isError": false
+          }
+        ],
+        "environment": {
+          "sources": "synthetic-fixtures",
+          "businessWrites": false,
+          "fileEnvironmentAvailable": true,
+          "model": "volcengine-agent-plan/deepseek-v4.1-flash",
+          "runtime": "axon/pi-0.85.1"
+        }
+      },
+      "download": {
+        "name": "trial-summary.md",
+        "hash": "92476e637b41cc9b305ae0f3fcaa4306562fad226560c6f276b27282720dfb2c",
+        "body": "# 合成数据试用核对摘要\n\n## 一、资料事实（来源：/workspace/sample.csv，已实际读取）\n\nsample.csv 当前内容为两行数据：\n\n| 项目 | 数量 |\n| --- | --- |\n| 苹果 | 10 |\n| 香蕉 | 20 |\n\n## 二、核对结果\n\n- 算式核对：10 + 20 = 30，与 sample.csv 中两行数量之和一致，结论成立。\n- 总数量：30\n\n## 三、按 review 方法复核\n\n**问题与依据**\n\n- 未发现事实性错误：数量取值 10、20 均直接来自 sample.csv，加总结果 30 可核验。\n- 约束方面：sample.csv 不含计量单位、项目编码、统计口径（如是否含其他行、重复计数）等信息，因此“总数量”仅代表对本文件现有两行的求和，不代表更大范围的数量统计（依据：sample.csv 自身字段结构）。\n\n**修订建议**\n\n- 若该摘要后续用于正式统计，建议在 sample.csv 中补充单位与统计口径说明，再重新核对，以免 30 被误读为含单位的总量。\n\n**仍待确认**\n\n- “总数量：30”是否需标注单位，需用户确认。\n- 是否需要按项目分别列出小计（10、20），当前已列出明细行，可作为默认表达。\n\n## 四、说明\n\n- 本次为合成数据试用，仅使用工作区文件 sample.csv 与实际读取结果，未查询任何真实业务数据，未使用 bash。\n"
+      }
+    }
+  ],
+  "limits": "最多40次模型调用、每请求180秒、总计15分钟；无任务重试或自动交互批准。真实外部业务、在途普通停用收尾和完整升级回退由独立验收覆盖。"
+}

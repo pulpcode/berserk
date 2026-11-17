@@ -1,0 +1,13 @@
+{
+  "exit": {
+    "code": null,
+    "signal": "SIGKILL"
+  },
+  "message": {
+    "boundary": "queued",
+    "eventId": "2891e66c-ccb5-40e7-b3b6-e319a7d5da5b",
+    "jobId": "e98a118e-9f7d-43dd-b9ce-bcf5ea1ccf04",
+    "acknowledged": true
+  },
+  "stderrPath": "/private/tmp/axon-r3-crash-actual-stderr.log"
+}

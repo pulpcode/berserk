@@ -1,0 +1,17 @@
+{
+  "unitApiUniqueFiles": 10,
+  "unitApiUniquePassed": 33,
+  "browserUniqueFiles": 3,
+  "browserUniquePassed": 17,
+  "postCssFocusedBrowserPassed": 3,
+  "typecheck": "passed",
+  "lint": "passed (2 existing warnings)",
+  "buildSeconds": 8.87,
+  "sourceHashesVerified": true,
+  "deployed4316": true,
+  "release": "/home/ubuntu/axon-r3-create-ux-4316-20261116",
+  "pid": 2758959,
+  "schemaMigration": false,
+  "gitCommitted": false,
+  "userAcceptance": "pending"
+}

@@ -104,6 +104,7 @@ export interface TaskLinkDependencies {
   /** Current source permission OR an actual delivery to this seat, plus scope. Not scope alone. */
   canRead(actor: Identity, event: BackgroundEvent, job: BackgroundJob): boolean;
   sourceName(sourceId: string): string;
+  sourceGroup?(sourceId: string): {id: string; name: string};
   assertWrite?(event:BackgroundEvent,job:BackgroundJob):void;
   readContent(actor: Identity, event: BackgroundEvent, job: BackgroundJob): Promise<TaskInformationContent>;
   analysisSummaries?(actor: Identity, taskId: string, eventId: string, jobId: string): BackgroundAnalysisSummary[];
@@ -133,7 +134,7 @@ export class TaskLinkService {
     return current;
   }
   private readable(actor: Identity, event: BackgroundEvent, job: BackgroundJob) {
-    return job.eventId === event.id && job.sourceId === event.sourceId && job.scenarioInstanceId === event.scenarioInstanceId && job.kind === 'preprocess' && job.status === 'succeeded'
+    return job.eventId === event.id && job.sourceId === event.sourceId && job.scenarioInstanceId === event.scenarioInstanceId && (job.policySourceId ?? job.sourceId) === (event.policySourceId ?? event.sourceId) && job.kind === 'preprocess' && job.status === 'succeeded'
       && !!job.result && this.dependencies.canRead(actor, event, job);
   }
   authorize(actor: Identity, eventId: string, jobId: string) {
@@ -227,8 +228,9 @@ export class TaskLinkService {
       return item ? [item] : [];
     });
     // The source picker covers every readable effective association, not only this page or filter.
-    const sources = [...new Map(authorized.map(item => [item.sourceId, {id: item.sourceId, name: item.sourceName ?? item.sourceId}])).values()];
-    const items = authorized.filter(item => (!filter.sourceId || filter.sourceId === item.sourceId)
+    const group = (item: typeof authorized[number]) => this.dependencies.sourceGroup?.(item.sourceId) ?? {id: item.sourceId, name: item.sourceName ?? item.sourceId};
+    const sources = [...new Map(authorized.map(item => [group(item).id, group(item)])).values()];
+    const items = authorized.filter(item => (!filter.sourceId || filter.sourceId === item.sourceId || filter.sourceId === group(item).id)
       && (!query || [item.title, item.reason, item.sourceName ?? item.sourceId].some(text => text.toLocaleLowerCase().includes(query))))
       .sort((a, b) => b.receivedAt.localeCompare(a.receivedAt));
     return {items: items.slice(offset, offset + limit), total: items.length, offset, limit, sources};

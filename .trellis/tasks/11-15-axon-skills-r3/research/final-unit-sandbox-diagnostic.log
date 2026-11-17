@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:29404) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/context-background.test.ts (8 tests | 8 failed) 104ms
+     × freezes source/scope at admission and returns actual HTTP and task-query evidence from native history 55ms
+     × isolates missing-scope configuration failures from legacy queue management and execution 6ms
+     × isolates missing-context configuration failures from legacy queue management and execution 4ms
+     × isolates unspecified-scope configuration failures from legacy queue management and execution 22ms
+     × isolates assessment-without-scope configuration failures from legacy queue management and execution 3ms
+     × denies source managers without context grants content/search/file/import paths and rejects out-of-scope recipients 4ms
+     × prepares an unsent follow-up with source/query references and preserves scope for seat background analysis 3ms
+     × keeps legacy unscoped jobs readable and usable by their authorized recipients 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > freezes source/scope at admission and returns actual HTTP and task-query evidence from native history
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > isolates missing-scope configuration failures from legacy queue management and execution
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > isolates missing-context configuration failures from legacy queue management and execution
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > isolates unspecified-scope configuration failures from legacy queue management and execution
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > isolates assessment-without-scope configuration failures from legacy queue management and execution
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > denies source managers without context grants content/search/file/import paths and rejects out-of-scope recipients
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > prepares an unsent follow-up with source/query references and preserves scope for seat background analysis
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > keeps legacy unscoped jobs readable and usable by their authorized recipients
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  12:38:42
+   Duration  11.60s (transform 8.96s, setup 0ms, import 11.07s, tests 104ms, environment 0ms)
+

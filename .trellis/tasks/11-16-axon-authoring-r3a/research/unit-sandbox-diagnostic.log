@@ -1,0 +1,20 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:56372) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/context-background.test.ts (8 tests | 1 failed) 26ms
+     × freezes source/scope at admission and returns actual HTTP and task-query evidence from native history 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/context-background.test.ts > background multi-source permission and evidence integration > freezes source/scope at admission and returns actual HTTP and task-query evidence from native history
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (8)
+   Start at  12:13:22
+   Duration  12.20s (transform 9.62s, setup 0ms, import 11.91s, tests 26ms, environment 0ms)
+

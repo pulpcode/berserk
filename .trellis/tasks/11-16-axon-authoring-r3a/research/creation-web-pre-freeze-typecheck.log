@@ -1,0 +1,5 @@
+
+> @berserk/harness-lab@0.1.0 typecheck
+> tsc --noEmit
+
+tests/pi/management-skill-review.test.ts(43,5): error TS2722: Cannot invoke an object which is possibly 'undefined'.

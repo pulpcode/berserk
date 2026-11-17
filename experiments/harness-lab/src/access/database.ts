@@ -4,9 +4,16 @@ import { DatabaseSync } from 'node:sqlite';
 import { RequestError } from '../contracts/errors.js';
 import { atomicWrite, checkDirectory, readControlled, stateError } from '../resources/files.js';
 import { baseSchemaVersion } from './schema.js';
+import { requireAdministratorSchema } from './administrator-schema.js';
 
 export async function openDatabase(dataDir: string): Promise<DatabaseSync> {
     const directory = join(dataDir, 'collaboration'); await mkdir(directory, {recursive: true, mode: 0o700}); await checkDirectory(directory);
+    const adminMigration = await readControlled(join(directory, 'administrator-migration.json'), 32 * 1024 * 1024, true);
+    if (adminMigration !== null) {
+      const record = JSON.parse(adminMigration) as {schemaVersion?: unknown; stage?: unknown};
+      if (record.schemaVersion !== 1 || !['prepared','completed'].includes(String(record.stage))) throw stateError();
+      if (record.stage !== 'completed') throw new RequestError('ACCESS_MIGRATION_INCOMPLETE','管理员账号迁移尚未完成，请停服后恢复迁移。',409);
+    }
     const markerPath = join(directory, '.initialized'); const marker = await readControlled(markerPath, 1024, true);
     const dbPath = join(directory, 'collaboration.sqlite');
     const stat = await lstat(dbPath).catch(error => { if (error.code === 'ENOENT') return null; throw error; });
@@ -14,6 +21,7 @@ export async function openDatabase(dataDir: string): Promise<DatabaseSync> {
     const db = new DatabaseSync(dbPath);
     try {
       db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL;');
+      if (adminMigration !== null) requireAdministratorSchema(db);
       if (!stat) {
         db.exec(`BEGIN IMMEDIATE;
           CREATE TABLE works(id TEXT PRIMARY KEY, data TEXT NOT NULL CHECK(json_valid(data)));

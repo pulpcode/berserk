@@ -14,7 +14,7 @@ Read when changing W01-6 question tools, operation gates, command policy, intera
 
 ## 3. Contracts
 
-Shared DTOs live in `src/contracts/interactions.ts`. Question responses are `{requestId,kind:'question',action:'answer',answers}` or `action:'skip'`; confirmation responses are `{requestId,kind:'confirmation',decision:'approve'|'reject'}`. Question answers use exactly one of `{questionId,optionIds}` and `{questionId,text}`. An answer never authorizes an operation. Additional authority/answer fields are rejected.
+Shared DTOs live in `src/contracts/interactions.ts`. Question responses are `{requestId,kind:'question',action:'answer',answers}` or `action:'skip'`; confirmation responses are `{requestId,kind:'confirmation',decision:'approve'|'reject'}`. Question answers use exactly one of `{questionId,optionIds}`, `{questionId,text}` and `{questionId,skipped:true}`. Per-question skip is explicit, occupies that question in the complete batch, survives replay and reaches Pi through the original tool result; empty answers remain invalid. Legacy whole-batch skip and old records remain readable. An answer never authorizes an operation. Additional authority/answer fields are rejected.
 
 Fixed `extensionFactories` register `ask_user` while `noExtensions=true` prevents automatic discovery. Explicit main-agent tools must include it; readonly children have no interactive tools. SDK extensions are trusted host code, never uploaded file scripts. Optional `LAB_HITL_DEMO_ENABLED=true` registers the local confirmation probe; default false. No new default deadline or tool-count limit.
 

@@ -1,0 +1,106 @@
+{
+  "measuredAt": "2026-11-14T05:17:03.430Z",
+  "baseline": {
+    "commit": "13b4e87a7a393d50d5db89c3426034176b27c17b",
+    "source": "clean tracked R1 PiLab and capability service"
+  },
+  "environment": {
+    "node": "v24.14.0",
+    "model": "deterministic-provider-substitute; real native Pi loop",
+    "productionData": false,
+    "docker": false
+  },
+  "sessionId": "69bc8cb8-ab3d-4901-9037-a464279303db",
+  "expertRevision": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+  "dryRun": {
+    "fromVersion": 1,
+    "builtinSources": [
+      {
+        "expert_id": "axon-general",
+        "current_revision": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874"
+      },
+      {
+        "expert_id": "role-analyst",
+        "current_revision": "rev-023290a1ff8b2d49a27939489d276d19bbf6bc804b81c9a79921ddc8059674c3"
+      },
+      {
+        "expert_id": "role-reviewer",
+        "current_revision": "rev-d5900ec94b1d1f6481fde4f00311a197a50f1270584a2ee33aed078e7a4f35b7"
+      },
+      {
+        "expert_id": "synthesis-expert",
+        "current_revision": "rev-b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c"
+      }
+    ],
+    "duplicateReleaseLabels": [],
+    "denials": [],
+    "unfinishedCreationIntents": [],
+    "builtinAssets": 4,
+    "accountDenials": 0,
+    "unfinishedIntents": 0,
+    "revisions": 4,
+    "stage": "dry-run",
+    "resumed": false,
+    "backupDigest": "f71e7064dec0c19fb353862bbcc015f710e80fc25da918409f77cbc8e2fa64d9"
+  },
+  "applied": {
+    "fromVersion": 1,
+    "builtinSources": [
+      {
+        "expert_id": "axon-general",
+        "current_revision": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874"
+      },
+      {
+        "expert_id": "role-analyst",
+        "current_revision": "rev-023290a1ff8b2d49a27939489d276d19bbf6bc804b81c9a79921ddc8059674c3"
+      },
+      {
+        "expert_id": "role-reviewer",
+        "current_revision": "rev-d5900ec94b1d1f6481fde4f00311a197a50f1270584a2ee33aed078e7a4f35b7"
+      },
+      {
+        "expert_id": "synthesis-expert",
+        "current_revision": "rev-b7b8f6c92379ab54a8c76d024be5b9d1be573ee9b595b61f3e7b3d549f6f0c8c"
+      }
+    ],
+    "duplicateReleaseLabels": [],
+    "denials": [],
+    "unfinishedCreationIntents": [],
+    "builtinAssets": 4,
+    "accountDenials": 0,
+    "unfinishedIntents": 0,
+    "revisions": 4,
+    "stage": "completed",
+    "resumed": false,
+    "backupDigest": "f71e7064dec0c19fb353862bbcc015f710e80fc25da918409f77cbc8e2fa64d9"
+  },
+  "checks": {
+    "dryRunByteStable": true,
+    "completeBackupVerified": true,
+    "r2OpenAndGetNoCalls": true,
+    "r2ExplicitContinuation": true,
+    "oldCodeOpenedOnlyRestoredBackup": true,
+    "restoredOpenAndGetNoCalls": true,
+    "restoredExplicitContinuation": true,
+    "backupOriginalUntouched": true,
+    "upgradedRootUntouchedByRollback": true,
+    "originalNativePrefixPreserved": true
+  },
+  "evidence": {
+    "originalHistorySha256": "3a546a468410ea337e8d5fbcefaff882cc32a2f47bc201651097073ee12ddd9c",
+    "upgradedHistorySha256": "4ab45bd26f58a35138b9dd4891af59b28aa0c4fc35ecac2e02e5a62efc7cb368",
+    "restoredHistorySha256": "c53b4f86115cd2ae00b9e30fc8afabfbdb895a1c9e3cf0cf6c95790c32ea5a32",
+    "originalBackupInventorySha256": "f71e7064dec0c19fb353862bbcc015f710e80fc25da918409f77cbc8e2fa64d9",
+    "filesInCompleteBackup": 13
+  },
+  "modelCalls": {
+    "initialR1": 1,
+    "explicitR2": 1,
+    "restoredR1": 1
+  },
+  "limits": [
+    "Model transport is deterministic; this proves native persistence, complete backup and version-paired rollback rather than live model quality.",
+    "Only fresh synthetic data is used. Original backup is copied before old-code recovery and compared byte-for-byte afterward.",
+    "Temporary roots are removed after hashes and checks are written."
+  ]
+}

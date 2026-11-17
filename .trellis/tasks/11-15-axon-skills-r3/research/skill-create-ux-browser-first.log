@@ -1,0 +1,124 @@
+[WebServer] (node:25190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:25161) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:25197) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25197) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/skills.spec.ts:30:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate (12.5s)
+(node:25238) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25238) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  2 tests/e2e/skills.spec.ts:49:1 › ordinary user can stage a published skill into an existing conversation without sending or changing its draft (5.7s)
+  ✓  3 tests/e2e/skills.spec.ts:63:1 › policy and publication saves retain their viewed baselines across background detail refreshes (6.8s)
+  ✓  4 tests/e2e/skills.spec.ts:101:1 › administrator stages a published skill in a personal conversation without business scope or automatic sending (5.4s)
+  ✓  5 tests/e2e/skills.spec.ts:136:1 › creation starts with an empty local form, cancel writes nothing, and invalid submission keeps the input (4.7s)
+  ✘  6 tests/e2e/skills.spec.ts:163:1 › a lost create response retries the same complete draft instead of creating another asset (9.3s)
+(node:25711) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25711) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  7 tests/e2e/skills.spec.ts:178:1 › form and source editing share the same draft and preserve imported extensions and other files (30.1s)
+
+
+  1) tests/e2e/skills.spec.ts:30:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: locator('dialog.skill-management-panel').getByLabel('使用说明', { exact: true })
+    Expected pattern: /先核对输入/
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" locator('dialog.skill-management-panel').getByLabel('使用说明', { exact: true }) with timeout 5000ms
+      - waiting for locator('dialog.skill-management-panel').getByLabel('使用说明', { exact: true })
+
+
+      38 |     expect(env.writes.filter(path => path.endsWith('/skills/import'))).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
+      39 |     await page.locator('.skill-library input[type=file]').setInputFiles(payload); await preview.getByRole('button', { name: '确认导入草稿', exact: true }).click();
+    > 40 |     const manager = page.locator('dialog.skill-management-panel'); await expect(manager.getByLabel('使用说明', { exact: true })).toHaveValue(/先核对输入/);
+         |                                                                                                                              ^
+      41 |     await manager.getByRole('button', { name: '使用范围', exact: true }).click(); await manager.getByLabel('开放范围', { exact: true }).selectOption('all'); await manager.getByRole('button', { name: '保存使用范围', exact: true }).click(); await expect(manager.getByRole('status')).toContainText('使用范围已保存');
+      42 |     await manager.getByRole('button', { name: '检查与发布', exact: true }).click(); await manager.getByRole('button', { name: '检查格式与完整性', exact: true }).click(); await expect(manager.getByRole('heading', { name: '格式与完整性检查完成', exact: true })).toBeVisible();
+      43 |     await manager.getByLabel('技能发布说明', { exact: true }).fill('方法型首版，不要求试用。'); await manager.getByLabel('确认发布当前内容及使用范围。', { exact: true }).check(); await manager.getByRole('button', { name: '发布技能', exact: true }).click(); await expect(manager.getByRole('status')).toContainText('版本 1.0.0 已发布');
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/skills.spec.ts:40:126
+
+    Error Context: ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-administrator-impor-164aa--without-trial-or-scan-gate/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-administrator-impor-164aa--without-trial-or-scan-gate/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-administrator-impor-164aa--without-trial-or-scan-gate/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/skills.spec.ts:163:1 › a lost create response retries the same complete draft instead of creating another asset 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByRole('dialog', { name: '创建技能', exact: true }).getByLabel('使用说明', { exact: true })
+    Expected: "保留我的处理步骤。"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" getByRole('dialog', { name: '创建技能', exact: true }).getByLabel('使用说明', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: '创建技能', exact: true }).getByLabel('使用说明', { exact: true })
+
+
+      169 |     await form.getByLabel('技能名称', { exact: true }).fill('retry-method'); await form.getByLabel('技能简介', { exact: true }).fill('完整草稿重试'); await form.getByLabel('使用说明', { exact: true }).fill('保留我的处理步骤。');
+      170 |     await form.getByRole('button', { name: '创建草稿', exact: true }).click(); await expect(form.getByRole('alert')).toBeVisible();
+    > 171 |     expect(env.lab.skills.list()).toHaveLength(before + 1); await expect(form.getByLabel('使用说明', { exact: true })).toHaveValue('保留我的处理步骤。');
+          |                                                                                                                    ^
+      172 |     await form.getByRole('button', { name: '创建草稿', exact: true }).click(); const manager = page.locator('dialog.skill-management-panel');
+      173 |     await expect(manager.getByLabel('技能名称', { exact: true })).toHaveValue('retry-method'); expect(env.lab.skills.list()).toHaveLength(before + 1);
+      174 |     expect(env.createRequests).toHaveLength(2); expect(env.createRequests[0]).toEqual(env.createRequests[1]); expect(env.fake.calls).toHaveLength(0);
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/skills.spec.ts:171:116
+
+    Error Context: ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-a-lost-create-respo-4fe83-d-of-creating-another-asset/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-a-lost-create-respo-4fe83-d-of-creating-another-asset/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-a-lost-create-respo-4fe83-d-of-creating-another-asset/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/e2e/skills.spec.ts:178:1 › form and source editing share the same draft and preserve imported extensions and other files 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('dialog.skill-management-panel').getByLabel('技能简介', { exact: true })
+
+
+      186 |     const manager = page.locator('dialog.skill-management-panel'); await expect(manager.getByLabel('技能名称', { exact: true })).toHaveValue('form-method');
+      187 |     await expect(manager.getByLabel('编辑SKILL.md', { exact: true })).not.toBeVisible(); expect(env.lab.skills.detail(created.skill.skillId).draft!.files).toEqual(files);
+    > 188 |     await manager.getByLabel('技能简介', { exact: true }).fill('新的简介'); await manager.getByLabel('使用说明', { exact: true }).fill('表单里的处理步骤。');
+          |                                                       ^
+      189 |     await openSource(manager); const source = manager.getByLabel('编辑SKILL.md', { exact: true });
+      190 |     await expect(source).toHaveValue(/custom-field: retained/); await expect(source).toHaveValue(/# keep this comment/); await expect(source).toHaveValue(/表单里的处理步骤/);
+      191 |     const raw = await source.inputValue(); await source.fill(raw.replace('form-method', 'source-method').replace('表单里的处理步骤。', '源码中的处理步骤。'));
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/skills.spec.ts:188:55
+
+    Error Context: ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-form-and-source-edi-29516--extensions-and-other-files/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-form-and-source-edi-29516--extensions-and-other-files/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-skill-create-browser-results/skills-form-and-source-edi-29516--extensions-and-other-files/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests/e2e/skills.spec.ts:30:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate 
+    tests/e2e/skills.spec.ts:163:1 › a lost create response retries the same complete draft instead of creating another asset 
+    tests/e2e/skills.spec.ts:178:1 › form and source editing share the same draft and preserve imported extensions and other files 
+  4 passed (1.6m)

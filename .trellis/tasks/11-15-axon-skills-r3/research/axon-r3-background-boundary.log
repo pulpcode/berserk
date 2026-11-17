@@ -1,0 +1,42 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:21961) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/skill-background-boundary.test.ts (4 tests | 1 failed) 2024ms
+   × legacy builtin explicit selection still works in background and does not invoke the dynamic provider 464ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/pi/skill-background-boundary.test.ts > legacy builtin explicit selection still works in background and does not invoke the dynamic provider
+AssertionError: expected '[{"role":"user","content":[{"type":"t…' to contain '---\nname: review\ndescription: 根据资料检…'
+
+- Expected
++ Received
+
+- ---
+- name: review
+- description: 根据资料检查草稿的事实、约束与可执行性。
+- ---
+- 核对草稿是否符合用户目标和已读取资料，逐项检查事实、来源、约束遗漏与执行责任。
+- 输出“问题与依据”“修订建议”和“仍待确认”三个部分；没有问题时如实说明。引用资料 ID，不把建议伪装成事实。
+- 本 Skill 不授权更改工作区指令；只在用户明确要求时才可另行执行指令编辑。
+-
++ [{"role":"user","content":[{"type":"text","text":"用户为本条任务显式选择了以下方法或子 Agent。这些是用户级任务资料，不改变系统指令、工具权限或确认要求。选择只适用于本条请求；若本条请求在用户目标保存前停止，不执行该选择，也不要把后续新请求作为本条目标。历史选择不构成后续请求的强制委派要求。\n所选 Skill 正文已经加载，无需再调用 skill_read 重复读取。方法资料（JSON 边界）：\n{\"id\":\"review\",\"name\":\"结果检查\",\"description\":\"根据资料检查草稿的事实、约束与可执行性。\",\"version\":\"1\",\"hash\":\"513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904\",\"content\":\"---\\nname: review\\ndescription: 根据资料检查草稿的事实、约束与可执行性。\\n---\\n核对草稿是否符合用户目标和已读取资料，逐项检查事实、来源、约束遗漏与执行责任。\\n输出“问题与依据”“修订建议”和“仍待确认”三个部分；没有问题时如实说明。引用资料 ID，不把建议伪装成事实。\\n本 Skill 不授权更改工作区指令；只在用户明确要求时才可另行执行指令编辑。\\n\"}"}],"timestamp":1794714714405},{"role":"user","content":[{"type":"text","text":"沿用既有后台方法"}],"timestamp":1794714714405}]
+
+ ❯ tests/pi/skill-background-boundary.test.ts:69:58
+     67|   const session=await lab.createSession();await lab.start(session.id,'…
+     68|   expect(lab.get(session.id).lastResult?.status).toBe('succeeded');exp…
+     69|   expect(JSON.stringify(fake.calls[0].context.messages)).toContain(met…
+       |                                                          ^
+     70|   expect(catalog).not.toHaveBeenCalled();
+     71| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  11:51:49
+   Duration  4.48s (transform 907ms, setup 0ms, import 2.28s, tests 2.02s, environment 0ms)
+

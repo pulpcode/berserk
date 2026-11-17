@@ -30,7 +30,7 @@ export function scenarioQuery(store:ScenarioStore) {
     const unique=[...new Set(selectedOwners)];if(unique.length>1||unique.length&&values.some(value=>!owner(value))||boundInstanceId!==undefined&&(unique.some(id=>id!==boundInstanceId)||values.some(value=>owner(value)!==boundInstanceId)))throw sceneError('同一次查询不能混合场景轮次或旧来源范围。','SCENARIO_CLOCK_CONFLICT');
     if('cursor' in params&&params.cursor&&!cursor){if(boundInstanceId!==undefined)throw sceneError('分页游标无效。','INVALID_CURSOR',400);return;}
     if(boundInstanceId===undefined&&!unique.length&&values.length)return;
-    const instanceId=boundInstanceId??unique[0]??store.active().instanceId;if(!instanceId)return;
+    const instanceId=boundInstanceId??unique[0]??store.active().instanceId;if(!instanceId){if(store.active().revision>0)throw sceneError('当前没有活动轮次，请在导演台明确启动。','SCENARIO_CLOCK_CONFLICT');return;}
     let record=store.get(instanceId);
     const readKey=readId?`${instanceId}:${readId}`:undefined;
     if(readKey&&record.instance.definitionVersion==='7'){

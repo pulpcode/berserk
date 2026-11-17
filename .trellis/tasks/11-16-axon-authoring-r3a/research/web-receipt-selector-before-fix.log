@@ -1,0 +1,47 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/authoring.spec.ts --grep existing confirmation --workers=1 --output=/private/tmp/r3a-web-authoring-link-results
+
+[WebServer] (node:55926) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:55899) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:55931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55931) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/authoring.spec.ts:74:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (1.5m)
+
+
+  1) tests/e2e/authoring.spec.ts:74:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for locator('details.tool-result').filter({ has: getByRole('button', { name: '查看技能详情', exact: true }) }).locator('summary').first()
+
+
+      82 |     for (const width of [1060, 1440]) { await page.setViewportSize({ width, height: 960 }); await page.screenshot({ path: info.outputPath(`authoring-confirmation-${width}.png`) }); }
+      83 |     await confirm.getByRole('button', { name: '确认保存草稿', exact: true }).click(); await expect(page.locator('.message.assistant').last()).toContainText('草稿已保存'); expect(env.lab.skills.list().filter(s => !s.system)).toHaveLength(1); await expect(page).toHaveURL(url);
+    > 84 |     await showResults(page); const result = page.locator('details.tool-result').filter({ has: page.getByRole('button', { name: '查看技能详情', exact: true, includeHidden: true }) }); await result.locator('summary').first().click(); await result.getByRole('button', { name: '查看技能详情', exact: true }).click();
+         |                                                                                                                                                                                                     ^
+      85 |     const manager = page.locator('dialog.skill-management-panel'); await expect(manager.getByRole('button', { name: '使用范围', exact: true })).toHaveAttribute('aria-current', 'page'); await expect(manager.getByLabel('开放范围', { exact: true })).toHaveValue('none');
+      86 |     await manager.getByRole('button', { name: '关闭面板', exact: true }).click(); await expect(page).toHaveURL(url);
+      87 |     expect(env.writes.filter(w => /\/policy$|\/publish$|\/trials$/.test(w.path))).toHaveLength(0);
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:84:197
+
+    Error Context: ../../../../../../../../private/tmp/r3a-web-authoring-link-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-web-authoring-link-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-web-authoring-link-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/authoring.spec.ts:74:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 

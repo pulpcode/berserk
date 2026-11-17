@@ -1,0 +1,15 @@
+{
+  "name": "director-unification",
+  "title": "导演台统一场景演练与自由调试",
+  "status": "in_progress",
+  "userAcceptance": "pending",
+  "implementationApproval": "approved",
+  "reviewDocument": "Axon_导演台整合方案_v0.1.md",
+  "approvedPlanCommit": "1f324a1",
+  "implementationStatus": "implemented",
+  "technicalVerification": "passed_with_failed_cases_rechecked",
+  "verificationRecord": "research/verification.md",
+  "userTesting": "not_performed",
+  "onlineTesting": "not_performed",
+  "releaseStatus": "not_deployed"
+}

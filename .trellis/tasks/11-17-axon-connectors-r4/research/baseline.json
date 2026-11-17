@@ -1,0 +1,18 @@
+{
+  "head": "a3b9b887ab7cb26a1212d7b8bd543fb0d83b02f0",
+  "branch": "codex/axon-r3a",
+  "originalProductTreeCleanBeforePlanning": true,
+  "planSource": "/Users/lau/Downloads/Axon_R4_Connectors_MCP_Plan_v0.2.md",
+  "planSha256": "5a3f248bc6d2a9a35cea7ef02d8c7c636e5f49d946d141eac56dc6486c2d88c8",
+  "shareUrl": "https://chatgpt.com/share/6afb301e-d790-83e9-8d2a-f5bedb69fe0f",
+  "shareRead": "web cache miss; IAB initial navigation timeout then actual shared R4 latest discussion rendered and read",
+  "productCodeChanged": false,
+  "planningOnly": true,
+  "userAcceptance": "pending",
+  "upstreamHead": "a3b9b887ab7cb26a1212d7b8bd543fb0d83b02f0",
+  "upstreamAheadBehind": [
+    0,
+    0
+  ],
+  "committedProductChangesAgainstPlanBaseline": []
+}

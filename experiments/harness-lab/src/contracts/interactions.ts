@@ -1,13 +1,15 @@
+import type { AuthoringConfirmation } from './authoring.js';
 import type { HandoffConfirmation } from './collaboration.js';
+import type { McpConfirmation } from './mcp.js';
 export interface InteractionQuestion {
   id: string;
   prompt: string;
   options?: { id: string; label: string; description?: string }[];
   multiSelect?: boolean;
 }
-export type InteractionAnswer = { questionId: string; optionIds: string[] } | { questionId: string; text: string };
+export type InteractionAnswer = { questionId: string; skipped: true } | { questionId: string; optionIds: string[] } | { questionId: string; text: string };
 interface InteractionBase {
-  schemaVersion: 1;
+  schemaVersion: 1 | 2 | 3;
   interactionId: string;
   workspaceId: string;
   sessionId: string;
@@ -19,6 +21,7 @@ interface InteractionBase {
   reason?: string;
 }
 export interface QuestionInteraction extends InteractionBase {
+  schemaVersion: 1;
   kind: 'question';
   questions: InteractionQuestion[];
   status: 'pending' | 'answered' | 'skipped' | 'cancelled' | 'expired';
@@ -27,7 +30,7 @@ export interface QuestionInteraction extends InteractionBase {
 export interface ConfirmationInteraction extends InteractionBase {
   kind: 'confirmation';
   status: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'expired';
-  action: { title: string; description: string; command?: string; cwd?: string; parameters: Record<string, unknown>; commandReference?: { id: string; contentHash: string }; handoff?: HandoffConfirmation };
+  action: { title: string; description: string; command?: string; cwd?: string; parameters: Record<string, unknown>; commandReference?: { id: string; contentHash: string }; handoff?: HandoffConfirmation; authoring?: AuthoringConfirmation; mcp?: McpConfirmation };
   rule: { ruleId: string; reason: string; version: string };
   /** Derived from the native tool result, never from approval alone. */
   execution?: 'succeeded' | 'failed' | 'unknown' | 'not_started';

@@ -1,0 +1,96 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:9324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9323) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/access.test.ts (16 tests | 6 failed) 185804ms
+     × publishes only enabled seat labels and authenticates the selected seat with its own password 15049ms
+     × keeps handoff participants private and refuses private task assignments 15028ms
+     × rejects committed action receipt reads and replay after the account is disabled 15014ms
+     × revokes expired/reset sessions and retains hashed credentials only 15051ms
+   × reopens native history and login metadata without importing unrelated old workspaces 15027ms
+     × keeps overview explicit and read-only, with filtered counts and no private payload 16141ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/access.test.ts > authenticated task scopes > publishes only enabled seat labels and authenticates the selected seat with its own password
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/access.test.ts:51:3
+     49|   });
+     50|
+     51|   it('publishes only enabled seat labels and authenticates the selecte…
+       |   ^
+     52|     const {app,lab}=await setup();
+     53|     await lab.access!.saveAccount({username:'different-login',displayN…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/access.test.ts > authenticated task scopes > keeps handoff participants private and refuses private task assignments
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/access.test.ts:241:3
+    239|     expect((await a.call('/api/sessions',{workspaceId:w.id})).statusCo…
+    240|   });
+    241|   it('keeps handoff participants private and refuses private task assi…
+       |   ^
+    242|     const {app}=await setup();const a=await login(app,'a'),b=await log…
+    243|     for(const visibility of ['private','public'] as const){
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/access.test.ts > authenticated task scopes > rejects committed action receipt reads and replay after the account is disabled
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/access.test.ts:255:3
+    253|     }
+    254|   });
+    255|   it('rejects committed action receipt reads and replay after the acco…
+       |   ^
+    256|     const {app,lab}=await setup();const a=await login(app,'a');
+    257|     const task=(await a.call('/api/tasks',input())).json<TaskSpace>();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/access.test.ts > authenticated task scopes > revokes expired/reset sessions and retains hashed credentials only
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/access.test.ts:273:3
+    271|     expect(lab.collaboration!.list({seatId:'b'}).map(work=>work.id)).t…
+    272|   });
+    273|   it('revokes expired/reset sessions and retains hashed credentials on…
+       |   ^
+    274|     const {app,lab,dir}=await setup();const a=await login(app,'a');
+    275|     lab.access!.db.prepare('UPDATE auth_sessions SET expires=0 WHERE u…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/access.test.ts > reopens native history and login metadata without importing unrelated old workspaces
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/access.test.ts:282:1
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/access.test.ts > authorized workbench and public overview > keeps overview explicit and read-only, with filtered counts and no private payload
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/access.test.ts:308:3
+    306|
+    307| describe('authorized workbench and public overview', () => {
+    308|   it('keeps overview explicit and read-only, with filtered counts and …
+       |   ^
+    309|     const {app,lab,fake} = await setup();
+    310|     const a = await login(app,'a'), b = await login(app,'b'), c = awai…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  6 failed | 11 passed (17)
+   Start at  16:36:41
+   Duration  199.98s (transform 9.22s, setup 0ms, import 26.77s, tests 210.12s, environment 1ms)
+

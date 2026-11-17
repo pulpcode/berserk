@@ -158,7 +158,7 @@ test('director nodes drive real vehicle movement, bridge blockage, confirmed rer
   let page = directorPage;
   try {
     const readControl = await apiLogin(f.app, control);
-    await login(page, director); await page.goto('/scenario-director');
+    await login(page, director); await page.goto('/director');
     await advanceUntil(page, f, state => state.instance.businessNow.slice(11, 16) === '09:18');
     expect((await detail(f)).timeline?.filter(step => step.kind === 'execution')).toHaveLength(0);
     page = controlPage;
@@ -169,7 +169,7 @@ test('director nodes drive real vehicle movement, bridge blockage, confirmed rer
     const cross = records.find(item => item.command.vehicles.length === 4)!;
     const local = records.find(item => item.command.vehicles.length === 3)!;
     await closePanel(page);
-    page = directorPage; await page.goto('/scenario-director');
+    page = directorPage; await page.goto('/director');
     await advanceUntil(page, f, state => state.instance.businessNow.slice(11, 16) === '09:23');
     const blocked = await readControl<CommandRecord>(`/api/commands/${cross.id}/execution`);
     const arrived = await readControl<CommandRecord>(`/api/commands/${local.id}/execution`);
@@ -208,7 +208,7 @@ test('director nodes drive real vehicle movement, bridge blockage, confirmed rer
     await page.getByRole('button', { name: '确认调整路线', exact: true }).click();
     await expect(page.getByRole('dialog').getByRole('status')).toHaveText('已接收');
     await closePanel(page);
-    page = directorPage; await page.goto('/scenario-director');
+    page = directorPage; await page.goto('/director');
     await advanceUntil(page, f, state => !state.timeline?.some(step => step.state === 'pending'));
     const finished = await readControl<CommandRecord>(`/api/commands/${cross.id}/execution`);
     expect(finished.execution?.vehicles.every(vehicle => vehicle.state === 'arrived')).toBe(true);
@@ -306,7 +306,7 @@ test('scenario selector distinguishes definition versions and can start the lega
   test.setTimeout(100000);
   const f = await setup(context);
   try {
-    await login(page, director); await page.goto('/scenario-director');
+    await login(page, director); await page.goto('/director');
     await page.getByRole('button', { name: '重新演示', exact: true }).click();
     const panel = page.getByRole('dialog', { name: '重新演示', exact: true });
     const scenario = panel.getByLabel('场景');
@@ -329,7 +329,7 @@ test('cancelling the remaining vehicle preserves arrival and shows an ended mixe
     await login(page, control); await openTask(page, f.task.id);
     await sendCommand(page, ['V07', 'V13'], ['东环线', '滨港路']);
     await closePanel(page);
-    await login(page, director); await page.goto('/scenario-director');
+    await login(page, director); await page.goto('/director');
     await advanceUntil(page, f, state => {
       const states = state.objects.filter(item => ['V07', 'V13'].some(id => item.ref.objectId.endsWith(`-${id}`)))
         .map(item => 'executionState' in item.properties ? item.properties.executionState : undefined);
@@ -359,7 +359,7 @@ test('v7 advances once while two business maps join the shared live journey',asy
   const f=await setup(context,'7');
   const viewers=await Promise.all([browser.newContext({recordVideo:{dir:test.info().outputPath('control-video')}}),browser.newContext({recordVideo:{dir:test.info().outputPath('overall-video')}})]);
   try{
-    await login(page,director);await page.goto('/scenario-director');
+    await login(page,director);await page.goto('/director');
     await advanceUntil(page,f,state=>state.instance.stepIndex>=5);
     const pages:Page[]=[];
     for(const [index,viewer] of viewers.entries()){

@@ -1,0 +1,11 @@
+{
+  "document": "Axon_R3_Skills_Plan_v0.3.md",
+  "sha256": "e7808c60db2313e29a97c752cad51a074a56e520c0dbbf68d5addecdbaf15360",
+  "discussion": "https://chatgpt.com/share/6af91c50-1cac-83ea-9510-d39489d6b21a",
+  "discussionAccess": "2026-11-15 native Chrome UI successfully loaded exact shared URL and read visible conversation; web fetch Cache miss and IAB timeout retained as prior attempts",
+  "baseCommit": "5969069f565d28c753962daca1fe8bf3de17885c",
+  "remoteVerified": "origin/codex/axon-r2 fetched and matches HEAD",
+  "date": "2026-11-15",
+  "scope": "R3 v0.3; document instructions treated as proposal context",
+  "discussionEvidence": "research/shared-discussion.md"
+}

@@ -1,3 +1,4 @@
+import type { LegacyConnectionResolver } from '../connectors/legacy-config.js';
 import { decodeMapMotion } from './map-motion.js';
 import type { ResourceQueryScope } from '../contracts/task-resources.js';
 import { mapReferences } from './map-references.js';
@@ -12,13 +13,16 @@ export class ContextService {
   readonly config: ContextConfig;
   scenario?: {assertWritable(instanceId: string): void};
   private readonly readClocks=new Map<string,{clock:string;at:number}>();
+  private readonly readConnections=new Map<string,{revisionId:string;credentialVersion:number;at:number}>();
   private readonly tokens: Map<string, string>;
-  constructor(config: ContextConfig, env: NodeJS.ProcessEnv = process.env, private readonly httpOptions: ContextHttpOptions = {}) {
-    this.config = parseContextConfig(config); assertContextCredentials(this.config, env);
+  constructor(config: ContextConfig, env: NodeJS.ProcessEnv = process.env, private readonly httpOptions: ContextHttpOptions = {}, private connectionResolver?: LegacyConnectionResolver) {
+    this.config = parseContextConfig(config); if (!connectionResolver) assertContextCredentials(this.config, env);
     this.tokens = new Map(this.config.systems.map(s => [s.id, env[s.tokenEnv]!]));
   }
+  setConnectionResolver(resolver: LegacyConnectionResolver): void { this.connectionResolver=resolver; }
   scopeSnapshot(scopeId: string): ContextScopeSnapshot {
     const scope = this.config.scopes.find(s => s.id === scopeId); if (!scope) throw denied();
+    try{for(const systemId of scope.systemIds)this.connectionResolver?.({systemId});}catch(error){if(error instanceof RequestError&&error.code==='CONNECTOR_CREDENTIAL_REQUIRED')throw new RequestError('CONTEXT_UNAVAILABLE','业务资料配置不可用，请检查服务凭证。',503);throw error;}
     return {scopeId, systemIds: [...scope.systemIds]};
   }
   assertServiceScope(snapshot: ContextScopeSnapshot): void {
@@ -65,13 +69,15 @@ export class ContextService {
     }
     const path = tool === 'information_read' && 'reportId' in params ? `/reports/${encodeURIComponent(params.reportId!)}`
       : tool === 'information_search' ? '/reports' : 'mode' in params && params.mode === 'current' ? '/objects' : '/changes';
-    const url = new URL(`${system.baseUrl}${path}`);
+    const connection=this.connectionResolver?.({systemId:system.id});
+    const url = new URL(`${connection?.endpoint??system.baseUrl}${path}`);
     for (const [key, value] of Object.entries(params)) {
       if (key === 'systemId' || key === 'mode' || (tool === 'information_read' && key === 'reportId')) continue;
       url.searchParams.set(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
     }
     const readId=principal.readId??(principal.kind==='service'?principal.jobId:undefined);
-    const raw = await readContextJson(url, this.tokens.get(system.id)!, signal, {...this.httpOptions, mapDisplay,
+    if(connection&&readId){const key=`${readId}:${system.id}`,prior=this.readConnections.get(key);if(prior&&(prior.revisionId!==connection.revisionId||prior.credentialVersion!==connection.credentialVersion||Date.now()-prior.at>30*60*1000))throw new RequestError('CONTEXT_READ_SNAPSHOT_CONFLICT','固定读取的连接或凭证已变化，请重新发起查询。',409);if(!prior){if(this.readConnections.size>=100000)throw new RequestError('CONTEXT_UNAVAILABLE','固定读取容量已满。',503);this.readConnections.set(key,{revisionId:connection.revisionId,credentialVersion:connection.credentialVersion,at:Date.now()});}}
+    const raw = await readContextJson(url, connection?.token??this.tokens.get(system.id)!, signal, {...this.httpOptions, mapDisplay,
       ...(system.scenarioClock === true && scenarioInstanceId ? {scenarioInstanceId} : {}), ...(system.scenarioClock===true&&readId?{readId}:{})});
     signal?.throwIfAborted();
     if (scenarioInstanceId && !readOnly) this.scenario?.assertWritable(scenarioInstanceId);

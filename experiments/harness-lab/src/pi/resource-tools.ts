@@ -1,8 +1,9 @@
+import { managementSkillKind } from '../authoring/management-skills.js';
 import { Type } from 'typebox';
 import { defineTool, type SessionManager } from '@earendil-works/pi-coding-agent';
 import type { InstructionUpdate, RequestResourcesRecord } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
-import { ResourceService, resourceInfo, snapshotSkill, type ResourceSnapshot } from '../resources/service.js';
+import { ResourceService, resourceInfo, resolveSnapshotSkill, type ResourceSnapshot } from '../resources/service.js';
 
 export const RESOURCE_ENTRY = 'berserk.request-resources.v1';
 export const SKILL_ENTRY = 'berserk.skill-read.v1';
@@ -11,7 +12,7 @@ export const CHANGE_ENTRY = 'berserk.instructions-updated.v1';
 export const toolNames = ['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read'] as const;
 export const publicToolName = (name: string) => (toolNames as readonly string[]).includes(name) ? name.replace('_', '.') : name;
 export function requestRecord(requestId: string, snapshot: ResourceSnapshot, readonly = false): Extract<RequestResourcesRecord, { status: 'available' }> {
-  return { ...(snapshot.task ? { task: snapshot.task } : {}), status: 'available', requestId, workspaceId: snapshot.workspaceId, instructions: readonly ? snapshot.instructions.map(file => ({ ...file, editable: false })) : snapshot.instructions,
+  return { ...(snapshot.skills.some(skill => managementSkillKind(skill.id)) ? {schemaVersion:3 as const} : snapshot.skills.some(skill => skill.schemaVersion === 2) ? {schemaVersion:2 as const} : {}), ...(snapshot.task ? { task: snapshot.task } : {}), status: 'available', requestId, workspaceId: snapshot.workspaceId, instructions: readonly ? snapshot.instructions.map(file => ({ ...file, editable: false })) : snapshot.instructions,
     skills: resourceInfo(snapshot).skills, readSkills: [], editableFileIds: readonly ? [] : ['workspace'] };
 }
 export function resourceTools(snapshot: ResourceSnapshot, resources: ResourceService, manager: SessionManager, requestId: string, controller: AbortController,
@@ -66,9 +67,11 @@ export function resourceTools(snapshot: ResourceSnapshot, resources: ResourceSer
         try { manager.appendCustomEntry(CHANGE_ENTRY, { requestId, change: result }); } catch { uncertain(); }
         return result;
       }, signal, timeouts.instructions_update) }),
-    ...(snapshot.skills.length ? [defineTool({ name: 'skill_read', label: '读取 Skill', description: '按需读取本请求可用 Skill 的正文；可用 ID 与适用场景见资源目录。Skill 提供方法，不扩大工具或权限。', parameters: Type.Object({ id: Type.Union(snapshot.skills.map(skill => Type.Literal(skill.id, { description: `${skill.name}：${skill.description}` }))) }, { additionalProperties: false }), executionMode: 'sequential',
+    ...(snapshot.skills.some(skill=>skill.autoInvocationEligible!==false) ? [defineTool({ name: 'skill_read', label: '读取 Skill', description: '按需读取本请求可用 Skill 的正文；可用 ID 与适用场景见资源目录。Skill 提供方法，不扩大工具或权限。', parameters: Type.Object({ id: Type.Union(snapshot.skills.filter(skill=>skill.autoInvocationEligible!==false).map(skill => Type.Literal(skill.id, { description: `${skill.name}：${skill.description}` }))) }, { additionalProperties: false }), executionMode: 'sequential',
       execute: (_id, params, signal) => execute(async () => {
-        const skill = snapshotSkill(snapshot, params.id);
+        if(snapshot.skills.find(skill=>skill.id===params.id)?.autoInvocationEligible===false)throw new RequestError('SKILL_MANUAL_ONLY','此技能的扩展调用条件尚未支持，仅可由用户显式选择。',403);
+        const skill = await resolveSnapshotSkill(snapshot, params.id);
+        if(skill.autoInvocationEligible===false)throw new RequestError('SKILL_MANUAL_ONLY','此技能的扩展调用条件尚未支持，仅可由用户显式选择。',403);
         manager.appendCustomEntry(SKILL_ENTRY, { requestId, skill });
         return skill;
       }, signal, timeouts.skill_read) })] : []),

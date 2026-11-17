@@ -1,0 +1,19 @@
+{
+  "discussionUrl": "https://chatgpt.com/share/6af7e275-54f8-83ea-a81c-4a40b592d6b1",
+  "discussionAccess": "网页读取失败，浏览器加载超时；未声称已读讨论正文",
+  "sources": [
+    {
+      "file": "Axon_R2_Plan_v0.2.md",
+      "source": "/Users/lau/Downloads/Axon_R2_Plan_v0.2.md",
+      "sha256": "185d504944bce69dbe24db66ec2ee168f2bbd3e44d9a70877dc4f0c05b0fb5fc"
+    },
+    {
+      "file": "Axon_能力中心阶段_需求与建设轮次调整方案_v0.1.md",
+      "source": "/Users/lau/Downloads/Axon_能力中心阶段_需求与建设轮次调整方案_v0.1.md",
+      "sha256": "060ac2fd6214e4d5b968e05e36c083c3cd7e6326f8ce4b957cf77dc118c1b840"
+    }
+  ],
+  "baseline": "13b4e87a7a393d50d5db89c3426034176b27c17b",
+  "approval": "用户要求根据讨论完成实施；两份原稿内部仍标记待审阅，Q1—Q4与R1用户验收等待最终核对",
+  "currentApprovalRef": "approval-and-baseline.json"
+}

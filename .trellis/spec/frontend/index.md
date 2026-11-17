@@ -16,6 +16,19 @@ This product targets desktop browsers only (user decision, 2026-10-13). Do not a
 
 ## Pre-Development and Quality Check
 
+Read [R4 Connectors and Remote MCP](../backend/connectors-r4.md) for fixed legacy business mappings, personal credentials, remote protocol/network admission, original confirmation/history and desktop connection selection.
+Read [Conversation Work Activity](../backend/work-activity.md) for the collapsible work panel, verified business facts, semantic interpretations, navigation authorization and memory-only analysis.
+
+Read [Next Input Suggestions](../backend/prompt-suggestions.md) for independent prediction, native placeholder display, input hiding/empty restoration, keyboard ownership and login-scoped preferences.
+
+Read [R3A Conversational Authoring](../backend/authoring-r3a.md) for request-scoped administrator methods, original chat confirmation, atomic draft receipts and manual-entry compatibility.
+
+Read [R3 Skill Packages](../backend/capabilities-r3.md) for full package identity, import, independent Skill publication, scanner reports, scoped runtime loading and compatibility.
+
+Read [R2 Expert Management](../backend/capabilities-r2.md) for drafts, isolated trials, publication, ordinary lifecycle and scoped defaults; R1 immutable history remains valid.
+
+Read [R1 Expert Capabilities](../backend/capabilities.md) for immutable expert bindings, professional catalogs, persistent session creation intents, current-state guards and explicit legacy migration.
+
 Read [Simulation Command Integration](../backend/commands.md) for control-seat grants, document soft workflow, native confirmation, external reception and command history.
 
 Read [Scenario Director and Business Clock](../backend/scenario-director.md) for the independent director page, authenticated entry, forbidden business seats and explicit scene/real-time labels.
@@ -74,3 +87,5 @@ The goal is to help AI assistants and new team members understand how YOUR proje
 ---
 
 **Language**: All documentation should be written in **English**.
+
+Read [Director Unification](../backend/director-unification.md) for the sole `/director` page, mutually exclusive free-debug runs, source consolidation and historical policy permissions.

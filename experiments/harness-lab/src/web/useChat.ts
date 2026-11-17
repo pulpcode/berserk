@@ -3,6 +3,7 @@ import type { InputQueueState, Interaction, InteractionResponse, AppInfo, ModelC
 import { isConnectionFailure, useApi } from './api';
 import { clearInteractionDraft, type InteractionSubmission } from './InteractionCard';
 import { randomUUID } from './random-uuid';
+import { sessionAction } from './session-action';
 import { useInputQueue } from './useInputQueue';
 import { useAttachments } from './useAttachments';
 import { useComposerSelections, selectionInput } from './useComposerSelections';
@@ -62,6 +63,7 @@ export function useChat(enabled = true) {
   const draftVersions = useRef(stored(DRAFT_VERSION_KEY));
   const SENT_KEY = storageKey('berserk.submitted');
   const READ_KEY = storageKey('berserk.read-results');
+  const CREATION_ACTION_KEY = storageKey('berserk.session-actions');
   const attachments = useAttachments();
   const composerSelections = useComposerSelections();
   const { move: moveSelections, consume: consumeSelections, recover: recoverSelections, clearSubmitted: clearSubmittedSelections } = composerSelections;
@@ -97,6 +99,7 @@ export function useChat(enabled = true) {
   const interactionLocks = useRef(new Set<string>());
   const [interactionSubmissions, setInteractionSubmissions] = useState<Record<string, InteractionSubmission>>({});
   const [pending, setPending] = useState<Record<string, boolean>>({});
+  const [completedForeground, setCompletedForeground] = useState<{ sessionId: string; requestId: string }>();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [readErrors, setReadErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(enabled);
@@ -125,6 +128,7 @@ export function useChat(enabled = true) {
     try { sessionStorage.setItem(storageKey('berserk.workspace'), id); } catch { /* Keep selection in memory. */ }
     return selectionsRef.current[id] || '';
   }, [noteNavigation, storageKey]);
+  const beginNew = useCallback((id = workspaceRef.current) => { selectForWorkspace(id, ''); selectWorkspace(id); }, [selectForWorkspace, selectWorkspace]);
   const [drafts, setDrafts] = useState(() => stored(DRAFT_KEY));
   const draftsRef = useRef(drafts);
   const movedDrafts = useRef(new Map<string, string>());
@@ -200,7 +204,7 @@ export function useChat(enabled = true) {
       const stream = streams.current.get(id);
       if (stream && !stream.terminal && result.active) {
         const current = snapshotsRef.current[id];
-        if (current && result.active.requestId === stream.requestId) put({ ...current, title: result.title, interactions: result.interactions, active: result.active, inputQueue: result.inputQueue });
+        if (current && result.active.requestId === stream.requestId) put({ ...current, title: result.title, expert: result.expert, interactions: result.interactions, active: result.active, inputQueue: result.inputQueue });
         return;
       }
       // Polling may observe completion before the final SSE frame arrives.
@@ -218,7 +222,9 @@ export function useChat(enabled = true) {
     const previous = current.interactions?.find(entry => entry.interactionId === item.interactionId);
     if (previous && (previous.requestId !== item.requestId || previous.toolCallId !== item.toolCallId || (previous.status !== 'pending' && previous.status !== item.status))) return;
     item = mergeInteraction(previous, item);
-    const interactions = [...(current.interactions || []).filter(entry => entry.interactionId !== item.interactionId), item];
+    const interactions = previous
+      ? (current.interactions || []).map(entry => entry.interactionId === item.interactionId ? item : entry)
+      : [...(current.interactions || []), item];
     const waiting = interactions.find(entry => entry.requestId === item.requestId && entry.status === 'pending');
     const active = current.active?.requestId === item.requestId && current.active.status !== 'stopping' && (!previous || previous.status === 'pending')
       ? { ...current.active, phase: waiting ? waiting.kind === 'question' ? 'waiting_answer' as const : 'waiting_confirmation' as const : item.status === 'approved' ? 'tool' as const : 'preparing' as const }
@@ -280,7 +286,17 @@ export function useChat(enabled = true) {
           if (snapshot && snapshot.title !== item.title) nextSnapshots = { ...nextSnapshots, [item.id]: { ...snapshot, title: item.title } };
         }
         if (nextSnapshots !== snapshotsRef.current) { snapshotsRef.current = nextSnapshots; setSnapshots(nextSnapshots); }
-        activitiesRef.current = mergeById(activitiesRef.current, incoming);
+        const merged = mergeById(activitiesRef.current, incoming);
+        // A restored selected-session GET may win the first overview race.
+        // Seed its canonical order once, retaining newer DTOs and local creations.
+        if (!overviewLoaded.current) {
+          const order = new Set(overview.sessions.map(item => item.id));
+          const latest = new Map(merged.map(item => [item.id, item]));
+          activitiesRef.current = [...merged.filter(item => !order.has(item.id)), ...overview.sessions.flatMap(item => {
+            const current = latest.get(item.id);
+            return current ? [current] : [];
+          })];
+        } else activitiesRef.current = merged;
         setActivities(activitiesRef.current);
         setSessions(previous => mergeById(previous, incoming));
         // There is no deletion API. Preserve just-created workspaces/sessions if a GET predates their POST.
@@ -293,7 +309,7 @@ export function useChat(enabled = true) {
           const selectedId = selectionsRef.current[owner.id];
           // A creation may appear in polling before POST returns and transfers
           // its workspace draft. Keep that composer owner until create settles.
-          if (!selectedId && creatingRef.current === owner.id) continue;
+          if (!selectedId && (creatingRef.current === owner.id || Object.hasOwn(selectionsRef.current, owner.id))) continue;
           if (!activitiesRef.current.some(item => item.id === selectedId && item.workspaceId === owner.id)) {
             selectForWorkspace(owner.id, activitiesRef.current.find(item => item.workspaceId === owner.id)?.id || '');
           }
@@ -395,13 +411,16 @@ export function useChat(enabled = true) {
     try {
       const key = options?.draftKey || `workspace:${targetWorkspaceId}`;
       const modelId = draftModelsRef.current[key];
-      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}), ...(modelId ? { modelId } : {}) });
+      const input = { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}), ...(modelId ? { modelId } : {}) };
+      const action = sessionAction(CREATION_ACTION_KEY, input);
+      const snapshot = await api<SessionSnapshot>('/api/sessions', { ...input, clientActionId: action.id });
+      action.complete();
       put(snapshot);
       // A delayed creation may populate its project, but must not undo later navigation.
       if (!options && navigationRevision.current === navigation) {
         selectForWorkspace(targetWorkspaceId, snapshot.id);
         selectWorkspace(targetWorkspaceId);
-      } else if (!options && !selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
+      } else if (!options && !Object.hasOwn(selectionsRef.current, targetWorkspaceId)) selectForWorkspace(targetWorkspaceId, snapshot.id);
       if (!options) movedDrafts.current.set(key, snapshot.id);
       if (draftModelsRef.current[key]) {
         const next = { ...draftModelsRef.current }; delete next[key];
@@ -413,7 +432,7 @@ export function useChat(enabled = true) {
       return snapshot.id;
     } catch (error) { setErrors(previous => ({ ...previous, [options?.draftKey || `workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = null; setCreating(false); }
-  }, [MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
+  }, [CREATION_ACTION_KEY, MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
 
   const send = useCallback(async (targetSessionId?: string) => {
     // Continuation may send before navigation renders; every input belongs to its explicit target.
@@ -425,7 +444,7 @@ export function useChat(enabled = true) {
     const picks = composerSelections.current(key);
     if (!text || files.some(file => file.status !== 'ready') || !model?.configured || !model.contextReady || modelsError || modelErrors[key] || modelLocks.current.has(key)) return;
     const id = targetSessionId || selected || await create();
-    if (!id || streams.current.has(id)) return;
+    if (!id || streams.current.has(id) || snapshotsRef.current[id]?.expert?.availability.available === false) return;
     const before = snapshotsRef.current[id];
     const activity = activitiesRef.current.find(item => item.id === id);
     if (!before || before.active || before.backgroundJob || activity?.active || activity?.backgroundJob) return;
@@ -439,6 +458,7 @@ export function useChat(enabled = true) {
     if ((draftsRef.current[id] || '').trim() === text) draft(id, '');
     let messages: PublicMessage[] = [...before.messages, { id: 'sending-user', role: 'user', text }];
     let assistantNumber = 0;
+    let structuredAssistant = false;
     put({ ...before, messages, lastResult: null });
     const receive = (event: StreamEvent) => {
       if (event.sessionId !== id || streams.current.get(id)?.token !== token || stream.terminal) return;
@@ -452,6 +472,7 @@ export function useChat(enabled = true) {
         stream.terminal = true;
         put(event.snapshot);
         setPending(previous => ({ ...previous, [id]: false }));
+        if (event.type === 'response.completed') setCompletedForeground({ sessionId: id, requestId: event.requestId });
         return;
       }
       if (event.type === 'interaction.updated') {
@@ -459,16 +480,30 @@ export function useChat(enabled = true) {
         applyInteraction(event.interaction); return;
       }
       if (event.type === 'input.queue') { applyInputQueue(id, event.queue); return; }
+      if (event.type === 'resources.loaded') {
+        // Update the stream's message list too, so the next delta retains the resolved inputs.
+        messages = messages.map(message => message.id === 'sending-user' && message.requestId === event.requestId
+          ? { ...message, selections: event.selections, attachments: event.attachments } : message);
+      }
       if (event.type === 'input.consumed') {
         messages = [...messages, { id: event.submissionId, role: 'user', requestId: event.requestId, text: event.text }];
       }
-      if (event.type === 'text.delta') {
+      if (event.type === 'assistant.updated') {
+        structuredAssistant = true;
+        const incoming = event.message;
+        if (incoming.requestId !== event.requestId || incoming.role !== 'assistant') return;
+        messages = messages.filter(message => !message.id.startsWith('stream-assistant-'));
+        const position = messages.findIndex(message => message.id === incoming.id || Boolean(incoming.presentationId && message.presentationId === incoming.presentationId));
+        messages = position < 0 ? [...messages, incoming] : messages.map((message, index) => index === position ? incoming : message);
+      }
+      if (event.type === 'text.delta' && !structuredAssistant) {
         const last = messages.at(-1);
         if (last?.role === 'assistant') messages = [...messages.slice(0, -1), { ...last, text: last.text + event.delta }];
         else messages = [...messages, { id: `stream-assistant-${assistantNumber++}`, role: 'assistant', requestId: event.requestId, text: event.delta }];
       }
-      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, toolCallId: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
-      if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError, annotationResult: event.annotationResult, spatialResult: event.spatialResult, taskDiscovery: event.taskDiscovery, resourceResult: event.resourceResult } : message);
+      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, toolCallId: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, toolInput: event.toolInput, toolStatus: 'running', text: '' }];
+      if (event.type === 'tool.updated') messages = messages.map(message => message.requestId === event.requestId && message.toolCallId === event.toolCallId ? { ...message, text: event.text, toolDetails: event.toolDetails, toolStatus: 'running' } : message);
+      if (event.type === 'tool.completed') messages = messages.map(message => message.requestId === event.requestId && message.toolCallId === event.toolCallId ? { ...message, text: event.text, toolInput: event.toolInput || message.toolInput, toolDetails: event.toolDetails, toolStatus: 'completed', isError: event.isError, annotationResult: event.annotationResult, spatialResult: event.spatialResult, taskDiscovery: event.taskDiscovery, resourceResult: event.resourceResult } : message);
       let fileOutputs = current.fileOutputs;
       if (event.type === 'files.output') {
         if (event.file.workspaceId !== current.workspaceId || event.file.sessionId !== id || event.file.requestId !== event.requestId) return;
@@ -483,7 +518,7 @@ export function useChat(enabled = true) {
         subagents = [...(subagents || []).filter(item => item.subagentId !== child.subagentId), child];
       }
       const phase = event.type === 'subagent.updated' ? ['running', 'stopping'].includes(event.subagent.status) ? 'subagent' : 'preparing' : event.type === 'context.compaction_started'  ? 'compacting' : event.type === 'context.compaction_completed' ? 'generating' : ['response.started', 'resources.loaded', 'tool.completed'].includes(event.type) ? 'preparing' : event.type === 'tool.started' ? 'tool'
-        : event.type === 'text.delta' ? 'generating' : current.active?.phase;
+        : event.type === 'text.delta' || event.type === 'assistant.updated' ? 'generating' : current.active?.phase;
       put({ ...current, messages, ...(fileOutputs ? { fileOutputs } : {}), ...(subagents ? { subagents } : {}), ...(event.type === 'context.compaction_completed' ? { latestCompaction: event.compaction } : {}), active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding', phase,
         ...(phase === 'tool' ? { toolName: event.type === 'tool.started' ? event.toolName : current.active?.toolName } : {}) } });
     };
@@ -520,7 +555,7 @@ export function useChat(enabled = true) {
 
   function hasDraft(id: string) {
     const selection = composerSelections.current(id);
-    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.skill || selection.agent || selection.contextRefs?.length);
+    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.authoring || selection.skill || selection.agent || selection.contextRefs?.length || selection.annotationRefs?.length || selection.connectorIds?.length);
   }
 
   return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
@@ -533,15 +568,16 @@ export function useChat(enabled = true) {
       const owner = activitiesRef.current.find(item => item.id === id)?.workspaceId;
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
     }, workspaces, workspaceId,
-    workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
-    loading, creating, create, send, cancel, draftKey, attachments, composerSelections, inputQueue,
+    workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace,
+    beginNew, selectedForWorkspace: (id: string) => selectionsRef.current[id] || '', createWorkspace,
+    loading, creating, create, send, cancel, draftKey, attachments, composerSelections, inputQueue, completedForeground,
     resolveDraftOwner: () => movedDrafts.current.get(draftKey) || draftKey,
     setComposerSelection: (kind: 'skill' | 'agent', value?: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(movedDrafts.current.get(draftKey) || draftKey, kind, value),
     interactionSubmissions, respondInteraction, queryInteraction,
     draft: drafts[draftKey] || '',
     // An input event from the previous render can arrive after first-session creation moved its draft.
     setDraft: (text: string) => draft(movedDrafts.current.get(draftKey) || draftKey, text),
-    recoverableSelectionDiffers: JSON.stringify(selectionInput(composerSelections.recovery[selected] || {})) !== JSON.stringify(selectionInput(composerSelections.all[draftKey] || {})),
+    recoverableSelectionDiffers: JSON.stringify(selectionInput({ ...composerSelections.recovery[selected], connectorIds: undefined })) !== JSON.stringify(selectionInput({ ...composerSelections.all[draftKey], connectorIds: undefined })),
     submitted: submitted[selected] || '', restoreSubmitted: () => { draft(draftKey, submittedRef.current[selected] || ''); composerSelections.restore(draftKey); },
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],
     pending: pending[selected] || false, error: errors[selected] || readErrors[selected] || errors[`workspace:${workspaceId}`] || errors[''] || '', refresh, bootstrap };

@@ -1,0 +1,15 @@
+{
+  "updatedAt": "2026-11-14T11:03:42.961062+00:00",
+  "release": "/home/ubuntu/axon-r2-personal-4316-20261114",
+  "sourceArchiveSha256": "d3e6b9e807e87aa5b13973f4b7d1305291ff01b25a148b94c17da14ca8fa851b",
+  "pid": 2224745,
+  "previousPid": 2196232,
+  "backup": "/home/ubuntu/axon-r2-personal-4316-20261114/backup/before-admin-personal-space",
+  "backupDigest": "34730f3bc3983ab3b3e0e12041d139dcd5624cfca95e399b068fd993e826b56d",
+  "schemaVersion": 24,
+  "adminIdPreserved": true,
+  "administratorPasswordMatchesExistingTestSeats": true,
+  "oldAdminSessionsInvalidated": true,
+  "businessAccountsSeatsRolesTasksUnchanged": true,
+  "r2UserAcceptance": "pending"
+}

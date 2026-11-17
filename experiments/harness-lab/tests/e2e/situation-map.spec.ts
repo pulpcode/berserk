@@ -10,9 +10,7 @@ import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 import { scenarioDefinition } from '../../scripts/mock-context/scenarios/data';
-import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
 import type { SituationCurrent } from '../../src/contracts/context';
-import type { SimulationAction } from '../../src/contracts/simulation';
 import type { ScenarioMutationResult } from '../../src/contracts/scenarios';
 import { mapHref } from '../../src/web/situation/evidence';
 import { basemapFixture, captureMap, localVectorTiles, mapSnapshot } from './basemap-fixtures';
@@ -100,14 +98,12 @@ test('object draft loads native context on explicit send; verified answer opens 
  }finally{await env.close();}
 });
 
-test('simulation UI separates saving facts from sending notifications and shows accepted receipt',async({page})=>{
- const env=await setup(page,true);const fixture=mapFixtures('ui','2026-10-11');const actions:SimulationAction[]=[];let sends=0;
- await page.route('**/api/simulation**',async route=>{const req=route.request();const path=new URL(req.url()).pathname;
-  if(path==='/api/simulation')return route.fulfill({json:{instanceId:'ui',objects:fixture.objects,reports:fixture.reports,actions}});
-  if(path.endsWith('/object-updates')){const input=req.postDataJSON();const item=fixture.objects.find(item=>item.ref.objectId===input.ref.objectId)!;expect(input.expectedRevision).toBe(item.revision);item.revision++;item.properties=input.properties;actions.push({id:input.clientActionId,systemId:'situation',createdAt:new Date().toISOString(),revision:item.revision,sendState:'unsent',notification:{sourceMessageId:'ui-msg',title:'车辆更新',text:'车辆由4降为2，请查询当前资料',subjectId:item.ref.objectId,occurredAt:input.effectiveAt}});return route.fulfill({json:actions.at(-1)});}
-  const action=actions.at(-1)!;if(path.endsWith('/send')){sends++;action.sendState='accepted';action.receipt={eventId:'received',sourceMessageId:'ui-msg',receivedAt:new Date().toISOString(),status:'accepted'};}return route.fulfill({json:action});
- });
- try{await page.getByRole('button',{name:'设置',exact:true}).click();await page.getByRole('button',{name:'模拟验证',exact:true}).click();await expect(page.getByRole('heading',{name:'模拟验证'})).toBeVisible();await page.getByRole('button',{name:/西区可用车辆/}).click();await page.getByLabel('可用车辆数量').fill('2');await page.getByRole('button',{name:'保存变化',exact:true}).click();await expect(page.getByText('保存修订 2 · 尚未发送')).toBeVisible();expect(sends).toBe(0);await page.getByRole('button',{name:'发送通知',exact:true}).click();await expect(page.getByRole('link',{name:'查看接收与处理记录'})).toHaveAttribute('href','/overview?tab=events&id=received');expect(sends).toBe(1);expect(env.fake.calls).toHaveLength(0);await page.screenshot({path:test.info().outputPath('simulation-control.png')});}finally{await env.close();}
+test('removed simulation page and settings entry do not redirect or expose controls',async({page})=>{
+ const env=await setup(page,true);try{
+  await page.getByRole('button',{name:'设置',exact:true}).click();await expect(page.getByRole('button',{name:'模拟验证',exact:true})).toHaveCount(0);
+  for(const path of ['/simulation','/scenario-director']){await page.goto(path);await expect(page.getByRole('heading',{name:'页面不存在',exact:true})).toBeVisible();expect(new URL(page.url()).pathname).toBe(path);}
+  expect(env.fake.calls).toHaveLength(0);
+ }finally{await env.close();}
 });
 
 

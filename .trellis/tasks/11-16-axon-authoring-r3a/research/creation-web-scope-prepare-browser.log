@@ -1,0 +1,15 @@
+[WebServer] (node:82667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:82638) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:82673) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:82673) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work (8.2s)
+  ✓  2 tests/e2e/authoring.spec.ts:112:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (5.3s)
+  ✓  3 tests/e2e/authoring.spec.ts:130:1 › one personal conversation modifies two exact targets without changing unrelated fields (6.3s)
+
+  3 passed (29.5s)

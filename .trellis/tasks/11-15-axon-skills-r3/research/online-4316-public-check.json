@@ -1,0 +1,9 @@
+{
+  "localPublicAddressProbe": "RemoteDisconnected",
+  "localProxyDisabledProbe": "RemoteDisconnected",
+  "serverPublicAddressProbe": "URLError",
+  "serverLoopbackHealth": 200,
+  "listener": "0.0.0.0:4316",
+  "existingNetworkConfigurationUnchanged": true,
+  "qualification": "未据此声称从当前本机网络直连公网端口已成功；请沿用既有4316访问入口。"
+}

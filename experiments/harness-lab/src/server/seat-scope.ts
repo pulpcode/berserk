@@ -1,4 +1,4 @@
-import { identityOf } from './auth.js';
+import { workspaceIdentityOf } from './auth.js';
 import type { FastifyRequest } from 'fastify';
 import { RequestError } from '../contracts/errors.js';
 import type { LabConfig } from './config.js';
@@ -9,7 +9,7 @@ export function apiScope(config: Pick<LabConfig, 'seatId' | 'testSeats' | 'auth'
   return {
     base: testing ? '/api/test-seats/:seatId' : '/api',
     seat(request: FastifyRequest): string {
-      if (config.auth) return identityOf(request).seatId;
+      if (config.auth) return workspaceIdentityOf(request).seatId;
       if (!testing) return config.seatId ?? 'test-seat';
       const seatId = (request.params as { seatId?: string }).seatId;
       if (!seatId || !config.testSeats!.some(seat => seat.id === seatId)) throw new RequestError('SEAT_NOT_FOUND', '测试席位不存在。', 404);

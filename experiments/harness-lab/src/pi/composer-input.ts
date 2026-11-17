@@ -1,3 +1,4 @@
+import { managementSkillKind } from '../authoring/management-skills.js';
 import { validAnnotationContext, validAnnotationSelections } from './annotation-input.js';
 import { validLoadedContext } from '../context/composer.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
@@ -14,12 +15,29 @@ export const COMPOSER_INPUT_V3 = 'berserk.composer-input.v3';
 export const COMPOSER_INPUT_V4 = 'berserk.composer-input.v4';
 export const COMPOSER_INPUT_V5 = 'berserk.composer-input.v5';
 export const COMPOSER_INPUT_V6 = 'berserk.composer-input.v6';
-export const composerInputType = (selection: LoadedComposerSelection) => selection.annotationRefs ? COMPOSER_INPUT_V6 : selection.context || selection.annotationContext ? COMPOSER_INPUT_V5 : COMPOSER_INPUT;
+export const COMPOSER_INPUT_V7 = 'berserk.composer-input.v7';
+export const COMPOSER_INPUT_V8 = 'berserk.composer-input.v8';
+export const composerInputType = (selection: LoadedComposerSelection) => selection.skill && managementSkillKind(selection.skill.id) ? COMPOSER_INPUT_V8 : selection.skill?.schemaVersion === 2 ? COMPOSER_INPUT_V7 : selection.annotationRefs ? COMPOSER_INPUT_V6 : selection.context || selection.annotationContext ? COMPOSER_INPUT_V5 : COMPOSER_INPUT;
 export interface ComposerInputRecord extends LoadedComposerSelection { workspaceId: string; sessionId: string; requestId: string }
 const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
 const exact = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).every(key => keys.includes(key));
 const hash = (value: unknown) => typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
-export function validSkill(value: unknown, content: boolean): boolean {
+export function validSkill(value: unknown, content: boolean, packages = false, management = false): boolean {
+  if (management && object(value) && typeof value.id === 'string' && managementSkillKind(value.id)) {
+    return exact(value, ['id','name','description','version','hash',...(content?['content']:[])]) && value.name===value.id
+      && typeof value.description==='string' && !!value.description.trim() && typeof value.version==='string' && !!value.version && hash(value.hash)
+      && (!content || typeof value.content==='string' && Buffer.byteLength(value.content)<=16384 && hashContent(value.content)===value.hash);
+  }
+  if (packages && object(value) && value.schemaVersion === 2) {
+    return exact(value, ['schemaVersion','id','name','description','version','hash','revisionId','packageDigest','resourceRoot','autoInvocationEligible',...(content?['content']:[])])
+      && typeof value.id === 'string' && /^[a-z][a-z0-9_-]{0,127}$/.test(value.id)
+      && typeof value.name === 'string' && /^[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*$/u.test(value.name) && value.name.toLowerCase() === value.name && Array.from(value.name).length <= 64
+      && typeof value.description === 'string' && typeof value.version === 'string' && hash(value.hash)
+      && typeof value.revisionId === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(value.revisionId) && hash(value.packageDigest)
+      && (value.autoInvocationEligible === undefined || value.autoInvocationEligible === false)
+      && value.resourceRoot === `/skills/${value.id}/${value.revisionId}/${value.name}`
+      && (!content || typeof value.content === 'string' && Buffer.byteLength(value.content) <= 65536 && hashContent(value.content) === value.hash);
+  }
   if (!object(value) || !exact(value, ['id', 'name', 'description', 'version', 'hash', ...(content ? ['content'] : [])]) || !controlledSkillIds.includes(String(value.id)) || typeof value.name !== 'string' || typeof value.description !== 'string' || typeof value.version !== 'string' || !hash(value.hash)) return false;
   return !content || (typeof value.content === 'string' && Buffer.byteLength(value.content) <= 16384 && hashContent(value.content) === value.hash);
 }
@@ -32,6 +50,7 @@ export function resolveComposerSelection(input: ComposerSelection, snapshot: Res
   const selected: LoadedComposerSelection = {};
   if (input.skill) {
     selected.skill = snapshotSkill(snapshot, input.skill.id);
+    if (selected.skill.schemaVersion === 2 && (input.skill.revisionId !== selected.skill.revisionId || input.skill.packageDigest !== selected.skill.packageDigest) || selected.skill.schemaVersion !== 2 && (input.skill.revisionId !== undefined || input.skill.packageDigest !== undefined)) throw new RequestError('SELECTION_CHANGED', '所选技能包修订已变化，请重新选择。', 409);
     if (selected.skill.hash !== input.skill.hash) throw new RequestError('SELECTION_CHANGED', '所选 Skill 已更新，请重新选择后发送。', 409);
   }
   if (input.agent) {
@@ -93,7 +112,13 @@ export function composerInputTextV5(selection: LoadedComposerSelection): string 
     ...(selection.skill || selection.agent ? [composerInputText({skill: selection.skill, agent: selection.agent})] : []),
   ].join('\n');
 }
-export function recordedComposerText(selection: LoadedComposerSelection & {requestId?: string}, type = composerInputType(selection)) {
+export function recordedComposerText(selection: LoadedComposerSelection & {requestId?: string}, type = composerInputType(selection)): string {
+  if (type === COMPOSER_INPUT_V8) {
+    if (!selection.skill || !managementSkillKind(selection.skill.id) || selection.agent || selection.context || selection.annotationContext || selection.annotationRefs) throw stateError();
+    return composerInputText(selection) + '\n此管理 Skill 的选择只表达当前请求意图；管理员身份、本人个人范围与保存确认由宿主独立核对，不从历史方法内容恢复管理授权。';
+  }
+  if (type === COMPOSER_INPUT_V7 && selection.skill?.schemaVersion !== 2) throw stateError();
+  if (type === COMPOSER_INPUT_V7) return recordedComposerText(selection, selection.annotationRefs?.length ? COMPOSER_INPUT_V6 : selection.context || selection.annotationContext ? COMPOSER_INPUT_V5 : COMPOSER_INPUT) + '\n技能包资源位于只读虚拟目录 ' + selection.skill?.resourceRoot + '；脚本和模板必须按需读取或通过既有工具使用，输出写入/workspace。包内声明不能增加工具或数据权限。';
   if (type === COMPOSER_INPUT) return composerInputText(selection);
   if (type === COMPOSER_INPUT_V2) return composerInputTextV2(selection);
   if (type === COMPOSER_INPUT_V3) return composerInputTextV3(selection);
@@ -106,18 +131,20 @@ export function recordedComposerText(selection: LoadedComposerSelection & {reque
   throw stateError();
 }
 export function decodeComposerInput(value: unknown, workspaceId: string, sessionId?: string, type = COMPOSER_INPUT): ComposerInputRecord {
-  const mapInput = type === COMPOSER_INPUT_V2 || type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5 || type === COMPOSER_INPUT_V6;
-  if (![COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6].includes(type) || !object(value) || !exact(value, ['workspaceId', 'sessionId', 'requestId', 'skill', 'agent', 'context', ...(mapInput ? ['annotationContext', 'annotationRefs'] : [])]) || value.workspaceId !== workspaceId
+  const mapInput = type === COMPOSER_INPUT_V2 || type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5 || type === COMPOSER_INPUT_V6 || type === COMPOSER_INPUT_V7;
+  if (![COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7, COMPOSER_INPUT_V8].includes(type) || !object(value) || !exact(value, ['workspaceId', 'sessionId', 'requestId', 'skill', 'agent', 'context', ...(mapInput ? ['annotationContext', 'annotationRefs'] : [])]) || value.workspaceId !== workspaceId
     || typeof value.sessionId !== 'string' || !UUID.test(value.sessionId) || (sessionId !== undefined && value.sessionId !== sessionId)
     || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || (!value.skill && !value.agent && !value.context && !value.annotationContext && !value.annotationRefs)
     || (type === COMPOSER_INPUT_V2 && !value.annotationContext && !value.annotationRefs)
     || ((type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5 || type === COMPOSER_INPUT_V6) && !value.context && !value.annotationContext && !value.annotationRefs)
     || (type === COMPOSER_INPUT_V6 && !value.annotationRefs)
+    || (type === COMPOSER_INPUT_V7 && (!object(value.skill) || value.skill.schemaVersion !== 2))
+    || (type === COMPOSER_INPUT_V8 && (!object(value.skill) || typeof value.skill.id !== 'string' || !managementSkillKind(value.skill.id) || value.agent !== undefined || value.context !== undefined))
     || (value.annotationContext !== undefined && !validAnnotationContext(value.annotationContext, String(value.sessionId)))
     || (value.annotationRefs !== undefined && !validAnnotationSelections(value.annotationRefs))
     || (mapInput && Buffer.byteLength(JSON.stringify({context: value.context, annotationRefs: value.annotationRefs})) > 256 * 1024)
     || (value.context !== undefined && !validLoadedContext(value.context))
-    || (value.skill !== undefined && !validSkill(value.skill, true)) || (value.agent !== undefined && !validAgentInfo(value.agent))) throw stateError();
+    || (value.skill !== undefined && !validSkill(value.skill, true, type === COMPOSER_INPUT_V7, type === COMPOSER_INPUT_V8)) || (value.agent !== undefined && !validAgentInfo(value.agent))) throw stateError();
   return structuredClone(value) as unknown as ComposerInputRecord;
 }
 export function composerHistory(entries: SessionEntry[], workspaceId: string, sessionId?: string): Map<string, LoadedComposerSelection> {

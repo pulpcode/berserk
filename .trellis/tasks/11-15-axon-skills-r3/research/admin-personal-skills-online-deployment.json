@@ -1,0 +1,28 @@
+{
+  "updatedAt": "2026-11-15T06:13:43Z",
+  "release": "/home/ubuntu/axon-r3-admin-skills-4316-20261115",
+  "previousRelease": "/home/ubuntu/axon-r3-preview-4316-20261115",
+  "sourceArchiveSha256": "68b43ce34cf47a9a030fc2afd323ae969c465979110f103790888c959d1c397e",
+  "filesVerified": 472,
+  "pid": 2495033,
+  "previousPid": 2486986,
+  "dataDir": "/home/ubuntu/axon-chat-c-preview-20261112/data",
+  "backup": "/home/ubuntu/axon-r3-admin-skills-4316-20261115/backup/before-admin-personal-skills",
+  "backupDigest": "6dd2055c65e535dd95e1fd48194038f6986e80b7be27f4da400effd7407e7bc0",
+  "backupFiles": 471,
+  "schemaMigrationNeeded": false,
+  "allAccountAndSkillTablesPreserved": true,
+  "historyPrefixesPreserved": 85,
+  "serviceSecretsUnchanged": true,
+  "frontendAssetsVerified": [
+    "/assets/index-bPMFPyeh.js",
+    "/assets/index-DS5-5Y2j.css"
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "pid4315Unchanged": true,
+  "administratorPersonalOrganizationSkills": true,
+  "userAcceptance": "pending"
+}

@@ -203,7 +203,7 @@ describe('scenario HTTP facts, controls and replay',()=>{
     const scene=await setup(),created=await scene.create(),active=await scene.activate(created.body.instance),op=randomUUID(),applied=await scene.apply(active.body.instance,'E01',op);expect(applied.status).toBe(200);
     expect(applied.body.actions[0]).toMatchObject({sendState:'unsent',actor});expect(scene.receiver.notifications).toEqual([]);
     expect((await scene.apply(active.body.instance,'E01',op)).body).toEqual(applied.body);expect((await scene.apply(applied.body.instance,'E02')).status).toBe(409);
-    expect((await scene.request(`/control/actions/${applied.body.actions[0].id}`)).status).toBe(404);expect((await scene.request(`/control/actions/${applied.body.actions[0].id}/send`,'POST',{})).status).toBe(404);
+    expect((await scene.request(`/control/actions/${applied.body.actions[0].id}`)).status).toBe(404);expect((await scene.request(`/control/actions/${applied.body.actions[0].id}/send`,'POST',{})).status).toBe(410);
     const paused=await scene.request<ScenarioMutationResult>(`/control/instances/${created.body.instance.instanceId}/control`,'POST',{action:'pause',clientActionId:randomUUID(),expectedRevision:applied.body.instance.revision,actor});expect(paused.status).toBe(200);expect((await scene.send(applied.body.actions[0])).status).toBe(409);expect(scene.receiver.notifications).toHaveLength(0);
     const resumed=await scene.request<ScenarioMutationResult>(`/control/instances/${created.body.instance.instanceId}/control`,'POST',{action:'resume',clientActionId:randomUUID(),expectedRevision:paused.body.instance.revision,actor});expect(resumed.body.instance.businessNow).toBe(applied.body.instance.businessNow);
     scene.receiver.setLoseAck(true);const sent=await scene.send(applied.body.actions[0]);expect(sent.body).toMatchObject({sendState:'accepted',deliveryActor:actor});expect(scene.receiver.notifications).toHaveLength(1);expect(scene.receiver.notifications[0].scenarioInstanceId).toBe(created.body.instance.instanceId);expect((await scene.send(sent.body)).body.receipt).toEqual(sent.body.receipt);expect(scene.receiver.notifications).toHaveLength(1);
@@ -289,4 +289,10 @@ describe('scenario HTTP facts, controls and replay',()=>{
     const scene=await setup(),created=await scene.create(),active=await scene.activate(created.body.instance);const first=await scene.request<SituationCurrent>('/situation/objects?limit=100');vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2030-01-01T12:00:00Z'));const second=await scene.request<SituationCurrent>('/situation/objects?limit=100');expect(second.body).toEqual(first.body);expect(second.body.asOf).toBe(active.body.instance.businessNow);vi.useRealTimers();
     for(let i=0;i<3;i++)await scene.create();const page=await scene.request<ScenarioInstances>('/control/instances?limit=2');expect(page.body.items).toHaveLength(2);expect(page.body.hasMore).toBe(true);const rest=await scene.request<ScenarioInstances>(`/control/instances?limit=2&cursor=${page.body.nextCursor}`);expect(rest.body.items).toHaveLength(2);expect(rest.body.hasMore).toBe(false);expect(new Set([...page.body.items,...rest.body.items].map(i=>i.instanceId)).size).toBe(4);
   });
+});
+
+it('retires unscoped source helpers whenever unified director mode is enabled',async()=>{
+  const mock=createMockContextServer({token,controlToken,scenariosEnabled:true});
+  try{expect(()=>mock.reset()).toThrow('导演台');expect(()=>mock.advance('intel')).toThrow('指定自由调试轮次');expect(()=>mock.event('E1')).toThrow('指定轮次');}
+  finally{await mock.close();}
 });

@@ -1,0 +1,33 @@
+{
+  "dry": {
+    "fromVersion": 18,
+    "toVersion": 24,
+    "accounts": 6,
+    "seats": 6,
+    "administratorGrants": 0,
+    "createsAccounts": false,
+    "grantsRoles": false,
+    "stage": "dry-run",
+    "resumed": false,
+    "backupDigest": "4886bad14f8bdd8654d7dbd64ad08b83dac80853ea35c9ddc5da88fab623b440"
+  },
+  "apply": {
+    "fromVersion": 18,
+    "toVersion": 24,
+    "accounts": 6,
+    "seats": 6,
+    "administratorGrants": 0,
+    "createsAccounts": false,
+    "grantsRoles": false,
+    "stage": "completed",
+    "resumed": false,
+    "backupDigest": "4886bad14f8bdd8654d7dbd64ad08b83dac80853ea35c9ddc5da88fab623b440"
+  },
+  "upgradedVersion": 24,
+  "businessAndAuthRecordsUnchanged": true,
+  "foreignKeysValid": true,
+  "olderBinaryRejectsUpgraded": true,
+  "matchedBackupReopensWithPreviousBinary": true,
+  "createsAccounts": false,
+  "grantsRoles": false
+}

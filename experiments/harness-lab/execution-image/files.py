@@ -11,10 +11,10 @@ DIRECTORY = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 
 def path_parts(path, writable=False):
     parts = path.split("/")
-    if len(parts) < 2 or parts[0] != "" or parts[1] not in ("workspace", "logs"):
-        raise ValueError("仅能访问 /workspace 和只读 /logs。")
+    if len(parts) < 2 or parts[0] != "" or parts[1] not in ("workspace", "logs", "skills"):
+        raise ValueError("仅能访问 /workspace、只读 /logs 和已激活的只读 /skills。")
     if writable and parts[1] != "workspace":
-        raise ValueError("日志目录只读。")
+        raise ValueError("日志与技能资源目录只读。")
     if any(part in (".", "..") or "\x00" in part for part in parts[2:]):
         raise ValueError("文件路径无效。")
     return "/" + parts[1], [part for part in parts[2:] if part]
@@ -145,6 +145,52 @@ def main():
             if process.returncode not in (0, 1, -15):
                 raise ValueError("文件查找失败，请检查目录和 glob 表达式。")
             print(json.dumps(result, ensure_ascii=False))
+        elif operation == "grep":
+            options = json.loads(sys.argv[4])
+            pattern = options["pattern"]
+            if not isinstance(pattern, str) or len(pattern) > 1024:
+                raise ValueError("搜索表达式过长。")
+            count = max(1, min(int(options.get("limit", 100)), 1000))
+            args = ["rg", "--json", "--line-number", "--color=never", "--hidden", "--no-ignore"]
+            if options.get("ignoreCase"):
+                args.append("--ignore-case")
+            if options.get("literal"):
+                args.append("--fixed-strings")
+            if options.get("glob"):
+                args.extend(["--glob", options["glob"]])
+            directory = stat.S_ISDIR(info.st_mode)
+            target = "." if directory else f"/proc/self/fd/{fd}"
+            args.extend(["--", pattern, target])
+            # The fixed descriptor is the only root. rg never follows symlinks.
+            process = subprocess.Popen(args, cwd=f"/proc/self/fd/{fd}" if directory else "/workspace",
+                                       pass_fds=(fd,), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            result = []
+            truncated = False
+            try:
+                while True:
+                    line = process.stdout.readline(2 * 1024 * 1024 + 1)
+                    if not line:
+                        break
+                    if len(line) > 2 * 1024 * 1024:
+                        raise ValueError("匹配行过长，请缩小搜索范围。")
+                    event = json.loads(line)
+                    if event.get("type") != "match":
+                        continue
+                    data = event["data"]
+                    relative = data.get("path", {}).get("text", "") if directory else path
+                    result.append({"path": relative, "line": data["line_number"],
+                                   "text": data.get("lines", {}).get("text", "")[:4096]})
+                    if len(result) >= count:
+                        truncated = True
+                        process.terminate()
+                        break
+            finally:
+                if process.poll() is None:
+                    process.terminate()
+                _, error = process.communicate()
+            if process.returncode not in (0, 1, -15):
+                raise ValueError("搜索失败，请检查表达式与路径。")
+            print(json.dumps({"matches": result, "limitReached": truncated}, ensure_ascii=False))
         else:
             raise ValueError("未知文件操作。")
     finally:

@@ -1,0 +1,8 @@
+{
+  "src/authoring/service.ts": "c0d9bc40354d412f42c9532a89a8609632b0d0aab045c5ba0c2e2be39bdbda8d",
+  "src/authoring/integrity.ts": "1715951d5dc0dcd38ff77aa095a6d9e802baee5aa83f18caeed5a357c0496e76",
+  "src/authoring/method-files.ts": "1cf23342c36f12d506bc25fc768ab80ef8c24f0fa358ec3914b2befa1cd6f699",
+  "src/capabilities/management.ts": "30687848809cc5c3cffd5998db7bb7451bcc4358f541b902fdf9d943d5e934cf",
+  "src/skills/service.ts": "929c98bcb5d68faf1166e680b5c0be7ecbd035879357e8879f84f580f94db5d0",
+  "tests/authoring-storage.test.ts": "e046d4af0d4679db1d9017fbb3a14084429231de4ee81b945070b00cb4521b51"
+}

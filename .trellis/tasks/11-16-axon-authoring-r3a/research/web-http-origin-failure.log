@@ -1,0 +1,131 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/authoring.spec.ts --workers=1 --output=/private/tmp/r3a-web-authoring-http-results
+
+[WebServer] (node:54733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:54704) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:54746) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54746) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/authoring.spec.ts:52:1 › creation uses original new-chat flow, cancel has no writes, and manual skill creation stays independent (8.0s)
+(node:54788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  2 tests/e2e/authoring.spec.ts:72:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (7.6s)
+(node:54872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  3 tests/e2e/authoring.spec.ts:90:1 › one personal conversation modifies two exact targets without changing unrelated fields (7.6s)
+
+
+  1) tests/e2e/authoring.spec.ts:52:1 › creation uses original new-chat flow, cancel has no writes, and manual skill creation stays independent 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: '能力中心', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: '能力中心', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: '能力中心', exact: true })
+
+
+      29 |   return { lab, fake, adminId, writes, close: async () => { if (!page.isClosed()) { await page.goto('about:blank').catch(() => {}); await page.unrouteAll({ behavior: 'ignoreErrors' }); } await app.close(); await rm(dir, { recursive: true, force: true }); } };
+      30 | }
+    > 31 | async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '系统管理员' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible(); }
+         |                                                                                                                                                                                                                                                                                                                                                             ^
+      32 | async function personal(page: Page) {
+      33 |   const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });
+      34 |   await space.getByLabel('空间名称', { exact: true }).fill('创作个人空间');
+        at login (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:31:349)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:55:5
+
+    Error Context: ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-creation-uses-or-fa347--creation-stays-independent/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-creation-uses-or-fa347--creation-stays-independent/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-creation-uses-or-fa347--creation-stays-independent/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/authoring.spec.ts:72:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: '能力中心', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: '能力中心', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: '能力中心', exact: true })
+
+
+      29 |   return { lab, fake, adminId, writes, close: async () => { if (!page.isClosed()) { await page.goto('about:blank').catch(() => {}); await page.unrouteAll({ behavior: 'ignoreErrors' }); } await app.close(); await rm(dir, { recursive: true, force: true }); } };
+      30 | }
+    > 31 | async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '系统管理员' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible(); }
+         |                                                                                                                                                                                                                                                                                                                                                             ^
+      32 | async function personal(page: Page) {
+      33 |   const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });
+      34 |   await space.getByLabel('空间名称', { exact: true }).fill('创作个人空间');
+        at login (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:31:349)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:75:5
+
+    Error Context: ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/e2e/authoring.spec.ts:90:1 › one personal conversation modifies two exact targets without changing unrelated fields 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: '能力中心', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: '能力中心', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: '能力中心', exact: true })
+
+
+      29 |   return { lab, fake, adminId, writes, close: async () => { if (!page.isClosed()) { await page.goto('about:blank').catch(() => {}); await page.unrouteAll({ behavior: 'ignoreErrors' }); } await app.close(); await rm(dir, { recursive: true, force: true }); } };
+      30 | }
+    > 31 | async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '系统管理员' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible(); }
+         |                                                                                                                                                                                                                                                                                                                                                             ^
+      32 | async function personal(page: Page) {
+      33 |   const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });
+      34 |   await space.getByLabel('空间名称', { exact: true }).fill('创作个人空间');
+        at login (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:31:349)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:110:5
+
+    Error Context: ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-one-personal-con-25149-t-changing-unrelated-fields/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-one-personal-con-25149-t-changing-unrelated-fields/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-web-authoring-http-results/authoring-one-personal-con-25149-t-changing-unrelated-fields/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests/e2e/authoring.spec.ts:52:1 › creation uses original new-chat flow, cancel has no writes, and manual skill creation stays independent 
+    tests/e2e/authoring.spec.ts:72:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 
+    tests/e2e/authoring.spec.ts:90:1 › one personal conversation modifies two exact targets without changing unrelated fields 

@@ -1,0 +1,56 @@
+[WebServer] (node:81232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:81197) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:81272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:81272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work (33.5s)
+(node:81606) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:81606) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  2 tests/e2e/authoring.spec.ts:103:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (15.3s)
+  ✓  3 tests/e2e/authoring.spec.ts:121:1 › one personal conversation modifies two exact targets without changing unrelated fields (20.3s)
+
+
+  1) tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByRole('textbox', { name: '发送消息', exact: true })
+    Expected: "保留尚未发送的创作需求"
+    Received: "另一个空间的普通草稿"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByRole('textbox', { name: '发送消息', exact: true }) with timeout 5000ms
+      - waiting for getByRole('textbox', { name: '发送消息', exact: true })
+        14 × locator resolved to <textarea rows="1" aria-label="发送消息" id="message-input" placeholder="描述你的问题，或继续补充想法…">另一个空间的普通草稿</textarea>
+           - unexpected value "另一个空间的普通草稿"
+
+
+      92 |     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('另一个空间的普通草稿'); await page.getByRole('button', { name: '移除 Skill', exact: true }).click();
+      93 |     page.once('dialog', dialog => dialog.accept()); await page.getByLabel('对话保存位置', { exact: true }).selectOption(originalSpace);
+    > 94 |     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('保留尚未发送的创作需求'); await expect(page.getByRole('button', { name: '查看 Skill：skill-creator', exact: true })).toBeVisible();
+         |                                                                            ^
+      95 |     page.once('dialog', dialog => dialog.accept()); await page.getByLabel('对话保存位置', { exact: true }).selectOption(otherSpace);
+      96 |     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('另一个空间的普通草稿'); await expect(page.getByRole('button', { name: '移除 Skill', exact: true })).toHaveCount(0);
+      97 |     page.once('dialog', dialog => dialog.accept()); await page.getByLabel('对话保存位置', { exact: true }).selectOption(originalSpace);
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:94:76
+
+    Error Context: ../../../../../../../../private/tmp/r3a-creation-web-frozen-results/authoring-one-create-actio-8c76c-e-and-preserves-unsent-work/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-creation-web-frozen-results/authoring-one-create-actio-8c76c-e-and-preserves-unsent-work/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-creation-web-frozen-results/authoring-one-create-actio-8c76c-e-and-preserves-unsent-work/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work
+  2 passed (2.2m)

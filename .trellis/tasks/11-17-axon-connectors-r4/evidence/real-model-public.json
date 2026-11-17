@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "node": "v24.14.0",
+  "model": "deepseek-v4.1-flash",
+  "sdk": "@modelcontextprotocol/client@2.4.0",
+  "scope": "受控双服务及Cloudflare公开文档MCP、真实方舟模型、原Pi确认；不代表用户验收",
+  "publicNetwork": {
+    "endpoint": "https://docs.mcp.cloudflare.com/mcp",
+    "tlsVerification": "native HTTPS certificate and hostname validation retained",
+    "temporaryApprovedIp": "198.18.0.14"
+  },
+  "durationMs": 35597.048666,
+  "records": [
+    {
+      "kind": "discovery",
+      "name": "R4-alpha",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 64.87778299999991
+    },
+    {
+      "kind": "discovery",
+      "name": "R4-beta",
+      "protocolVersion": "2025-11-25",
+      "protocolEra": "legacy",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 47.569548999999824
+    },
+    {
+      "kind": "model-loop",
+      "name": "R4-alpha",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "a3498233-4f30-4c47-937b-07ddf678bc57",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "342b1004-f3a0-4244-a29e-c42101ae7e36",
+        "connectorId": "bd2c815a-fd2f-44c4-9180-2161a7aecdaf",
+        "revisionId": "6f5cc779-e966-4a9d-8cda-a1b73bd22c4e",
+        "connectionName": "R4-alpha",
+        "accountLabel": "无需凭证",
+        "toolName": "lookup",
+        "contractDigest": "a6fb4e1f22486875aebe50a5e96d30f298f633b3881c77d7c6eae573e11e78ff",
+        "catalogDigest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "54b226190be2bebdef93cbd83de7189bc775b707bbecbe732e27332a578914a7",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2026-07-28",
+        "protocolEra": "modern"
+      },
+      "durationMs": 6957.895084,
+      "assembly": {
+        "assemblyMs": 87.79181599999993,
+        "toolsMs": [
+          46.50276600000052
+        ],
+        "firstTextMs": 4225
+      }
+    },
+    {
+      "kind": "model-loop",
+      "name": "R4-beta",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "2715eac6-7db9-4c2d-9f06-dce83d1b66b0",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "a850fe5a-2f80-4780-ac1c-e2390a21f8ac",
+        "connectorId": "aa1b2085-9db7-4533-95f5-e89e5c214a4b",
+        "revisionId": "b53501bb-22f5-4b4b-ac47-c18c9af78f7a",
+        "connectionName": "R4-beta",
+        "accountLabel": "无需凭证",
+        "toolName": "lookup",
+        "contractDigest": "a6fb4e1f22486875aebe50a5e96d30f298f633b3881c77d7c6eae573e11e78ff",
+        "catalogDigest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "c85420e7eeea68f4a120e795f52df41fe4d7bf613bec289fa260f7e1d3e512b3",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2025-11-25",
+        "protocolEra": "legacy"
+      },
+      "durationMs": 5242.163985000001,
+      "assembly": {
+        "assemblyMs": 18.620513999998366,
+        "toolsMs": [
+          39.22348299999976
+        ],
+        "firstTextMs": 3127
+      }
+    },
+    {
+      "kind": "discovery",
+      "name": "Cloudflare 官方文档",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "tools": [
+        "search_cloudflare_documentation",
+        "migrate_pages_to_workers_guide"
+      ],
+      "catalogBytes": 2175,
+      "durationMs": 1499.2351460000027
+    },
+    {
+      "kind": "model-loop",
+      "name": "Cloudflare 官方文档",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "96c43ad8-7ebd-4d39-aa4e-220bb1688acc",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "37ae1c09-cacc-42ec-a235-3e450368f401",
+        "connectorId": "938a81f1-430c-4e6a-93c9-fd9afec36539",
+        "revisionId": "08d85fa2-61a2-467c-8549-c7b953681852",
+        "connectionName": "Cloudflare 官方文档",
+        "accountLabel": "无需凭证",
+        "toolName": "search_cloudflare_documentation",
+        "contractDigest": "bc47fa5f04ddf433508022be7b7d2290a426ecbaae4226e49a6b73f2f5ba48ec",
+        "catalogDigest": "80659c60314984e58c007d383fd04dabf47fe0c357cb9cc9564c0932d9e0efda",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "01eb82a3aa029d67c7b37393667b45029c72bd186b69c36d97363480bd4b31d7",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2026-07-28",
+        "protocolEra": "modern"
+      },
+      "durationMs": 20491.249609000002,
+      "assembly": {
+        "assemblyMs": 22.384603999998944,
+        "toolsMs": [
+          6989.279039000001
+        ],
+        "firstTextMs": 10648
+      }
+    }
+  ],
+  "modelCalls": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_045feacc0d7112b41d0fcf7d55b680db803a1c15",
+        "ask_user"
+      ],
+      "contextBytes": 9315
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_045feacc0d7112b41d0fcf7d55b680db803a1c15",
+        "ask_user"
+      ],
+      "contextBytes": 11406
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_d328c654dcae80cdcd186b4eec511127f62ad9b0",
+        "ask_user"
+      ],
+      "contextBytes": 9311
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_d328c654dcae80cdcd186b4eec511127f62ad9b0",
+        "ask_user"
+      ],
+      "contextBytes": 11212
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_fb3a5ebe1f16e32717fd59ca12e01170f66ca5c0",
+        "ask_user"
+      ],
+      "contextBytes": 10035
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_fb3a5ebe1f16e32717fd59ca12e01170f66ca5c0",
+        "ask_user"
+      ],
+      "contextBytes": 40918
+    }
+  ]
+}

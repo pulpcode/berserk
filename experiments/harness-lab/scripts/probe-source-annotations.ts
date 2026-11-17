@@ -1,5 +1,6 @@
 /** Opt-in, isolated map-only live probe. No automatic answers, approvals, adoption, or deployment. */
 import assert from 'node:assert/strict';
+import { requireDirectorProbeRebuild } from './director-probe-guard.js';
 import {execFileSync} from 'node:child_process';
 import {createHash, randomUUID} from 'node:crypto';
 import {appendFile, mkdir, mkdtemp, readFile, writeFile} from 'node:fs/promises';
@@ -205,8 +206,9 @@ async function runCase(kind:Case, run:number, options:Options,collection:string)
   }
   return result;
 }
-async function main() {
-  const options=parseOptions(process.argv.slice(2));
+export async function main(args=process.argv.slice(2)) {
+  const options=parseOptions(args);
+  requireDirectorProbeRebuild('source-annotations');
   const collection=await mkdtemp(join(tmpdir(),'axon-source-annotations-'));await mkdir(collection,{recursive:true,mode:0o700});
   console.info(JSON.stringify({collection,options}));
   const results=[];

@@ -1,0 +1,11 @@
+# R3-0工具链冻结
+
+源规范获取日期2026-11-15，Agent Skills官方页面快照SHA2561133b01f5993cddfa32a0bec317c89c006894192dd028fb73c3f164825cc3763；skills-ref0.1.1元数据快照SHA256806ea2b410bf9ccd011ac2834c171956ce47f68f114ee9d0679e8ad92f950c3f。
+
+Semgrep初尝1.185.0安装成功但无法启动：官方已移除Intel macOS core。改用官方1.182.0 wheel，实际版本启动并完成Python/JS真实扫描，命中/无发现/4文件覆盖见real-semgrep-baseline.json。初次报告的ruleId包含配置宿主路径前缀，产品适配需禁用ID重写或映射固定ID，此问题已交核心实现者处理。
+
+本机Docker daemon不可用；服务器Docker26.1.3和原berserk-file-runtime:w01-5镜像可用，原镜像IDdf1f13897d2d8c227d0af8059ad34bc1f7e55892478efde44c608f65e9861ee4。R3不得原地覆盖旧镜像标签；待新files.py冻结后从固定原镜像构建R3新标签。仅独立测试目录验证，不更新4315/4316。
+
+新增应用依赖yauzl3.4.0、yaml2.9.1、@types/yauzl3.4.0，全部exact锁定。node_modules已从R1共享符号链接改为本工作树APFS克隆，避免改动另一分支依赖；一次误在仓库根执行的npm安装已仅删除其新建文件并在应用目录重做，无根产品文件改变。
+
+六类真实管理服务自动扫描已通过：方法不适用、Python/JS命中且nosemgrep/包ignore不静默抑制、无发现、未覆盖语言部分完成、实际解析错误、真实缺可执行文件。均不以成功扫描或试用为发布条件。首次损坏Python夹具可被Semgrep恢复解析，测试假设错误保留，换用真实PartialParsing错误夹具再测。默认扫描执行器正升级为强制无网络容器；此处本机显式裸二进制功能验证与后续容器验证分别记录。

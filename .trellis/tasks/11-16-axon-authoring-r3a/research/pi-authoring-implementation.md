@@ -1,0 +1,20 @@
+# 原Pi对话管理接入
+
+仅当前管理员本人个人对话的显式每消息authoring意图/明确直接请求可启用；服务器复核身份、个人scope、请求当前性。原循环创建请求级6管理工具+ask_user，普通工具/Shell/委派/业务写/发布不注入，不使用extraTrialTools，不改变永久专家绑定。普通后续无意图无管理工具；参考同名文件/历史/引用不能赋权。
+
+方法按需通过固定宿主method工具加载。目录/草稿/候选由现有管理服务读取；propose UTF8补丁转原始bytes，完整before/candidate进入原action.authoring确认，保存仅接proposalId，原beforeToolCall等待真实批准并再次核对，批准凭据一次消费。宿主服务锁内再次检查停止/角色。只使用原Pi JSONL交互/工具结果，release清理请求候选。元数据意图不成为持久权限。
+
+确认、policy和原生结果的严格解码增加新save工具，完整proposal校验摘要与session/request，真实receipt绑定owner/target/baseline/批准来源。同proposal重复save可返回首次原子receipt，不能要求回执伪装为后来确认。重启旧等待只过期、不恢复；新请求read回执只核对不重放。
+
+检查：首轮4项仅拒绝后undefined字段断言失败，修复后4/4通过。随后authoring+既有interactions两文件38/38通过24.09s；最后增加等待时撤权场景并收紧确认title/编辑target与baseline，authoring文件5/5通过7.83s。定向ESLint exit0。中间全局typecheck日志保留并修复本文件重复import、测试execution配置不全及工具files联合类型；其他代理同期修改另记录，最终全局门禁由root执行。
+
+产品源码已冻结供真实probe。独立checker追加异常历史断言，若修改需单列证据。Skill原生试用报告的管理read桥接尚由root补齐，不把仅scan/validation当完整trial报告。无部署、生产迁移或commit/push。
+
+
+## 收尾审查补齐
+
+独立审查补methodBody服务保真路径；Pi propose schema与固定管理方法提示同步：仅修改SKILL.md正文必须用methodBody，与files SKILL.md互斥；不由模型重新序列化frontmatter。
+
+本人Skill既有试用通过现有SkillTrials实例注入AuthoringService受控report reader，读取前后检查当前请求与管理员，原trials.get验证owner，额外核对trialId和skillId。仅返回ExpertTrialRecord，不返回snapshot/messages/calls/files或执行任何试用。新增真实认证/服务/试用API（只fake provider）定向场景；首轮与服务fallback并发落盘导致未找到报告，第二轮真实owner隔离正确返回EXPERT_TRIAL_NOT_FOUND而测试误期FORBIDDEN，按既有隐私契约修正断言，不改产品使其泄漏存在性。
+
+最终产品冻结后6/6通过33.44s（26.05s执行，主机并行负载下），定向ESLint exit0；不把前轮38项当本次整套重跑。最终全局检查与真实Ark由root继续。

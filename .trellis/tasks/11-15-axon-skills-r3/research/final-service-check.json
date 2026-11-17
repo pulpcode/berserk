@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-15",
+  "operation": "read-only SSH health/container/image check after isolated R3 probes",
+  "productionUpdated": false,
+  "productionMigrated": false,
+  "services": {"4315": {"httpStatus": 200}, "4316": {"httpStatus": 200}},
+  "activeR3Containers": [],
+  "oldExecutionImage": "sha256:df1f13897d2d8c227d0af8059ad34bc1f7e55892478efde44c608f65e9861ee4"
+}

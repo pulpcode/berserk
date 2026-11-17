@@ -1,0 +1,35 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/authoring.spec.ts --workers=1 --output=/private/tmp/r3a-web-authoring-results
+
+[WebServer] (node:54062) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:54030) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:54067) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54067) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/authoring.spec.ts:51:1 › creation uses original new-chat flow, cancel has no writes, and manual skill creation stays independent (5.8s)
+  ✘  2 tests/e2e/authoring.spec.ts:71:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (1.5m)
+
+
+  1) tests/e2e/authoring.spec.ts:71:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 
+
+    Test timeout of 90000ms exceeded.
+
+    Error Context: ../../../../../../../../private/tmp/r3a-web-authoring-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-web-authoring-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-web-authoring-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/authoring.spec.ts:71:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link 
+  1 passed (1.7m)

@@ -1,0 +1,5 @@
+
+> @berserk/harness-lab@0.1.0 typecheck
+> tsc --noEmit
+
+tests/pi/management-skills.test.ts(58,34): error TS2367: This comparison appears to be unintentional because the types '"user" | "assistant" | "toolResult"' and '"custom"' have no overlap.

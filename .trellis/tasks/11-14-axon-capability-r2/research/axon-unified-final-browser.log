@@ -1,0 +1,70 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/administrator.spec.ts tests/e2e/access.spec.ts tests/e2e/capability-management.spec.ts tests/e2e/capabilities.spec.ts --workers=1 --output=/private/tmp/axon-unified-final-browser-results
+
+[WebServer] (node:12448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:12418) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:12454) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12454) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/access.spec.ts:23:1 › seat login supports password visibility, errors, clearing and a narrow viewport (8.9s)
+  ✓   2 tests/e2e/access.spec.ts:50:1 › empty seat choices cannot submit a login (2.4s)
+  ✓   3 tests/e2e/access.spec.ts:80:1 › login, public/private task navigation, lazy workspace, archive and two independent seats (22.7s)
+  ✓   4 tests/e2e/access.spec.ts:92:1 › same-browser logout and identity change clear private drafts in both tabs (14.5s)
+  ✓   5 tests/e2e/access.spec.ts:100:1 › login reads the current CSRF token after another tab replaces the anonymous cookie (9.2s)
+  ✓   6 tests/e2e/access.spec.ts:115:1 › catalog managers maintain all work tasks while every seat owns its personal spaces (26.4s)
+  ✓   7 tests/e2e/access.spec.ts:227:1 › task catalog groups preserve disclosure and hide all space entries in the desktop rail (13.0s)
+  ✓   8 tests/e2e/access.spec.ts:323:1 › directory outages show one content status, preserve navigation and drafts, and recover without writes (24.0s)
+  ✓   9 tests/e2e/access.spec.ts:359:1 › task read errors remain scoped instead of reporting a disconnected service (17.6s)
+  ✓  10 tests/e2e/access.spec.ts:380:1 › basemap preference survives logout and stays isolated between accounts (23.5s)
+  ✘  11 tests/e2e/administrator.spec.ts:54:1 › independent administrator manages experts without mounting a seat workbench (30.3s)
+(node:13214) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13214) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  12 tests/e2e/administrator.spec.ts:103:1 › revoking an independent administrator returns to login and overall remains a business seat (7.4s)
+  ✓  13 tests/e2e/capabilities.spec.ts:35:1 › professional expert creation is empty, cancelable and retains existing conversation drafts (8.8s)
+  ✓  14 tests/e2e/capabilities.spec.ts:81:1 › a lost creation response is retried with the same action and does not create another session (7.7s)
+  ✓  15 tests/e2e/capabilities.spec.ts:106:1 › ordinary new conversation keeps the general assistant and uses an action ID (5.6s)
+  ✓  16 tests/e2e/capabilities.spec.ts:120:1 › a disabled expert retains its conversation and draft while sending is blocked (11.0s)
+  ✓  17 tests/e2e/capabilities.spec.ts:143:1 › capability tabs share searchable cards and real read-only skills without creating work (6.1s)
+  ✓  18 tests/e2e/capability-management.spec.ts:54:1 › admin creates and checks a draft without calling a model; shared conflicts preserve local edits (12.4s)
+  ✓  19 tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate (15.2s)
+  ✓  20 tests/e2e/capability-management.spec.ts:149:1 › ordinary user cannot see expert management and can explicitly choose general as personal default (7.3s)
+
+
+  1) tests/e2e/administrator.spec.ts:54:1 › independent administrator manages experts without mounting a seat workbench 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog').filter({ has: getByLabel('专家名称', { exact: true }) }).getByRole('button', { name: '检查配置', exact: true })
+
+
+      72 |     await expect(management.getByRole('button', { name: '保存草稿', exact: true })).toBeDisabled();
+      73 |     await management.getByRole('button', { name: '检查与试用', exact: true }).click();
+    > 74 |     await management.getByRole('button', { name: '检查配置', exact: true }).click();
+         |                                                                         ^
+      75 |     await expect(management.getByRole('heading', { name: '检查通过', exact: true })).toBeVisible();
+      76 |     expect(env.fake.calls).toHaveLength(0);
+      77 |     await page.reload();
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/administrator.spec.ts:74:73
+
+    Error Context: ../../../../../../../../private/tmp/axon-unified-final-browser-results/administrator-independent--99030-t-mounting-a-seat-workbench/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/axon-unified-final-browser-results/administrator-independent--99030-t-mounting-a-seat-workbench/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/axon-unified-final-browser-results/administrator-independent--99030-t-mounting-a-seat-workbench/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/administrator.spec.ts:54:1 › independent administrator manages experts without mounting a seat workbench 
+  19 passed (5.0m)

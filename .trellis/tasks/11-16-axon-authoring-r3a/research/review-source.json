@@ -1,0 +1,9 @@
+{
+  "src/authoring/method-files.ts": "d253d6153ff379e408c6e579ae8f69328569b6bbfd4956030912a310547fcbe6",
+  "src/authoring/method-body.ts": "618d415b9bf6edead48dafd94b5248bce90f1fb12e036bd2497aaf1f585a71c2",
+  "src/authoring/service.ts": "323f68ace8542073e0fba8fa635dd93823c35d1f6bb832dfc2eb689f2283d1c8",
+  "src/contracts/authoring.ts": "8a98c70839ec69d7759dab33ae88cabc3a926a5636e45744f157782c69718581",
+  "src/pi/interactions.ts": "3924f368313b3767f79ccc3ee3b2760d111aeae5c264d17aefab8879e5c4d7b6",
+  "tests/authoring-storage.test.ts": "372dda5837e603a0e7242c43872548e16aed3b371ca28966337d82f745ff2b01",
+  "tests/pi/authoring-history.test.ts": "74e7e6bcba05460d4dd559c014442307fe22cff8cb572c1a73bbc3e635926674"
+}

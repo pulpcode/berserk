@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "administrator": {
+    "login": 200,
+    "managedSkills": 7,
+    "availableSkills": 6,
+    "publishedOrganizationSkills": 2,
+    "allPublishedSkillDetailsReadable": true,
+    "businessSeatPolicyNotRequired": true,
+    "management": 200,
+    "personalWorkspacesAndSessions": 200,
+    "businessWorkbenchDenied": 403
+  },
+  "businessAccounts": [
+    {
+      "seatId": "seat-overall",
+      "login": 200,
+      "skills": 6,
+      "managementDenied": 403,
+      "existingSessions": 2,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-intelligence",
+      "login": 200,
+      "skills": 6,
+      "managementDenied": 403,
+      "existingSessions": 2,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-planning",
+      "login": 200,
+      "skills": 6,
+      "managementDenied": 403,
+      "existingSessions": 1,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-situation",
+      "login": 200,
+      "skills": 6,
+      "managementDenied": 403,
+      "existingSessions": 1,
+      "historyReadable": true
+    }
+  ],
+  "unauthenticatedDenied": 401,
+  "managementCountsUnchanged": {
+    "r3_skill_assets": 7,
+    "r3_skill_drafts": 3,
+    "r3_skill_publications": 2,
+    "r2_drafts": 1,
+    "r2_trials": 0
+  },
+  "credentialsChanged": false,
+  "modelsInvoked": 0,
+  "testAssetsCreated": 0,
+  "brandingAssetsVerified": [
+    {
+      "path": "/brand/axon-app-icon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytesVerified": true
+    },
+    {
+      "path": "/brand/axon-wordmark.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytesVerified": true
+    },
+    {
+      "path": "/favicon.ico",
+      "status": 200,
+      "contentType": "image/vnd.microsoft.icon",
+      "bytesVerified": true
+    }
+  ]
+}

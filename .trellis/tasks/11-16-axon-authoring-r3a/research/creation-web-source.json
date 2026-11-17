@@ -1,0 +1,33 @@
+{
+  "files": {
+    "src/web/CapabilityCenter.tsx": "b237d681e183196970d356cc1ed5c135a766ec5c1d68b2d2c25cb108bc459d92",
+    "src/web/ComposerReferences.tsx": "01a8403940f9312f7aa960c7db3c0ba93946fb12d1ecb1fbdc28693093a31c38",
+    "src/web/CreationMethodDialog.tsx": "0a737093240e5ab6039b2c8d875ae233b3853ae754c7229ad275ba097186f411",
+    "src/web/NewSession.tsx": "2fb5a0315fe1b4ebdbe7197c10d143c223f6d2ea35d9b673eeb1dd8d05f25012",
+    "src/web/SkillLibrary.tsx": "2d00240ab8982415f69e8d0acde6cae6ea18632a93d84af34294f48d41f5518c",
+    "src/web/capabilities.css": "551f730a65bd1c036c224f4278cef8fbdfc16b689a4d602370768d36b153a49a",
+    "src/web/main.tsx": "41acd82b528354f9c50be34890dc4f959698ab0d8668e92552243eb57b00ee83",
+    "src/web/styles.css": "799adbd4623dc061f844d33e7b2d3057a78ac7fbcc561a5d3d2971fe5d562602",
+    "src/web/useChat.ts": "cf6bf0a0be40bdc3fd51cf88820a6f13c60704af23df279a02e86b2626d93c98",
+    "src/web/useComposerSelections.ts": "2f4ce1daa0f34a1e6b115c68f4976b8f620c98478ab4a406c8105c1f8b2587b3",
+    "tests/e2e/authoring.spec.ts": "44fbadac154064150f8a0149c6635168c01fcd5f2b9a4bac1b3856477eb083fd",
+    "tests/e2e/administrator.spec.ts": "fc8555234f9661ce25d7de2115f9072ce06e6b0ae925546d95603f1a9bb3cca7",
+    "tests/e2e/skills.spec.ts": "8e97074f090117ead966f6454e9f6065884c6a7e33a2096937d99146a0141068"
+  },
+  "deployment": false,
+  "commit": false,
+  "userAcceptance": "pending",
+  "finalBrowser": {
+    "files": [
+      "tests/e2e/authoring.spec.ts"
+    ],
+    "passed": 3,
+    "durationSeconds": 26.8,
+    "screenshots": [
+      "authoring-composer-1060.png",
+      "authoring-composer-1440.png",
+      "authoring-confirmation-1060.png",
+      "authoring-confirmation-1440.png"
+    ]
+  }
+}

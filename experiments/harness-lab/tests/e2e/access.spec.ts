@@ -73,20 +73,38 @@ async function logout(page: Page) {
   await expect(page.getByRole('button', { name: '登录', exact: true })).toBeVisible();
 }
 async function createTask(page:Page,title:string,visibility:'public'|'private') {
-  const create = page.getByRole('button',{name:visibility==='public'?'新建任务空间':'新建个人空间',exact:true});
-  await page.locator('.catalog-heading').filter({has:create}).hover();
+  const header = page.locator('.catalog-heading').filter({hasText:visibility==='public'?'任务空间':'个人空间'});
+  const create = header.getByRole('button',{name:visibility==='public'?'新建任务空间':'新建个人空间',exact:true});
+  await header.hover();
   await create.click();await page.getByLabel(visibility==='public'?'任务名称':'空间名称',{exact:true}).fill(title);await page.getByLabel('目标与说明',{exact:true}).fill('综合资料编制计划');await page.getByRole('button',{name:visibility==='public'?'创建任务空间':'创建个人空间',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();
 }
 test('login, public/private task navigation, lazy workspace, archive and two independent seats',async({page,browser})=>{
   const env=await setup();const second=await browser.newContext();const b=await second.newPage();await env.attach(page);await env.attach(b);
   try {
-    await login(page,'a');await expect(page.getByLabel('测试席位')).toHaveCount(0);await createTask(page,'联合任务','public');await createTask(page,'席位 A 私有','private');
+    await login(page,'a');await expect(page.getByLabel('测试席位')).toHaveCount(0);
+    await page.getByRole('button', { name: '新建对话', exact: true }).click(); await page.getByRole('button', { name: '对话保存位置', exact: true }).click();
+    const spaces = page.getByRole('menu', { name: '选择空间', exact: true }); await expect(spaces.getByRole('menuitem', { name: '新建个人空间', exact: true })).toBeVisible();
+    await spaces.getByRole('menuitem', { name: '新建任务空间', exact: true }).click(); await expect(page.getByRole('dialog', { name: '新建任务空间', exact: true })).toBeVisible(); await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: '对话保存位置', exact: true })).toBeFocused(); expect(env.lab.workspaces.listAll()).toHaveLength(0); expect(await env.lab.list()).toHaveLength(0);
+    await createTask(page,'联合任务','public');await createTask(page,'席位 A 私有','private');
     await login(b,'b');await expect(b.getByRole('button',{name:'进入项目：联合任务'})).toBeVisible();await expect(b.getByRole('button',{name:/席位 A 私有/})).toHaveCount(0);expect(env.lab.workspaces.listAll()).toHaveLength(0);
     await b.getByRole('button', { name: '进入项目：联合任务', exact: true }).click();await b.getByRole('button', { name: '任务说明', exact: true }).click();await expect(b.locator('.task-description')).toContainText('综合资料编制计划');await b.keyboard.press('Escape');expect(env.lab.workspaces.listAll()).toHaveLength(0);
     await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button',{name:'在项目 联合任务 中新建对话'}) }).hover(); await page.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.getByRole('textbox',{name:'发送消息'}).fill('A 未发送草稿');
     await b.locator('.workspace-group-heading').filter({ has: b.getByRole('button',{name:'在项目 联合任务 中新建对话'}) }).hover(); await b.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await b.getByRole('textbox',{name:'发送消息'}).fill('帮我处理');await b.getByRole('button',{name:'发送消息',exact:true}).click();await expect(b.getByText('当前任务处理完成',{exact:true})).toBeVisible();await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('A 未发送草稿');expect(env.lab.workspaces.listAll()).toHaveLength(2);
     const conversationUrl = page.url(); await page.getByRole('button', { name: '进入项目：联合任务', exact: true }).click();const taskHomeUrl = page.url();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'归档任务',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();await page.goto(conversationUrl);await expect(page.getByRole('textbox',{name:'发送消息'})).toBeDisabled();
-    await expect(page.getByRole('button',{name:'进入项目：联合任务'})).toHaveCount(0);await expect(page.getByRole('button',{name:'查看任务说明 · 已归档',exact:true})).toHaveCount(0);await page.goto(taskHomeUrl);await page.getByRole('button',{name:'编辑说明',exact:true}).click();await page.getByRole('button',{name:'重新开启',exact:true}).click();await page.goto(conversationUrl);await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.screenshot({path:'test-results/access-desktop.png',fullPage:true});
+    await expect(page.getByRole('button',{name:'进入项目：联合任务'})).toHaveCount(0);await expect(page.getByRole('button',{name:'查看任务说明 · 已归档',exact:true})).toHaveCount(0);await page.goto(taskHomeUrl);await page.getByRole('button',{name:'编辑说明',exact:true}).click();await page.getByRole('button',{name:'重新开启',exact:true}).click();await page.goto(conversationUrl);await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();
+    const picker = page.getByRole('button', { name: '对话保存位置', exact: true });
+    await expect(page.locator('.new-chat-space-type')).toHaveText('任务');
+    await picker.click(); const grouped = page.getByRole('menu', { name: '选择空间', exact: true });
+    await expect(grouped.getByRole('group', { name: '任务空间', exact: true }).getByRole('menuitemradio')).toHaveText(['联合任务']);
+    await expect(grouped.getByRole('group', { name: '个人空间', exact: true }).getByRole('menuitemradio')).toHaveText(['席位 A 私有']);
+    page.once('dialog', dialog => dialog.accept()); await grouped.getByRole('menuitemradio', { name: '席位 A 私有', exact: true }).click();
+    await expect(page.locator('.new-chat-space-type')).toHaveText('个人'); await expect(page.locator('.new-chat-space-name')).toHaveText('席位 A 私有'); await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeEnabled();
+    await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('个人空间独立草稿'); await picker.click(); page.once('dialog', dialog => dialog.accept()); await grouped.getByRole('menuitemradio', { name: '联合任务', exact: true }).click();
+    await expect(page.locator('.new-chat-space-type')).toHaveText('任务'); await expect(page.locator('.new-chat-space-name')).toHaveText('联合任务');
+    await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('A 未发送草稿');
+    for (const width of [1060,1440]) { await page.setViewportSize({width,height:960}); await picker.click(); await expect(grouped.getByRole('group', { name: '任务空间', exact: true })).toBeVisible(); await expect(grouped.getByRole('group', { name: '个人空间', exact: true })).toBeVisible(); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await page.screenshot({path:test.info().outputPath(`grouping-mixed-menu-${width}.png`)}); await page.keyboard.press('Escape'); }
+    await page.screenshot({path:'test-results/access-desktop.png',fullPage:true});
   } finally {await env.close();await second.close();}
 });
 test('same-browser logout and identity change clear private drafts in both tabs',async({page,context})=>{
@@ -224,7 +242,7 @@ test('catalog managers maintain all work tasks while every seat owns its persona
 });
 
 
-test('task catalog groups fold independently and creation stays accessible across desktop rail and mobile', async ({ page }) => {
+test('task catalog groups preserve disclosure and hide all space entries in the desktop rail', async ({ page }) => {
   const env = await setup();
   await env.attach(page);
   let writes = 0;
@@ -266,8 +284,9 @@ test('task catalog groups fold independently and creation stays accessible acros
     await page.getByRole('button', { name: '展开任务空间', exact: true }).click();
     await expect(publicEntry).toBeVisible();
     await expect(privateEntry).toBeHidden();
-    await page.locator('.catalog-heading').filter({ hasText: '个人空间' }).hover();
-    await page.getByRole('button', { name: '新建个人空间', exact: true }).click();
+    const personalHeading = page.locator('.catalog-heading').filter({ hasText: '个人空间' });
+    await personalHeading.hover();
+    await personalHeading.getByRole('button', { name: '新建个人空间', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '新建个人空间', exact: true })).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog')).toBeHidden();
@@ -277,19 +296,21 @@ test('task catalog groups fold independently and creation stays accessible acros
     expect(writes).toBe(writesBeforeFolding);
 
     await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
-    await expect(publicEntry).toBeVisible();
-    await expect(privateEntry).toBeVisible();
+    await expect(publicEntry).toBeHidden();
+    await expect(privateEntry).toBeHidden();
+    const sidebar = page.locator('.sidebar');
     for (const action of ['新建任务空间', '新建个人空间']) {
-      const create = page.getByRole('button', { name: action, exact: true });
-      await expect(create).toBeVisible();
-      await expect(create.locator('.catalog-rail-icon')).toBeVisible();
-      await expect(create).toHaveCSS('opacity', '1');
-      await create.click();
-      await expect(page.getByRole('dialog', { name: action, exact: true })).toBeVisible();
-      await page.keyboard.press('Escape');
-      await expect(page.getByRole('dialog')).toBeHidden();
-      await expect(create).toBeFocused();
+      await expect(sidebar.getByRole('button', { name: action, exact: true })).toBeHidden();
     }
+    const globalActions = sidebar.locator('button:visible');
+    const actionCount = await globalActions.count();
+    expect(actionCount).toBeGreaterThan(2);
+    for (let index = 0; index < actionCount; index++) {
+      await expect(globalActions.nth(index)).not.toHaveAttribute('aria-label', /进入项目|新建任务空间|新建个人空间/);
+    }
+    await page.getByRole('button', { name: '新建对话', exact: true }).focus();
+    for (let index = 0; index < actionCount - 2; index++) await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: '设置', exact: true })).toBeFocused();
 
     await page.getByRole('button', { name: '展开侧边栏', exact: true }).click();
     await expect(publicEntry).toBeVisible();
@@ -301,7 +322,7 @@ test('task catalog groups fold independently and creation stays accessible acros
     await page.setViewportSize({ width: 375, height: 812 });
     const menu = page.getByRole('button', { name: '打开会话列表', exact: true });
     await menu.click();
-    const create = page.getByRole('button', { name: '新建个人空间', exact: true });
+    const create = sidebar.getByRole('button', { name: '新建个人空间', exact: true });
     await expect(create).toHaveCSS('opacity', '1');
     await create.click();
     await expect(page.getByRole('dialog', { name: '新建个人空间', exact: true })).toBeVisible();

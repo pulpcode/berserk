@@ -69,7 +69,7 @@ function validateContinuousMetadata(db:DatabaseSync){
       if(!stream||input.id!==row.id||input.epochId!==row.epoch_id||input.receivedAt!==row.received_at||!Number.isSafeInteger(input.bytes)||input.bytes<0||!UUID.test(input.id))throw stateError();
       if(input.kind==='event'){
         const event=db.prepare('SELECT source_id,data FROM background_events WHERE id=?').get(input.eventId);
-        if(input.eventId!==row.event_id||row.task_id!==null||!event||!stream.sourceIds.includes(String(event.source_id))||decode<{continuousEpochId?:string}>(event.data).continuousEpochId!==input.epochId || stream.scenarioInstanceId!==undefined&&decode<{scenarioInstanceId?:string}>(event.data).scenarioInstanceId!==stream.scenarioInstanceId)throw stateError();
+        if(input.eventId!==row.event_id||row.task_id!==null||!event||!stream.sourceIds.includes(decode<{policySourceId?:string}>(event.data).policySourceId ?? String(event.source_id))||decode<{continuousEpochId?:string}>(event.data).continuousEpochId!==input.epochId || stream.scenarioInstanceId!==undefined&&decode<{scenarioInstanceId?:string}>(event.data).scenarioInstanceId!==stream.scenarioInstanceId)throw stateError();
       }else if(input.kind!=='task_revision'||input.task.id!==row.task_id||row.event_id!==null||input.task.visibility!=='public'||!Number.isSafeInteger(input.task.revision)||stream.scenarioInstanceId!==input.task.scenarioInstanceId)throw stateError();
       inputs.set(input.id,input);consumed.set(input.id,row.consumed===1);
     }

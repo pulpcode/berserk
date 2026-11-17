@@ -1,0 +1,10 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:80809) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  15:34:06
+   Duration  31.44s (transform 6.11s, setup 0ms, import 24.08s, tests 5.08s, environment 1ms)

@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-r3-storage-timing-DiCBAA",
+  "scope": "Synthetic storage and metadata timings; no model, no SLO claim; OS cache not flushed; cold means a new service instance; nearest-rank percentiles; concurrent local test load",
+  "catalogAssets": 12,
+  "resourceBytesPerPackage": 262144,
+  "saveSnapshot": {
+    "n": 12,
+    "p50Ms": 46.015131999999994,
+    "p95Ms": 79.440834
+  },
+  "metadataCatalog": {
+    "n": 100,
+    "p50Ms": 2.5198539999998957,
+    "p95Ms": 3.221644999999853
+  },
+  "warmResolve": {
+    "n": 30,
+    "p50Ms": 4.147609999999986,
+    "p95Ms": 6.6949990000000525
+  },
+  "coldInstanceResolve": {
+    "n": 20,
+    "p50Ms": 4.491669000000002,
+    "p95Ms": 6.315162999999757
+  },
+  "sameActionPublication": {
+    "n": 8,
+    "p50Ms": 57.85072200000013,
+    "p95Ms": 58.12044900000001
+  },
+  "publicationCount": 1
+}

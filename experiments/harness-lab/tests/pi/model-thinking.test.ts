@@ -55,13 +55,15 @@ it('validates endpoint/model, accepts a custom registry alias, and keeps absent 
 });
 
 it.each(['off', 'high'] as const)('captures actual SDK wire %s on reply + tool continuation, with no required thought text', async mode => {
-  const cfg = await config(mode); const calls = capture((_body, index) => index === 0 ? { thoughts: 'PRIVATE_THOUGHT', tool: { name: 'source_read', arguments: { id: 'meeting-notes' } } } : { text: '已完成' });
+  const cfg = await config(mode); const calls = capture((_body, index) => index === 0 ? { thoughts: 'PROVIDER_VISIBLE_THOUGHT', tool: { name: 'source_read', arguments: { id: 'meeting-notes' } } } : { text: '已完成' });
   const lab = await PiLab.create(cfg); cleanup.push(() => lab.close());
   const session = await lab.createSession(); await lab.start(session.id, '查看资料').run(() => {});
   expect(lab.get(session.id).lastResult?.status).toBe('succeeded'); expect(calls).toHaveLength(2); expectMode(calls, mode);
   expect(calls[0].max_tokens).toBe(cfg.maxOutputTokens);
-  expect(calls[1].messages.some(message => message.role === 'assistant' && message.reasoning_content === 'PRIVATE_THOUGHT')).toBe(true);
-  expect(JSON.stringify(lab.get(session.id))).not.toContain('PRIVATE_THOUGHT');
+  expect(calls[1].messages.some(message => message.role === 'assistant' && message.reasoning_content === 'PROVIDER_VISIBLE_THOUGHT')).toBe(true);
+  const answer = lab.get(session.id).messages.find(message => message.content?.some(block => block.type === 'thinking'));
+  expect(answer?.content).toEqual([expect.objectContaining({ type: 'thinking', text: 'PROVIDER_VISIBLE_THOUGHT' })]);
+  expect(answer?.text).toBe(''); // Visible thinking stays in process content, outside the answer text.
 });
 
 it('uses the same mode in foreground, delegated child and parent continuation', async () => {

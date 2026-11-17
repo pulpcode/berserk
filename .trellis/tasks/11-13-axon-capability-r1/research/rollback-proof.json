@@ -1,0 +1,14 @@
+{
+  "baseline": "66d0cba3ad4420d74593f31ffd540b893ed41ae6",
+  "dataRoot": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-r1-full-rollback-SgUsvR",
+  "sessionId": "01a1d42b-24d8-75a7-8a94-106035aaffbd",
+  "checks": [
+    "旧提交程序创建真实原生会话",
+    "迁移dry-run/apply/重复apply",
+    "新程序显式续聊追加未来绑定",
+    "完整备份恢复副本由旧提交程序打开",
+    "旧程序继续原会话且不重放升级后工作",
+    "备份原件未写入新格式"
+  ],
+  "model": "deterministic transport; real old/new Pi programs"
+}

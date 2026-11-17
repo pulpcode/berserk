@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:75459) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/management-skills.test.ts (5 tests | 1 failed) 9471ms
+   × explicit method delivers exact Skill body once, original confirmation saves, native v8 reopens and next turn has no management authority 2197ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/pi/management-skills.test.ts > explicit method delivers exact Skill body once, original confirmation saves, native v8 reopens and next turn has no management authority
+AssertionError: expected '' to contain 'expert-manager'
+
+- Expected
++ Received
+
+- expert-manager
+
+ ❯ tests/pi/management-skills.test.ts:58:89
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  15:14:27
+   Duration  14.04s (transform 1.54s, setup 0ms, import 4.36s, tests 9.47s, environment 0ms)

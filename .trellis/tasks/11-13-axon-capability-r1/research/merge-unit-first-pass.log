@@ -1,0 +1,282 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r1-experts/berserk/experiments/harness-lab
+
+(node:2398) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2399) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3050) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3193) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3396) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3540) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3708) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3711) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3919) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3958) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4084) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4110) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4131) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4134) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4157) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4159) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4266) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4285) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4289) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/model-thinking.test.ts (18 tests | 2 failed) 8117ms
+   × captures actual SDK wire off on reply + tool continuation, with no required thought text 764ms
+   × captures actual SDK wire high on reply + tool continuation, with no required thought text 567ms
+(node:4300) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4317) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4312) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4343) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4346) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4372) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4375) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4406) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4438) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4522) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4575) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4673) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4669) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4702) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4703) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4830) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4831) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4887) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4890) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4921) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4930) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4940) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5006) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5004) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5013) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5015) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/server.test.ts (10 tests | 1 failed) 5335ms
+     × creates, lists and reads isolated sessions, and streams a request with an authoritative final snapshot 858ms
+(node:5034) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5041) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5043) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5046) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5051) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5054) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5059) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5062) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5065) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5071) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5075) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5079) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5081) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5108) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5113) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5122) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5123) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5129) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5130) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5145) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5147) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5159) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5165) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5239) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5245) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5250) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5253) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5284) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5293) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5304) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5313) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5311) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5323) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5329) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5334) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5337) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5336) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5341) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5342) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5351) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5372) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5375) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5378) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5434) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5438) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5441) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/server.test.ts > local API with real Pi sessions > creates, lists and reads isolated sessions, and streams a request with an authoritative final snapshot
+AssertionError: expected [ 'response.started', …(7) ] to deeply equal [ 'response.started', …(3) ]
+
+- Expected
++ Received
+
+  [
+    "response.started",
+    "resources.loaded",
++   "assistant.updated",
+    "text.delta",
++   "assistant.updated",
++   "assistant.updated",
++   "assistant.updated",
+    "response.completed",
+  ]
+
+ ❯ tests/server.test.ts:64:91
+     62|     expect(reply.headers['content-type']).toContain('text/event-stream…
+     63|     const stream = events(reply.payload);
+     64|     expect(stream.filter(event => event.type !== 'input.queue').map(ev…
+       |                                                                                           ^
+     65|     expect(stream.every(event => event.sessionId === a.id && event.req…
+     66|     const history = (await app.inject(`/api/sessions/${a.id}`)).json<S…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/pi/model-thinking.test.ts > captures actual SDK wire off on reply + tool continuation, with no required thought text
+AssertionError: expected '{"id":"781a1e03-dd88-4e0c-a872-18fcfc…' not to contain 'PRIVATE_THOUGHT'
+
+Expected: "PRIVATE_THOUGHT"
+Received: "{"id":"781a1e03-dd88-4e0c-a872-18fcfcc39e59","workspaceId":"ea0c3a91-5081-431e-b5b3-b68138eb1638","title":"查看资料","updatedAt":"2026-11-13T14:36:03.357Z","expert":{"expertId":"axon-general","revisionId":"rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874","name":"Axon 通用助手","description":"帮助处理通用任务，保留工作台现有能力。","releaseVersion":"1.0.0","digest":"cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874","modes":["interactive"],"dependencies":[],"availability":{"available":true,"state":"enabled"},"currentRevisionId":"rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874","updateAvailable":false},"modelId":"default","inputQueue":{"revision":2,"available":false,"reason":"当前回复已结束。","items":[]},"messages":[{"id":"9d70367a","requestId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc","role":"user","text":"查看资料"},{"id":"1a6773ef","requestId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc","role":"assistant","text":"","presentationId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc:assistant:0","content":[{"id":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc:assistant:0:content:0","type":"thinking","text":"PRIVATE_THOUGHT"}]},{"id":"e18f331a","requestId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc","role":"tool","text":"{\"id\":\"meeting-notes\",\"title\":\"项目讨论纪要\",\"description\":\"通用资料示例：目标、约束与待办。\",\"content\":\"# 项目讨论纪要\\n\\n本资料为对话和工具验证使用的虚构样例。\\n\\n团队计划在周五下午前提交一份内部培训方案，面向 12 名新成员。\\n目标是让参与者理解资料收集、问题澄清和方案评审三个步骤。\\n首次活动时长 90 分钟，采用线上方式，不安排出差。\\n\\n已确认：先收集每位成员的问题，再由两位讲师组织讨论。\\n待确认：演练主题、主持人和结果记录模板。\\n交付物：一页议程、准备清单，以及待确认事项。\\n\\n用户在对话中提出的新要求应单独说明；不要把新要求当作本纪要原文。\\n\",\"hash\":\"a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0\",\"sourceId\":\"meeting-notes\"}","toolName":"source.read","toolCallId":"0b078842-6b30-4285-b8c4-06caa0972199","toolStatus":"completed","isError":false},{"id":"97339aaf","requestId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc","role":"assistant","text":"已完成","presentationId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc:assistant:1","content":[{"id":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc:assistant:1:content:0","type":"text","text":"已完成"}]}],"active":null,"turns":[{"requestId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc","status":"succeeded","startedAt":"2026-11-13T14:36:03.190Z","completedAt":"2026-11-13T14:36:03.357Z","finalMessageId":"97339aaf"}],"interactions":[],"lastResult":{"requestId":"f7724f00-ed77-4d0f-952c-5e0936c7f9fc","status":"succeeded","compactionIds":[],"compactions":[],"usageSummary":{"modelAttempts":2,"replyAttempts":2,"compactionAttempts":0,"toolCalls":1,"unknownUsageAttempts":0,"actual":{"input":10,"output":10,"cacheRead":0,"cacheWrite":0,"totalTokens":20}}}}"
+
+ ❯ tests/pi/model-thinking.test.ts:64:51
+     62|   expect(calls[0].max_tokens).toBe(cfg.maxOutputTokens);
+     63|   expect(calls[1].messages.some(message => message.role === 'assistant…
+     64|   expect(JSON.stringify(lab.get(session.id))).not.toContain('PRIVATE_T…
+       |                                                   ^
+     65| });
+     66|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/pi/model-thinking.test.ts > captures actual SDK wire high on reply + tool continuation, with no required thought text
+AssertionError: expected '{"id":"d15d7f87-8d77-49af-a123-497bdd…' not to contain 'PRIVATE_THOUGHT'
+
+Expected: "PRIVATE_THOUGHT"
+Received: "{"id":"d15d7f87-8d77-49af-a123-497bdd49e975","workspaceId":"d6e90a7a-2a63-4492-b9b5-8abd2aaf2f50","title":"查看资料","updatedAt":"2026-11-13T14:36:03.964Z","expert":{"expertId":"axon-general","revisionId":"rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874","name":"Axon 通用助手","description":"帮助处理通用任务，保留工作台现有能力。","releaseVersion":"1.0.0","digest":"cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874","modes":["interactive"],"dependencies":[],"availability":{"available":true,"state":"enabled"},"currentRevisionId":"rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874","updateAvailable":false},"modelId":"default","inputQueue":{"revision":2,"available":false,"reason":"当前回复已结束。","items":[]},"messages":[{"id":"3186706b","requestId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94","role":"user","text":"查看资料"},{"id":"85c1bb19","requestId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94","role":"assistant","text":"","presentationId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94:assistant:0","content":[{"id":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94:assistant:0:content:0","type":"thinking","text":"PRIVATE_THOUGHT"}]},{"id":"846b18a3","requestId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94","role":"tool","text":"{\"id\":\"meeting-notes\",\"title\":\"项目讨论纪要\",\"description\":\"通用资料示例：目标、约束与待办。\",\"content\":\"# 项目讨论纪要\\n\\n本资料为对话和工具验证使用的虚构样例。\\n\\n团队计划在周五下午前提交一份内部培训方案，面向 12 名新成员。\\n目标是让参与者理解资料收集、问题澄清和方案评审三个步骤。\\n首次活动时长 90 分钟，采用线上方式，不安排出差。\\n\\n已确认：先收集每位成员的问题，再由两位讲师组织讨论。\\n待确认：演练主题、主持人和结果记录模板。\\n交付物：一页议程、准备清单，以及待确认事项。\\n\\n用户在对话中提出的新要求应单独说明；不要把新要求当作本纪要原文。\\n\",\"hash\":\"a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0\",\"sourceId\":\"meeting-notes\"}","toolName":"source.read","toolCallId":"8eda9344-1883-466d-9eb9-4a3c864b53fe","toolStatus":"completed","isError":false},{"id":"87e19621","requestId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94","role":"assistant","text":"已完成","presentationId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94:assistant:1","content":[{"id":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94:assistant:1:content:0","type":"text","text":"已完成"}]}],"active":null,"turns":[{"requestId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94","status":"succeeded","startedAt":"2026-11-13T14:36:03.898Z","completedAt":"2026-11-13T14:36:03.964Z","finalMessageId":"87e19621"}],"interactions":[],"lastResult":{"requestId":"b1e5a52c-84f9-4d38-ab3f-943c4f2fbd94","status":"succeeded","compactionIds":[],"compactions":[],"usageSummary":{"modelAttempts":2,"replyAttempts":2,"compactionAttempts":0,"toolCalls":1,"unknownUsageAttempts":0,"actual":{"input":10,"output":10,"cacheRead":0,"cacheWrite":0,"totalTokens":20}}}}"
+
+ ❯ tests/pi/model-thinking.test.ts:64:51
+     62|   expect(calls[0].max_tokens).toBe(cfg.maxOutputTokens);
+     63|   expect(calls[1].messages.some(message => message.role === 'assistant…
+     64|   expect(JSON.stringify(lab.get(session.id))).not.toContain('PRIVATE_T…
+       |                                                   ^
+     65| });
+     66|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 152 passed (154)
+      Tests  3 failed | 1705 passed (1708)
+   Start at  22:28:23
+   Duration  744.88s (transform 7.69s, setup 0ms, import 180.90s, tests 1277.36s, environment 24ms)
+

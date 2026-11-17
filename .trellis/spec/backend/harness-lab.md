@@ -242,3 +242,41 @@ Correct: require a new key for changed provider/endpoint, reserve the update aga
 Wrong: treat every stream as a normal reply, overwrite summary maxTokens, or inject AGENTS into default summary input.
 
 Correct: distinguish purpose using native compaction lifecycle; preserve default summary prompts/limits and add the fixed reminder only to reply payloads.
+
+## Chat presentation B first-batch contract
+
+### 1. Scope / Trigger
+
+Provider-returned visible thinking, public tool summaries, live bash output, native edit diff and completed request time are read-only projections of Pi evidence. No new execution ledger, provider configuration, prompt or history migration.
+
+### 2. Signatures
+
+`PublicMessage` adds optional `presentationId`, ordered `content: PublicAssistantContent[]`, `toolInput`, `toolDetails` and `toolStatus`. SSE adds `assistant.updated {message}` and `tool.updated {toolCallId,toolName,text,toolDetails?}`. Existing tool start/completion can carry the optional projections. `ConversationTurn` can carry `startedAt` and `completedAt`.
+
+### 3. Contracts
+
+`content` contains only `{id,type:'text'|'thinking',text}`. `toolInput` allowlists path, read offset/limit, find pattern and bash command by native tool name. `toolDetails` allowlists native edit diff/patch/firstChangedLine, truncation and remapped virtual log paths. Never publish arbitrary args/details. Match session/request/toolCallId ownership, retain existing business result authorization, and derive snapshots and SSE through the same projection. Bash updates are accumulated snapshots; final persisted results supersede transient output. The matching RESOURCE_ENTRY/RESULT_ENTRY timestamps define request duration, including waiting within that interval and excluding queue/preparation before its start.
+
+### 4. Validation & Error Matrix
+
+| Evidence | Projection |
+| --- | --- |
+| Visible native thinking text | Ordered thinking block |
+| Empty/redacted thinking or opaque signature | Omit; no private payload |
+| Unsupported tool fields or metadata | Omit; existing result text remains |
+| edit failure or missing native diff | No fabricated change view |
+| Native temporary bash log path | Exclude unless mapped to an approved virtual /logs path |
+| Missing/mismatched request start/end | Omit duration; do not borrow another request's timestamps |
+| Failed/revoked structured business result | Preserve existing rejection/authorization behavior |
+
+### 5. Good / Base / Bad Cases
+
+Good: thinking → text → tool, then refreshed native history produces the same ordered public content. Base: old history without new fields keeps its prior readable text. Bad: expose signatures, append accumulated bash snapshots as deltas, or infer historical diff by reading a current file.
+
+### 6. Tests Required
+
+Assert projection field allowlists, redacted/signature exclusion, tool request ownership, streamed-to-saved content identities, cumulative output replacement, native diff and timestamps with missing/reversed evidence. Integration checks must preserve business authorization and existing history validation; frontend checks cover folds and C interactions.
+
+### 7. Wrong vs Correct
+
+Wrong: `{...nativeBlock}` or `{...args}` in a public payload; `output += update.text`. Correct: construct explicit public fields through `pi/chat-projection.ts`; replace the tool output with the new accumulated snapshot. Reading projections must never append a second history or replay execution.

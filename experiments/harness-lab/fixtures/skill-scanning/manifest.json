@@ -1,0 +1,58 @@
+{
+  "scanner": "semgrep",
+  "scannerVersion": "1.182.0",
+  "rulesRepositoryCommit": "a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2",
+  "files": [
+    {
+      "path": "python__lang__security__audit__eval-detected.yaml",
+      "source": "https://raw.githubusercontent.com/semgrep/semgrep-rules/a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2/python/lang/security/audit/eval-detected.yaml",
+      "sha256": "4a7d2769392c93fecb74a76b313b36b499c0ca22b42966d48f174761d85a5eec"
+    },
+    {
+      "path": "python__lang__security__audit__exec-detected.yaml",
+      "source": "https://raw.githubusercontent.com/semgrep/semgrep-rules/a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2/python/lang/security/audit/exec-detected.yaml",
+      "sha256": "4f104a4f848ec09d02ec1317458572a6f581aba21bc884f2ea07503a1478095f"
+    },
+    {
+      "path": "python__lang__security__audit__subprocess-shell-true.yaml",
+      "source": "https://raw.githubusercontent.com/semgrep/semgrep-rules/a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2/python/lang/security/audit/subprocess-shell-true.yaml",
+      "sha256": "753ba9d29d592b3d7f5086e671e424ee05138acbf75a39b663d92aa3275f5380"
+    },
+    {
+      "path": "javascript__lang__security__audit__code-string-concat.yaml",
+      "source": "https://raw.githubusercontent.com/semgrep/semgrep-rules/a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2/javascript/lang/security/audit/code-string-concat.yaml",
+      "sha256": "6a1d29327dd908382bdf9109e223f6ed4ca6167ae2be6617b59191c892e3c0cc"
+    },
+    {
+      "path": "javascript__lang__security__audit__dangerous-spawn-shell.yaml",
+      "source": "https://raw.githubusercontent.com/semgrep/semgrep-rules/a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2/javascript/lang/security/audit/dangerous-spawn-shell.yaml",
+      "sha256": "1a81f91e9ad9ea4c62a9b0bda4dcf3cf2fc1bb6f2d9e2580ea3effa6bfe9ba74"
+    },
+    {
+      "path": "LICENSE",
+      "source": "https://raw.githubusercontent.com/semgrep/semgrep-rules/a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2/LICENSE",
+      "sha256": "1a6466ae5f1c68631bbd13e3f1aa8f380d84219853c08f0456b853fccfacee1d"
+    },
+    {
+      "path": "javascript__lang__security__audit__spawn-shell-true.yaml",
+      "source": "https://raw.githubusercontent.com/semgrep/semgrep-rules/a5ad1714f00c9f7fde980cab0ea1d6dc6d414fd2/javascript/lang/security/audit/spawn-shell-true.yaml",
+      "sha256": "452fb593301edca721a151ed3c051f428ca1df1fc1af613380d58b076601b5ba"
+    }
+  ],
+  "coverage": "Selected local audit rules for Python and JavaScript; not comprehensive malicious-code certification",
+  "date": "2026-11-15",
+  "excludedRules": [
+    {
+      "path": "javascript__lang__security__audit__code-string-concat.yaml",
+      "reason": "interfile option is not CE baseline; retained only as source evidence, excluded from executable rule bundle"
+    }
+  ],
+  "rulesDigest": "ce1dbfd4436f63b2074589eca2a33954d56e7da82bbac9ded8449cdc92c422fe",
+  "activeRuleIds": [
+    "eval-detected",
+    "exec-detected",
+    "subprocess-shell-true",
+    "dangerous-spawn-shell",
+    "spawn-shell-true"
+  ]
+}

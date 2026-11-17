@@ -1,3 +1,4 @@
+import type { LegacyConnectionResolver } from '../connectors/legacy-config.js';
 import type { ContextConfig } from '../context/config.js';
 import { readContextJson } from '../context/http.js';
 import { contextInteger, contextRecord, contextText } from '../context/validation.js';
@@ -15,7 +16,7 @@ export class ScenarioScope {
   private current?: string;
   private revision = 0;
   private closing = new Set<string>();
-  constructor(private readonly config: ContextConfig, private readonly env: NodeJS.ProcessEnv = process.env) {}
+  constructor(private readonly config: ContextConfig, private readonly env: NodeJS.ProcessEnv = process.env, private readonly connectionResolver?: LegacyConnectionResolver) {}
   activeId() { return this.current; }
   activeRevision() { return this.revision; }
   isWritable(id: string) { return id === this.current && !this.closing.has(id); }
@@ -24,9 +25,15 @@ export class ScenarioScope {
   }
   close(id: string) { this.closing.add(instanceId(id)); }
   private async read(path: string): Promise<unknown> {
-    const config = this.config.simulation, token = config && this.env[config.tokenEnv];
+    const config = this.config.simulation, connection=this.connectionResolver?.({control:true}), token = connection?.token??(config && this.env[config.tokenEnv]);
     if (!config?.enabled || !token) throw new RequestError('SIMULATION_UNAVAILABLE', '业务资料来源暂不可用。', 503);
-    return readContextJson(new URL(`${config.baseUrl}/control/${path}`), token, undefined, {maxBytes: 2 * 1024 * 1024});
+    return readContextJson(new URL(`${connection?.endpoint??config.baseUrl}/control/${path}`), token, undefined, {maxBytes: 2 * 1024 * 1024});
+  }
+  async modeFor(id:string):Promise<'scenario'|'free_debug'> {
+    const raw=contextRecord(await this.read(`instances/${encodeURIComponent(instanceId(id))}`),['instance','steps','timeline','objects','reports','actions','operations','taskDefinitions','taskBootstrap'],['instance']);
+    const instance=raw.instance as Record<string,unknown>;if(!instance||instance.instanceId!==id||instance.operationMode!==undefined&&instance.operationMode!=='free_debug')throw mismatch();
+    if(instance.operationMode==='free_debug'&&instance.definitionId!=='free-debug')throw mismatch();
+    return instance.operationMode==='free_debug'?'free_debug':'scenario';
   }
   provenance(id: string) { return this.read(`instances/${encodeURIComponent(instanceId(id))}/provenance`); }
   async reconcileLegacy(events: Array<{id:string;sourceId:string;sourceMessageId:string;title:string;text:string;subjectId?:string;occurredAt?:string;scenarioInstanceId?:string;files?:unknown[]}>, bind: (eventId:string,id:string)=>Promise<void>) {

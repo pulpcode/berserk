@@ -1,0 +1,30 @@
+{
+  "updatedAt": "2026-11-16T02:25:35Z",
+  "release": "/home/ubuntu/axon-r3-skill-flow-4316-20261116",
+  "previousRelease": "/home/ubuntu/axon-r3-create-ux-4316-20261116",
+  "sourceArchiveSha256": "ab1c44b9c66cfdb53bb7655567cea31cd862bf019166fea6fd4d02b149de7e18",
+  "filesVerified": 473,
+  "pid": 2771458,
+  "previousPid": 2758959,
+  "dataDir": "/home/ubuntu/axon-chat-c-preview-20261112/data",
+  "backup": "/home/ubuntu/axon-r3-skill-flow-4316-20261116/backup/before-skill-flow",
+  "backupDigest": "735cada4fe602f7429ae9b930923be71b0dda5a5475489ed6d0d33b5ec535b9d",
+  "backupFiles": 473,
+  "schemaMigrationNeeded": false,
+  "allAccountAndSkillTablesPreserved": true,
+  "historyPrefixesPreserved": 86,
+  "serviceSecretsUnchanged": true,
+  "frontendAssetsVerified": [
+    "/assets/index-buG6X6HX.js",
+    "/assets/index-Q2lwA-pY.css"
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "pid4315Unchanged": true,
+  "administratorPersonalOrganizationSkills": true,
+  "skillCreationFormAndConciseCopy": true,
+  "skillFlowOrderAndHeaderRow": true,
+  "userAcceptance": "pending"
+}

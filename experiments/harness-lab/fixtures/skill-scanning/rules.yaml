@@ -1,0 +1,224 @@
+rules:
+  - id: eval-detected
+    patterns:
+      - pattern-not: eval(f"")
+      - pattern-not: eval("...")
+      - pattern: eval(...)
+    message: Detected the use of eval(). eval() can be dangerous if used to evaluate
+      dynamic content. If this content can be input from outside the program,
+      this may be a code injection vulnerability. Ensure evaluated content is
+      not definable by external sources.
+    metadata:
+      source-rule-url: https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
+      cwe:
+        - "CWE-95: Improper Neutralization of Directives in Dynamically
+          Evaluated Code ('Eval Injection')"
+      owasp:
+        - A03:2021 - Injection
+        - A05:2025 - Injection
+      asvs:
+        section: "V5: Validation, Sanitization and Encoding Verification Requirements"
+        control_id: 5.2.4 Dyanmic Code Execution Features
+        control_url: https://github.com/OWASP/ASVS/blob/master/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md#v52-sanitization-and-sandboxing-requirements
+        version: "4"
+      category: security
+      technology:
+        - python
+      references:
+        - https://owasp.org/Top10/A03_2021-Injection
+      subcategory:
+        - audit
+      likelihood: LOW
+      impact: HIGH
+      confidence: LOW
+    languages:
+      - python
+    severity: WARNING
+  - id: exec-detected
+    patterns:
+      - pattern-not: exec("...")
+      - pattern: exec(...)
+    message: Detected the use of exec(). exec() can be dangerous if used to evaluate
+      dynamic content. If this content can be input from outside the program,
+      this may be a code injection vulnerability. Ensure evaluated content is
+      not definable by external sources.
+    metadata:
+      source-rule-url: https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.html
+      cwe:
+        - "CWE-95: Improper Neutralization of Directives in Dynamically
+          Evaluated Code ('Eval Injection')"
+      owasp:
+        - A03:2021 - Injection
+        - A05:2025 - Injection
+      asvs:
+        section: "V5: Validation, Sanitization and Encoding Verification Requirements"
+        control_id: 5.2.4 Dyanmic Code Execution Features
+        control_url: https://github.com/OWASP/ASVS/blob/master/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md#v52-sanitization-and-sandboxing-requirements
+        version: "4"
+      category: security
+      technology:
+        - python
+      references:
+        - https://owasp.org/Top10/A03_2021-Injection
+      subcategory:
+        - audit
+      likelihood: LOW
+      impact: HIGH
+      confidence: LOW
+    languages:
+      - python
+    severity: WARNING
+  - id: subprocess-shell-true
+    patterns:
+      - pattern: subprocess.$FUNC(..., shell=$TRUE, ...)
+      - metavariable-pattern:
+          metavariable: $TRUE
+          pattern: |
+            True 
+      - pattern-not: subprocess.$FUNC("...", shell=True, ...)
+      - focus-metavariable: $TRUE
+    message: Found 'subprocess' function '$FUNC' with 'shell=True'. This is
+      dangerous because this call will spawn the command using a shell process.
+      Doing so propagates current shell settings and variables, which makes it
+      much easier for a malicious actor to execute commands. Use 'shell=False'
+      instead.
+    fix: |
+      False
+    metadata:
+      source-rule-url: https://bandit.readthedocs.io/en/latest/plugins/b602_subprocess_popen_with_shell_equals_true.html
+      owasp:
+        - A01:2017 - Injection
+        - A03:2021 - Injection
+        - A05:2025 - Injection
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS
+          Command ('OS Command Injection')"
+      references:
+        - https://stackoverflow.com/questions/3172470/actual-meaning-of-shell-true-in-subprocess
+        - https://docs.python.org/3/library/subprocess.html
+      category: security
+      technology:
+        - python
+      cwe2022-top25: true
+      cwe2021-top25: true
+      subcategory:
+        - secure default
+      likelihood: HIGH
+      impact: LOW
+      confidence: MEDIUM
+    languages:
+      - python
+    severity: ERROR
+  - id: dangerous-spawn-shell
+    message: Detected non-literal calls to $EXEC(). This could lead to a command
+      injection vulnerability.
+    metadata:
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS
+          Command ('OS Command Injection')"
+      owasp:
+        - A01:2017 - Injection
+        - A03:2021 - Injection
+        - A05:2025 - Injection
+      source-rule-url: https://github.com/nodesecurity/eslint-plugin-security/blob/master/rules/detect-child-process.js
+      category: security
+      technology:
+        - javascript
+      references:
+        - https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html#do-not-use-dangerous-functions
+      cwe2022-top25: true
+      cwe2021-top25: true
+      subcategory:
+        - vuln
+      likelihood: HIGH
+      impact: MEDIUM
+      confidence: LOW
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+    mode: taint
+    pattern-sources:
+      - patterns:
+          - pattern-inside: |
+              function ... (...,$FUNC,...) {
+                ...
+              }
+          - focus-metavariable: $FUNC
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern-inside: |
+                  require('child_process')
+                  ...
+              - pattern-inside: |
+                  import 'child_process'
+                  ...
+          - pattern-either:
+              - pattern: spawn(...)
+              - pattern: spawnSync(...)
+              - pattern: $CP.spawn(...)
+              - pattern: $CP.spawnSync(...)
+          - pattern-either:
+              - pattern: |
+                  $EXEC("=~/(sh|bash|ksh|csh|tcsh|zsh)/",["-c", $ARG, ...],...)
+              - patterns:
+                  - pattern: $EXEC($CMD,["-c", $ARG, ...],...)
+                  - pattern-inside: |
+                      $CMD = "=~/(sh|bash|ksh|csh|tcsh|zsh)/"
+                      ...
+              - pattern: |
+                  $EXEC("=~/(sh|bash|ksh|csh|tcsh|zsh)/",[$ARG, ...],...)
+              - patterns:
+                  - pattern: $EXEC($CMD,[$ARG, ...],...)
+                  - pattern-inside: |
+                      $CMD = "=~/(sh|bash|ksh|csh|tcsh|zsh)/"
+                      ...
+          - focus-metavariable: $ARG
+  - id: spawn-shell-true
+    message: "Found '$SPAWN' with '{shell: $SHELL}'. This is dangerous because this
+      call will spawn the command using a shell process. Doing so propagates
+      current shell settings and variables, which makes it much easier for a
+      malicious actor to execute commands. Use '{shell: false}' instead."
+    metadata:
+      owasp:
+        - A01:2017 - Injection
+        - A03:2021 - Injection
+        - A05:2025 - Injection
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS
+          Command ('OS Command Injection')"
+      category: security
+      technology:
+        - javascript
+      cwe2022-top25: true
+      cwe2021-top25: true
+      subcategory:
+        - audit
+      likelihood: LOW
+      impact: LOW
+      confidence: LOW
+      references:
+        - https://owasp.org/Top10/A03_2021-Injection
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+    patterns:
+      - pattern-either:
+          - pattern: |
+              spawn(...,{shell: $SHELL})
+          - pattern: |
+              spawnSync(...,{shell: $SHELL})
+          - pattern: |
+              $CP.spawn(...,{shell: $SHELL})
+          - pattern: |
+              $CP.spawnSync(...,{shell: $SHELL})
+      - pattern-not: |
+          spawn(...,{shell: false})
+      - pattern-not: |
+          spawnSync(...,{shell: false})
+      - pattern-not: |
+          $CP.spawn(...,{shell: false})
+      - pattern-not: |
+          $CP.spawnSync(...,{shell: false})

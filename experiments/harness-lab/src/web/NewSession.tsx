@@ -1,31 +1,66 @@
-import { useRef, useState } from 'react';
-import { Folder } from 'lucide-react';
+import { useId, useLayoutEffect, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { BriefcaseBusiness, Check, ChevronDown, Folder, Plus, UserRound } from 'lucide-react';
 import type { Workspace } from '../contracts/index';
-import { Panel } from './Resources';
 
-export function NewSession({ workspaces, workspaceId, create, close }: {
-  workspaces: Workspace[]; workspaceId: string; create: (workspaceId: string) => Promise<string | null>; close: () => void;
+/** The ordinary chat draft owns space selection; opening it writes no conversation. */
+export function NewSession({ workspaces, workspaceId, taskMeta, choosing, choose, createPersonal, createTask }: {
+  workspaces: Workspace[]; workspaceId: string; choosing: boolean; choose: (workspaceId: string) => void;
+  taskMeta?: Record<string, { visibility: 'public' | 'private' }>;
+  createPersonal: () => void; createTask?: () => void;
 }) {
-  const [target, setTarget] = useState(workspaces.some(w=>w.id===workspaceId)?workspaceId:workspaces[0]?.id || '');
-  const [creating, setCreating] = useState(false);
-  const [error, setError] = useState('');
-  const pending = useRef(false);
-  async function submit() {
-    if (pending.current || !target) return;
-    pending.current = true; setCreating(true); setError('');
-    try {
-      if (await create(target)) close();
-      else setError('对话创建未完成，请核对项目中的会话后重试。');
-    } catch { setError('对话创建未完成，请核对项目中的会话后重试。'); }
-    finally { pending.current = false; setCreating(false); }
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null), trigger = useRef<HTMLButtonElement>(null), menu = useRef<HTMLDivElement>(null);
+  const firstFocus = useRef<'selected' | 'first' | 'last'>('selected');
+  const menuId = useId();
+  const current = workspaces.find(workspace => workspace.id === workspaceId);
+  const currentVisibility = current && taskMeta?.[current.id]?.visibility;
+  const CurrentIcon = currentVisibility === 'public' ? BriefcaseBusiness : currentVisibility === 'private' ? UserRound : Folder;
+  const groups = [{ visibility: 'public', label: '任务空间', Icon: BriefcaseBusiness }, { visibility: 'private', label: '个人空间', Icon: UserRound }, { visibility: undefined, label: '空间', Icon: Folder }]
+    .map(group => ({ ...group, workspaces: workspaces.filter(workspace => taskMeta?.[workspace.id]?.visibility === group.visibility) })).filter(group => group.workspaces.length);
+  const visible = open && !choosing;
+  const items = () => Array.from(menu.current?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]') || []);
+
+  useLayoutEffect(() => {
+    if (!visible) return;
+    const choices = Array.from(menu.current?.querySelectorAll<HTMLButtonElement>('[role^="menuitem"]') || []);
+    const selected = choices.find(item => item.getAttribute('aria-checked') === 'true');
+    (firstFocus.current === 'last' ? choices.at(-1) : firstFocus.current === 'first' ? choices[0] : selected || choices[0])?.focus();
+  }, [visible]);
+  useEffect(() => {
+    if (!visible) return;
+    const outside = (event: Event) => {
+      if (root.current?.contains(event.target as Node)) return;
+      setOpen(false);
+      if (event.type === 'pointerdown') trigger.current?.focus();
+    };
+    document.addEventListener('pointerdown', outside); document.addEventListener('focusin', outside);
+    return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('focusin', outside); };
+  }, [visible]);
+
+  function dismiss() { setOpen(false); trigger.current?.focus(); }
+  function show(focus: 'selected' | 'first' | 'last') { firstFocus.current = focus; setOpen(true); }
+  function keyboard(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); dismiss(); return; }
+    const choices = items(), index = choices.indexOf(document.activeElement as HTMLButtonElement);
+    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? choices.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : choices.length - 1)) % choices.length;
+      choices[next]?.focus();
+    } else if (event.key === 'Tab') {
+      event.preventDefault(); setOpen(false);
+      const controls = Array.from(document.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]')).filter(item => item.tabIndex >= 0 && !item.matches(':disabled') && item.getClientRects().length && !menu.current?.contains(item));
+      const next = controls[controls.indexOf(trigger.current!) + (event.shiftKey ? -1 : 1)];
+      (next || trigger.current)?.focus();
+    }
   }
-  return <Panel title="新建对话" className="new-session-panel" close={close}>
-    <form className="workspace-form new-session-form" onSubmit={event => { event.preventDefault(); void submit(); }}>
-      <label htmlFor="new-session-project">选择项目</label>
-      <div className="project-select"><Folder size={17} aria-hidden="true" /><select id="new-session-project" value={target} onChange={event => setTarget(event.target.value)} disabled={creating} required>{workspaces.map(workspace => <option value={workspace.id} key={workspace.id}>{workspace.name}</option>)}</select></div>
-      <p className="resource-help">新对话将使用这个项目的指令和资料。</p>
-      {error && <p className="resource-error" role="alert">{error}</p>}
-      <div className="dialog-actions"><button type="button" onClick={close}>取消</button><button className="primary-action" type="submit" disabled={creating || !target}>{creating ? '创建中…' : '创建对话'}</button></div>
-    </form>
-  </Panel>;
+  return <div ref={root} className="new-chat-space" aria-label="新对话空间">
+    <button ref={trigger} type="button" className="new-chat-space-trigger" aria-label="对话保存位置" title={current?.name || '选择空间'} aria-haspopup="menu" aria-expanded={visible} aria-controls={visible ? menuId : undefined} disabled={choosing} onClick={() => visible ? dismiss() : show('selected')} onKeyDown={event => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); show(event.key === 'ArrowDown' ? 'first' : 'last'); }
+    }}><CurrentIcon size={17} aria-hidden="true" />{currentVisibility && <span className="new-chat-space-type">{currentVisibility === 'public' ? '任务' : '个人'}</span>}<span className="new-chat-space-name">{current?.name || '选择空间'}</span><ChevronDown size={14} aria-hidden="true" /></button>
+    {visible && <div ref={menu} id={menuId} className="new-chat-space-menu" role="menu" aria-label="选择空间" onKeyDown={keyboard}>
+      {!!groups.length && <div className="new-chat-space-options">{groups.map(({ visibility, label, Icon, workspaces: entries }) => <div key={visibility || 'space'} className="new-chat-space-group" role="group" aria-label={label}><div className="new-chat-space-group-title">{label}</div>{entries.map(workspace => <button type="button" key={workspace.id} role="menuitemradio" aria-checked={workspace.id === workspaceId} title={workspace.name} onClick={() => { dismiss(); choose(workspace.id); }}><Icon size={16} aria-hidden="true" /><span>{workspace.name}</span>{workspace.id === workspaceId && <Check size={15} aria-hidden="true" />}</button>)}</div>)}</div>}
+      {!!workspaces.length && <div className="new-chat-space-divider" role="separator" />}
+      <div className="new-chat-space-actions">{createTask && <button type="button" role="menuitem" onClick={() => { dismiss(); createTask(); }}><Plus size={16} aria-hidden="true" /><span>新建任务空间</span></button>}<button type="button" role="menuitem" onClick={() => { dismiss(); createPersonal(); }}><Plus size={16} aria-hidden="true" /><span>新建个人空间</span></button></div>
+    </div>}
+  </div>;
 }

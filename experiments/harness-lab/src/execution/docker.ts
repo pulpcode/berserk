@@ -69,6 +69,8 @@ export interface SandboxScope {
   /** Workspace executions directory, so previous /logs/<requestId>/ references remain readable. */
   logsDir: string;
   signal?: AbortSignal;
+  /** Private root containing only packages activated by this request. */
+  skillsDir?: string;
 }
 export interface BashExecutionOptions {
   onData: (data: Buffer) => void;
@@ -171,6 +173,14 @@ export class RequestSandbox {
       if (!stat.isDirectory() || stat.isSymbolicLink()) throw new Error('执行目录必须是受控的实际目录。');
       return realpath(path);
     }));
+    let skillRoot: string | undefined;
+    if (this.scope.skillsDir) {
+      const path = this.scope.skillsDir;
+      if (!isAbsolute(path) || path.includes(',') || /[\r\n\0]/.test(path)) throw new Error('技能资源目录无效。');
+      const stat = await lstat(path);
+      if (!stat.isDirectory() || stat.isSymbolicLink()) throw new Error('技能资源必须是受控目录。');
+      skillRoot = await realpath(path);
+    }
     this.assertActive();
     const { image, cpus, memoryMiB, pidsLimit, uid, gid } = this.service.options;
     const args = ['run', '--detach', '--pull=never', '--name', this.name, '--label', `${label}=${this.service.owner}`,
@@ -179,6 +189,7 @@ export class RequestSandbox {
       '--cpus', String(cpus), '--memory', `${memoryMiB}m`, '--memory-swap', `${memoryMiB}m`, '--pids-limit', String(pidsLimit),
       '--tmpfs', '/tmp:rw,nosuid,nodev,size=268435456,mode=1777', '--workdir', '/workspace',
       '--mount', `type=bind,src=${roots[0]},dst=/workspace`, '--mount', `type=bind,src=${roots[1]},dst=/logs,readonly`,
+      ...(skillRoot ? ['--mount', `type=bind,src=${skillRoot},dst=/skills,readonly`] : []),
       '--env', 'HOME=/tmp', '--env', 'LANG=C.UTF-8', '--env', 'PYTHONDONTWRITEBYTECODE=1', '--env', 'MPLCONFIGDIR=/tmp/matplotlib',
       image, 'sleep', 'infinity'];
     try {
@@ -221,6 +232,7 @@ export class RequestSandbox {
   readdir = async (path: string): Promise<string[]> => JSON.parse((await this.helper('ls', path)).toString());
   glob = async (pattern: string, cwd: string, options: { ignore: string[]; limit: number }): Promise<string[]> =>
     JSON.parse((await this.helper('find', cwd, undefined, [pattern, JSON.stringify(options)])).toString());
+  grep = async (path:string,options:{pattern:string;glob?:string;ignoreCase?:boolean;literal?:boolean;limit?:number}):Promise<unknown> => JSON.parse((await this.helper('grep',path,undefined,[JSON.stringify(options)])).toString());
   detectImageMimeType = async (path: string): Promise<string | null> => {
     const data = (await this.helper('image', path)).toString();
     return data || null;

@@ -1,0 +1,28 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/capabilities.spec.ts tests/e2e/skills.spec.ts tests/e2e/administrator.spec.ts --workers=1 --output=/private/tmp/axon-r3-delivery-browser-results
+
+[WebServer] (node:25882) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:25854) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:25886) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25886) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/administrator.spec.ts:69:1 › independent administrator manages experts without mounting a seat workbench (6.3s)
+  ✓   2 tests/e2e/administrator.spec.ts:123:1 › an administrator creates personal spaces and resumes ordinary two-turn chat without business access (8.7s)
+  ✓   3 tests/e2e/administrator.spec.ts:214:1 › revoking an independent administrator returns to login and overall remains a business seat (3.9s)
+  ✓   4 tests/e2e/administrator.spec.ts:234:1 › an administrator card opens the selected expert configuration without creating another draft (3.2s)
+  ✓   5 tests/e2e/capabilities.spec.ts:35:1 › professional expert creation is empty, cancelable and retains existing conversation drafts (5.0s)
+  ✓   6 tests/e2e/capabilities.spec.ts:81:1 › a lost creation response is retried with the same action and does not create another session (2.5s)
+  ✓   7 tests/e2e/capabilities.spec.ts:106:1 › ordinary new conversation keeps the general assistant and uses an action ID (1.6s)
+  ✓   8 tests/e2e/capabilities.spec.ts:120:1 › a disabled expert retains its conversation and draft while sending is blocked (5.8s)
+  ✓   9 tests/e2e/capabilities.spec.ts:143:1 › capability tabs share searchable cards and real read-only skills without creating work (2.4s)
+  ✓  10 tests/e2e/skills.spec.ts:27:1 › administrator imports a method package, cancels preview without writes, and publishes without trial or scan gate (3.9s)
+  ✓  11 tests/e2e/skills.spec.ts:46:1 › ordinary user can stage a published skill into an existing conversation without sending or changing its draft (4.2s)
+  ✓  12 tests/e2e/skills.spec.ts:60:1 › policy and publication saves retain their viewed baselines across background detail refreshes (4.6s)
+
+  12 passed (58.6s)

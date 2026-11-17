@@ -1,0 +1,50 @@
+{
+  "branch": "codex/axon-r2",
+  "administratorGrant": "unchanged",
+  "r2UserAcceptance": "pending",
+  "updatedAt": "2026-11-14T07:41:17.560176+00:00",
+  "checks": [
+    {
+      "seat": "overall",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "personalDefault": "inherit",
+      "readableSessions": 15
+    },
+    {
+      "seat": "intelligence",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "personalDefault": "inherit",
+      "readableSessions": 2
+    },
+    {
+      "seat": "planning",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "personalDefault": "inherit",
+      "readableSessions": 1
+    },
+    {
+      "seat": "situation",
+      "login": true,
+      "expertCatalog": true,
+      "administrator": false,
+      "personalDefault": "inherit",
+      "readableSessions": 1
+    },
+    {
+      "asset": "/assets/index-BGvocjI9.js",
+      "sha256": "12fa2108b8e89d0de1ed1a46f004b39a1150e7113aca041e9c6650b9cb37294d"
+    },
+    {
+      "asset": "/assets/index-D__tQJao.css",
+      "sha256": "3f082d79dfd01506ad8272b51e097079870e76a03321b3d7e7f33470b9073576"
+    }
+  ],
+  "health4316": 200,
+  "health4315": 200
+}

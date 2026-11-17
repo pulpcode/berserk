@@ -5,11 +5,14 @@ import { enqueueContinuousTaskChange } from '../background/continuous-store.js';
 import { BackgroundStore } from '../background/store.js';
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
-import type { Identity, TaskContext, TaskInput, TaskSpace } from '../contracts/access.js';
+import type { AccountIdentity, AdministratorIdentity, Identity, TaskContext, TaskInput, TaskSpace } from '../contracts/access.js';
 import { UUID } from '../workspaces/store.js';
 import { stateError } from '../resources/files.js';
 import { RequestError } from '../contracts/errors.js';
 import { normalizeTaskContext } from './context.js';
+import { SystemRoles } from './system-roles.js';
+import { requireAdministratorSchema } from './administrator-schema.js';
+import { personalScopeId, personalScopeUserId } from './personal-scope.js';
 
 const missing = () => new RequestError('TASK_NOT_FOUND', '任务不存在或无权访问。', 404);
 const conflict = (message = '任务已变化，请查看最新说明后重试。') => new RequestError('TASK_CONFLICT', message, 409);
@@ -21,6 +24,10 @@ function decodeTask(row: {id: unknown;data:unknown}): TaskSpace {
   const task=JSON.parse(String(row.data)) as TaskSpace;
   if(!task || typeof task!=='object' || task.id!==row.id || !UUID.test(task.id) || typeof task.title!=='string' || !task.title.trim() || task.title.length>60 || typeof task.goal!=='string' || task.goal.length>8000 || !['public','private'].includes(task.visibility) || !['active','archived'].includes(task.state) || !Number.isSafeInteger(task.revision) || task.revision<1 || !/^[a-zA-Z0-9_-]{1,64}$/.test(task.ownerSeatId) || !UUID.test(task.createdByUserId) || !UUID.test(task.updatedByUserId) || !Number.isFinite(Date.parse(task.createdAt)) || !Number.isFinite(Date.parse(task.updatedAt)))throw stateError();
   if (task.scenarioInstanceId !== undefined && !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(task.scenarioInstanceId)) throw stateError();
+  const personalUserId = personalScopeUserId(task.ownerSeatId);
+  if (personalUserId !== undefined) {
+    if (task.ownerUserId !== personalUserId || task.visibility !== 'private' || task.scenarioInstanceId !== undefined || task.context !== undefined || task.createdByUserId !== personalUserId || task.updatedByUserId !== personalUserId) throw stateError();
+  } else if (task.ownerUserId !== undefined) throw stateError();
   if (task.context !== undefined) {
     try { normalizeTaskContext(task.context); } catch { throw stateError(); }
   }
@@ -64,7 +71,7 @@ export class AccessStore {
     if (hasBackground || [3,4,6,8,10,11,12].includes(base)) { new BackgroundStore(this.db); return; }
     if (![2,5,7,9].includes(base)) throw stateError();
     this.db.exec('BEGIN IMMEDIATE');
-    try { upgradeSeatColumns(this.db,version,false); this.db.exec(`PRAGMA user_version=${scenarioSchemaVersion(base === 9 ? 9 : 7)}; COMMIT`); }
+    try { upgradeSeatColumns(this.db,version,false); this.db.exec(`PRAGMA user_version=${scenarioSchemaVersion(base === 9 ? 9 : 7, version)}; COMMIT`); }
     catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
   seatName(id: string): string { return String(this.db.prepare('SELECT name FROM seats WHERE id=?').get(id)?.name ?? id); }
@@ -77,6 +84,21 @@ export class AccessStore {
   canCollaborate(seatId: string) { return this.identityForSeat(seatId)?.canCollaborate === true; }
   assertCanCollaborate(seatId: string) {
     if (!this.canCollaborate(seatId)) throw new RequestError('FORBIDDEN', '当前席位不能参与业务分派、接收或办理。', 403);
+  }
+  /** A storage owner may be an eligible business seat or a current independent administrator. */
+  isPersonalScope(scope: string): boolean { return personalScopeUserId(scope) !== undefined; }
+  private personalOwner(scope: string): string | undefined {
+    const userId = personalScopeUserId(scope);
+    if (userId === undefined) return undefined;
+    if (this.db.prepare('SELECT 1 FROM seats WHERE id=?').get(scope)) throw stateError();
+    return this.db.prepare('SELECT 1 FROM accounts WHERE id=? AND seat_id IS NULL').get(userId) ? userId : undefined;
+  }
+  canUseWorkspace(scope: string): boolean {
+    const userId = this.personalOwner(scope);
+    return this.isPersonalScope(scope) ? userId !== undefined && this.workspaceIdentity(userId)?.seatId === scope : this.canCollaborate(scope);
+  }
+  assertCanUseWorkspace(scope: string): void {
+    if (!this.canUseWorkspace(scope)) throw new RequestError('FORBIDDEN', '当前账号不能使用此个人空间或工作区。', 403);
   }
   updateSeat(seatId: string, input: {name?: string; responsibility: string}) {
     const responsibility = input.responsibility.trim();
@@ -96,14 +118,55 @@ export class AccessStore {
     const row = this.db.prepare('SELECT id FROM accounts WHERE seat_id=? AND enabled=1').get(seatId);
     return row ? this.identity(String(row.id)) : undefined;
   }
+  loginUsers(): Array<{id: string; name: string}> {
+    const roles = new SystemRoles(this.db);
+    return this.db.prepare('SELECT id,display_name FROM accounts WHERE seat_id IS NULL AND enabled=1 ORDER BY display_name,id').all()
+      .filter(row => roles.has(String(row.id))).map(row => ({id:String(row.id),name:String(row.display_name)}));
+  }
+  identityForLoginUser(id: string): AdministratorIdentity | undefined {
+    const identity = this.accountIdentity(id);
+    return identity?.role === 'administrator' ? identity : undefined;
+  }
+  accountIdentity(id: string): AccountIdentity | undefined {
+    const business = this.identity(id); if (business) return business;
+    const row = this.db.prepare('SELECT id,username,display_name FROM accounts WHERE id=? AND seat_id IS NULL AND enabled=1').get(id);
+    if (!row || !new SystemRoles(this.db).has(id)) return undefined;
+    const scope = personalScopeId(String(row.id));
+    if (this.db.prepare('SELECT 1 FROM seats WHERE id=?').get(scope)) throw stateError();
+    return {userId:String(row.id),username:String(row.username),displayName:String(row.display_name),role:'administrator',personalScopeId:scope,canCollaborate:false,createPublicTask:false,manageModelSettings:false};
+  }
+  /** Internal workspace adapter only. It must never authorize business endpoints. */
+  workspaceIdentity(id: string): Identity | undefined {
+    const account = this.accountIdentity(id);
+    if (!account) return undefined;
+    if (account.role !== 'administrator') return account;
+    return {userId:account.userId,username:account.username,displayName:account.displayName,seatId:account.personalScopeId,seatName:'个人空间',canCollaborate:true,createPublicTask:false,manageModelSettings:false,viewWorkOverview:false,controlScenarios:false,canIssueCommands:false};
+  }
   async authenticate(username: string, password: string) {
     const row = this.db.prepare('SELECT id,salt,password_hash,enabled FROM accounts WHERE username=?').get(username);
     const key = await derivePassword(password, row ? String(row.salt) : 'axon-unknown-account');
     const hash = row ? Buffer.from(String(row.password_hash), 'hex') : Buffer.alloc(64);
-    return row?.enabled && hash.length === key.length && timingSafeEqual(hash, key) ? this.identity(String(row.id)) : undefined;
+    return row?.enabled && hash.length === key.length && timingSafeEqual(hash, key) ? this.accountIdentity(String(row.id)) : undefined;
+  }
+  async saveAdministratorAccount(input: {username:string;displayName:string;password:string}) {
+    requireAdministratorSchema(this.db);
+    if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(input.username) || !input.displayName.trim() || input.displayName.trim().length > 100 || input.password.length < 10 || input.password.length > 256) throw new Error('管理员账号或密码无效；密码须为 10～256 个字符。');
+    const prior = this.db.prepare('SELECT id,seat_id FROM accounts WHERE username=?').get(input.username);
+    if (prior && prior.seat_id !== null) throw new Error('该账号属于业务席位，请使用独立的管理员账号。');
+    const salt = randomBytes(32).toString('hex'); const hash = (await derivePassword(input.password, salt)).toString('hex');
+    const id = prior ? String(prior.id) : randomUUID();
+    if (this.db.prepare('SELECT 1 FROM seats WHERE id=?').get(personalScopeId(id))) throw stateError();
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      this.db.prepare('INSERT INTO accounts(id,username,display_name,seat_id,salt,password_hash,enabled) VALUES(?,?,?,NULL,?,?,1) ON CONFLICT(id) DO UPDATE SET display_name=excluded.display_name,salt=excluded.salt,password_hash=excluded.password_hash,enabled=1').run(id,input.username,input.displayName.trim(),salt,hash);
+      new SystemRoles(this.db).grant(input.username);
+      this.db.prepare('DELETE FROM auth_sessions WHERE user_id=?').run(id); this.db.exec('COMMIT');
+    } catch(error) { this.db.exec('ROLLBACK'); throw error; }
+    return id;
   }
   async saveAccount(input: {username:string;displayName:string;seatId:string;seatName:string;password:string;createPublicTask:boolean;manageModelSettings:boolean;viewWorkOverview?:boolean;controlScenarios?:boolean}) {
     if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(input.username) || !/^[a-zA-Z0-9_-]{1,64}$/.test(input.seatId) || !input.displayName.trim() || !input.seatName.trim() || input.password.length < 10 || input.password.length > 256) throw new Error('账号、席位或密码无效；密码须为 10～256 个字符。');
+    if (this.isPersonalScope(input.seatId)) throw new Error('席位不能占用账号个人空间的保留标识。');
     const previous = this.db.prepare('SELECT id,seat_id FROM accounts WHERE username=?').get(input.username);
     if (previous && previous.seat_id !== input.seatId) throw new Error('本期不支持账号换岗。');
     if (input.controlScenarios !== undefined && typeof input.controlScenarios !== 'boolean') throw new Error('场景控制权限须为明确的布尔值。');
@@ -124,7 +187,14 @@ export class AccessStore {
     catch(error) { this.db.exec('ROLLBACK'); throw error; }
   }
   list(seatId: string): TaskSpace[] {
-    return this.db.prepare('SELECT id,data FROM task_spaces ORDER BY rowid DESC').all().map(row => decodeTask({id:row.id,data:row.data})).filter(task => (task.visibility === 'public' || task.ownerSeatId === seatId) && (this.isScenarioDirectorSeat(seatId) || task.scenarioInstanceId === undefined || this.scenario?.isWritable(task.scenarioInstanceId)));
+    const personal = this.isPersonalScope(seatId), owner = this.personalOwner(seatId);
+    if (personal && !owner) return [];
+    return this.db.prepare('SELECT id,data FROM task_spaces ORDER BY rowid DESC').all().map(row => this.decodeTask({id:row.id,data:row.data})).filter(task => (personal ? task.visibility === 'private' && task.ownerUserId === owner && task.ownerSeatId === seatId : task.visibility === 'public' || task.ownerSeatId === seatId) && (this.isScenarioDirectorSeat(seatId) || task.scenarioInstanceId === undefined || this.scenario?.isWritable(task.scenarioInstanceId)));
+  }
+  private decodeTask(row: {id: unknown;data: unknown}): TaskSpace {
+    const task = decodeTask(row);
+    if (task.ownerUserId !== undefined && this.personalOwner(task.ownerSeatId) !== task.ownerUserId) throw stateError();
+    return task;
   }
   /** Service queries are explicitly public-only; no synthetic seat or workspace is involved. */
   listActivePublic(): TaskSpace[] {
@@ -140,13 +210,15 @@ export class AccessStore {
   get(id: string, seatId: string, write = false): TaskSpace {
     const row = this.db.prepare('SELECT id,data FROM task_spaces WHERE id=?').get(id);
     if (!row) throw missing();
-    const task = decodeTask({id:row.id,data:row.data});
-    if (task.visibility !== 'public' && task.ownerSeatId !== seatId) throw missing();
+    const task = this.decodeTask({id:row.id,data:row.data});
+    const personal = this.isPersonalScope(seatId), owner = this.personalOwner(seatId);
+    if (personal ? !owner || task.visibility !== 'private' || task.ownerUserId !== owner || task.ownerSeatId !== seatId : task.visibility !== 'public' && task.ownerSeatId !== seatId) throw missing();
     if (write && task.scenarioInstanceId !== undefined) this.assertScenarioWritable(task.scenarioInstanceId);
     if (write && task.state !== 'active') throw new RequestError('TASK_ARCHIVED', '任务已归档，请先重新开启。', 409);
     return task;
   }
   findCreation(actor: Identity, actionId: string): TaskSpace[] {
+    if (this.isPersonalScope(actor.seatId)) this.assertPersonalActor(actor);
     const row=this.db.prepare('SELECT task_id FROM task_actions WHERE user_id=? AND action_id=?').get(actor.userId,actionId);
     return row ? [this.get(String(row.task_id),actor.seatId)] : [];
   }
@@ -157,6 +229,11 @@ export class AccessStore {
   }
   /** Caller owns the transaction, so information linkage and creation share one commit. */
   createInTransaction(actor: Identity, input: TaskInput, origin?: {eventId: string; jobId: string; reason: string; scenarioInstanceId?: string}, preparedInstanceId?: string): TaskSpace {
+    const ownerUserId = this.isPersonalScope(actor.seatId) ? this.personalOwner(actor.seatId) : undefined;
+    if (this.isPersonalScope(actor.seatId)) {
+      this.assertPersonalActor(actor);
+      if (input.visibility !== 'private' || input.context !== undefined || origin !== undefined || preparedInstanceId !== undefined) throw new RequestError('FORBIDDEN','管理员个人空间不能关联业务任务或资料。',403);
+    }
     if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写名称，任务空间还需要目标说明。');
     if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建任务空间。', 403);
     const scenarioInstanceId = origin?.scenarioInstanceId ?? preparedInstanceId;
@@ -181,13 +258,17 @@ export class AccessStore {
       return task;
     }
     const time = new Date().toISOString();
-    const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {}),...(scenarioInstanceId === undefined ? {} : {scenarioInstanceId})};
+    const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,...(ownerUserId === undefined ? {} : {ownerUserId}),state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {}),...(scenarioInstanceId === undefined ? {} : {scenarioInstanceId})};
     this.db.prepare('INSERT INTO task_spaces VALUES(?,?)').run(task.id,JSON.stringify(task));
     this.db.prepare('INSERT INTO task_actions VALUES(?,?,?,?)').run(actor.userId,input.clientActionId,digest,task.id);
     enqueueContinuousTaskChange(this.db,task);
     return task;
   }
   update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state'];context?:TaskContext|null}, blocked: () => boolean = () => false, archiveEndedScenario = false): TaskSpace {
+    if (this.isPersonalScope(actor.seatId)) {
+      this.assertPersonalActor(actor);
+      if (change.context !== undefined && change.context !== null) throw new RequestError('FORBIDDEN','管理员个人空间不能关联业务资料。',403);
+    }
     const task = this.get(id,actor.seatId);
     const sealedArchive = archiveEndedScenario && task.scenarioInstanceId !== undefined && actor.controlScenarios && this.isScenarioDirectorSeat(actor.seatId) && Object.keys(change).length === 1 && change.state === 'archived';
     if (task.scenarioInstanceId !== undefined && !sealedArchive) this.assertScenarioWritable(task.scenarioInstanceId);
@@ -226,6 +307,7 @@ export class AccessStore {
     const current=JSON.stringify([expectedInput.title.trim(),expectedInput.goal.trim(),expectedInput.visibility,...(context?[context]:[]),{scenarioInstanceId}]);
     if(receipt?.task_id!==id || receipt.input!==legacy && receipt.input!==current || !row || !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(scenarioInstanceId))throw conflict('资料归属核验失败。');
     const task=decodeTask({id:row.id,data:row.data});
+    if (task.ownerUserId !== undefined) throw conflict('个人空间不能绑定业务场景。');
     if(task.scenarioInstanceId!==undefined && task.scenarioInstanceId!==scenarioInstanceId)throw conflict();
     if(task.scenarioInstanceId===undefined)this.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify({...task,scenarioInstanceId}),id);
   }
@@ -247,8 +329,12 @@ export class AccessStore {
   }
   /** Synchronous admission, held only for the actual write/request lifetime. No execution queue. */
   acquire(id: string, seatId: string): () => void {
-    this.assertCanCollaborate(seatId);
+    this.assertCanUseWorkspace(seatId);
     this.get(id,seatId,true); this.busy.set(id,(this.busy.get(id)||0)+1); let done=false;
     return () => { if (!done) { done=true; const count=(this.busy.get(id)||1)-1; if(count) this.busy.set(id,count); else this.busy.delete(id); } };
+  }
+  private assertPersonalActor(actor: Identity): void {
+    const current = this.workspaceIdentity(actor.userId);
+    if (!current || current.seatId !== actor.seatId || this.personalOwner(actor.seatId) !== actor.userId) throw new RequestError('FORBIDDEN','当前账号不能管理此个人空间。',403);
   }
 }

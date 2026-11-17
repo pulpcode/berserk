@@ -1,0 +1,14 @@
+[WebServer] (node:80912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:80951) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/chat.spec.ts:973:1 › 新建对话页内选空间，离开不创建，项目加号同页且首次发送不抢回后续导航 (20.7s)
+  ✓  2 tests/e2e/chat.spec.ts:1097:1 › 跨项目创建失败可见，切换会话保护后续选择，手机新建聚焦输入且设置遮挡不误读 (11.4s)
+  ✓  3 tests/e2e/chat.spec.ts:1790:1 › 折叠侧栏仅保留全局入口，展开后恢复项目导航与草稿 (14.7s)
+  ✓  4 tests/e2e/chat.spec.ts:1903:3 › 显式对话链接后新建对话不会被旧 session 参数抢回 (8.0s)
+  ✓  5 tests/e2e/chat.spec.ts:1903:3 › 显式对话链接后切换项目不会被旧 session 参数抢回 (7.1s)
+
+  5 passed (1.5m)

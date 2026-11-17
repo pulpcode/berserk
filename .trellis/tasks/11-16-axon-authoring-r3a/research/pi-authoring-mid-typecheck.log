@@ -1,0 +1,11 @@
+
+> @berserk/harness-lab@0.1.0 typecheck
+> tsc --noEmit
+
+tests/pi/authoring.test.ts(6,10): error TS2300: Duplicate identifier 'authoringToolNames'.
+tests/pi/authoring.test.ts(6,30): error TS2300: Duplicate identifier 'requestedAuthoring'.
+tests/pi/authoring.test.ts(7,15): error TS2300: Duplicate identifier 'AuthoringIntent'.
+tests/pi/authoring.test.ts(13,10): error TS2300: Duplicate identifier 'authoringToolNames'.
+tests/pi/authoring.test.ts(13,30): error TS2300: Duplicate identifier 'requestedAuthoring'.
+tests/pi/authoring.test.ts(14,15): error TS2300: Duplicate identifier 'AuthoringIntent'.
+tests/pi/authoring.test.ts(34,124): error TS2740: Type '{ enabled: false; }' is missing the following properties from type '{ enabled: boolean; image: string; cpus: number; memoryMb: number; pidsLimit: number; uid: number; gid: number; }': image, cpus, memoryMb, pidsLimit, and 2 more.

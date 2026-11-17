@@ -1,0 +1,306 @@
+{
+  "passed": true,
+  "dataDir": "/tmp/axon-r3a-live-BIp8Nc",
+  "elapsedMs": 104000,
+  "model": {
+    "provider": "volcengine-agent-plan",
+    "id": "deepseek-v4.1-flash"
+  },
+  "calls": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "capability_authoring_method",
+        "capability_authoring_catalog",
+        "capability_authoring_read",
+        "capability_authoring_propose",
+        "capability_authoring_save",
+        "capability_authoring_report",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "read",
+        "ls",
+        "grep",
+        "find",
+        "write",
+        "edit",
+        "bash",
+        "file_output",
+        "subagent",
+        "ask_user"
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": []
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": []
+    }
+  ],
+  "checks": [
+    "真实管理员原个人对话创建完整专家草稿，原确认后真实数据库保存且未发布",
+    "同会话精确修改专家简介，原指令和工具不变",
+    "同会话转向方法技能创建与单文件修改，未改SKILL.md字节保真",
+    "真实正文专用补丁保留原frontmatter注释、license、metadata及其他文件字节",
+    "原范围明确未开放业务席位，技能未试用直接发布后管理员个人对话真实使用",
+    "专家沿用原校验、真实试用、独立人工确认后发布并实际使用",
+    "重开读取真实原会话与草稿，不调用模型、不重放保存"
+  ],
+  "scope": "独立远端合成数据；真实API/Pi/原确认/管理服务。未访问生产用户会话或改变4315/4316。",
+  "recordCount": 8,
+  "rawEvidenceSha256": "2a445990a39b9d7c85c24b3ae33ee8b7240963c5520e41362dfe0757bfc85dde",
+  "rawEvidenceRemote": "tencent-server:/tmp/axon-r3a-live-BIp8Nc/r3a-live-evidence.json",
+  "sourceManifest": "creation-live-source.json",
+  "userAcceptance": "pending"
+}

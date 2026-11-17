@@ -1,0 +1,115 @@
+[WebServer] (node:76681) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:76652) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:76717) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:76717) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work (8.4s)
+(node:76801) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:76801) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  2 tests/e2e/authoring.spec.ts:87:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (6.6s)
+(node:76861) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:76861) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  3 tests/e2e/authoring.spec.ts:105:1 › one personal conversation modifies two exact targets without changing unrelated fields (4.6s)
+
+
+  1) tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work
+
+    Error: locator.click: Error: strict mode violation: getByRole('button', { name: '新建个人空间', exact: true }) resolved to 2 elements:
+        1) <button title="新建个人空间" aria-label="新建个人空间" class="icon-button catalog-create">…</button> aka getByRole('button', { name: '新建个人空间', description: '新建个人空间' })
+        2) <button type="button">…</button> aka getByText('新建个人空间')
+
+    Call log:
+      - waiting for getByRole('button', { name: '新建个人空间', exact: true })
+
+
+      31 | async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '系统管理员' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible(); }
+      32 | async function personal(page: Page) {
+    > 33 |   await page.getByRole('button', { name: '新建个人空间', exact: true }).click();
+         |                                                                   ^
+      34 |   const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });
+      35 |   await space.getByLabel('空间名称', { exact: true }).fill('创作个人空间');
+      36 |   await space.getByRole('button', { name: '创建并开始对话', exact: true }).click(); await expect(space).toBeHidden();
+        at personal (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:33:67)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:74:39
+
+    Error Context: ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-one-create-actio-8c76c-e-and-preserves-unsent-work/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-one-create-actio-8c76c-e-and-preserves-unsent-work/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-one-create-actio-8c76c-e-and-preserves-unsent-work/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/authoring.spec.ts:87:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link
+
+    Error: locator.click: Error: strict mode violation: getByRole('button', { name: '新建个人空间', exact: true }) resolved to 2 elements:
+        1) <button title="新建个人空间" aria-label="新建个人空间" class="icon-button catalog-create">…</button> aka getByRole('button', { name: '新建个人空间', description: '新建个人空间' })
+        2) <button type="button">…</button> aka getByText('新建个人空间')
+
+    Call log:
+      - waiting for getByRole('button', { name: '新建个人空间', exact: true })
+
+
+      31 | async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '系统管理员' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible(); }
+      32 | async function personal(page: Page) {
+    > 33 |   await page.getByRole('button', { name: '新建个人空间', exact: true }).click();
+         |                                                                   ^
+      34 |   const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });
+      35 |   await space.getByLabel('空间名称', { exact: true }).fill('创作个人空间');
+      36 |   await space.getByRole('button', { name: '创建并开始对话', exact: true }).click(); await expect(space).toBeHidden();
+        at personal (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:33:67)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:90:124
+
+    Error Context: ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-the-existing-con-1f758--with-an-actual-detail-link/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/e2e/authoring.spec.ts:105:1 › one personal conversation modifies two exact targets without changing unrelated fields
+
+    Error: locator.click: Error: strict mode violation: getByRole('button', { name: '新建个人空间', exact: true }) resolved to 2 elements:
+        1) <button title="新建个人空间" aria-label="新建个人空间" class="icon-button catalog-create">…</button> aka getByRole('button', { name: '新建个人空间', description: '新建个人空间' })
+        2) <button type="button">…</button> aka getByText('新建个人空间')
+
+    Call log:
+      - waiting for getByRole('button', { name: '新建个人空间', exact: true })
+
+
+      31 | async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '系统管理员' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible(); }
+      32 | async function personal(page: Page) {
+    > 33 |   await page.getByRole('button', { name: '新建个人空间', exact: true }).click();
+         |                                                                   ^
+      34 |   const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });
+      35 |   await space.getByLabel('空间名称', { exact: true }).fill('创作个人空间');
+      36 |   await space.getByRole('button', { name: '创建并开始对话', exact: true }).click(); await expect(space).toBeHidden();
+        at personal (/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:33:67)
+        at /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/tests/e2e/authoring.spec.ts:128:140
+
+    Error Context: ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-one-personal-con-25149-t-changing-unrelated-fields/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-one-personal-con-25149-t-changing-unrelated-fields/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../private/tmp/r3a-creation-web-results/authoring-one-personal-con-25149-t-changing-unrelated-fields/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work
+    tests/e2e/authoring.spec.ts:87:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link
+    tests/e2e/authoring.spec.ts:105:1 › one personal conversation modifies two exact targets without changing unrelated fields

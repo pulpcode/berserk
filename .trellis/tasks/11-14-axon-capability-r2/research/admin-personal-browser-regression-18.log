@@ -1,0 +1,34 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/access.spec.ts tests/e2e/capabilities.spec.ts tests/e2e/capability-management.spec.ts --workers=1 --output=/private/tmp/axon-admin-personal-regression-ui-results
+
+[WebServer] (node:28699) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:28668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 18 tests using 1 worker
+
+(node:28704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28704) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/access.spec.ts:23:1 › seat login supports password visibility, errors, clearing and a narrow viewport (4.4s)
+  ✓   2 tests/e2e/access.spec.ts:50:1 › empty seat choices cannot submit a login (951ms)
+  ✓   3 tests/e2e/access.spec.ts:80:1 › login, public/private task navigation, lazy workspace, archive and two independent seats (9.9s)
+  ✓   4 tests/e2e/access.spec.ts:92:1 › same-browser logout and identity change clear private drafts in both tabs (6.5s)
+  ✓   5 tests/e2e/access.spec.ts:100:1 › login reads the current CSRF token after another tab replaces the anonymous cookie (3.9s)
+  ✓   6 tests/e2e/access.spec.ts:115:1 › catalog managers maintain all work tasks while every seat owns its personal spaces (11.0s)
+  ✓   7 tests/e2e/access.spec.ts:227:1 › task catalog groups preserve disclosure and hide all space entries in the desktop rail (5.7s)
+  ✓   8 tests/e2e/access.spec.ts:323:1 › directory outages show one content status, preserve navigation and drafts, and recover without writes (15.4s)
+  ✓   9 tests/e2e/access.spec.ts:359:1 › task read errors remain scoped instead of reporting a disconnected service (13.6s)
+  ✓  10 tests/e2e/access.spec.ts:380:1 › basemap preference survives logout and stays isolated between accounts (12.0s)
+  ✓  11 tests/e2e/capabilities.spec.ts:35:1 › professional expert creation is empty, cancelable and retains existing conversation drafts (5.9s)
+  ✓  12 tests/e2e/capabilities.spec.ts:81:1 › a lost creation response is retried with the same action and does not create another session (3.0s)
+  ✓  13 tests/e2e/capabilities.spec.ts:106:1 › ordinary new conversation keeps the general assistant and uses an action ID (1.6s)
+  ✓  14 tests/e2e/capabilities.spec.ts:120:1 › a disabled expert retains its conversation and draft while sending is blocked (6.0s)
+  ✓  15 tests/e2e/capabilities.spec.ts:143:1 › capability tabs share searchable cards and real read-only skills without creating work (2.1s)
+  ✓  16 tests/e2e/capability-management.spec.ts:54:1 › admin creates and checks a draft without calling a model; shared conflicts preserve local edits (5.3s)
+  ✓  17 tests/e2e/capability-management.spec.ts:85:1 › representative plaintext trial requires human confirmation before publishing and personal defaults remain separate (8.4s)
+  ✓  18 tests/e2e/capability-management.spec.ts:149:1 › ordinary user cannot see expert management and can explicitly choose general as personal default (3.3s)
+
+  18 passed (2.1m)

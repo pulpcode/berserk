@@ -1,0 +1,35 @@
+{
+  "updatedAt": "2026-11-16T09:07:19Z",
+  "release": "/home/ubuntu/axon-r3a-compact-4316-20261116",
+  "previousRelease": "/home/ubuntu/axon-r3a-creation-4316-20261116",
+  "sourceArchiveSha256": "f4fd359933d71634d87fd93f907ca809f8ec6a6d28001a4a2eec67f7273743e8",
+  "filesVerified": 486,
+  "pid": 2867624,
+  "previousPid": 2855460,
+  "dataDir": "/home/ubuntu/axon-chat-c-preview-20261112/data",
+  "backup": "/home/ubuntu/axon-r3a-compact-4316-20261116/backup/before-compact-feedback",
+  "backupDigest": "9e4411e2fae7a95a2102b76c0317a1029bc90caf2723082f9447e30d6fa6decd",
+  "backupFiles": 477,
+  "schemaMigrationNeeded": false,
+  "allAccountAndSkillTablesPreserved": true,
+  "historyPrefixesPreserved": 89,
+  "serviceSecretsUnchanged": true,
+  "frontendAssetsVerified": [
+    "/assets/index-Bgm_4NwJ.js",
+    "/assets/index-LXkr9WwK.css"
+  ],
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "pid4315Unchanged": true,
+  "administratorPersonalOrganizationSkills": true,
+  "skillCreationFormAndConciseCopy": true,
+  "skillFlowOrderAndHeaderRow": true,
+  "conversationalAuthoringR3A": true,
+  "sourceBranch": "codex/axon-r3a",
+  "sourceBaseCommit": "1e99845",
+  "unifiedCreationAndManagementSkills": true,
+  "sourceWorkingTreeUncommitted": true,
+  "userAcceptance": "pending"
+}

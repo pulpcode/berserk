@@ -1,0 +1,22 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/administrator.spec.ts tests/e2e/capabilities.spec.ts --grep an administrator card|professional expert creation|a lost creation response|ordinary new conversation|a disabled expert retains|capability tabs share --workers=1 --output=/private/tmp/axon-unified-capabilities-final-results
+
+[WebServer] (node:14051) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:13965) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:14072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/administrator.spec.ts:123:1 › an administrator card opens the selected expert configuration without creating another draft (8.9s)
+  ✓  2 tests/e2e/capabilities.spec.ts:35:1 › professional expert creation is empty, cancelable and retains existing conversation drafts (11.3s)
+  ✓  3 tests/e2e/capabilities.spec.ts:81:1 › a lost creation response is retried with the same action and does not create another session (6.1s)
+  ✓  4 tests/e2e/capabilities.spec.ts:106:1 › ordinary new conversation keeps the general assistant and uses an action ID (3.7s)
+  ✓  5 tests/e2e/capabilities.spec.ts:120:1 › a disabled expert retains its conversation and draft while sending is blocked (8.8s)
+  ✓  6 tests/e2e/capabilities.spec.ts:143:1 › capability tabs share searchable cards and real read-only skills without creating work (4.8s)
+
+  6 passed (59.9s)

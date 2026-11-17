@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:25725) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25773) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/situation-host.test.ts (3 tests | 3 failed) 15ms
+   × serves public basemap config without secrets and uses seat permission for actual map reads 11ms
+   × rejects simulation controls before network without all configured grants and read permissions 2ms
+   × rejects partial simulation mappings so the combined state cannot disclose another source 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/situation-host.test.ts > serves public basemap config without secrets and uses seat permission for actual map reads
+ FAIL  tests/situation-host.test.ts > rejects simulation controls before network without all configured grants and read permissions
+ FAIL  tests/situation-host.test.ts > rejects partial simulation mappings so the combined state cannot disclose another source
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 5 passed (8)
+   Start at  18:45:46
+   Duration  12.09s (transform 1.75s, setup 0ms, import 4.68s, tests 7.03s, environment 0ms)
+

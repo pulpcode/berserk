@@ -1,0 +1,30 @@
+{
+  "updatedAt": "2026-11-17T07:29:35Z",
+  "updateId": "work-panel-three-section-20261117T072904Z",
+  "release": "/home/ubuntu/axon-work-activity-4316-20261117",
+  "backup": "/home/ubuntu/axon-work-activity-4316-20261117/frontend-updates/work-panel-three-section-20261117T072904Z/backup",
+  "sourceArchiveSha256": "ec6d7c58c88e2c74ff0a0ed5577e766077c9718bbd26f85c86f5153d6f63eac9",
+  "filesVerified": 24,
+  "newAssets": [
+    "/assets/index-Cm6KlDFc.js",
+    "/assets/index-CPpI8F1L.css"
+  ],
+  "pidsUnchanged": {
+    "4315": 2776215,
+    "4316": 3160962
+  },
+  "health": {
+    "4315": 200,
+    "4316": 200
+  },
+  "serviceRestarted": false,
+  "threeSectionLayout": true,
+  "tabsRemoved": true,
+  "floatingWorkPanel": true,
+  "compactTitleRows": true,
+  "evidenceControlsRemoved": true,
+  "preferenceOnlyInSettings": true,
+  "dataTouched": false,
+  "userAcceptance": "pending",
+  "modelsInvoked": 0
+}

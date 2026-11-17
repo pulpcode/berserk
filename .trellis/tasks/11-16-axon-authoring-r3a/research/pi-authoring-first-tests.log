@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:53074) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/authoring.test.ts (4 tests | 1 failed) 6670ms
+   × rejecting native save leaves no placeholder and ordinary confirmation text does not authorize it 2102ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/pi/authoring.test.ts > rejecting native save leaves no placeholder and ordinary confirmation text does not authorize it
+AssertionError: expected { schemaVersion: 1, …(12) } to match object { status: 'rejected', …(1) }
+(19 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "execution": undefined,
+    "status": "rejected",
+  }
+
+ ❯ tests/pi/authoring.test.ts:78:45
+     76|   expect(result.confirmation).toBeDefined();
+     77|   expect((await state.lab.management!.list()).length).toBe(before);
+     78|   expect(result.snapshot.interactions?.[0]).toMatchObject({status:'rej…
+       |                                             ^
+     79|   expect(result.snapshot.messages.find(m=>m.toolName==='capability_aut…
+     80| },30000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  12:02:53
+   Duration  11.61s (transform 1.77s, setup 0ms, import 4.64s, tests 6.67s, environment 0ms)
+

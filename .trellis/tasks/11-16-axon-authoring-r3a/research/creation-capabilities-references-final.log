@@ -1,0 +1,28 @@
+[WebServer] (node:79864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:79799) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:79886) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79886) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/capabilities.spec.ts:35:1 › professional expert creation is empty, cancelable and retains existing conversation drafts (14.1s)
+  ✓   2 tests/e2e/capabilities.spec.ts:81:1 › a lost creation response is retried with the same action and does not create another session (8.7s)
+  ✓   3 tests/e2e/capabilities.spec.ts:106:1 › ordinary new conversation keeps the general assistant and uses an action ID (6.0s)
+  ✓   4 tests/e2e/capabilities.spec.ts:124:1 › a disabled expert retains its conversation and draft while sending is blocked (12.6s)
+  ✓   5 tests/e2e/capabilities.spec.ts:147:1 › capability tabs share searchable cards and real read-only skills without creating work (8.8s)
+  ✓   6 tests/e2e/references.spec.ts:55:1 › typed references select using keyboard, preserve prose, show historical Skill and do not call model before send (16.8s)
+  ✓   7 tests/e2e/references.spec.ts:96:1 › IME, Escape, outside click and pasted paths remain plain text; menu allows replacement and removal (8.4s)
+  ✓   8 tests/e2e/references.spec.ts:123:1 › file picker browses directories and pagination, shares upload count and deduplicates the same ordinary path (10.8s)
+  ✓   9 tests/e2e/references.spec.ts:150:1 › seat-scoped drafts survive refresh, delayed directories cannot leak, and first creation migrates selections once (17.8s)
+  ✓  10 tests/e2e/references.spec.ts:179:1 › 375px picker and Skill dialog remain contained with keyboard focus (8.1s)
+  ✓  11 tests/e2e/references.spec.ts:201:1 › changed selection fails before model work and preserves all inputs until explicit correction (19.1s)
+  ✓  12 tests/e2e/references.spec.ts:225:1 › workspace navigation preserves separate drafts and dismisses stale pickers without selecting late results (13.8s)
+  ✓  13 tests/e2e/references.spec.ts:252:1 › Chinese composition filters the browsed directory and caret movement abandons the trigger safely (16.2s)
+  ✓  14 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (新的目标) (19.2s)
+  ✓  15 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (原始目标) (15.7s)
+  ✓  16 tests/e2e/references.spec.ts:311:1 › @ opens categories without loading file or agent lists and supports returning between categories (12.4s)
+
+  16 passed (4.3m)

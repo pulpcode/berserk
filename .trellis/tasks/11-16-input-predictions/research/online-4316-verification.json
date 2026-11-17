@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "administrator": {
+    "login": 200,
+    "managedSkills": 8,
+    "availableSkills": 7,
+    "publishedOrganizationSkills": 3,
+    "allPublishedSkillDetailsReadable": true,
+    "businessSeatPolicyNotRequired": true,
+    "management": 200,
+    "personalWorkspacesAndSessions": 200,
+    "businessWorkbenchDenied": 403
+  },
+  "businessAccounts": [
+    {
+      "seatId": "seat-overall",
+      "login": 200,
+      "skills": 7,
+      "managementDenied": 403,
+      "existingSessions": 2,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-intelligence",
+      "login": 200,
+      "skills": 7,
+      "managementDenied": 403,
+      "existingSessions": 2,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-planning",
+      "login": 200,
+      "skills": 7,
+      "managementDenied": 403,
+      "existingSessions": 1,
+      "historyReadable": true
+    },
+    {
+      "seatId": "seat-situation",
+      "login": 200,
+      "skills": 7,
+      "managementDenied": 403,
+      "existingSessions": 1,
+      "historyReadable": true
+    }
+  ],
+  "unauthenticatedDenied": 401,
+  "managementCountsUnchanged": {
+    "r3_skill_assets": 8,
+    "r3_skill_drafts": 4,
+    "r3_skill_publications": 3,
+    "r2_drafts": 4,
+    "r2_trials": 0
+  },
+  "credentialsChanged": false,
+  "modelsInvoked": 0,
+  "testAssetsCreated": 0,
+  "brandingAssetsVerified": [
+    {
+      "path": "/brand/axon-app-icon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytesVerified": true
+    },
+    {
+      "path": "/brand/axon-wordmark.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytesVerified": true
+    },
+    {
+      "path": "/favicon.ico",
+      "status": 200,
+      "contentType": "image/vnd.microsoft.icon",
+      "bytesVerified": true
+    }
+  ],
+  "allFrontendAssetsVerified": 16,
+  "businessAuthoringDeniedBeforeModel": 403,
+  "businessAuthoringChecks": 2,
+  "existingReadonlyRecoveryWarningSamples": 2,
+  "conversationalAuthoringR3A": true,
+  "unifiedCreationAndManagementSkills": true,
+  "managementSkills": [
+    {
+      "id": "expert-manager",
+      "hash": "83bc0550d86c68a477b11a188657fc38b14164807a83d7113ee82e6d31512ef3",
+      "actualBodyVerified": true
+    },
+    {
+      "id": "skill-creator",
+      "hash": "d713e008fd26359342b9349c17250d7e1d227361e814db8ed2911858abcdc1df",
+      "actualBodyVerified": true
+    }
+  ],
+  "personalWorkspaceMethodsVerified": 2,
+  "startupConfigurationUnchanged": true,
+  "predictionStaleSourceRejected": 409,
+  "inputPredictionFrontendVerified": true
+}

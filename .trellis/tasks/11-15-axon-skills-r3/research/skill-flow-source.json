@@ -1,0 +1,34 @@
+{
+  "scope": "skill-flow-steps delta; no backend or auth changes",
+  "checks": {
+    "skills_e2e_unique": 12,
+    "skills_e2e_final_full": "12/12 (54.2s), before final action-row JSX wrapper",
+    "post_action_row_focused": "2/2 flow+header (27.9s)",
+    "archive_evidence_focused": "1/1 final header+archive (21.0s); prior evidence-only 1/1 (15.0s)",
+    "fake_model_calls": "0 in all affected checks",
+    "completion_evidence_focused": "1/1 creation→publish→history→finish (20.3s)"
+  },
+  "sha256": {
+    "experiments/harness-lab/src/web/SkillLibrary.tsx": "365cfc2b3aac673a78b1a6254d6bad68237a4a4c1303c09d39896141f5a377fa",
+    "experiments/harness-lab/src/web/CapabilityCenter.tsx": "4678ad830d887430957adc39d7c3649947042441c5ed1b3f44ee7aaed29e77ab",
+    "experiments/harness-lab/src/web/skill-management.css": "672595858c949db5ba450150a3250ec0ef0a63f7c4b3ce63998d06d1acedd167",
+    "experiments/harness-lab/tests/e2e/skills.spec.ts": "cfab998a1fcfcb95c37e735aa8f65a45d93954da8f8950bdeb74be58aea27bd8"
+  },
+  "evidence_files": [
+    "skill-flow-header-1440.png",
+    "skill-flow-header-1060.png",
+    "skill-flow-scope-1440.png",
+    "skill-flow-scope-1060.png",
+    "skill-flow-publish-1440.png",
+    "skill-flow-publish-1060.png",
+    "skill-flow-archive-folded-1060.png",
+    "skill-flow-archive-open-1060.png",
+    "skill-flow-browser-final.log",
+    "skill-flow-browser-visual.log",
+    "skill-flow-browser-archive.log",
+    "skill-flow-complete-1060.png",
+    "skill-flow-complete-1440.png",
+    "skill-flow-browser-completion.log",
+    "skill-flow-browser-archive-final.log"
+  ]
+}

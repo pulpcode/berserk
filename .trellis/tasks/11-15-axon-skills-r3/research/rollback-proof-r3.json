@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "measuredAt": "2026-11-15T03:30:26.606Z",
+  "baseline": {
+    "commit": "5969069f565d28c753962daca1fe8bf3de17885c",
+    "source": "actual fixed R2 git archive; every tracked app file verified against git object",
+    "verifiedFileCount": 631
+  },
+  "environment": {
+    "node": "v24.14.0",
+    "model": "deterministic-provider-substitute; real native Pi loop",
+    "productionData": false,
+    "docker": false
+  },
+  "sessionId": "e427d6e6-b470-40ce-9050-c0eec94998de",
+  "expertRevision": "rev-cc9d34fd1a1da1e6d9abf19ab2599c280f024a3c0c6deb10be80052b3ad7b874",
+  "dryRun": {
+    "capabilitySchemaVersion": 2,
+    "skillSchemaVersion": 1,
+    "legacySkillSnapshots": 2,
+    "expertRevisions": 4,
+    "expertDrafts": 0,
+    "expertTrials": 0,
+    "unfinishedIntents": 0,
+    "oldRevisionsRewritten": false,
+    "accountDatabaseChanged": false,
+    "stage": "dry-run",
+    "resumed": false,
+    "backupDigest": "4553484e6528776f57d2432656c9772c302359b3385c3723a94b576a4ca87681"
+  },
+  "applied": {
+    "capabilitySchemaVersion": 2,
+    "skillSchemaVersion": 1,
+    "legacySkillSnapshots": 2,
+    "expertRevisions": 4,
+    "expertDrafts": 0,
+    "expertTrials": 0,
+    "unfinishedIntents": 0,
+    "oldRevisionsRewritten": false,
+    "accountDatabaseChanged": false,
+    "stage": "completed",
+    "resumed": false,
+    "backupDigest": "4553484e6528776f57d2432656c9772c302359b3385c3723a94b576a4ca87681"
+  },
+  "checks": {
+    "dryRunByteStable": true,
+    "completeBackupVerified": true,
+    "r3OpenAndGetNoCalls": true,
+    "r3ExplicitContinuation": true,
+    "r3NewSkillPublishedAndUsed": true,
+    "legacySkillComposerHistoryReadable": true,
+    "oldCodeOpenedOnlyRestoredBackup": true,
+    "restoredOpenAndGetNoCalls": true,
+    "restoredExplicitContinuation": true,
+    "backupOriginalUntouched": true,
+    "upgradedRootUntouchedByRollback": true,
+    "originalNativePrefixPreserved": true
+  },
+  "evidence": {
+    "originalHistorySha256": "2a7585122f9edfce4a33ff2e1f28711e464b8050f86847104cd07e39a05b75b4",
+    "upgradedHistorySha256": "a4133d269bd9873e95b8625537eee5886030e5cc858b3220c793387ddc317149",
+    "restoredHistorySha256": "2267730ffc30c521da7faa7365d27329adcb9dc7543c84706cf9072ea3ef4576",
+    "originalBackupInventorySha256": "bc2c84608c238a0591348f55062bcbfa4ec37d1ee15e9708cfd575de0046754c",
+    "filesInCompleteBackup": 13
+  },
+  "modelCalls": {
+    "initialR2": 1,
+    "explicitR3": 1,
+    "newR3Skill": 1,
+    "restoredR2": 1
+  },
+  "limits": [
+    "Model transport is deterministic; this proves native persistence, complete backup and version-paired rollback rather than live model quality.",
+    "Only fresh synthetic data is used. Original backup is copied before old-code recovery and compared byte-for-byte afterward.",
+    "Temporary roots are removed after hashes and checks are written.",
+    "Skill publication uses a synthetic core actor; this is not HTTP authentication evidence.",
+    "No assertion that old R2 automatically rejects additive R3 database metadata; old code opens only a separate restored backup copy."
+  ]
+}

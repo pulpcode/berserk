@@ -1,0 +1,12 @@
+
+> @berserk/harness-lab@0.1.0 lint
+> eslint . && node scripts/check-boundaries.mjs
+
+
+/Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab/src/web/InteractionCard.tsx
+  187:65   warning  The ref value 'focusScope.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'focusScope.current' to a variable inside the effect, and use that variable in the cleanup function        react-hooks/exhaustive-deps
+  187:185  warning  The ref value 'composerInput.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'composerInput.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 2 problems (0 errors, 2 warnings)
+
+Pi and browser dependency boundaries passed.

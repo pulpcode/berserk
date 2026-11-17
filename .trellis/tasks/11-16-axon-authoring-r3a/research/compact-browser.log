@@ -1,0 +1,21 @@
+[WebServer] (node:94923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:94894) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:94933) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:94933) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/access.spec.ts:81:1 › login, public/private task navigation, lazy workspace, archive and two independent seats (12.6s)
+  ✓  2 tests/e2e/administrator.spec.ts:123:1 › an administrator creates personal spaces and resumes ordinary two-turn chat without business access (10.5s)
+  ✓  3 tests/e2e/authoring.spec.ts:57:1 › one create action chooses a method, opens the shared draft page and preserves unsent work (10.2s)
+  ✓  4 tests/e2e/authoring.spec.ts:142:1 › the existing confirmation displays full candidate, rejection leaves no asset, and approved save stays in chat with an actual detail link (6.9s)
+  ✓  5 tests/e2e/authoring.spec.ts:160:1 › one personal conversation modifies two exact targets without changing unrelated fields (6.9s)
+  ✓  6 tests/e2e/capabilities.spec.ts:106:1 › ordinary new conversation keeps the general assistant and uses an action ID (2.7s)
+  ✓  7 tests/e2e/chat.spec.ts:973:1 › 新建对话页内选空间，离开不创建，项目加号同页且首次发送不抢回后续导航 (3.0s)
+  ✓  8 tests/e2e/chat.spec.ts:1903:3 › 显式对话链接后新建对话不会被旧 session 参数抢回 (2.1s)
+  ✓  9 tests/e2e/files.spec.ts:217:1 › pending cancellation stays owned by the project draft when opening the new conversation page (2.5s)
+
+  9 passed (1.1m)

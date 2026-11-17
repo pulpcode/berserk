@@ -1,0 +1,256 @@
+{
+  "passed": true,
+  "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-r3-context-timing-ZFUqDg",
+  "scope": "Native Pi request resource/context preparation with deterministic fake provider; no network model calls, Docker timing, first-token claim or SLO",
+  "qualifications": [
+    "Cold means a newly opened PiLab instance; application startup is excluded from request timing.",
+    "Percentiles use nearest rank on these small samples; they are descriptive, not a latency guarantee.",
+    "OS/filesystem caches were not flushed. Warm means repeated fresh conversations in one instance, not a claimed immutable-content cache hit.",
+    "Preparation is measured from PiLab.start invocation to resources.loaded, and to the fake streamSimple context entry after serializing context to count bytes.",
+    "The catalog has twelve published organization packages plus existing builtins; selected method body is delivered, package template bytes are not placed in context."
+  ],
+  "packageCount": 12,
+  "resourceBytesPerPackage": 262144,
+  "requestCount": 16,
+  "fakeProviderCalls": 16,
+  "groups": [
+    {
+      "instance": "cold_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": {
+        "n": 3,
+        "p50": 18.74051999999938,
+        "p95": 59.01134499999989
+      },
+      "startToProviderContextMs": {
+        "n": 3,
+        "p50": 21.62441199999921,
+        "p95": 71.68262600000025
+      },
+      "providerContextBytes": {
+        "n": 3,
+        "p50": 11106,
+        "p95": 11106
+      }
+    },
+    {
+      "instance": "cold_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": {
+        "n": 3,
+        "p50": 33.80206000000089,
+        "p95": 35.71003400000018
+      },
+      "startToProviderContextMs": {
+        "n": 3,
+        "p50": 37.45733300000029,
+        "p95": 40.13469500000019
+      },
+      "providerContextBytes": {
+        "n": 3,
+        "p50": 18043,
+        "p95": 18043
+      }
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": {
+        "n": 5,
+        "p50": 13.93655999999919,
+        "p95": 25.449397000000317
+      },
+      "startToProviderContextMs": {
+        "n": 5,
+        "p50": 15.891128000000208,
+        "p95": 27.65131200000087
+      },
+      "providerContextBytes": {
+        "n": 5,
+        "p50": 11106,
+        "p95": 11106
+      }
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": {
+        "n": 5,
+        "p50": 27.89577999999983,
+        "p95": 32.83222099999966
+      },
+      "startToProviderContextMs": {
+        "n": 5,
+        "p50": 30.6205659999996,
+        "p95": 35.85232799999994
+      },
+      "providerContextBytes": {
+        "n": 5,
+        "p50": 18043,
+        "p95": 18043
+      }
+    }
+  ],
+  "samples": [
+    {
+      "instance": "cold_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 59.01134499999989,
+      "startToProviderContextMs": 71.68262600000025,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "cold_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 35.71003400000018,
+      "startToProviderContextMs": 40.13469500000019,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "cold_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 12.206067000000075,
+      "startToProviderContextMs": 14.03877599999987,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "cold_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 32.1697479999998,
+      "startToProviderContextMs": 35.16572200000019,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "cold_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 18.74051999999938,
+      "startToProviderContextMs": 21.62441199999921,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "cold_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 33.80206000000089,
+      "startToProviderContextMs": 37.45733300000029,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 25.449397000000317,
+      "startToProviderContextMs": 27.65131200000087,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 32.43411999999989,
+      "startToProviderContextMs": 35.28421100000014,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 13.93655999999919,
+      "startToProviderContextMs": 16.088885999999547,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 32.83222099999966,
+      "startToProviderContextMs": 35.85232799999994,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 11.859879999999976,
+      "startToProviderContextMs": 13.258872999999767,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 27.62416200000007,
+      "startToProviderContextMs": 30.067503999999644,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 13.424646999999823,
+      "startToProviderContextMs": 14.89094600000044,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 26.486793999999463,
+      "startToProviderContextMs": 29.119821999999658,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "metadata_only",
+      "startToResourcesLoadedMs": 14.387865000000602,
+      "startToProviderContextMs": 15.891128000000208,
+      "resourcesPayloadBytes": 8711,
+      "providerContextBytes": 11106,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    },
+    {
+      "instance": "warm_instance",
+      "selection": "full_selected_method",
+      "startToResourcesLoadedMs": 27.89577999999983,
+      "startToProviderContextMs": 30.6205659999996,
+      "resourcesPayloadBytes": 14767,
+      "providerContextBytes": 18043,
+      "organizationCatalogEntries": 12,
+      "modelCalls": 1
+    }
+  ]
+}

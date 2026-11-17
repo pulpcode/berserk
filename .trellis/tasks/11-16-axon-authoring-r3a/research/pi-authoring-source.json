@@ -1,0 +1,10 @@
+{
+  "src/pi/authoring-tools.ts": "c71bd99e7a3fc0d0f5033aec5a6d8a6ba9f4beca5267b09df59efa0a58b8f4f2",
+  "src/pi/authoring-history.ts": "712f440d77f300afb2d1e9a1c08bf2fa1b5a9a357e6739525bef609d0a6c5f8c",
+  "src/pi/lab.ts": "5a9a8087d371509abf0e1e9df03577837593a3e394159ce88b6e571547aee532",
+  "src/pi/interactions.ts": "3924f368313b3767f79ccc3ee3b2760d111aeae5c264d17aefab8879e5c4d7b6",
+  "src/server/app.ts": "13d8321efe73cc0520d8e15fa23ffb430625d22a40f8dd334a69e23408c5118c",
+  "src/server/skill-routes.ts": "6f865a358c32cede941dd8c88e51885bbe1ec4302de82160cd4f0cb6564d1c8a",
+  "src/contracts/interactions.ts": "d34c5bf3c45f8038ea70cdef732f6218edfa3df2bb734d81811870e5595b1467",
+  "tests/pi/authoring.test.ts": "53b123bbafb7463f8b1d2ed4008d19e2eba1d057de8a3573e848142c7a27893b"
+}

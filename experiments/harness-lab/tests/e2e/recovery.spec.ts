@@ -179,6 +179,6 @@ for (const oldOutputSaved of [false, true]) test(`file outputs remain request-sc
   await expect(page.getByRole('link', { name: '下载 r1.txt', exact: true })).toHaveCount(oldOutputSaved ? 1 : 0);
   await expect(page.locator('.tool-result')).toHaveCount(oldOutputSaved ? 0 : 1);
   if (!oldOutputSaved) await expect(page.locator('.tool-result summary')).toContainText('未收到执行结果');
-  const sequence = await page.locator('.message-list > .message, .message-list > .file-output-group, .message-list > .tool-result').evaluateAll(items => items.map(item => item.classList.contains('file-output-group') ? item.querySelector('.file-output strong')?.textContent : item.classList.contains('tool-result') ? 'missing' : 'user'));
+  const sequence = await page.locator('.message-list .chat-block > .message, .message-list .chat-block > .file-output-group, .message-list .chat-block > .tool-result').evaluateAll(items => items.map(item => item.classList.contains('file-output-group') ? item.querySelector('.file-output strong')?.textContent : item.classList.contains('tool-result') ? 'missing' : 'user'));
   expect(sequence).toEqual(['user', oldOutputSaved ? 'r1.txt' : 'missing', 'user', 'r2.txt']);
 });

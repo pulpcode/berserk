@@ -12,6 +12,7 @@ export const SUBAGENT_START = 'berserk.subagent-start.v1';
 export const SUBAGENT_RESULT = 'berserk.subagent-result.v1';
 export const CHILD_ORIGIN = 'berserk.subagent-origin.v1';
 export interface SubagentStart {
+  schemaVersion?: 2;
   requestId: string; parentSessionId: string; workspaceId: string; childSessionId: string;
   subagentId: string; toolCallId: string; task: string; role: AgentRole; promptHash: string;
   effectiveTools: string[]; startedAt: string;
@@ -37,12 +38,13 @@ export function addUsage(target: UsageSummary, source: UsageSummary): void {
   }
 }
 export function decodeSubagentStart(value: unknown, workspaceId: string, parentSessionId?: string): SubagentStart {
-  if (!object(value) || !keys(value, ['requestId', 'parentSessionId', 'workspaceId', 'childSessionId', 'subagentId', 'toolCallId', 'task', 'role', 'promptHash', 'effectiveTools', 'startedAt', 'input'])
+  if (!object(value) || !keys(value, ['schemaVersion', 'requestId', 'parentSessionId', 'workspaceId', 'childSessionId', 'subagentId', 'toolCallId', 'task', 'role', 'promptHash', 'effectiveTools', 'startedAt', 'input'])
     || !['requestId', 'parentSessionId', 'childSessionId', 'subagentId'].every(key => uuid(value[key])) || value.workspaceId !== workspaceId
     || (parentSessionId !== undefined && value.parentSessionId !== parentSessionId) || typeof value.toolCallId !== 'string' || !value.toolCallId
     || typeof value.task !== 'string' || !value.task.trim() || !date(value.startedAt)) throw stateError();
+  if(value.schemaVersion!==undefined && value.schemaVersion!==2)throw stateError();
   if (value.input !== undefined && (!object(value.input) || !keys(value.input, ['skill', 'files'])
-    || (value.input.skill !== undefined && !validSkill(value.input.skill, true)) || !Array.isArray(value.input.files)
+    || (value.input.skill !== undefined && !validSkill(value.input.skill, true, value.schemaVersion === 2)) || !Array.isArray(value.input.files)
     || !value.input.files.every(file => validFileRef(file) && object(file) && keys(file, ['path', 'name', 'size', 'hash']))
     || new Set(value.input.files.map(file => file.path)).size !== value.input.files.length)) throw stateError();
   const role = value.role;

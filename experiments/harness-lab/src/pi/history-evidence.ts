@@ -1,6 +1,10 @@
+import { isDeepStrictEqual } from 'node:util';
+import { MCP_ADMISSION, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, decodeMcpAdmission } from './mcp-history.js';
+import { managementSkillKind } from '../authoring/management-skills.js';
+import { EXPERT_BINDING, EXECUTION_MANIFEST, decodeExpertBinding, decodeExecutionManifest } from './capability-history.js';
 import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
-import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7, COMPOSER_INPUT_V8, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
+import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, AUTHORING_REQUESTED, AUTHORING_RESOLVED, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { ConversationTurn, PublicMessage, InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
 import { validCompactionSummary } from './compaction-history.js';
@@ -23,12 +27,14 @@ function change(value: unknown): value is InstructionUpdate {
   return object(value) && keys(value, ['fileId', 'status', 'previousHash', 'hash', 'effectiveFrom']) && value.fileId === 'workspace' && ['updated', 'unchanged'].includes(String(value.status)) && (value.previousHash === null || hash(value.previousHash)) && hash(value.hash) && value.effectiveFrom === 'next_request';
 }
 export function decodeResourceRecord(value: unknown, workspaceId: string, readonly = false): Extract<RequestResourcesRecord, { status: 'available' }> {
+  if (readonly && object(value) && value.schemaVersion === 3) throw stateError();
   const instructionsReadonly = readonly || (object(value) && JSON.stringify(value.editableFileIds) === '[]');
-  if (!object(value) || value.status !== 'available' || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || value.workspaceId !== workspaceId || !Array.isArray(value.instructions) || value.instructions.length !== 2 || !value.instructions.every(item => instruction(item, instructionsReadonly)) || new Set(value.instructions.map(file => file.fileId)).size !== 2 || !Array.isArray(value.skills) || value.skills.length > controlledSkillIds.length || !value.skills.every(item => skill(item, false)) || new Set(value.skills.map(item => item.id)).size !== value.skills.length || !Array.isArray(value.readSkills) || !value.readSkills.every(item => skill(item, true)) || JSON.stringify(value.editableFileIds) !== (instructionsReadonly ? '[]' : '["workspace"]')) throw stateError();
-  if (!keys(value, ['task', 'status', 'requestId', 'workspaceId', 'instructions', 'skills', 'readSkills', 'editableFileIds'])) throw stateError();
+  if (!object(value) || value.status !== 'available' || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || value.workspaceId !== workspaceId || !Array.isArray(value.instructions) || value.instructions.length !== 2 || !value.instructions.every(item => instruction(item, instructionsReadonly)) || new Set(value.instructions.map(file => file.fileId)).size !== 2 || !Array.isArray(value.skills) || value.skills.length > ([2,3].includes(Number(value.schemaVersion)) ? 256 : controlledSkillIds.length) || !value.skills.every(item => skill(item, false, value.schemaVersion === 2 || value.schemaVersion === 3, value.schemaVersion === 3)) || new Set(value.skills.map(item => item.id)).size !== value.skills.length || !Array.isArray(value.readSkills) || !value.readSkills.every(item => skill(item, true, value.schemaVersion === 2 || value.schemaVersion === 3, value.schemaVersion === 3)) || JSON.stringify(value.editableFileIds) !== (instructionsReadonly ? '[]' : '["workspace"]')) throw stateError();
+  if (!keys(value, ['schemaVersion', 'task', 'status', 'requestId', 'workspaceId', 'instructions', 'skills', 'readSkills', 'editableFileIds'])) throw stateError();
   if (value.task !== undefined && (!object(value.task) || !keys(value.task,['id','title','goal','visibility']) || typeof value.task.id !== 'string' || !UUID.test(value.task.id) || typeof value.task.title !== 'string' || typeof value.task.goal !== 'string' || !['public','private'].includes(String(value.task.visibility)))) throw stateError();
+  if (value.schemaVersion !== undefined && value.schemaVersion !== 2 && value.schemaVersion !== 3 || value.schemaVersion === 3 && !(value.skills as Array<{id:string}>).some(skill => managementSkillKind(skill.id))) throw stateError();
   const record = structuredClone(value) as Extract<RequestResourcesRecord, { status: 'available' }>;
-  if (!record.readSkills.every(read => record.skills.some(allowed => allowed.id === read.id && allowed.hash === read.hash && allowed.version === read.version))) throw stateError();
+  if (!record.readSkills.every(read => record.skills.some(allowed => allowed.id === read.id && allowed.hash === read.hash && allowed.version === read.version && allowed.packageDigest === read.packageDigest && allowed.revisionId === read.revisionId))) throw stateError();
   return record;
 }
 /** Read only after strict evidence validation. Request boundaries do not require a terminal entry. */
@@ -46,7 +52,7 @@ export function unfinishedRequests(entries: SessionEntry[]) {
       if (entry.message.role === 'assistant') for (const block of entry.message.content) {
         if (block.type !== 'toolCall') continue;
         current.pendingTools.set(block.id, block.name);
-        if (['read', 'ls', 'find', 'write', 'edit', 'bash'].includes(block.name)) current.usedSandbox = true;
+        if (['read', 'ls', 'find', 'grep', 'write', 'edit', 'bash'].includes(block.name)) current.usedSandbox = true;
       }
       if (entry.message.role === 'toolResult') current.pendingTools.delete(entry.message.toolCallId);
     }
@@ -57,20 +63,25 @@ export function unfinishedRequests(entries: SessionEntry[]) {
 /** Read only after strict history validation. Never infer completion from message text/order alone. */
 export function conversationTurns(entries: SessionEntry[], messages: PublicMessage[], activeRequestId?: string): ConversationTurn[] {
   const turns = new Map<string, ConversationTurn>();
+  const starts = new Map<string, string>();
   const visible = new Map(messages.map(message => [message.id, message]));
   let currentRequest: string | undefined;
   let lastMessage: Extract<SessionEntry, { type: 'message' }> | undefined;
   for (const entry of entries) {
     if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) {
       currentRequest = (entry.data as { requestId: string }).requestId;
-      turns.set(currentRequest, { requestId: currentRequest, status: 'interrupted' });
+      if (Number.isFinite(Date.parse(entry.timestamp))) starts.set(currentRequest, entry.timestamp);
+      turns.set(currentRequest, { requestId: currentRequest, status: 'interrupted', ...(starts.has(currentRequest) ? { startedAt: starts.get(currentRequest) } : {}) });
       lastMessage = undefined;
     } else if (entry.type === 'message' && currentRequest) {
       // Empty/tool-only assistant messages still replace the candidate; never look backwards.
       lastMessage = entry;
     } else if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) {
       const { requestId, status } = entry.data as RequestResult;
-      const turn: ConversationTurn = { requestId, status };
+      const startedAt = starts.get(requestId);
+      const completedAt = entry.timestamp;
+      const timed = currentRequest === requestId && startedAt && Number.isFinite(Date.parse(completedAt)) && Date.parse(completedAt) >= Date.parse(startedAt);
+      const turn: ConversationTurn = { requestId, status, ...(timed ? { startedAt, completedAt } : {}) };
       const message = lastMessage?.message;
       const projected = lastMessage && visible.get(lastMessage.id);
       if (lastMessage && status === 'succeeded' && currentRequest === requestId && message?.role === 'assistant'
@@ -102,7 +113,13 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
   const fileCalls = new Map<string, {requestId: string | undefined; path: unknown}>();
   const fileReturned = new Set<string>();
   let currentRequestHasUser = false;
+  let binding: ReturnType<typeof decodeExpertBinding> | undefined;
+  const manifests = new Set<string>();
+  const mcpAdmissions = new Set<string>();
+  let hasWork = false;
   for (const entry of entries) {
+    if (entry.type === 'message' || entry.type === 'compaction' || entry.type === 'custom' && [RESOURCE_ENTRY, EXECUTION_MANIFEST].includes(entry.customType)) hasWork = true;
+    if (entry.type === 'message' && binding && currentRequest && !manifests.has(currentRequest)) throw stateError();
     // Once host request records exist, later native messages must have a request boundary.
     // Earlier migrated Pi-only history remains readable without invented request IDs.
     if (entry.type === 'message' && requests.size && currentRequest === undefined) throw stateError();
@@ -123,13 +140,13 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       } else if (currentRequest && !message.isError) throw stateError();
     }
     if (entry.type === 'custom_message' && entry.customType.startsWith('berserk.')) {
-      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6].includes(entry.customType)) {
+      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, COMPOSER_INPUT_V7, COMPOSER_INPUT_V8].includes(entry.customType)) {
         const input = decodeComposerInput(entry.details, workspaceId, parentSessionId, entry.customType);
         const resources = requests.get(input.requestId);
         if (currentRequestHasUser || currentRequest !== input.requestId || composerInputs.has(input.requestId) || entry.display !== false
-          || entry.content !== recordedComposerText(input, entry.customType) || (readonly && (input.agent || input.annotationContext || input.annotationRefs))
+          || entry.content !== recordedComposerText(input, entry.customType) || (readonly && (input.agent || input.annotationContext || input.annotationRefs || input.skill && managementSkillKind(input.skill.id)))
           || (input.skill && !resources?.skills.some(skill => skill.id === input.skill!.id && skill.hash === input.skill!.hash && skill.version === input.skill!.version
-            && skill.name === input.skill!.name && skill.description === input.skill!.description))) throw stateError();
+            && skill.name === input.skill!.name && skill.description === input.skill!.description && skill.packageDigest === input.skill!.packageDigest && skill.revisionId === input.skill!.revisionId))) throw stateError();
         composerInputs.add(input.requestId);
       } else if (entry.customType === FILE_INPUT) {
         const input = decodeFileInput(entry.details, workspaceId, parentSessionId);
@@ -139,6 +156,29 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
     }
     if (entry.type === 'compaction') compactedBy.set(entry.id, currentRequest);
     if (entry.type !== 'custom' || !entry.customType.startsWith('berserk.')) continue;
+    if (entry.customType === EXPERT_BINDING) {
+      if (readonly || binding) throw stateError();
+      binding = decodeExpertBinding(entry.data, workspaceId, parentSessionId);
+      if (hasWork && !binding.legacy) throw stateError();
+      continue;
+    }
+    if (entry.customType === EXECUTION_MANIFEST) {
+      const manifest = decodeExecutionManifest(entry.data, workspaceId, parentSessionId);
+      if (currentRequest !== manifest.requestId || manifests.has(manifest.requestId) || currentRequestHasUser
+        || readonly && manifest.mode !== 'delegated'
+        || binding && (!['interactive', 'background'].includes(manifest.mode) || manifest.identity.seatId !== binding.seatId
+          || manifest.expertRef.expertId !== binding.expertRef.expertId || manifest.expertRef.revisionId !== binding.expertRef.revisionId || manifest.digest !== binding.digest)) throw stateError();
+      manifests.add(manifest.requestId);
+      continue;
+    }
+    if (entry.customType === MCP_ADMISSION) {
+      const admission = decodeMcpAdmission(entry.data,workspaceId,parentSessionId);
+      if (readonly || admission.requestId !== currentRequest || currentRequestHasUser || mcpAdmissions.has(admission.requestId) || !manifests.has(admission.requestId)) throw stateError();
+      const manifestEntry = entries.find(e => e.type === 'custom' && e.customType === EXECUTION_MANIFEST && (e.data as {requestId?:unknown})?.requestId === admission.requestId);
+      const manifest = manifestEntry?.type === 'custom' ? decodeExecutionManifest(manifestEntry.data,workspaceId,parentSessionId) : undefined;
+      if (!manifest || manifest.mode !== 'interactive' || manifest.identity.userId !== admission.userId || !isDeepStrictEqual(manifest.tools.filter(name=>name.startsWith('mcp_')).sort(),admission.tools.map(tool=>tool.name).sort())) throw stateError();
+      mcpAdmissions.add(admission.requestId);continue;
+    }
     if (entry.customType === MODEL_SELECTION) {
       if (readonly) throw stateError();
       decodeModelSelection(entry.data, workspaceId, parentSessionId);
@@ -181,10 +221,10 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       fileOutputs.set(key, output); outputDownloads.add(output.downloadId);
     } else if (entry.customType === SKILL_ENTRY) {
       const request = requests.get(data.requestId);
-      if (!keys(data, ['requestId', 'skill']) || currentRequest !== data.requestId || !request || !skill(data.skill, true) || !object(data.skill) || !request.skills.some(item => item.id === (data.skill as Record<string, unknown>).id && item.hash === (data.skill as Record<string, unknown>).hash && item.version === (data.skill as Record<string, unknown>).version)) throw stateError();
+      if (!keys(data, ['requestId', 'skill']) || currentRequest !== data.requestId || !request || !skill(data.skill, true, request?.schemaVersion === 2 || request?.schemaVersion === 3, request?.schemaVersion === 3) || !object(data.skill) || !request.skills.some(item => item.id === (data.skill as Record<string, unknown>).id && item.hash === (data.skill as Record<string, unknown>).hash && item.version === (data.skill as Record<string, unknown>).version && item.packageDigest === (data.skill as Record<string,unknown>).packageDigest && item.revisionId === (data.skill as Record<string,unknown>).revisionId)) throw stateError();
     } else if (entry.customType === CHANGE_ENTRY) {
       if (readonly || !keys(data, ['requestId', 'change']) || currentRequest !== data.requestId || !requests.has(data.requestId) || !change(data.change)) throw stateError();
-    } else if (entry.customType === INTERACTION_REQUESTED || entry.customType === INTERACTION_RESOLVED || entry.customType === COMMAND_POLICY) {
+    } else if (entry.customType === INTERACTION_REQUESTED || entry.customType === INTERACTION_RESOLVED || entry.customType === COMMAND_POLICY || entry.customType === MCP_POLICY || entry.customType === MCP_REQUESTED || entry.customType === MCP_RESOLVED || entry.customType === AUTHORING_REQUESTED || entry.customType === AUTHORING_RESOLVED) {
       if (readonly || currentRequest !== data.requestId || !requests.has(data.requestId)) throw stateError();
     } else if (entry.customType === SUBAGENT_START || entry.customType === SUBAGENT_RESULT) {
       if (readonly || currentRequest !== data.requestId || !requests.has(data.requestId)) throw stateError();

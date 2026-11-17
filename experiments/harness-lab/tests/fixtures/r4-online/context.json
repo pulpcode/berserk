@@ -1,0 +1,80 @@
+{
+  "systems": [
+    {
+      "id": "intel",
+      "name": "特情系统",
+      "adapter": "mock-information-http",
+      "baseUrl": "http://127.0.0.1:4326",
+      "tokenEnv": "MOCK_CONTEXT_API_TOKEN",
+      "scenarioClock": true
+    },
+    {
+      "id": "situation",
+      "name": "态势系统",
+      "adapter": "mock-situation-http",
+      "baseUrl": "http://127.0.0.1:4326",
+      "tokenEnv": "MOCK_CONTEXT_API_TOKEN",
+      "scenarioClock": true,
+      "resourceCapability": {
+        "systemId": "situation",
+        "categories": [
+          "vehicle",
+          "fire_engine",
+          "facility",
+          "hydrant"
+        ],
+        "units": [
+          "辆",
+          "处",
+          "个"
+        ],
+        "relations": [],
+        "filters": [
+          "category"
+        ],
+        "pagination": "cursor",
+        "snapshot": "fixed_revision"
+      }
+    }
+  ],
+  "scopes": [
+    {
+      "id": "demo-context",
+      "name": "本轮模拟资料",
+      "systemIds": [
+        "intel",
+        "situation"
+      ],
+      "seatIds": [
+        "seat-overall",
+        "seat-intelligence",
+        "seat-planning",
+        "seat-situation",
+        "seat-director",
+        "seat-control"
+      ]
+    }
+  ],
+  "simulation": {
+    "enabled": true,
+    "baseUrl": "http://127.0.0.1:4326",
+    "tokenEnv": "MOCK_CONTEXT_CONTROL_TOKEN",
+    "sources": [
+      {
+        "systemId": "intel",
+        "sourceId": "scenario-intel-source"
+      },
+      {
+        "systemId": "situation",
+        "sourceId": "scenario-situation-source"
+      }
+    ],
+    "directorSeatId": "seat-director"
+  },
+  "commands": {
+    "enabled": true,
+    "seatIds": [
+      "seat-control"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/axon-r2/berserk/experiments/harness-lab
+
+(node:55782) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/authoring.test.ts (6 tests | 1 failed) 7871ms
+   × management report reads only the matching skill trial owned by the current administrator 2574ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/pi/authoring.test.ts > management report reads only the matching skill trial owned by the current administrator
+AssertionError: expected Error: 试用不存在或无权访问。 { …(2) } to match object { code: 'FORBIDDEN' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "FORBIDDEN",
++ RequestError {
++   "code": "EXPERT_TRIAL_NOT_FOUND",
+  }
+
+ ❯ tests/pi/authoring.test.ts:128:229
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  12:11:38
+   Duration  11.69s (transform 1.66s, setup 0ms, import 3.63s, tests 7.87s, environment 0ms)
+

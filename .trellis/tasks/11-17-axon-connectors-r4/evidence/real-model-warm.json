@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "node": "v24.14.0",
+  "model": "deepseek-v4.1-flash",
+  "sdk": "@modelcontextprotocol/client@2.4.0",
+  "scope": "受控MCP、真实方舟模型、原Pi确认；不代表第三方业务或用户验收",
+  "publicNetwork": null,
+  "durationMs": 17222.903061999998,
+  "records": [
+    {
+      "kind": "discovery",
+      "name": "R4-alpha",
+      "protocolVersion": "2026-07-28",
+      "protocolEra": "modern",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 65.12355000000025
+    },
+    {
+      "kind": "discovery",
+      "name": "R4-beta",
+      "protocolVersion": "2025-11-25",
+      "protocolEra": "legacy",
+      "tools": [
+        "lookup"
+      ],
+      "catalogBytes": 580,
+      "durationMs": 35.19732500000009
+    },
+    {
+      "kind": "model-loop",
+      "name": "R4-alpha",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "51a640f1-4ddf-4143-a1f4-d4481ebcf5a4",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "803006b4-ada1-48d5-a7b3-8eacd170812d",
+        "connectorId": "fa7e4300-986b-4776-9896-4a3a1174f7fd",
+        "revisionId": "6722e51d-4b78-4567-a092-625e6f90b122",
+        "connectionName": "R4-alpha",
+        "accountLabel": "无需凭证",
+        "toolName": "lookup",
+        "contractDigest": "a6fb4e1f22486875aebe50a5e96d30f298f633b3881c77d7c6eae573e11e78ff",
+        "catalogDigest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "54b226190be2bebdef93cbd83de7189bc775b707bbecbe732e27332a578914a7",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2026-07-28",
+        "protocolEra": "modern"
+      },
+      "durationMs": 5194.29706,
+      "assembly": {
+        "assemblyMs": 85.10994899999969,
+        "toolsMs": [
+          46.18151100000068
+        ],
+        "firstTextMs": 3192
+      }
+    },
+    {
+      "kind": "model-loop",
+      "name": "R4-alpha",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "99645396-6eff-4d4d-b979-b7cd7b5c0590",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "5f6db1e5-926e-4fe0-af92-05c687ba964d",
+        "connectorId": "fa7e4300-986b-4776-9896-4a3a1174f7fd",
+        "revisionId": "6722e51d-4b78-4567-a092-625e6f90b122",
+        "connectionName": "R4-alpha",
+        "accountLabel": "无需凭证",
+        "toolName": "lookup",
+        "contractDigest": "a6fb4e1f22486875aebe50a5e96d30f298f633b3881c77d7c6eae573e11e78ff",
+        "catalogDigest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "f651253942b676768d48a4edf90a33d109a1bff61d2320fc3a0595fb5c17d62b",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2026-07-28",
+        "protocolEra": "modern"
+      },
+      "durationMs": 5588.1600800000015,
+      "assembly": {
+        "assemblyMs": 21.841362999999546,
+        "toolsMs": [
+          33.52369800000088
+        ],
+        "firstTextMs": 3785
+      }
+    },
+    {
+      "kind": "model-loop",
+      "name": "R4-beta",
+      "model": "deepseek-v4.1-flash",
+      "requestId": "06fe9d3d-fd65-41df-bb1e-aa246d1931d1",
+      "source": {
+        "schemaVersion": 1,
+        "intentId": "044e6c94-b4eb-482f-aa20-d7f362116ddd",
+        "connectorId": "e390ee75-74d7-4643-908e-489cf1a7f4fb",
+        "revisionId": "c312a2c5-6e14-4bfa-bae7-6d8d8aa39a2a",
+        "connectionName": "R4-beta",
+        "accountLabel": "无需凭证",
+        "toolName": "lookup",
+        "contractDigest": "a6fb4e1f22486875aebe50a5e96d30f298f633b3881c77d7c6eae573e11e78ff",
+        "catalogDigest": "988ce12638d6983e97b121c2cf4b94b52adc64dcd192191f6b7c77a4c6d072db",
+        "subjectId": "anonymous",
+        "credentialVersion": 0,
+        "argumentsDigest": "c85420e7eeea68f4a120e795f52df41fe4d7bf613bec289fa260f7e1d3e512b3",
+        "status": "success",
+        "sent": true,
+        "protocolVersion": "2025-11-25",
+        "protocolEra": "legacy"
+      },
+      "durationMs": 5080.480083,
+      "assembly": {
+        "assemblyMs": 22.51027299999987,
+        "toolsMs": [
+          39.63886100000309
+        ],
+        "firstTextMs": 3355
+      }
+    }
+  ],
+  "modelCalls": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_8c26306d7684af62e6b2965768505daedabab571",
+        "ask_user"
+      ],
+      "contextBytes": 9315
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_8c26306d7684af62e6b2965768505daedabab571",
+        "ask_user"
+      ],
+      "contextBytes": 11265
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_8c26306d7684af62e6b2965768505daedabab571",
+        "ask_user"
+      ],
+      "contextBytes": 9320
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_8c26306d7684af62e6b2965768505daedabab571",
+        "ask_user"
+      ],
+      "contextBytes": 11407
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_993ee3cafb464717da9b893618b129bc8432f130",
+        "ask_user"
+      ],
+      "contextBytes": 9311
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "tools": [
+        "source_list",
+        "source_read",
+        "instructions_read",
+        "instructions_update",
+        "skill_read",
+        "subagent",
+        "mcp_993ee3cafb464717da9b893618b129bc8432f130",
+        "ask_user"
+      ],
+      "contextBytes": 11256
+    }
+  ]
+}

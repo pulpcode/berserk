@@ -1,0 +1,66 @@
+{
+  "createdAt": "2026-11-16T09:31:35.073707+00:00",
+  "branch": "codex/axon-r3a",
+  "head": "1e99845",
+  "baseline": "grouping-baseline.json",
+  "priorDeployedSource": "compact-deploy-source.json",
+  "productionDeltas": [
+    {
+      "path": "experiments/harness-lab/src/web/NewSession.tsx",
+      "before": "3cc8798e355f9cead86541e529c5a7bf1192a0f18977ce46d1276e1466378b08",
+      "after": "5b04d9652bb600fbbc76ad397c590b90a668ca57bc3fe30f4fca2419780142bc"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "before": "33967f29f5d95a8e11f608341dbb45e6fdc0be6412555730498c7ffc902aed62",
+      "after": "8a2ebb4737f916dc3fb559659475f146c9bd6779867d2780e02a61b4b3c64542"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/styles.css",
+      "before": "58b8fbc88eb0faa9603fc8da56bfa7b04f30e0b8d2c10564c1627ba2952058c0",
+      "after": "34e667d32fd3eb2cbc2b45003289fbb861a17fcd219a27c9f8da828199f230cc"
+    }
+  ],
+  "frozenSources": {
+    "src/web/NewSession.tsx": "5b04d9652bb600fbbc76ad397c590b90a668ca57bc3fe30f4fca2419780142bc",
+    "src/web/main.tsx": "8a2ebb4737f916dc3fb559659475f146c9bd6779867d2780e02a61b4b3c64542",
+    "src/web/styles.css": "34e667d32fd3eb2cbc2b45003289fbb861a17fcd219a27c9f8da828199f230cc",
+    "tests/e2e/authoring.spec.ts": "de29a3751225af5525d225cb97dcbf2792943e215daa4b93a32a08bafbceb122",
+    "tests/e2e/administrator.spec.ts": "c99f0eaa8bd5d41214e63955e03a0346b4f2fc28cf257b9e2ac1ef80a57f7424",
+    "tests/e2e/access.spec.ts": "ff05e266a43e9099ec01c5f14574fecd407a1814305516dfa219039ddc99fef8",
+    "tests/e2e/chat.spec.ts": "a01f92da61c2e9cdb33fb87b2096d6744b9190b134291ac148ea7ae0ab2fc859",
+    "tests/e2e/files.spec.ts": "23b8cd4ffbc1f4047fe0511ef82c884e9c8b1aa883764204a2801010683998f8"
+  },
+  "checks": {
+    "typecheck": 0,
+    "lintAndBoundaries": 0,
+    "build": 0,
+    "browser": {
+      "passed": 9,
+      "singleWorker": true,
+      "duration": "1.2m",
+      "port": 5193,
+      "log": "grouping-browser.log"
+    },
+    "diffCheck": 0,
+    "logs": [
+      "grouping-final-typecheck.log",
+      "grouping-final-lint.log",
+      "grouping-final-build.log"
+    ],
+    "warnings": "仅原InteractionCard两条ref cleanup warning与既有大chunk提示"
+  },
+  "visual": {
+    "parentViewed": [
+      "grouping-mixed-menu-1060.png",
+      "grouping-mixed-menu-1440.png"
+    ],
+    "noOverflow": true
+  },
+  "backendAndModel": "本轮后端/配置/方法未变，不重复后端全套或真实模型验收。",
+  "commit": false,
+  "push": false,
+  "deployment": false,
+  "userAcceptance": "pending",
+  "milestone": "interim"
+}
