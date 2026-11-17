@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/backend/prompt-suggestions.md", "reason": "独立调用、授权、版本与内存模式"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "工作查询/回执/正式关联边界"}
+{"file": ".trellis/spec/backend/workbench.md", "reason": "工作投影及业务权限"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "登录、个人空间与席位范围"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "桌面对话、导航与组件约定"}
