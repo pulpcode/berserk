@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read the [Axon Deployment Standard](../../../docs/axon-deployment.md) before deploying, rolling back, or cleaning up server releases.
+
 Read [Simulation Command Integration](./commands.md) for control-seat grants, document soft workflow, native confirmation, external reception and command history.
 
 Read [Scenario Run Isolation](./scenario-run-isolation.md) for trusted source lineage, ending gates, continuous partitions and the deferred unsourced task-creation boundary.
