@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read the [Axon Deployment Standard](../../../docs/axon-deployment.md) before deploying, rolling back, or cleaning up server releases.
+
 Read [R4 Connectors and Remote MCP](../backend/connectors-r4.md) for fixed legacy business mappings, personal credentials, remote protocol/network admission, original confirmation/history and desktop connection selection.
 Read [Conversation Work Activity](./work-activity.md) for the read-only work panel, independent semantic analysis, original receipt evidence and per-identity conversation caches.
 
