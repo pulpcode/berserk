@@ -953,6 +953,11 @@ button:is(.primary-action, .send-button):active:not(:disabled) { background: var
 .send-button { width: var(--control-height); height: var(--control-height); min-height: var(--control-height); padding: 0; border-radius: var(--control-radius); }
 button.danger-action, .stop-button { color: var(--danger); border-color: var(--danger-border); background: var(--surface); }
 button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { color: var(--danger); border-color: var(--danger-border); background: var(--danger-soft); }
+button.text-action { color: var(--accent); border-color: transparent; background: transparent; }
+button.text-action:hover:not(:disabled) { border-color: transparent; background: var(--control-hover); }
+button.text-action:active:not(:disabled) { border-color: transparent; background: var(--control-pressed); }
+button.text-action.danger-action { color: var(--danger); }
+button.text-action.danger-action:hover:not(:disabled) { background: var(--danger-soft); }
 .stop-button { gap: var(--control-gap); min-height: var(--control-height); padding: 8px 12px; font-size: var(--control-font-size); }
 :is(.files-toolbar button, .file-pagination button, .interaction-actions button, .work-inbox-header > button, .work-empty > button, .information-actions button) > svg { width: 18px; height: 18px; }
 .notice button, .restore-draft, .request-resources, .historical-file button, .information-center .information-row-link { min-height: var(--control-height-compact); border-radius: var(--control-radius); }

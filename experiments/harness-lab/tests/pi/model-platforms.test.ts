@@ -106,6 +106,34 @@ it('shares one version across platforms and models and refuses stale updates and
   expect(await readFile(join(dir, 'model-settings.json'), 'utf8')).toBe(raw); expect(store.platform(platform.id).name).toBe('Kimi');
 });
 
+it('atomically deletes linked profiles and the credential while preserving other platforms on reopen', async () => {
+  const { store, config, dir } = await setup();
+  const { platformId, modelId } = await addKimi(store);
+  await store.savePlatform(store.preparePlatform(platformInput(store, { apiKey: 'deletion-test-key' }), platformId));
+  const file = join(dir, 'model-settings.json');
+  const raw = await readFile(file, 'utf8');
+  expect(raw).toContain('deletion-test-key');
+  const before = store.catalog();
+  const defaultId = store.info().platformId!;
+  await expect(store.deletePlatform(defaultId, before.version)).rejects.toMatchObject({ code: 'DEFAULT_MODEL_PLATFORM' });
+  await expect(store.deletePlatform(platformId, randomUUID())).rejects.toMatchObject({ code: 'MODEL_SETTINGS_CONFLICT' });
+  let checks = 0;
+  await expect(store.deletePlatform(platformId, before.version, () => {
+    if (++checks === 3) throw new RequestError('FORBIDDEN', '撤权', 403);
+  })).rejects.toMatchObject({ code: 'FORBIDDEN' });
+  expect(await readFile(file, 'utf8')).toBe(raw);
+  expect(store.catalog()).toEqual(before);
+  expect(await store.deletePlatform(platformId, before.version)).toEqual([modelId]);
+  const written = await readFile(file, 'utf8');
+  expect(written).not.toContain('deletion-test-key');
+  expect(JSON.parse(written).credentials).not.toHaveProperty('platform:' + platformId);
+  expect(store.catalog().version).not.toBe(before.version);
+  const reopened = await ModelSettingsStore.open(config);
+  expect(reopened.catalog()).toEqual(store.catalog());
+  expect(reopened.catalog().platforms?.map(item => item.id)).toEqual([defaultId]);
+  expect(reopened.choices().models.map(item => item.id)).toEqual(['default']);
+});
+
 it('keeps historical profile IDs and independent platform bindings when migrating schema 5', async () => {
   const { config, dir } = await setup(); const id = randomUUID(); const version = randomUUID(); const fields = { provider: config.provider, model: 'same-model', baseUrl: config.baseUrl, apiKey: config.apiKey, contextWindow: 65536, maxOutputTokens: 256 };
   const raw = JSON.stringify({ schemaVersion: 5, version, models: [{ id: 'default', ...fields }, { id, ...fields, baseUrl: 'https://second.invalid/v1', apiKey: 'second-placeholder' }] });

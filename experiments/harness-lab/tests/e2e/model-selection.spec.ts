@@ -60,8 +60,8 @@ async function login(page: Page, username: string) {
   if(username !== 'system-admin') { await enter(page, 'A'); await expect(selector(page)).toBeEnabled(); }
 }
 async function addPlatform(page: Page, name = '测试平台', provider = 'test-local', url = 'https://no-network.invalid', modelsPath?: string) {
-  await page.getByRole('button', { name: '平台配置', exact: true }).click();
   await page.getByRole('button', { name: '添加平台', exact: true }).click();
+  await page.getByLabel('选择平台', { exact: true }).selectOption('custom');
   await page.getByLabel('平台名称', { exact: true }).fill(name);
   await page.getByLabel('服务商标识', { exact: true }).fill(provider);
   await page.getByLabel('API 地址', { exact: true }).fill(url);
@@ -70,26 +70,26 @@ async function addPlatform(page: Page, name = '测试平台', provider = 'test-l
     await page.getByText('平台高级设置', { exact: true }).click();
     await page.getByLabel('模型目录路径', { exact: true }).fill(modelsPath);
   }
-  await page.getByRole('button', { name: '保存平台', exact: true }).click();
-  await expect(page.getByRole('combobox', {name:'管理平台',exact:true})).not.toHaveValue('new');
-  await expect(page.getByLabel('API Key', { exact: true })).toHaveValue('');
+  await page.getByRole('button', { name: '保存连接', exact: true }).click();
+  await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+  await expect(page.getByText('已保存', { exact: true })).toBeVisible();
 }
-async function addModel(page: Page) {
+async function editDefaultModel(page: Page) {
+  await page.getByRole('list', { name: '平台列表', exact: true }).getByRole('button', { name: /含系统默认/ }).click();
+  await page.getByRole('listitem').filter({ has: page.getByText('系统默认', { exact: true }) })
+    .getByRole('button', { name: /^编辑模型 / }).click();
+}
+async function addModel(page: Page, lab: PiLab) {
   await page.getByRole('button', { name: '设置', exact: true }).click();
   await addPlatform(page);
-  await page.getByRole('button', {name:'模型目录',exact:true}).click();
-  await page.getByRole('button', { name: '添加模型', exact: true }).click();
-  await page.getByLabel('所属平台', { exact: true }).selectOption({label:'测试平台'});
+  await page.getByRole('button', { name: '手动添加', exact: true }).click();
   await page.getByLabel('模型 ID', { exact: true }).fill('deterministic-alternative');
   await page.getByLabel('上下文容量（token）', { exact: true }).fill('32768');
   await page.getByLabel('最大输出能力（token）', { exact: true }).fill('2048');
   await page.getByLabel('已确认该凭证可用于本系统的使用方式', {exact:true}).check();
   await page.getByRole('button', { name: '保存配置', exact: true }).click();
-  const managed = page.getByRole('combobox', { name: '管理模型', exact: true });
-  await expect(managed).not.toHaveValue('new');
-  await expect(managed.locator('option')).toHaveCount(2);
-  await expect(page.getByLabel('模型 ID', { exact: true })).toHaveValue('deterministic-alternative');
-  return managed.inputValue();
+  await expect(page.getByRole('button', { name: '编辑模型 deterministic-alternative', exact: true })).toBeEnabled();
+  return lab.modelCatalog().models.find(model => model.model === 'deterministic-alternative')!.id;
 }
 async function enter(page: Page, name: 'A' | 'B') {
   await page.getByRole('button', { name: `进入项目：模型项目 ${name}`, exact: true }).click();
@@ -107,13 +107,16 @@ test('thinking settings preserve legacy until an explicit supported mode is save
   try {
     await login(page, 'system-admin');
     await page.getByRole('button', { name: '设置', exact: true }).click();
+    await editDefaultModel(page);
     await expect(page.getByLabel('推理模式', { exact: true })).toHaveValue('legacy');
     await page.getByLabel('上下文容量（token）', { exact: true }).fill('65536');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
     await expect(page.getByText('已保存，下次发送消息时使用新配置。', { exact: true })).toBeVisible();
     expect(env.lab.modelSettings().thinkingExplicit).toBe(false);
+    await page.getByRole('button', { name: '平台列表', exact: true }).click();
     await addPlatform(page, '方舟测试', 'ark-browser-check', 'https://ark.cn-beijing.volces.com/api/plan/v3');
-    await page.getByRole('button', {name:'模型目录',exact:true}).click();
+    await page.getByRole('button', { name: '平台列表', exact: true }).click();
+    await editDefaultModel(page);
     await page.getByLabel('所属平台', {exact:true}).selectOption({label:'方舟测试'});
     await page.getByLabel('模型 ID', { exact: true }).fill('deepseek-v4.1-flash');
     await page.getByLabel('上下文容量（token）', { exact: true }).fill('65536');
@@ -122,8 +125,10 @@ test('thinking settings preserve legacy until an explicit supported mode is save
     await thinking.focus(); await thinking.selectOption('high');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
     await expect(page.getByText('已保存，下次发送消息时使用新配置。', { exact: true })).toBeVisible();
-    await expect(thinking).toHaveValue('high');
     expect(env.lab.modelSettings()).toMatchObject({ thinkingExplicit: true, thinkingMode: 'high', thinkingSupported: true });
+    await page.getByRole('listitem').filter({ has: page.getByText('系统默认', { exact: true }) })
+      .getByRole('button', { name: /^编辑模型 / }).click();
+    await expect(thinking).toHaveValue('high');
     await thinking.scrollIntoViewIfNeeded();
     await page.screenshot({ path: test.info().outputPath('model-thinking-settings-1440.png') });
     if (process.env.B3_VERIFY_BROWSER_ZOOM === 'true') {
@@ -158,15 +163,25 @@ test('administrators maintain the model catalog while ordinary seats select mode
   member.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/settings/model')) forbiddenSettingsReads.push(request.url()); });
   try {
     await login(page, 'system-admin');
-    const modelId = await addModel(page);
+    const modelId = await addModel(page, env.lab);
+    const settingNav = page.getByRole('navigation', { name: '设置分类' });
+    await expect(settingNav.getByRole('button')).toHaveText(['账户', '个人偏好', '模型管理']);
+    await expect(settingNav.getByRole('button', { name: '模型管理', exact: true })).toHaveAttribute('aria-current', 'page');
+    await page.getByRole('button', { name: '编辑模型 deterministic-alternative', exact: true }).click();
     await page.getByLabel('模型 ID', { exact: true }).fill('deterministic-reviewed');
     await page.getByLabel('显示名称', { exact: true }).fill('deterministic-reviewed');
     await expect(page.getByLabel('已确认该凭证可用于本系统的使用方式', {exact:true})).not.toBeChecked();
     await page.getByLabel('已确认该凭证可用于本系统的使用方式', {exact:true}).check();
     await page.getByLabel('上下文容量（token）', { exact: true }).fill('65536');
     await page.getByLabel('最大输出能力（token）', { exact: true }).fill('4096');
+    await settingNav.getByRole('button', { name: '账户', exact: true }).click();
+    await settingNav.getByRole('button', { name: '模型管理', exact: true }).click();
+    await expect(page.getByLabel('模型 ID', { exact: true })).toHaveValue('deterministic-reviewed');
+    page.once('dialog', dialog => dialog.dismiss());
+    await page.getByRole('button', { name: '平台列表', exact: true }).click();
+    await expect(page.getByLabel('模型 ID', { exact: true })).toHaveValue('deterministic-reviewed');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
-    await expect(page.getByRole('combobox', { name: '管理模型', exact: true }).locator('option:checked')).toContainText('deterministic-reviewed');
+    await expect(page.getByRole('button', { name: '编辑模型 deterministic-reviewed', exact: true })).toBeVisible();
     await page.keyboard.press('Escape');
 
     const choicesResponse = member.waitForResponse(response => new URL(response.url()).pathname === '/api/models');
@@ -176,9 +191,9 @@ test('administrators maintain the model catalog while ordinary seats select mode
     expect(JSON.stringify(choices)).not.toContain('test-catalog-key-not-a-real-secret');
     await member.getByRole('button', { name: '设置', exact: true }).click();
     await expect(member.getByRole('button', { name: '账户', exact: true })).toBeVisible();
-    await expect(member.getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
-    await expect(member.getByRole('button', { name: '添加模型', exact: true })).toHaveCount(0);
-    await expect(member.getByRole('combobox', { name: '管理模型', exact: true })).toHaveCount(0);
+    await expect(member.getByRole('navigation', { name: '设置分类' }).getByRole('button')).toHaveText(['账户', '个人偏好']);
+    await expect(member.getByRole('button', { name: '手动添加', exact: true })).toHaveCount(0);
+    await member.getByRole('dialog', { name: '设置', exact: true }).screenshot({ path: test.info().outputPath('seat-settings-desktop.png') });
     await member.keyboard.press('Escape');
     await enter(member, 'A');
     await composer(member).fill('A 独立草稿');
@@ -220,7 +235,7 @@ test('failed and delayed model selection stays with its conversation; busy and q
   let release: (() => Promise<void>) | undefined;
   try {
     await login(page, 'system-admin');
-    const modelId = await addModel(page);
+    const modelId = await addModel(page, env.lab);
     await page.keyboard.press('Escape');
     await login(member, 'member');
     await enter(member, 'A');
@@ -279,48 +294,70 @@ test('an administrator can prepare disabled Kimi entries without a key while a l
   try {
     await login(page,'system-admin');
     await page.getByRole('button',{name:'设置',exact:true}).click();
-    await page.getByRole('button',{name:'平台配置',exact:true}).click();
     await page.getByRole('button',{name:'添加平台',exact:true}).click();
-    await page.getByLabel('平台来源',{exact:true}).selectOption('kimi-coding');
+    const platformChoice = page.getByLabel('选择平台', { exact: true });
+    await expect(platformChoice.locator(':scope > option')).toHaveText(['请选择平台', 'DeepSeek 官方', 'Kimi Code', '自定义配置']);
+    await expect(platformChoice.locator('optgroup')).toHaveCount(0);
+    await expect(page.getByLabel('API 地址',{exact:true})).toHaveCount(0);
+    await platformChoice.selectOption('kimi-coding');
     await expect(page.getByLabel('API 地址',{exact:true})).toHaveValue('https://api.kimi.com/coding');
     await expect(page.getByLabel('API 协议',{exact:true})).toHaveValue('anthropic-messages');
     await expect(page.getByLabel('API Key',{exact:true})).toHaveCount(1);
     await expect(page.getByLabel('API Key',{exact:true})).toBeVisible();
     await expect(page.getByLabel('密钥环境变量',{exact:true})).toHaveCount(0);
     await expect(page.getByLabel('启用平台',{exact:true})).not.toBeChecked();
-    await page.getByRole('button',{name:'保存平台',exact:true}).click();
-    await expect(page.getByRole('combobox',{name:'管理平台',exact:true})).not.toHaveValue('new');
-    await page.getByRole('button',{name:'添加模型',exact:true}).click();
-    await page.getByRole('button',{name:'Kimi K2.8 Preview',exact:true}).click();
+    await page.getByRole('button',{name:'保存连接',exact:true}).click();
+    const detail = page.getByRole('region', { name: 'Kimi Code', exact: true });
+    await expect(detail.getByRole('heading', { name: '连接配置', exact: true })).toBeVisible();
+    await detail.getByRole('button',{name:'选择模型',exact:true}).click();
+    await detail.getByRole('checkbox',{name:/Kimi K2.8 Preview/}).check();
     await expect(page.getByRole('button',{name:'获取模型',exact:true})).toHaveCount(0);
+    await detail.getByRole('button',{name:'添加所选模型',exact:true}).click();
+    const imported = detail.getByText('模型已添加，请在下方核对配置后启用。', { exact: true });
+    await expect(imported).toBeVisible();
+    await detail.getByRole('button',{name:'编辑模型 Kimi K2.8 Preview',exact:true}).click();
+    await expect(imported).toHaveCount(0);
     await expect(page.getByLabel('模型 ID',{exact:true})).toHaveValue('kimi-for-coding');
     await expect(page.getByLabel('启用模型',{exact:true})).not.toBeChecked();
     await expect(page.getByLabel('默认思考档位',{exact:true})).toHaveValue('low');
-    await page.getByRole('button',{name:'保存配置',exact:true}).click();
-    await expect(page.getByRole('combobox',{name:'管理模型',exact:true})).not.toHaveValue('new');
     expect(env.lab.modelCatalog().models.find(model=>model.model==='kimi-for-coding')).toMatchObject({available:false,enabled:false,usageConfirmed:false,defaultThinkingLevel:'low'});
+    await page.getByRole('button', { name: '取消编辑', exact: true }).click();
     await page.setViewportSize({width:1060,height:800});
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     await page.screenshot({path:test.info().outputPath('kimi-model-settings-desktop.png')});
     // Registry aliases also trigger credential rebinding, even when the URL stays unchanged.
-    await page.getByRole('button',{name:'平台配置',exact:true}).click();
     const kimiPlatform = env.lab.modelCatalog().platforms!.find(platform=>platform.provider==='kimi-coding')!;
-    await page.getByRole('combobox',{name:'管理平台',exact:true}).selectOption(kimiPlatform.id);
+    await page.getByRole('button',{name:'编辑连接',exact:true}).click();
     await page.getByLabel('API Key',{exact:true}).fill('kimi-test-saved-key');
-    await page.getByRole('button',{name:'保存平台',exact:true}).click();
-    await expect(page.getByText('已保存。填写新值可更新密钥。',{exact:true})).toBeVisible();
+    await page.getByLabel('启用平台',{exact:true}).check();
+    await page.getByRole('button',{name:'保存连接',exact:true}).click();
+    await expect(detail.getByText('已保存',{exact:true})).toBeVisible();
+    await detail.getByRole('button',{name:'编辑模型 Kimi K2.8 Preview',exact:true}).click();
+    await page.getByLabel('启用模型',{exact:true}).check();
+    await page.getByLabel('已确认该凭证可用于本系统的使用方式',{exact:true}).check();
+    await page.getByRole('button',{name:'保存配置',exact:true}).click();
+    await expect(detail.getByRole('listitem').filter({ hasText: 'Kimi K2.8 Preview' })).toContainText('待补容量');
+    await page.getByLabel('上下文容量（token）',{exact:true}).fill('32768');
+    await page.getByLabel('最大输出能力（token）',{exact:true}).fill('8192');
+    await page.getByRole('button',{name:'保存配置',exact:true}).click();
+    await expect(detail.getByRole('listitem').filter({ hasText: 'Kimi K2.8 Preview' })).toContainText('可供席位选择');
+    await page.getByRole('button', { name: '取消编辑', exact: true }).click();
+    await page.getByRole('dialog', { name: '设置', exact: true }).screenshot({ path: test.info().outputPath('admin-platform-detail-desktop.png') });
+    await page.getByRole('button',{name:'编辑连接',exact:true}).click();
+    await expect(page.getByLabel('API Key',{exact:true})).toHaveValue('');
     await page.getByLabel('服务商标识',{exact:true}).fill('kimi-official-alias');
-    await page.getByRole('button',{name:'保存平台',exact:true}).click();
+    await page.getByRole('button',{name:'保存连接',exact:true}).click();
     await expect(page.locator('#platform-key-error')).toContainText('重新填写');
     await page.getByLabel('API Key',{exact:true}).fill('kimi-test-replacement-key');
-    await page.getByRole('button',{name:'保存平台',exact:true}).click();
+    await page.getByRole('button',{name:'保存连接',exact:true}).click();
     await expect.poll(()=>env.lab.modelCatalog().platforms!.find(platform=>platform.id===kimiPlatform.id)?.provider).toBe('kimi-official-alias');
+    await page.getByRole('button',{name:'编辑连接',exact:true}).click();
     await expect(page.getByLabel('API Key',{exact:true})).toHaveValue('');
     const storage = await page.evaluate(() => JSON.stringify({ session: { ...sessionStorage }, local: { ...localStorage } }));
     expect(storage).not.toContain('kimi-test-replacement-key');
     await login(legacy,'admin');
     await legacy.getByRole('button',{name:'设置',exact:true}).click();
-    await expect(legacy.getByRole('button',{name:'模型',exact:true})).toHaveCount(0);
+    await expect(legacy.getByRole('button',{name:'模型管理',exact:true})).toHaveCount(0);
     await expect(legacy.getByRole('button',{name:'账户',exact:true})).toBeVisible();
     expect(env.fake.calls).toHaveLength(0);
   } finally {await env.close();await context.close();}
@@ -338,18 +375,18 @@ test('directory candidates can be saved selectively and failures preserve manual
     await page.route(directory, route => route.request().method() !== 'GET' ? route.fallback() : fail
       ? route.fulfill({ status: 502, json: { error: { code: 'MODEL_DISCOVERY_FAILED', message: '无法读取平台目录，请手动填写模型 ID。' } } })
       : route.fulfill({ json: { version: env.lab.modelCatalog().version, models: [{ id: 'candidate-a' }, { id: 'candidate-b' }] } }));
-    await page.getByRole('button', { name: '添加模型', exact: true }).click();
-    await expect(page.getByLabel('所属平台', { exact: true })).toHaveValue(platform.id);
     await page.getByRole('button', { name: '获取模型', exact: true }).click();
     await page.getByRole('checkbox', { name: 'candidate-a', exact: true }).check();
-    await page.getByRole('button', { name: '保存所选模型', exact: true }).click();
+    await page.getByRole('button', { name: '添加所选模型', exact: true }).click();
+    await page.getByRole('button', { name: '选择目录模型', exact: true }).click();
     await expect(page.getByText('candidate-a（已添加）', { exact: true })).toBeVisible();
     expect(env.lab.modelCatalog().models.filter(model => model.platformId === platform.id)).toMatchObject([
       { model: 'candidate-a', enabled: false, usageConfirmed: false, available: false },
     ]);
+    await page.getByRole('button', { name: '手动添加', exact: true }).click();
     const field = page.getByLabel('模型 ID', { exact: true });
     await field.fill('manual-model'); fail = true;
-    await page.getByRole('button', { name: '获取模型', exact: true }).click();
+    await page.getByRole('button', { name: '重新获取', exact: true }).click();
     await expect(page.getByRole('alert')).toContainText('请手动填写模型 ID');
     await expect(field).toHaveValue('manual-model');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
@@ -361,7 +398,7 @@ test('a previously selected model becoming unavailable disables sending and pres
   const env = await setup(), context = await browser.newContext(), member = await context.newPage();
   await env.attach(page); await env.attach(member);
   try {
-    await login(page,'system-admin'); const modelId = await addModel(page);
+    await login(page,'system-admin'); const modelId = await addModel(page, env.lab);
     await page.keyboard.press('Escape');
     await login(member,'member');
     await selector(member).selectOption(modelId); await expect(selector(member)).toHaveValue(modelId);
@@ -381,4 +418,45 @@ test('a previously selected model becoming unavailable disables sending and pres
     await expect(composer(member)).toHaveValue('停用期间仍保留的草稿');
     expect(env.fake.calls).toHaveLength(0);
   } finally {await env.close();await context.close();}
+});
+
+test('deleting a platform removes its choices and preserves affected conversations', async ({ page, browser }) => {
+  const env = await setup(), context = await browser.newContext(), member = await context.newPage();
+  await env.attach(page); await env.attach(member);
+  try {
+    await login(page, 'system-admin');
+    const modelId = await addModel(page, env.lab);
+    await login(member, 'member');
+    await composer(member).fill('这段会话历史需要保留');
+    await member.getByRole('button', { name: '发送消息', exact: true }).click();
+    await expect(member.getByText('默认模型测试完成', { exact: true })).toBeVisible();
+    await selector(member).selectOption(modelId);
+    await expect(selector(member)).toHaveValue(modelId);
+    await composer(member).fill('删除配置后保留草稿');
+    const remove = page.getByRole('button', { name: '删除平台', exact: true });
+    page.once('dialog', async dialog => {
+      await dialog.dismiss();
+      expect(dialog.message()).toContain('1 个模型');
+    });
+    await remove.click();
+    await expect(page.getByRole('heading', { name: '测试平台', exact: true })).toBeVisible();
+    page.once('dialog', dialog => dialog.accept());
+    await remove.click();
+    await expect(page.getByRole('heading', { name: '平台列表', exact: true })).toBeVisible();
+    await expect(page.getByText('平台配置已删除。', { exact: true })).toBeVisible();
+    await expect(page.getByRole('list', { name: '平台列表', exact: true }).getByRole('button', { name: /测试平台/ })).toHaveCount(0);
+    await page.getByRole('list', { name: '平台列表', exact: true }).getByRole('button', { name: /含系统默认/ }).click();
+    await expect(page.getByRole('button', { name: '删除平台', exact: true })).toBeDisabled();
+
+    await member.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(member.getByText('当前模型已删除，请在下方改选其他可用模型。草稿会保留。', { exact: true })).toBeVisible();
+    await expect(member.getByRole('article', { name: '你的消息' }).getByText('这段会话历史需要保留', { exact: true })).toBeVisible();
+    await expect(member.getByText('默认模型测试完成', { exact: true })).toBeVisible();
+    await expect(composer(member)).toHaveValue('删除配置后保留草稿');
+    await expect(member.getByRole('button', { name: '发送消息', exact: true })).toBeDisabled();
+    await expect(selector(member).locator(`option[value="${modelId}"]`)).toHaveCount(0);
+    await selector(member).selectOption('default');
+    await expect(member.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled();
+    await expect(composer(member)).toHaveValue('删除配置后保留草稿');
+  } finally { await env.close(); await context.close(); }
 });

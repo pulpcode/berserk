@@ -8,6 +8,7 @@ Read before changing model settings, provider registration, reasoning options, s
 
 - `GET /api/settings/models` returns the administrator catalog with global `version`, `platforms` and `models`.
 - `POST /api/settings/platforms`, `PUT /api/settings/platforms/:id` use `ModelPlatformUpdate`.
+- `DELETE /api/settings/platforms/:id` accepts `{expectedVersion}` and returns the updated administrator catalog.
 - `GET /api/settings/platforms/:id/models` probes the saved platform directory and returns candidate IDs and the catalog version. `POST` on the same path saves selected IDs as disabled profiles in one versioned commit.
 - `POST /api/settings/models`, `PUT /api/settings/models/:id` use `ModelSettingsUpdate`; old singular model routes remain compatible.
 - `GET /api/models` returns credential-free selection metadata. Session model selection retains its existing profile ID and ownership/busy validation.
@@ -23,6 +24,8 @@ New writes use `model-settings.json` schema 7 with global CAS version, mode 0600
 The Web service has no environment-variable model credential fallback. Preserve non-key deployment defaults and authentication settings. Kimi Code starts disabled, uses `https://api.kimi.com/coding/` and Anthropic Messages, and offers `kimi-for-coding` (K2.8 Preview) with `low` effort as the offline candidate. Use Pi's adaptive thinking setting for that candidate to send the effort setting. Account capacity, usage confirmation and a saved key are needed before use. Default new sessions and background execution retain the existing default model.
 
 Changing an existing profile's platform or remote model resets usage confirmation unless the administrator explicitly confirms that new identity. A platform can be saved without a key. When a key exists, changing provider, normalized base URL or API requires explicit key entry. An omitted or blank key preserves the saved key for the same destination.
+
+Deleting a platform uses the same model-write guard, current settings version and before-rename authorization check. One file commit removes its credential and all its profiles. The lab drops their runtimes synchronously after commit. A platform holding the system default profile requires moving that profile first. Session selections and history retain their original IDs. An affected session remains readable and requires choosing an available model before sending again.
 
 Discovery is a read-only administrator action. `modelsPath` is a fixed path on the saved platform's HTTPS origin. Use that platform's key, protocol authentication, bounded response sizes and timeouts, pinned public DNS results, and no redirects. Parse `data[].id` conservatively, deduplicate IDs, and report a sanitized failure on unsupported account endpoints or formats. Discovery returns no credentials, does not infer model capacities, and never activates or persists candidates. Version checks prevent importing a result against changed settings. Batch import skips already registered IDs on the same platform, shares the model-write guard, and saves only selected new IDs, disabled and without usage confirmation. Manual entry remains available.
 
@@ -42,6 +45,7 @@ Only exact verified DeepSeek tuples with OpenAI Completions receive the transien
 | Missing credential, incomplete capacity, disabled platform/model or unconfirmed usage | Not selectable; explicit request fails before provider call |
 | Existing key with changed provider, endpoint or API and no explicit key entry | MODEL_API_KEY_REQUIRED |
 | Stale global version or unexpected disk changes | MODEL_SETTINGS_CONFLICT; no runtime publication |
+| Deleting the platform that holds the system default model | DEFAULT_MODEL_PLATFORM; move the default model first |
 | Active foreground/background request | Settings busy; preserve request snapshot |
 | Invalid API/compatibility/capability/null-mapped selected level | INVALID_INPUT |
 | Save failure or revoked authorization before commit | No settings/runtime publication; preserve original failure category |

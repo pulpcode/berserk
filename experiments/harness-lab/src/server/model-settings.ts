@@ -282,6 +282,17 @@ export class ModelSettingsStore {
     const { version, ...platform } = next; const platforms = new Map(this.platforms); platforms.set(platform.id, platform);
     await this.write({ ...this.current, version }, new Map(this.profiles), platforms, authorize);
   }
+  async deletePlatform(id: string, expectedVersion: string, authorize?: () => void): Promise<string[]> {
+    this.checkVersion(expectedVersion);
+    const modelIds = this.modelIdsForPlatform(id);
+    if (modelIds.includes('default')) throw new RequestError('DEFAULT_MODEL_PLATFORM', '此平台包含系统默认模型，请迁移默认模型后再删除。', 409);
+    const profiles = new Map(this.profiles);
+    const platforms = new Map(this.platforms);
+    for (const modelId of modelIds) profiles.delete(modelId);
+    platforms.delete(id);
+    await this.write({ ...this.current, version: randomUUID() }, profiles, platforms, authorize);
+    return modelIds;
+  }
   async saveImport(models: PreparedSettings[], authorize?: () => void): Promise<void> {
     const last = models.at(-1);
     if (!last) return;

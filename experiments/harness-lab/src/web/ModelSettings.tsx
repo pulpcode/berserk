@@ -1,9 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Check } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import type { ModelSettings as Settings, ModelSettingsUpdate, ModelCatalog, ModelProfile, ModelPlatform, ModelThinkingMode, ModelCompatibility } from '../contracts/index';
-import { builtinModel } from '../contracts/model-presets';
 import { useApi, ApiFailure } from './api';
-import { PlatformModelDiscovery } from './PlatformModelDiscovery';
 
 const parameterFields = ['contextWindow', 'maxOutputTokens', 'compactionReserveTokens', 'compactionKeepRecentTokens'] as const;
 type ParameterField = typeof parameterFields[number];
@@ -22,10 +19,10 @@ function emptySettings(version: string): Settings {
     contextSource: 'unknown', outputSource: 'unknown', contextReady: false };
 }
 
-export function ModelSettings({ saved, profileId = 'default', creating = false, selection, edited, busy, platforms, models, initialPlatformId, imported }: {
-  saved: (profile: ModelProfile) => Promise<void>; profileId?: string; creating?: boolean; selection?: ReactNode;
-  edited?: (value: boolean) => void; busy?: (value: boolean) => void; platforms: ModelPlatform[]; models: ModelProfile[];
-  initialPlatformId?: string; imported: (catalog: ModelCatalog) => void;
+export function ModelSettings({ saved, profileId, creating, edited, busy, platforms, initialPlatformId }: {
+  saved: (profile: ModelProfile) => Promise<void>; profileId: string; creating: boolean;
+  edited: (value: boolean) => void; busy: (value: boolean) => void; platforms: ModelPlatform[];
+  initialPlatformId: string;
 }) {
   const { api } = useApi();
   const [settings, setSettings] = useState<Settings>();
@@ -34,9 +31,7 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
   const [latestCatalog, setLatestCatalog] = useState<ModelCatalog>();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [importing, setImporting] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [needsReview, setNeedsReview] = useState(false);
   const [reload, setReload] = useState(0);
   const pending = useRef(false);
@@ -52,8 +47,8 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
       : api<ModelCatalog>('/api/settings/models').then(catalog => {
         if (creating) {
           if (current) setLatestCatalog(catalog);
-          const platform = catalog.platforms?.find(item => item.id === initialPlatformId) ?? catalog.platforms?.[0];
-          return { ...emptySettings(catalog.version), platformId: platform?.id, usageConfirmed: false };
+          if (!catalog.platforms?.some(item => item.id === initialPlatformId)) throw new Error('平台已不存在，请返回平台列表。');
+          return { ...emptySettings(catalog.version), platformId: initialPlatformId, usageConfirmed: false };
         }
         const profile = catalog.models.find(model => model.id === profileId);
         if (!profile) throw new Error('该模型已不在可用列表中，请重新打开设置。');
@@ -69,25 +64,22 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
       .finally(() => { if (current) setLoading(false); });
     return () => { current = false; };
   }, [api, reload, profileId, creating, initialPlatformId]);
-  function loadLatest() { if (pending.current) return; setLoading(true); setLatest(undefined); setLatestCatalog(undefined); setSuccess(''); setReload(value => value + 1); }
+  function loadLatest() { if (pending.current) return; setLoading(true); setLatest(undefined); setLatestCatalog(undefined); setReload(value => value + 1); }
   function edit(field: keyof Draft, value: Draft[keyof Draft]) {
-    edited?.(true);
+    edited(true);
     if (['thinkingLevels', 'thinkingLevelMap', 'defaultThinkingLevel'].includes(field)) capabilitiesEdited.current = true;
     if (field === 'compat') compatEdited.current = true;
     if (field === 'thinkingMode') modeEdited.current = true;
     if (parameterFields.includes(field as ParameterField)) changedParameters.current.add(field as ParameterField);
     const identity = field === 'model' || field === 'platformId';
-    const leaveCandidate = identity && candidate && draft?.model === candidate.model && value !== draft[field];
     if (identity) { changedParameters.current.clear(); setIdentityEdited(true); }
-    if (leaveCandidate) { capabilitiesEdited.current = false; compatEdited.current = false; }
     setDraft(previous => previous && { ...previous,
       ...(identity ? { usageConfirmed: false, thinkingMode: 'legacy' as const, contextWindow: '', maxOutputTokens: '', compactionReserveTokens: '', compactionKeepRecentTokens: '' } : {}),
-      ...(leaveCandidate ? { thinkingLevels: [], defaultThinkingLevel: 'legacy' as const, thinkingLevelMap: '{}', compat: '{}' } : {}), [field]: value });
-    setSuccess('');
+      [field]: value });
   }
   async function save() {
     const base = needsReview ? latest : settings;
-    if (pending.current || importing || loading || !draft || !base) return;
+    if (pending.current || loading || !draft || !base) return;
     if (!draft.platformId) { setError('请先选择所属平台。'); return; }
     const parameters: Partial<Record<ParameterField, number>> = {};
     for (const field of changedParameters.current) {
@@ -102,7 +94,7 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
       if (!value || typeof value !== 'object' || Array.isArray(value) || !mapping || typeof mapping !== 'object' || Array.isArray(mapping)) throw new Error();
       compat = value as ModelCompatibility; map = mapping as Settings['thinkingLevelMap'];
     } catch { setError('兼容参数和思考映射须为 JSON 对象。'); return; }
-    pending.current = true; setSaving(true); busy?.(true); setError(''); setSuccess('');
+    pending.current = true; setSaving(true); busy(true); setError('');
     const payload: ModelSettingsUpdate = { ...parameters,
       ...(draft.thinkingMode === 'legacy' ? modeEdited.current ? { thinkingMode: null } : {} : { thinkingMode: draft.thinkingMode }),
       platformId: draft.platformId,
@@ -114,46 +106,24 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
       const path = creating ? '/api/settings/models' : profileId === 'default' ? '/api/settings/model' : `/api/settings/models/${encodeURIComponent(profileId)}`;
       const result = await api<Settings | ModelProfile>(path, payload, creating ? 'POST' : 'PUT');
       setSettings(result); setLatest(result); setNeedsReview(false);
-      setDraft(toDraft(result)); changedParameters.current.clear(); capabilitiesEdited.current = false; compatEdited.current = false; modeEdited.current = false; setIdentityEdited(false); edited?.(false);
-      setSuccess('已保存，下次发送消息时使用新配置。');
-      await saved({ ...result, id: 'id' in result ? result.id : profileId }).catch(() => { setSuccess('配置已保存，模型列表暂未刷新，重新打开页面即可更新。'); });
+      setDraft(toDraft(result)); changedParameters.current.clear(); capabilitiesEdited.current = false; compatEdited.current = false; modeEdited.current = false; setIdentityEdited(false); edited(false);
+      await saved({ ...result, id: 'id' in result ? result.id : profileId });
     } catch (reason) {
       const uncertain = !(reason instanceof ApiFailure) || reason.code === 'MODEL_SETTINGS_CONFLICT' || reason.code === 'MODEL_SETTINGS_SAVE_FAILED';
       if (uncertain) { setNeedsReview(true); setLatest(undefined); }
       setError(reason instanceof ApiFailure && reason.code === 'MODEL_SETTINGS_CONFLICT' ? '配置已被修改，本次未保存。你填写的内容仍保留，请查看最新配置后再决定如何保存。' : reason instanceof Error ? reason.message : '保存结果未确认，请查看最新配置后再操作。');
-    } finally { pending.current = false; setSaving(false); busy?.(false); }
+    } finally { pending.current = false; setSaving(false); busy(false); }
   }
   let modes: ModelThinkingMode[] = [];
-  const platform = creating ? platforms.find(item => item.id === draft?.platformId) : undefined;
-  const candidate = platform && builtinModel(platform);
-  const existing = new Set(models.filter(model => model.platformId === platform?.id).map(model => model.model));
-  function chooseCandidate() {
-    if (!candidate) return;
-    edit('model', candidate.model);
-    setDraft(previous => previous && { ...previous, displayName: candidate.displayName ?? candidate.model, enabled: false,
-      thinkingLevels: candidate.thinkingLevels ?? [], defaultThinkingLevel: candidate.defaultThinkingLevel ?? 'legacy',
-      thinkingLevelMap: '{}', compat: JSON.stringify(candidate.compat ?? {}, null, 2) });
-    capabilitiesEdited.current = true;
-    compatEdited.current = true;
-  }
   if (draft) {
     try { const map = JSON.parse(draft.thinkingLevelMap) as Record<string, unknown>; modes = (draft.thinkingLevels.length ? draft.thinkingLevels : settings?.thinkingLevels !== undefined || map.off === null ? [] : ['off', 'high'] as ModelThinkingMode[]).filter(level => map[level] !== null); } catch { /* The form shows a validation error on save. */ }
   }
-  return <section className="settings-content" aria-labelledby="model-settings-title">
-        <div className="settings-heading"><h3 id="model-settings-title">模型配置</h3><p>配置可供所有席位在对话中选择的模型。</p></div>
-        {selection}
-        {!draft ? <div className="settings-loading">{loading ? <p role="status">正在读取配置…</p> : <><p className="resource-error" role="alert">{error}</p><button type="button" className="secondary-action" onClick={loadLatest}>重试</button></>}</div> : <form className="model-settings-form" onSubmit={event => { event.preventDefault(); void save(); }}>
-          <fieldset disabled={saving || importing}>
-          {platforms.length > 0 && <div className="settings-field"><label htmlFor="model-platform">所属平台</label><select id="model-platform" required value={draft.platformId} onChange={event => edit('platformId', event.target.value)}><option value="" disabled>请选择平台</option>{platforms.map(platform => <option key={platform.id} value={platform.id}>{platform.name}{platform.enabled ? '' : '（已停用）'}</option>)}</select><p>服务地址、协议和凭证在「平台配置」中维护。</p></div>}
-          {candidate && <div className="settings-field"><span>内置候选</span><div><button type="button" className="secondary-action" disabled={existing.has(candidate.model)} onClick={chooseCandidate}>{candidate.displayName ?? candidate.model}{existing.has(candidate.model) ? '（已添加）' : ''}</button></div></div>}
-          {platform?.modelsPath && <PlatformModelDiscovery key={`${platform.id}:${platform.modelsPath}:${platform.baseUrl}:${platform.api}`} platform={platform} existing={existing}
-            busy={value => { setImporting(value); busy?.(value); }} imported={result => {
-              setSettings(previous => previous && { ...previous, version: result.version });
-              setLatest(previous => previous && { ...previous, version: result.version });
-              imported(result);
-            }} />}
+  return <>
+        {!draft ? <div className="settings-loading">{loading ? <p role="status">正在读取配置…</p> : <><p className="resource-error" role="alert">{error}</p><button type="button" className="text-action" onClick={loadLatest}>重试</button></>}</div> : <form className="model-settings-form" onSubmit={event => { event.preventDefault(); void save(); }}>
+          <fieldset disabled={saving}>
+          {!creating && platforms.length > 0 && <div className="settings-field"><label htmlFor="model-platform">所属平台</label><select id="model-platform" required value={draft.platformId} onChange={event => edit('platformId', event.target.value)}><option value="" disabled>请选择平台</option>{platforms.map(platform => <option key={platform.id} value={platform.id}>{platform.name}{platform.enabled ? '' : '（已停用）'}</option>)}</select></div>}
           <div className="settings-field-grid"><div className="settings-field"><label htmlFor="model-name">显示名称</label><input id="model-name" value={draft.displayName} onChange={event => edit('displayName', event.target.value)} maxLength={200} placeholder="留空使用模型 ID" /></div>
-            <div className="settings-field"><label htmlFor="model-id">模型 ID</label><input id="model-id" value={draft.model} onChange={event => edit('model', event.target.value)} maxLength={200} required placeholder={candidate?.model ?? '输入平台提供的模型 ID'} autoComplete="off" spellCheck={false} /></div></div>
+            <div className="settings-field"><label htmlFor="model-id">模型 ID</label><input id="model-id" value={draft.model} onChange={event => edit('model', event.target.value)} maxLength={200} required placeholder="输入平台提供的模型 ID" autoComplete="off" spellCheck={false} /></div></div>
           <div className="settings-field"><label htmlFor="model-thinking">推理模式</label><select id="model-thinking" value={draft.thinkingMode} onChange={event => edit('thinkingMode', event.target.value)}><option value="legacy">使用模型默认行为</option>{modes.map(level => <option key={level} value={level}>{level === 'off' ? '关闭' : level}</option>)}</select><p>可选档位由模型能力决定。未显式选择时保留服务端默认行为。</p></div>
           <label className="model-check"><input type="checkbox" checked={draft.enabled} onChange={event => edit('enabled', event.target.checked)} />启用模型</label>
           <label className="model-check"><input type="checkbox" checked={draft.usageConfirmed} onChange={event => edit('usageConfirmed', event.target.checked)} />已确认该凭证可用于本系统的使用方式</label>
@@ -176,9 +146,8 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
           </div><p id="model-compaction-help" className="resource-help">预留量与保留量之和须小于上下文容量。近期消息按内容量保留原文，不按固定轮数。</p></details>
           </fieldset>
           {error && <p className="resource-error" role="alert">{error}</p>}
-          {needsReview && <div className="settings-review"><p>你的填写内容不会被替换。查看最新配置后，调整上方内容，再手动保存。</p><button type="button" className="secondary-action" onClick={loadLatest} disabled={loading || saving}>{loading ? '读取中…' : '查看最新配置'}</button>{latest && (creating ? <div aria-label="最新模型列表"><p role="status">已读取最新模型列表，请检查是否已有刚才添加的模型，再决定是否保存。</p><ul>{latestCatalog?.models.map(model => <li key={model.id}>{model.provider} / {model.model}</li>)}</ul></div> : <dl aria-label="最新模型配置"><dt>服务商</dt><dd>{latest.provider}</dd><dt>模型</dt><dd>{latest.model}</dd><dt>API 地址</dt><dd>{latest.baseUrl}</dd><dt>上下文容量</dt><dd>{latest.contextWindow ?? '未知'}</dd><dt>输出能力</dt><dd>{latest.maxOutputTokens ?? '未知'}</dd><dt>压缩预留量</dt><dd>{latest.compactionReserveTokens ?? '未知'}</dd><dt>近期原文</dt><dd>{latest.compactionKeepRecentTokens ?? '未知'}</dd><dt>推理模式</dt><dd>{!latest.thinkingExplicit ? '沿用旧请求（未指定开关）' : latest.thinkingMode === 'off' ? '关闭' : latest.thinkingMode}</dd><dt>API Key</dt><dd>{latest.configured ? '已配置，不显示密钥' : '未配置'}</dd></dl>)}</div>}
-          {success && <p className="settings-success" role="status"><Check size={16} aria-hidden="true" />{success}</p>}
-          <div className="settings-form-footer"><span>{creating ? '凭证、容量与使用方式确认后可供业务席位选择' : settings?.source === 'local' ? '当前使用已保存的配置' : '当前使用部署默认配置'}</span><button type="submit" className="primary-action" disabled={saving || importing || loading || (needsReview && !latest)}>{saving ? '保存中…' : needsReview ? '按最新版本保存' : '保存配置'}</button></div>
+          {needsReview && <div className="settings-review"><p>你的填写内容不会被替换。查看最新配置后，调整上方内容，再手动保存。</p><button type="button" className="text-action" onClick={loadLatest} disabled={loading || saving}>{loading ? '读取中…' : '查看最新配置'}</button>{latest && (creating ? <div aria-label="最新模型列表"><p role="status">已读取最新模型列表，请检查是否已有刚才添加的模型，再决定是否保存。</p><ul>{latestCatalog?.models.map(model => <li key={model.id}>{model.provider} / {model.model}</li>)}</ul></div> : <dl aria-label="最新模型配置"><dt>服务商</dt><dd>{latest.provider}</dd><dt>模型</dt><dd>{latest.model}</dd><dt>API 地址</dt><dd>{latest.baseUrl}</dd><dt>上下文容量</dt><dd>{latest.contextWindow ?? '未知'}</dd><dt>输出能力</dt><dd>{latest.maxOutputTokens ?? '未知'}</dd><dt>压缩预留量</dt><dd>{latest.compactionReserveTokens ?? '未知'}</dd><dt>近期原文</dt><dd>{latest.compactionKeepRecentTokens ?? '未知'}</dd><dt>推理模式</dt><dd>{!latest.thinkingExplicit ? '沿用旧请求（未指定开关）' : latest.thinkingMode === 'off' ? '关闭' : latest.thinkingMode}</dd><dt>API Key</dt><dd>{latest.configured ? '已配置，不显示密钥' : '未配置'}</dd></dl>)}</div>}
+          <div className="settings-form-footer"><span>{creating ? '凭证、容量与使用方式确认后可供业务席位选择' : settings?.source === 'local' ? '当前使用已保存的配置' : '当前使用部署默认配置'}</span><button type="submit" className="primary-action" disabled={saving || loading || (needsReview && !latest)}>{saving ? '保存中…' : needsReview ? '按最新版本保存' : '保存配置'}</button></div>
         </form>}
-  </section>;
+  </>;
 }

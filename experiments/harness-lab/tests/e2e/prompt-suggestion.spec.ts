@@ -325,13 +325,13 @@ test('a long candidate remains a placeholder until acceptance and is available i
   } finally { await state.close(); }
 });
 
-test('administrator personal chats expose the general preference without granting model management', async ({ page }) => {
+test('administrator personal chats expose the general preference alongside model management', async ({ page }) => {
   const state = await setup(page, { admin: true });
   try {
     await state.send(); await expect(candidate(page)).toBeVisible();
     await page.getByRole('button', { name: '设置', exact: true }).click(); await page.getByRole('button', { name: '个人偏好', exact: true }).click();
     await expect(page.getByRole('checkbox', { name: '显示下一步输入建议', exact: true })).toBeChecked();
-    await expect(page.getByRole('navigation', { name: '设置分类', exact: true }).getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('navigation', { name: '设置分类', exact: true }).getByRole('button', { name: '模型管理', exact: true })).toBeVisible();
     await page.getByRole('checkbox', { name: '显示下一步输入建议', exact: true }).uncheck(); await page.getByRole('button', { name: '关闭面板', exact: true }).click();
     await expect(candidate(page)).toBeHidden(); await box(page).fill('测试输入'); await box(page).fill(''); await expect(candidate(page)).toBeHidden();
   } finally { await state.close(); }

@@ -110,7 +110,7 @@ test('independent administrator manages experts without mounting a seat workbenc
     await expect(page.getByRole('button', { name: '展开侧边栏', exact: true })).toBeVisible();
     await page.getByRole('button', { name: '展开侧边栏', exact: true }).click();
     await page.getByRole('button', { name: '设置', exact: true }).click();
-    await expect(page.getByRole('button', { name: '模型', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '模型管理', exact: true })).toBeVisible();
     await page.getByRole('button', { name: '账户', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toContainText('系统管理员');
     page.once('dialog', dialog => dialog.accept());
@@ -196,7 +196,7 @@ test('an administrator creates personal spaces and resumes ordinary two-turn cha
     expect(env.lab.workspaces.listAll()).toHaveLength(1);
     expect(env.lab.workspaces.listAll()[0].seatId).toBe(`account-${String(admin.id)}`);
     await page.getByRole('button', { name: '设置', exact: true }).click();
-    await expect(page.getByRole('button', { name: '模型', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '模型管理', exact: true })).toBeVisible();
     await page.getByRole('button', { name: '账户', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toContainText('系统管理员');
     page.once('dialog', dialog => dialog.accept());

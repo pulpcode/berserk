@@ -147,13 +147,8 @@ test('catalog managers maintain all work tasks while every seat owns its persona
     await logout(page);
     await login(page, 'a');
     await page.getByRole('button', { name: '设置', exact: true }).click();
-    await expect(page.getByRole('navigation', { name: '设置分类' }).getByRole('button', { name: '模型', exact: true })).toHaveAttribute('aria-current', 'page');
-    await expect(page.locator('.model-settings-form')).toBeVisible();
-    await page.getByLabel('模型 ID', { exact: true }).fill('未保存的模型草稿');
-    await page.getByRole('navigation', { name: '设置分类' }).getByRole('button', { name: '账户', exact: true }).click();
+    await expect(page.getByRole('navigation', { name: '设置分类' }).getByRole('button')).toHaveText(['账户', '个人偏好']);
     await expect(page.locator('.account-settings-content')).toContainText('用户 a');
-    await page.getByRole('navigation', { name: '设置分类' }).getByRole('button', { name: '模型', exact: true }).click();
-    await expect(page.getByLabel('模型 ID', { exact: true })).toHaveValue('未保存的模型草稿');
     await page.keyboard.press('Escape');
 
     await expect(page.getByRole('button', { name: '新建项目', exact: true })).toHaveCount(0);
@@ -181,7 +176,7 @@ test('catalog managers maintain all work tasks while every seat owns its persona
     await member.getByRole('button', { name: '设置', exact: true }).click();
     const memberSettings = member.getByRole('navigation', { name: '设置分类' });
     await expect(memberSettings.getByRole('button', { name: '账户', exact: true })).toHaveAttribute('aria-current', 'page');
-    await expect(memberSettings.getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
+    await expect(memberSettings.getByRole('button', { name: '模型管理', exact: true })).toHaveCount(0);
     await expect(member.locator('.model-settings-form')).toHaveCount(0);
     await expect(member.locator('.account-settings-content')).toContainText('用户 b');
     await expect(member.locator('.account-settings-content')).toContainText('席位 b');

@@ -454,11 +454,15 @@ export class PiLab {
     return this.settings.info();
   }
 
-  async updateModelProfile(input: ModelSettingsUpdate, id = 'default', create = false, authorize?: () => void): Promise<ModelProfile> {
+  private reserveModelSettingsUpdate(authorize?: () => void) {
     authorize?.();
     // Reserve synchronously, before runtime construction or disk I/O can yield to start().
     if (this.settingsUpdating || this.backgroundHooks?.isActive() || [...this.records.values(), ...this.serviceRecords.values()].some(record => record.active)) throw settingsBusy();
     this.settingsUpdating = true;
+  }
+
+  async updateModelProfile(input: ModelSettingsUpdate, id = 'default', create = false, authorize?: () => void): Promise<ModelProfile> {
+    this.reserveModelSettingsUpdate(authorize);
     try {
       const next = this.settings.prepare(input, id, create);
       for (const record of this.records.values()) { record.prediction?.controller?.abort(); record.workAnalysis?.controller.abort(); }
@@ -476,9 +480,7 @@ export class PiLab {
   }
 
   async updateModelPlatform(input: ModelPlatformUpdate, id = 'default', create = false, authorize?: () => void): Promise<ModelPlatform> {
-    authorize?.();
-    if (this.settingsUpdating || this.backgroundHooks?.isActive() || [...this.records.values(), ...this.serviceRecords.values()].some(record => record.active)) throw settingsBusy();
-    this.settingsUpdating = true;
+    this.reserveModelSettingsUpdate(authorize);
     try {
       const next = this.settings.preparePlatform(input, id, create);
       for (const record of this.records.values()) { record.prediction?.controller?.abort(); record.workAnalysis?.controller.abort(); }
@@ -498,10 +500,21 @@ export class PiLab {
     } finally { this.settingsUpdating = false; }
   }
 
+  async deleteModelPlatform(id: string, expectedVersion: string, authorize?: () => void): Promise<ModelCatalog> {
+    this.reserveModelSettingsUpdate(authorize);
+    try {
+      const removed = await this.settings.deletePlatform(id, expectedVersion, authorize);
+      for (const modelId of removed) this.runtimes.delete(modelId);
+      for (const record of this.records.values()) {
+        record.prediction?.controller?.abort();
+        record.workAnalysis?.controller.abort();
+      }
+      return this.settings.catalog();
+    } finally { this.settingsUpdating = false; }
+  }
+
   async importPlatformModels(platformId: string, input: PlatformModelImport, authorize?: () => void): Promise<ModelCatalog> {
-    authorize?.();
-    if (this.settingsUpdating || this.backgroundHooks?.isActive() || [...this.records.values(), ...this.serviceRecords.values()].some(record => record.active)) throw settingsBusy();
-    this.settingsUpdating = true;
+    this.reserveModelSettingsUpdate(authorize);
     try {
       const models = this.settings.prepareImport(platformId, input.expectedVersion, input.modelIds);
       const runtimes = await Promise.all(models.map(async model => {

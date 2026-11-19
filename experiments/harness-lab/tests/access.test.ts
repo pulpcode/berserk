@@ -176,6 +176,17 @@ describe('authenticated task scopes',()=>{
     expect(models[0].id).toBe(model.json().id);
     expect(models[1]).toMatchObject({ model: 'platform-model', available: false, enabled: false, usageConfirmed: false });
     expect((await admin.call(directory, { expectedVersion: model.json().version, modelIds: ['stale-model'] })).json().error.code).toBe('MODEL_SETTINGS_CONFLICT');
+    const path = `/api/settings/platforms/${platform.id}`;
+    const inputDelete = { expectedVersion: imported.json().version };
+    for (const actor of [legacy, member]) expect((await actor.call(path, inputDelete, 'DELETE')).statusCode).toBe(403);
+    const { ['x-csrf-token']: _csrf, ...headers } = admin.headers; void _csrf;
+    expect((await app.inject({ url: path, method: 'DELETE', headers, payload: inputDelete })).json().error.code).toBe('CSRF_REJECTED');
+    expect((await admin.call(path, { expectedVersion: platform.version }, 'DELETE')).json().error.code).toBe('MODEL_SETTINGS_CONFLICT');
+    expect((await admin.call(`/api/settings/platforms/${lab.modelSettings().platformId}`, inputDelete, 'DELETE')).json().error.code).toBe('DEFAULT_MODEL_PLATFORM');
+    const removed = await admin.call(path, inputDelete, 'DELETE');
+    expect(removed.statusCode, removed.body).toBe(200);
+    expect(removed.json().platforms.map((item: { id: string }) => item.id)).not.toContain(platform.id);
+    expect(removed.json().models.map((item: { id: string }) => item.id)).toEqual(['default']);
     expect(lab.workspaces.listAll()).toHaveLength(0);
   });
 

@@ -1010,12 +1010,19 @@ test('新建对话页内选空间，离开不创建，项目加号同页且首�
   } finally { await mock.close(); }
 });
 
+async function openDefaultModelSettings(page: Page) {
+  await page.getByRole('list', { name: '平台列表', exact: true }).getByRole('button', { name: /含系统默认/ }).click();
+  await page.getByRole('listitem').filter({ has: page.getByText('系统默认', { exact: true }) })
+    .getByRole('button', { name: /^编辑模型 / }).click();
+}
+
 test('模型设置只修改所属平台和模型，保存后更新对话模型列表', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     await page.goto('/');
     const trigger = page.getByRole('button', { name: '设置', exact: true });
     await trigger.click();
+    await openDefaultModelSettings(page);
     const modal = page.getByRole('dialog', { name: '设置', exact: true });
     await expect(page.getByLabel('模型 ID')).toHaveValue('deepseek-flash');
     await expect(modal.getByLabel('API Key', { exact: true })).toHaveCount(0);
@@ -1029,6 +1036,7 @@ test('模型设置只修改所属平台和模型，保存后更新对话模型�
     await page.keyboard.press('Escape');
     await expect(trigger).toBeFocused();
     await trigger.click();
+    await openDefaultModelSettings(page);
     await expect(page.getByLabel('模型 ID')).toHaveValue('deepseek-test');
   } finally { await mock.close(); }
 });
@@ -1039,6 +1047,7 @@ test('模型配置读取可重试，冲突和失败保留填写内容并要求�
     mock.modelFaults.read = true;
     await page.goto('/');
     await page.getByRole('button', { name: '设置', exact: true }).click();
+    await openDefaultModelSettings(page);
     const modal = page.getByRole('dialog', { name: '设置', exact: true });
     await expect(modal.getByRole('alert')).toContainText('暂时无法读取模型配置');
     mock.modelFaults.read = false;
@@ -1102,7 +1111,7 @@ test('跨项目创建失败可见，切换会话保护后续选择，手机新�
     await expect(page.getByText('new-2 的回复', { exact: true })).toBeVisible();
     await page.getByRole('button', { name: '打开会话列表' }).click();
     await page.getByRole('button', { name: '设置', exact: true }).click();
-    await expect(page.getByLabel('模型 ID')).toBeVisible();
+    await expect(page.getByRole('heading', { name: '平台列表', exact: true })).toBeVisible();
     mock.finish('new-2');
     // Wait for the browser's terminal state, not merely an unread value that was already absent.
     await expect(page.locator('.composer-stop')).toHaveCount(0);
@@ -1133,6 +1142,7 @@ test('未知模型参数阻止发送并保留历史草稿，补填后不自动�
     await expect(input).toHaveValue('等待模型配置的草稿');
     expect(mock.counts.sends).toBe(0);
     await page.getByRole('button', { name: '设置', exact: true }).click();
+    await openDefaultModelSettings(page);
     await expect(page.getByLabel('上下文容量（token）')).toBeEmpty();
     await page.getByLabel('上下文容量（token）').fill('32768');
     await page.getByLabel('最大输出能力（token）').fill('8192');
@@ -1155,6 +1165,7 @@ test('容量参数来源、模型切换清空与冲突草稿保护，375px高级
     await page.goto('/');
     await page.getByRole('button', { name: '打开会话列表' }).click();
     await page.getByRole('button', { name: '设置', exact: true }).click();
+    await openDefaultModelSettings(page);
     const modal = page.getByRole('dialog', { name: '设置', exact: true });
     await expect(page.getByLabel('上下文容量（token）')).toHaveValue('1000000');
     await expect(page.getByLabel('最大输出能力（token）')).toHaveValue('393216');

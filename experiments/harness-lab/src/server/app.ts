@@ -221,7 +221,12 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }};
   app.get(`${scope.base}/settings/platforms`, {preHandler:requireModelSettings,schema:{querystring:settingsQuery}},async()=>({version:lab.modelCatalog().version,platforms:lab.modelCatalog().platforms}));
   app.post<{Body:ModelPlatformUpdate}>(`${scope.base}/settings/platforms`, {preHandler:requireModelSettings,schema:{querystring:settingsQuery,body:platformBody}},async(request,reply)=>reply.code(201).send(await lab.updateModelPlatform(request.body,'default',true,()=>authorizeModelSettings(request))));
-  app.put<{Params:{id:string};Body:ModelPlatformUpdate}>(`${scope.base}/settings/platforms/:id`, {preHandler:requireModelSettings,schema:{params:scope.params({id:{type:'string',minLength:1,maxLength:100}}),querystring:settingsQuery,body:platformBody}},async request=>lab.updateModelPlatform(request.body,request.params.id,false,()=>authorizeModelSettings(request)));
+  const platformParams = scope.params({id:{type:'string',minLength:1,maxLength:100}});
+  app.put<{Params:{id:string};Body:ModelPlatformUpdate}>(`${scope.base}/settings/platforms/:id`, {preHandler:requireModelSettings,schema:{params:platformParams,querystring:settingsQuery,body:platformBody}},async request=>lab.updateModelPlatform(request.body,request.params.id,false,()=>authorizeModelSettings(request)));
+  app.delete<{Params:{id:string};Body:{expectedVersion:string}}>(`${scope.base}/settings/platforms/:id`, {preHandler:requireModelSettings,schema:{
+    params:platformParams,querystring:settingsQuery,
+    body:{type:'object',additionalProperties:false,required:['expectedVersion'],properties:{expectedVersion:{type:'string',format:'uuid'}}},
+  }}, request=>lab.deleteModelPlatform(request.params.id,request.body.expectedVersion,()=>authorizeModelSettings(request)));
   const platformModelParams = scope.params({id:{type:'string',minLength:1,maxLength:101}});
   app.get<{Params:{id:string}}>(`${scope.base}/settings/platforms/:id/models`, {preHandler:requireModelSettings,schema:{querystring:settingsQuery,params:platformModelParams}}, async request => {
     const version = lab.modelSettings().version;

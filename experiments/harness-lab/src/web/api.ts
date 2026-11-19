@@ -91,7 +91,7 @@ export function createApiClient(seatId?: string, auth?: AuthSession, invalid?: (
     storageKey: (key: string, scope: 'login' | 'user-preference' = 'login') => auth
       ? scope === 'user-preference' && auth.identity ? `${key}:user:${auth.identity.userId}` : `${key}:login:${auth.viewId}`
       : seatId ? `${key}:seat:${seatId}` : key,
-    api: async <T,>(path: string, body?: object, method: 'POST' | 'PUT' = 'POST'): Promise<T> => {
+    api: async <T,>(path: string, body?: object, method: 'POST' | 'PUT' | 'DELETE' = 'POST'): Promise<T> => {
       const response=await checkResponse(await request(url(path),body===undefined ? {cache:'no-store'} : {method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}));
       return response.json() as Promise<T>;
     },
