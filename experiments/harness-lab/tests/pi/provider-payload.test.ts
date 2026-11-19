@@ -23,7 +23,7 @@ it('inserts one fixed system snapshot immediately before the current user on the
     return new Response(data.map(chunk => `data: ${JSON.stringify(chunk)}\n\n`).join('') + 'data: [DONE]\n\n', { status: 200, headers: { 'Content-Type': 'text/event-stream' } });
   });
   const dir = await mkdtemp(join(tmpdir(), 'berserk-payload-')); cleanup.push(() => rm(dir, { recursive: true, force: true }));
-  const config = testConfig(dir, { provider: 'deepseek', model: 'deepseek-flash' }); const lab = await PiLab.create(config); cleanup.push(() => lab.close());
+  const config = testConfig(dir, { provider: 'deepseek', model: 'deepseek-flash', baseUrl: 'https://api.deepseek.com' }); const lab = await PiLab.create(config); cleanup.push(() => lab.close());
   const session = await lab.createSession();
   const initial = await lab.resources.readInstruction(session.workspaceId, 'workspace');
   oldHash = (await lab.resources.updateInstruction(session.workspaceId, 'workspace', 'WIRE_OLD_RULE', initial.hash)).hash;

@@ -46,6 +46,7 @@ test('authenticated management trial/publication and five-level defaults preserv
     expect(await ok(admin,'/api/tasks')).toEqual([]);
     expect((await call(admin,'/api/info')).statusCode).toBe(200);
     expect((await call(admin,'/api/models')).statusCode).toBe(200);
+    expect((await call(admin,'/api/settings/models')).statusCode).toBe(200);
     expect((await call(admin,'/api/workspaces')).statusCode).toBe(200);
     expect((await call(admin,'/api/tasks',{title:'伪造业务',goal:'不能创建公共任务',visibility:'public',clientActionId:randomUUID()})).statusCode).toBe(403);
     expect((await call(admin,'/api/sessions',{clientActionId:randomUUID()})).statusCode).toBe(404);

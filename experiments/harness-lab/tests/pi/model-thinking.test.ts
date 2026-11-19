@@ -111,10 +111,10 @@ it.each([1, 2, 3])('reads legacy schema %s without rewrite; explicit save/restar
   await writeFile(path, raw, { mode: 0o600 }); const store = await ModelSettingsStore.open(cfg);
   expect(store.info().thinkingMode).toBe('off'); expect(await readFile(path, 'utf8')).toBe(raw);
   const update = { ...fields, expectedVersion: version, thinkingMode: 'high' as const }; const next = store.prepare(update); await store.save(next);
-  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 4, thinkingMode: 'high' });
+  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 7, models: [expect.objectContaining({ id: 'default', thinkingMode: 'high' })] });
   const reopened = await ModelSettingsStore.open(cfg); expect(reopened.info().thinkingMode).toBe('high'); expect(reopened.info().version).not.toBe(version);
   expect(JSON.stringify(reopened.info())).not.toContain(cfg.apiKey); expect(() => reopened.prepare(update)).toThrow(/已更新/);
-  expect(() => reopened.prepare({ ...update, expectedVersion: reopened.info().version, thinkingMode: null as never })).toThrow(/off 或 high/);
+  const cleared = reopened.prepare({ ...update, expectedVersion: reopened.info().version, thinkingMode: null }); await reopened.save(cleared); expect(reopened.info().thinkingExplicit).toBe(false);
 });
 
 it('keeps a reserved request unchanged and applies a saved mode only to the next request', async () => {
@@ -127,10 +127,10 @@ it('keeps a reserved request unchanged and applies a saved mode only to the next
   await lab.start(session.id, '新设置').run(() => {}); expectMode(calls.slice(1), 'high');
 });
 
-it('round trips a catalog with independent off/high profiles using schema 5', async () => {
+it('round trips a catalog with independent off/high profiles using schema 6', async () => {
   const cfg = await config('off'); const store = await ModelSettingsStore.open(cfg); const next = store.prepare({ provider: cfg.provider, model: cfg.model, baseUrl: cfg.baseUrl, apiKey: cfg.apiKey, expectedVersion: store.info().version, thinkingMode: 'high' }, 'default', true);
   await store.save(next); const raw = JSON.parse(await readFile(join(cfg.dataDir, 'model-settings.json'), 'utf8'));
-  expect(raw.schemaVersion).toBe(5); const reopened = await ModelSettingsStore.open(cfg);
+  expect(raw.schemaVersion).toBe(7); const reopened = await ModelSettingsStore.open(cfg);
   expect(reopened.info().thinkingMode).toBe('off'); expect(reopened.info(next.id).thinkingMode).toBe('high');
 });
 

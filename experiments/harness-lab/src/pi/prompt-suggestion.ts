@@ -1,8 +1,8 @@
 import { estimateTokens, type ModelRuntime } from '@earendil-works/pi-coding-agent';
 import type { AssistantMessage, Context } from '@earendil-works/pi-ai';
 import type { PromptSuggestionRequest, SessionSnapshot } from '../contracts/index.js';
-import { resolveModelThinking, type LabConfig } from '../server/config.js';
-import { providerPayload } from './model-runtime.js';
+import { type LabConfig } from '../server/config.js';
+import { modelReasoning, providerPayload } from './model-runtime.js';
 
 export const PROMPT_SUGGESTION_TIMEOUT_MS = 20_000;
 const BODY_TOOLS = new Set(['read', 'bash', 'edit', 'write', 'grep', 'source_read', 'instructions_read', 'skill_read',
@@ -62,9 +62,8 @@ export async function generatePromptSuggestion(runtime: ModelRuntime, config: Re
   signal.throwIfAborted();
   const model = runtime.getModel(config.provider, config.model);
   if (!model) return null;
-  const thinking = resolveModelThinking(config, config.thinkingMode);
   const result = await runtime.completeSimple(model, context, {
-    signal, apiKey: config.apiKey, reasoning: thinking.thinkingMode === 'high' ? 'high' : undefined,
+    signal, apiKey: config.apiKey, reasoning: modelReasoning(config),
     maxTokens: Math.min(512, config.maxOutputTokens!), maxRetries: 0, timeoutMs: Math.min(PROMPT_SUGGESTION_TIMEOUT_MS, config.llmRequestTimeoutMs || PROMPT_SUGGESTION_TIMEOUT_MS),
     onPayload: payload => providerPayload(config, payload),
   });

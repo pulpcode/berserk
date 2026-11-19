@@ -6,8 +6,8 @@ import { Check } from 'typebox/value';
 import type { SessionSnapshot } from '../contracts/index.js';
 import type { WorkAction, WorkItem } from '../contracts/collaboration.js';
 import type { WorkActivityEvidence, WorkActivityItem, WorkActivityView } from '../contracts/work-activity.js';
-import { resolveModelThinking, type LabConfig } from '../server/config.js';
-import { providerPayload } from './model-runtime.js';
+import { type LabConfig } from '../server/config.js';
+import { modelReasoning, providerPayload } from './model-runtime.js';
 
 export const WORK_ACTIVITY_TIMEOUT_MS = 20_000;
 const MAX_EVIDENCE = 16;
@@ -138,9 +138,8 @@ export async function generateWorkActivity(runtime: ModelRuntime, config: Readon
   signal.throwIfAborted();
   const model = runtime.getModel(config.provider, config.model);
   if (!model) return null;
-  const thinking = resolveModelThinking(config, config.thinkingMode);
   const message = await runtime.completeSimple(model, input.context, { signal, apiKey: config.apiKey,
-    reasoning: thinking.thinkingMode === 'high' ? 'high' : undefined, maxTokens: Math.min(OUTPUT_TOKENS, config.maxOutputTokens!),
+    reasoning: modelReasoning(config), maxTokens: Math.min(OUTPUT_TOKENS, config.maxOutputTokens!),
     maxRetries: 0, timeoutMs: Math.min(WORK_ACTIVITY_TIMEOUT_MS, config.llmRequestTimeoutMs || WORK_ACTIVITY_TIMEOUT_MS),
     onPayload: payload => providerPayload(config, payload) });
   signal.throwIfAborted();

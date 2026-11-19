@@ -53,10 +53,10 @@ export function SettingsPanel({ identity, logout, logoutError, close, saved, sug
   return <Panel title="设置" className="settings-panel" close={close}>
     <div className="settings-layout">
       <nav className="settings-nav" aria-label="设置分类">
-        {modelAllowed && <button type="button" aria-current={section === 'model' ? 'page' : undefined} onClick={() => setSection('model')}><Cpu size={17} aria-hidden="true" />模型</button>}
-        {administrator && <button type="button" aria-current={section === 'background' ? 'page' : undefined} onClick={() => setSection('background')}><ListChecks size={17} aria-hidden="true" />后台作业</button>}
-        {(suggestions || workActivity || identity?.canCollaborate !== false && identity) && <button type="button" aria-current={section === 'preferences' ? 'page' : undefined} onClick={() => setSection('preferences')}><SlidersHorizontal size={17} aria-hidden="true" />个人偏好</button>}
         {identity && <button type="button" aria-current={section === 'account' ? 'page' : undefined} onClick={() => setSection('account')}><UserRound size={17} aria-hidden="true" />账户</button>}
+        {(suggestions || workActivity || identity?.canCollaborate !== false && identity) && <button type="button" aria-current={section === 'preferences' ? 'page' : undefined} onClick={() => setSection('preferences')}><SlidersHorizontal size={17} aria-hidden="true" />个人偏好</button>}
+        {modelAllowed && <button type="button" aria-current={section === 'model' ? 'page' : undefined} onClick={() => setSection('model')}><Cpu size={17} aria-hidden="true" />模型管理</button>}
+        {administrator && <button type="button" aria-current={section === 'background' ? 'page' : undefined} onClick={() => setSection('background')}><ListChecks size={17} aria-hidden="true" />后台作业</button>}
       </nav>
       {modelAllowed && <div className="settings-model-section" hidden={section !== 'model'}><ModelCatalogSettings saved={saved} /></div>}
       {administrator && section === 'background' && <BackgroundQueueSettings />}

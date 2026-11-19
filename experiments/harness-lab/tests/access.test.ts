@@ -163,6 +163,53 @@ describe('authenticated task scopes',()=>{
     expect((await a.call('/api/settings/models')).statusCode).toBe(403);
   });
 
+  it('exposes platform management only to administrators and keeps an unconfigured Kimi profile unavailable', async () => {
+    const { app, lab } = await setup(['a'], undefined, true);
+    const admin = await login(app, 'system-admin'), legacy = await login(app, 'a'), member = await login(app, 'b');
+    const catalog = (await admin.call('/api/settings/models')).json();
+    const input = {name:'Kimi Code',provider:'kimi-coding',baseUrl:'https://api.kimi.com/coding/',api:'anthropic-messages',enabled:false,expectedVersion:catalog.version};
+    for(const actor of [legacy,member]) {
+      expect((await actor.call('/api/settings/platforms')).statusCode).toBe(403);
+      expect((await actor.call('/api/settings/platforms', input)).statusCode).toBe(403);
+    }
+    const noCsrf = await app.inject({url:'/api/settings/platforms',method:'POST',headers:{cookie:admin.headers.cookie,origin:admin.headers.origin,'x-axon-view':admin.headers['x-axon-view']},payload:input});
+    expect(noCsrf.statusCode).toBe(403);
+    const stale = await app.inject({url:'/api/settings/platforms',method:'POST',headers:{...admin.headers,'x-axon-view':'stale-view'},payload:input});
+    expect(stale.statusCode).toBe(409);
+    const created = await admin.call('/api/settings/platforms', input); expect(created.statusCode,created.body).toBe(201);
+    const platform = created.json(); expect(platform).toMatchObject({name:'Kimi Code',configured:false,enabled:false,api:'anthropic-messages'});
+    expect(platform.apiKey).toBeUndefined();
+    const directory = `/api/settings/platforms/${platform.id}/models`;
+    expect((await member.call(directory)).statusCode).toBe(403);
+    expect((await member.call(directory, { expectedVersion: platform.version, modelIds: ['other'] })).statusCode).toBe(403);
+    expect((await admin.call(directory)).json().error.code).toBe('MODEL_DISCOVERY_UNSUPPORTED');
+    expect((await admin.call(`/api/settings/platforms/${platform.id}`,input,'PUT')).json().error.code).toBe('MODEL_SETTINGS_CONFLICT');
+    const model = await admin.call('/api/settings/models',{platformId:platform.id,model:'k3.1-pro',displayName:'Kimi K3.1 Pro',enabled:false,usageConfirmed:false,thinkingLevels:[],thinkingLevelMap:{off:null},expectedVersion:platform.version});
+    expect(model.statusCode,model.body).toBe(201); expect(model.json()).toMatchObject({configured:false,contextReady:false,available:false,platformId:platform.id});
+    const choices = await member.call('/api/models'); expect(choices.statusCode).toBe(200);
+    for(const hidden of ['baseUrl','credentialEnv','BERSERK_TEST_UNSET_KIMI_KEY','api.kimi.com']) expect(choices.body).not.toContain(hidden);
+    expect(choices.json().models.find((item:{id:string})=>item.id===model.json().id)).toMatchObject({available:false});
+    const imported = await admin.call(directory, { expectedVersion: model.json().version, modelIds: ['k3.1-pro', 'platform-model', 'platform-model'] });
+    expect(imported.statusCode, imported.body).toBe(200);
+    const models = imported.json().models.filter((item: { platformId: string }) => item.platformId === platform.id);
+    expect(models).toHaveLength(2);
+    expect(models[0].id).toBe(model.json().id);
+    expect(models[1]).toMatchObject({ model: 'platform-model', available: false, enabled: false, usageConfirmed: false });
+    expect((await admin.call(directory, { expectedVersion: model.json().version, modelIds: ['stale-model'] })).json().error.code).toBe('MODEL_SETTINGS_CONFLICT');
+    const path = `/api/settings/platforms/${platform.id}`;
+    const inputDelete = { expectedVersion: imported.json().version };
+    for (const actor of [legacy, member]) expect((await actor.call(path, inputDelete, 'DELETE')).statusCode).toBe(403);
+    const { ['x-csrf-token']: _csrf, ...headers } = admin.headers; void _csrf;
+    expect((await app.inject({ url: path, method: 'DELETE', headers, payload: inputDelete })).json().error.code).toBe('CSRF_REJECTED');
+    expect((await admin.call(path, { expectedVersion: platform.version }, 'DELETE')).json().error.code).toBe('MODEL_SETTINGS_CONFLICT');
+    expect((await admin.call(`/api/settings/platforms/${lab.modelSettings().platformId}`, inputDelete, 'DELETE')).json().error.code).toBe('DEFAULT_MODEL_PLATFORM');
+    const removed = await admin.call(path, inputDelete, 'DELETE');
+    expect(removed.statusCode, removed.body).toBe(200);
+    expect(removed.json().platforms.map((item: { id: string }) => item.id)).not.toContain(platform.id);
+    expect(removed.json().models.map((item: { id: string }) => item.id)).toEqual(['default']);
+    expect(lab.workspaces.listAll()).toHaveLength(0);
+  });
+
   it('requires explicit production credentials and rejects test-seat bypass, CSRF and stale views',async()=>{
     expect(()=>loadConfig({})).toThrow('初始化');
     expect(()=>loadConfig({LAB_SESSION_SECRET:'x'.repeat(40),LAB_TEST_SEATS:'[]'})).toThrow('LAB_TEST_SEATS');

@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import type { ModelParameters, ModelThinkingMode } from '../contracts/index.js';
+import type { ModelParameters, ModelThinkingMode, ModelCapabilities, ModelApi, ModelCompatibility } from '../contracts/index.js';
 
 export type ParameterSource = 'preset' | 'explicit' | 'unknown';
 export interface ResolvedModelParameters extends ModelParameters {
@@ -7,7 +7,13 @@ export interface ResolvedModelParameters extends ModelParameters {
   outputSource: ParameterSource;
   contextReady: boolean;
 }
-export interface LabConfig extends ResolvedModelParameters {
+export interface LabConfig extends ResolvedModelParameters, ModelCapabilities {
+  platformId?: string;
+  displayName?: string;
+  enabled?: boolean;
+  usageConfirmed?: boolean;
+  available?: boolean;
+  platformCompat?: ModelCompatibility;
   thinkingMode?: ModelThinkingMode;
   provider: string;
   model: string;
@@ -41,14 +47,55 @@ export function normalizeModelEndpoint(value: string): string {
     throw new Error('模型地址必须为不含凭证、查询参数或片段的 HTTPS 地址。');
   }
 }
-/** Exact model + endpoint capabilities; provider is a user-defined registry name, not proof. */
-export function resolveModelThinking(identity: { model: string; baseUrl: string }, requested: unknown = 'off'): { thinkingMode: ModelThinkingMode; thinkingSupported: boolean } {
-  if (requested !== 'off' && requested !== 'high') throw new Error('推理模式只能为 off 或 high。');
+export const modelThinkingLevels: ModelThinkingMode[] = ['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'];
+export function isVerifiedDeepSeekModel(identity: { api?: ModelApi; model: string; baseUrl: string }): boolean {
+  if (identity.api !== undefined && identity.api !== 'openai-completions') return false;
   const endpoint = normalizeModelEndpoint(identity.baseUrl);
-  const supported = (['https://api.deepseek.com', 'https://api.deepseek.com/v1'].includes(endpoint) && identity.model === 'deepseek-flash')
+  return (['https://api.deepseek.com', 'https://api.deepseek.com/v1'].includes(endpoint) && identity.model === 'deepseek-flash')
     || (endpoint === 'https://ark.cn-beijing.volces.com/api/plan/v3' && identity.model === 'deepseek-v4.1-flash');
-  if (requested === 'high' && !supported) throw new Error('尚未核实此模型 ID 与 API 地址支持开启推理，请使用已支持的组合或保留原模式。');
-  return { thinkingMode: requested, thinkingSupported: supported };
+}
+const openAiCompat = ['supportsStore', 'supportsDeveloperRole', 'supportsReasoningEffort', 'supportsUsageInStreaming', 'supportsFinishReason', 'requiresToolResultName', 'requiresAssistantAfterToolResult', 'requiresThinkingAsText', 'requiresReasoningContentOnAssistantMessages', 'supportsStrictMode'];
+const anthropicCompat = ['supportsEagerToolInputStreaming', 'supportsCacheControlOnTools', 'supportsTemperature', 'forceAdaptiveThinking', 'allowEmptySignature', 'supportsStrictTools'];
+export function validateModelCompat(api: ModelApi, value: unknown): ModelCompatibility | undefined {
+  if (value === undefined) return undefined;
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('兼容参数必须是对象。');
+  const allowed = [...(api === 'openai-completions' ? openAiCompat : anthropicCompat), 'supportsLongCacheRetention', ...(api === 'openai-completions' ? ['maxTokensField', 'thinkingFormat'] : [])];
+  for (const [name, entry] of Object.entries(value)) {
+    if (!allowed.includes(name)) throw new Error(`此 API 不支持兼容参数 ${name}。`);
+    if (name === 'maxTokensField' ? !['max_tokens', 'max_completion_tokens'].includes(entry as string)
+      : name === 'thinkingFormat' ? !['openai', 'openrouter', 'deepseek', 'together', 'baseten', 'zai', 'qwen', 'chat-template', 'qwen-chat-template', 'string-thinking', 'ant-ling'].includes(entry as string)
+      : typeof entry !== 'boolean') throw new Error(`兼容参数 ${name} 的值不正确。`);
+  }
+  return { ...value };
+}
+export function resolveModelCapabilities(identity: ModelCapabilities): ModelCapabilities {
+  const api = identity.api === undefined ? 'openai-completions' : identity.api;
+  if (!['openai-completions', 'anthropic-messages'].includes(api)) throw new Error('API 协议不受支持。');
+  const input = identity.input;
+  if (input !== undefined && (!Array.isArray(input) || !input.length || input.some(kind => !['text', 'image'].includes(kind)) || new Set(input).size !== input.length)) throw new Error('输入能力必须是 text 或 image 的非重复数组。');
+  const levels = identity.thinkingLevels;
+  if (levels !== undefined && (!Array.isArray(levels) || levels.some(level => !modelThinkingLevels.includes(level)) || new Set(levels).size !== levels.length)) throw new Error('思考档位数组不正确。');
+  const map = identity.thinkingLevelMap;
+  if (map !== undefined && (!map || typeof map !== 'object' || Array.isArray(map) || Object.entries(map).some(([level, value]) => !modelThinkingLevels.includes(level as ModelThinkingMode) || value !== null && (typeof value !== 'string' || !/^[a-zA-Z0-9_.-]{1,80}$/.test(value))))) throw new Error('思考档位映射不正确。');
+  if (levels?.some(level => map?.[level] === null)) throw new Error('可用思考档位不能映射为 null。');
+  if (identity.defaultThinkingLevel !== undefined && (!modelThinkingLevels.includes(identity.defaultThinkingLevel) || levels && !levels.includes(identity.defaultThinkingLevel) || map?.[identity.defaultThinkingLevel] === null)) throw new Error('默认思考档位不在可用范围内。');
+  return { api, input: input ? [...input] : undefined, thinkingLevels: levels ? [...levels] : undefined,
+    defaultThinkingLevel: identity.defaultThinkingLevel, thinkingLevelMap: map ? { ...map } : undefined,
+    compat: identity.compat === undefined ? undefined : validateModelCompat(api, identity.compat) };
+}
+/** Exact legacy capability or administrator-declared model capability; never infer from registry alias. */
+export function resolveModelThinking(identity: { model: string; baseUrl: string } & ModelCapabilities, requested?: unknown): { thinkingMode: ModelThinkingMode; thinkingSupported: boolean } {
+  if (requested === null) throw new Error('推理模式只能为 off 或 high，或管理员声明的其他思考档位。');
+  const capabilities = resolveModelCapabilities(identity);
+  const explicit = capabilities.thinkingLevels;
+  const supported = capabilities.thinkingLevelMap?.off === null || (explicit?.length ? explicit.some(level => level !== 'off') : isVerifiedDeepSeekModel(identity));
+  const fallback = identity.defaultThinkingLevel ?? (explicit?.length && !explicit.includes('off') ? explicit[0] : capabilities.thinkingLevelMap?.off === null ? 'high' : 'off');
+  const mode = requested ?? fallback;
+  if (!modelThinkingLevels.includes(mode as ModelThinkingMode)) throw new Error('推理模式只能为 off 或 high，或管理员声明的其他思考档位。');
+  if (explicit?.length && !explicit.includes(mode as ModelThinkingMode) || capabilities.thinkingLevelMap?.[mode as ModelThinkingMode] === null) throw new Error('此模型不支持所选思考档位。');
+  if (mode !== 'off' && !supported) throw new Error('尚未核实此模型 ID 与 API 地址支持开启推理，请使用已支持的组合或保留原模式。');
+  if (!explicit && capabilities.thinkingLevelMap === undefined && isVerifiedDeepSeekModel(identity) && mode !== 'off' && mode !== 'high') throw new Error('推理模式只能为 off 或 high。');
+  return { thinkingMode: mode as ModelThinkingMode, thinkingSupported: supported };
 }
 /** Only this verified provider/model/endpoint tuple receives the official preset. */
 export function resolveModelParameters(identity: { provider: string; model: string; baseUrl: string }, values: ModelParameterOverrides = {}): ResolvedModelParameters {
@@ -88,6 +135,12 @@ export function parseTestSeats(raw: string | undefined, seatId: string): LabConf
     return seats.map(seat => ({ id: seat.id, name: seat.name.trim() }));
   } catch { throw new Error('LAB_TEST_SEATS 必须为两个不同的 {id,name} 席位组成的 JSON 数组，且包含 LAB_SEAT_ID。'); }
 }
+/** Web service defaults may come from deployment, but its model keys come from the store. */
+export function loadServerConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
+  return loadConfig({ ...env, LLM_API_KEY: undefined });
+}
+
+/** Standalone probes can still supply credentials for their isolated runtimes. */
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
   const listenHost = env.LAB_LISTEN_HOST ?? '127.0.0.1';
   if (listenHost !== '127.0.0.1' && listenHost !== '0.0.0.0') throw new Error('LAB_LISTEN_HOST 必须为 127.0.0.1 或 0.0.0.0。');

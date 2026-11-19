@@ -138,11 +138,73 @@ export interface ModelParameters {
   compactionReserveTokens: number | null;
   compactionKeepRecentTokens: number | null;
 }
-export type ModelThinkingMode = 'off' | 'high';
-export interface ModelSettings extends ModelParameters {
+export type ModelThinkingMode = 'off' | 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+export type ModelApi = 'openai-completions' | 'anthropic-messages';
+/** Supported public Pi compatibility switches; validated according to the selected API. */
+export interface ModelCompatibility {
+  supportsStore?: boolean;
+  supportsDeveloperRole?: boolean;
+  supportsReasoningEffort?: boolean;
+  supportsUsageInStreaming?: boolean;
+  supportsFinishReason?: boolean;
+  maxTokensField?: 'max_tokens' | 'max_completion_tokens';
+  requiresToolResultName?: boolean;
+  requiresAssistantAfterToolResult?: boolean;
+  requiresThinkingAsText?: boolean;
+  requiresReasoningContentOnAssistantMessages?: boolean;
+  thinkingFormat?: 'openai' | 'openrouter' | 'deepseek' | 'together' | 'baseten' | 'zai' | 'qwen' | 'chat-template' | 'qwen-chat-template' | 'string-thinking' | 'ant-ling';
+  supportsStrictMode?: boolean;
+  supportsLongCacheRetention?: boolean;
+  supportsEagerToolInputStreaming?: boolean;
+  supportsCacheControlOnTools?: boolean;
+  supportsTemperature?: boolean;
+  forceAdaptiveThinking?: boolean;
+  allowEmptySignature?: boolean;
+  supportsStrictTools?: boolean;
+}
+export interface ModelCapabilities {
+  api?: ModelApi;
+  input?: Array<'text' | 'image'>;
+  thinkingLevels?: ModelThinkingMode[];
+  defaultThinkingLevel?: ModelThinkingMode;
+  thinkingLevelMap?: Partial<Record<ModelThinkingMode, string | null>>;
+  compat?: ModelCompatibility;
+}
+export interface ModelPlatform {
+  id: string;
+  name: string;
+  provider: string;
+  baseUrl: string;
+  api: ModelApi;
+  modelsPath?: string;
+  configured: boolean;
+  enabled: boolean;
+  compat?: ModelCompatibility;
+  version: string;
+}
+export interface ModelPlatformUpdate {
+  name: string;
+  provider: string;
+  baseUrl: string;
+  api: ModelApi;
+  modelsPath?: string;
+  apiKey?: string;
+  enabled?: boolean;
+  compat?: ModelCompatibility;
+  expectedVersion: string;
+}
+export interface DiscoveredModel { id: string; name?: string }
+export interface PlatformModelImport { expectedVersion: string; modelIds: string[] }
+export interface ModelSettings extends ModelParameters, ModelCapabilities {
   thinkingMode?: ModelThinkingMode;
   thinkingSupported?: boolean;
   thinkingExplicit?: boolean;
+  platformId?: string;
+  platformName?: string;
+  displayName?: string;
+  enabled?: boolean;
+  usageConfirmed?: boolean;
+  available?: boolean;
   contextSource: 'preset' | 'explicit' | 'unknown';
   outputSource: 'preset' | 'explicit' | 'unknown';
   contextReady: boolean;
@@ -158,6 +220,10 @@ export interface ModelChoice {
   id: string;
   provider: string;
   model: string;
+  platformId?: string;
+  platformName?: string;
+  displayName?: string;
+  available?: boolean;
   configured: boolean;
   contextReady: boolean;
   contextWindow: number | null;
@@ -165,16 +231,21 @@ export interface ModelChoice {
 }
 export interface ModelChoices { defaultModelId: string; models: ModelChoice[] }
 export interface ModelProfile extends ModelSettings { id: string }
-export interface ModelCatalog { version: string; models: ModelProfile[] }
-export interface ModelSettingsUpdate {
-  thinkingMode?: ModelThinkingMode;
+export interface ModelCatalog { version: string; models: ModelProfile[]; platforms?: ModelPlatform[] }
+export interface ModelSettingsUpdate extends Omit<ModelCapabilities, 'defaultThinkingLevel'> {
+  thinkingMode?: ModelThinkingMode | null;
+  defaultThinkingLevel?: ModelThinkingMode | null;
+  platformId?: string;
+  displayName?: string;
+  enabled?: boolean;
+  usageConfirmed?: boolean;
   contextWindow?: number;
   maxOutputTokens?: number;
   compactionReserveTokens?: number;
   compactionKeepRecentTokens?: number;
-  provider: string;
+  provider?: string;
   model: string;
-  baseUrl: string;
+  baseUrl?: string;
   expectedVersion: string;
   apiKey?: string;
 }

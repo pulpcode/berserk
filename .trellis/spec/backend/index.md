@@ -35,7 +35,7 @@ Read [Scenario Director and Business Clock](./scenario-director.md) for dedicate
 
 Read [Continuous Background Analysis](./continuous-analysis.md) for stream epochs, native continuation, task revision inputs, composite authorization, exact published evidence and recovery.
 
-Read [Task Resource Semantics](./task-resources.md) for optional resource declarations, controlled entity association, source compatibility and publication privacy. Read [Task Resource Queries](./task-resource-query.md) for batch 2 read-only discovery, independent task relationships, native results and spatial/statistical use. Read [Task Resource Experience](./task-resource-experience.md) for explicit references, resource editing, result cards and batch 3 Skills; [Model Thinking](./model-thinking.md) covers shared effective runtime configuration. Live-model evaluations remain separate.
+Read [Task Resource Semantics](./task-resources.md) for optional resource declarations, controlled entity association, source compatibility and publication privacy. Read [Task Resource Queries](./task-resource-query.md) for batch 2 read-only discovery, independent task relationships, native results and spatial/statistical use. Read [Task Resource Experience](./task-resource-experience.md) for explicit references, resource editing, result cards and batch 3 Skills; [Model Thinking](./model-thinking.md) covers platform/model administration, schema compatibility, shared Pi protocol/reasoning resolution and request instruction boundaries. Live-model evaluations remain separate.
 
 Read [Professional Symbol Contract](./map-symbols.md) for annotation symbol/role fields, shared geometry validation and compatibility.
 

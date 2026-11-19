@@ -151,6 +151,7 @@ it('keeps administrator personal storage isolated from other administrators, bus
   expect(forgedHeader.statusCode, forgedHeader.body).toBe(200); expect(forgedHeader.json()).toEqual([own.task]);
   expect((await call(admin, '/api/tasks?seatId=business')).statusCode).toBe(400);
   expect(await ok<TaskSpace[]>(admin, '/api/tasks')).toEqual([own.task]);
+  expect((await call(admin, '/api/settings/models')).statusCode).toBe(200);
   for (const path of ['/api/context/catalog', '/api/workbench/items', '/api/information/access']) expect((await call(admin, path)).statusCode, path).toBe(403);
   expect(lab.get(own.session.id, (admin.identity as AdministratorIdentity).personalScopeId).messages).toEqual([]);
   expect(fake.calls).toHaveLength(0); expect(lab.access!.allSeatIds()).toEqual(['business']);

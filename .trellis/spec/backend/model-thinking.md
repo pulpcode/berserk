@@ -1,36 +1,75 @@
-# Effective Model Thinking Configuration
+# Multi-platform Model Configuration and Thinking
 
-## Scope and ownership
+## 1. Scope / Trigger
 
-`server/config.ts` resolves the endpoint/model capability and optional `thinkingMode`; `ModelSettingsStore` persists it in the existing model profile. `pi/model-runtime.ts` exports `configuredRuntime` for product and future evaluation callers. Pi registration, the request-scoped AgentSession and `controlled-stream.ts` use the same captured profile. No second configuration system or custom Agent loop is introduced.
+Read before changing model settings, provider registration, reasoning options, selection, request instructions or auxiliary calls in `experiments/harness-lab`. Extend the existing store and Pi 0.85.1 public SDK; Pi owns the agent loop, native history conversion and compaction. Do not introduce a parallel runtime/configuration system.
 
-## Shared model settings access
+## 2. Signatures
 
-- In formal mode, `GET /api/settings/model`, `GET /api/settings/models`, `PUT /api/settings/model`, `POST /api/settings/models` and `PUT /api/settings/models/:id` require the current independent administrator. These exact route shapes pass the administrator route filter and use the model settings guard reading `accountIdentityOf` plus `SystemRoles`.
-- Anonymous requests receive 401. Ordinary and director seats receive 403 even with `seats.manage_model` present. Origin, CSRF and active view checks still apply to authenticated mutations. Isolated test mode retains its previous routes.
-- Good case: the administrator maintains Settings → Models. Workspace owners use `GET /api/models` and their own idle session's model selector. The safe model list omits endpoints and credentials. A business seat's legacy flag or account-scope workspace projection must never authorize shared writes.
-- Regression coverage: `tests/access.test.ts` checks administrator reads/writes, legacy grant denial, revocation and per-session access. `tests/e2e/model-selection.spec.ts` exercises the formal administrator and business interfaces.
+- `GET /api/settings/models` returns the administrator catalog with global `version`, `platforms` and `models`.
+- `POST /api/settings/platforms`, `PUT /api/settings/platforms/:id` use `ModelPlatformUpdate`.
+- `DELETE /api/settings/platforms/:id` accepts `{expectedVersion}` and returns the updated administrator catalog.
+- `GET /api/settings/platforms/:id/models` probes the saved platform directory and returns candidate IDs and the catalog version. `POST` on the same path saves selected IDs as disabled profiles in one versioned commit.
+- `POST /api/settings/models`, `PUT /api/settings/models/:id` use `ModelSettingsUpdate`; old singular model routes remain compatible.
+- `GET /api/models` returns credential-free selection metadata. Session model selection retains its existing profile ID and ownership/busy validation.
+- `PiLab.updateModelProfile(input,id,create,authorize?)` and `updateModelPlatform(...)` construct affected runtimes before the CAS file commit and publish synchronously afterwards. The authorization callback is rechecked before commit, including `beforeRename`.
+- `configuredRuntime(config)`, `modelReasoning(config)` and `nativeThinkingLevel(config)` are shared by all model callers. `isVerifiedDeepSeekModel(config)` defines the exact temporary instruction-reminder exception.
 
-## Compatibility
+## 3. Contracts
 
-Modes are explicit `off` or `high`. Absence is meaningful: preserve the legacy wire behavior, not an implied new `thinking:disabled` field. The existing provider named `deepseek` retains its prior disabled mapping when no explicit supported adapter is selected; other legacy aliases keep their prior payload. Public settings distinguish explicit selection from legacy behavior. Saving an unrelated field must not silently select off.
+In formal mode, shared model and platform routes require the current independent administrator. The routes pass the administrator route filter and check `accountIdentityOf` and `SystemRoles`. Anonymous requests return 401. Business and director seats return 403 even with a legacy `seats.manage_model` grant. Mutations retain Origin, CSRF and active view checks. Workspace owners can list safe choices and select a model for their own idle conversations.
 
-Read existing single-profile schema 1/2 and catalog schema 3 without rewriting. New single profiles use schema 4 and catalogs schema 5; only explicit mode is persisted. Preserve atomic writes, CAS, same-identity omitted fields, secret redaction and the busy-request guard. New binaries read old configurations; old binaries are not valid rollback targets for schema 4/5 without an explicit stopped-data restoration.
+Platform names allow 100 characters; remote model IDs and model display names allow 200, including the default display name derived from a remote ID. Accepted IDs must survive save/restart. Platforms own `id/name/provider/baseUrl/api/modelsPath/enabled/compat`. The write-only `apiKey` and server-owned `credentialRef` never appear in responses. Models own stable IDs, `platformId/model/displayName/enabled/usageConfirmed`, capacity/compaction parameters, `input`, `thinkingLevels/defaultThinkingLevel/thinkingLevelMap`, model `compat` and optional selected `thinkingMode`. Platform compatibility defaults merge by field beneath model overrides. API is `openai-completions` or `anthropic-messages`; protocol-specific switches are strictly validated.
 
-## Supported adapter
+New writes use `model-settings.json` schema 7 with global CAS version, mode 0600 and a private `credentials` mapping keyed by the stable per-platform `credentialRef`. Read legacy schemas 1–6 without eager rewriting, preserving locally saved keys and model IDs. Missing API means OpenAI Completions. Legacy per-model endpoint/key edits must not silently mutate a shared platform; fork its platform when necessary. Rollback to old code requires a paired stopped-data/config backup.
 
-Capability depends on the normalized HTTPS endpoint and exact model ID, not the user-defined provider alias. Verified pairs are `deepseek-flash` at the official DeepSeek root or `/v1`, and `deepseek-v4.1-flash` at `https://ark.cn-beijing.volces.com/api/plan/v3`. Unknown high modes fail explicitly. Do not infer that a compatible protocol or similarly named model supports the setting.
+The Web service has no environment-variable model credential fallback. Preserve non-key deployment defaults and authentication settings. Kimi Code starts disabled, uses `https://api.kimi.com/coding/` and Anthropic Messages, and offers `kimi-for-coding` (K2.8 Preview) with `low` effort as the offline candidate. Use Pi's adaptive thinking setting for that candidate to send the effort setting. Account capacity, usage confirmation and a saved key are needed before use. Default new sessions and background execution retain the existing default model.
 
-For explicit supported modes, use the installed public Pi SDK reasoning options and DeepSeek thinking format. Actual final JSON carries enabled/high or disabled as selected. The registered model capability must agree with the session and stream settings. Do not overwrite native compaction maxTokens, inject the foreground reminder into compaction, or require returned private reasoning text.
+Changing an existing profile's platform or remote model resets usage confirmation unless the administrator explicitly confirms that new identity. A platform can be saved without a key. When a key exists, changing provider, normalized base URL or API requires explicit key entry. An omitted or blank key preserves the saved key for the same destination.
 
-## Execution and failure behavior
+Deleting a platform uses the same model-write guard, current settings version and before-rename authorization check. One file commit removes its credential and all its profiles. The lab drops their runtimes synchronously after commit. A platform holding the system default profile requires moving that profile first. Session selections and history retain their original IDs. An affected session remains readable and requires choosing an available model before sending again.
 
-Capture the profile/runtime/version at request admission. Foreground first reply, tool continuation, native automatic compaction, child execution and background default-profile execution use that snapshot. Existing authorization and readonly child tools remain unchanged. There is no standalone manual-compaction product endpoint; shared compaction-stream verification is not evidence of such an endpoint.
+Discovery is a read-only administrator action. `modelsPath` is a fixed path on the saved platform's HTTPS origin. Use that platform's key, protocol authentication, bounded response sizes and timeouts, pinned public DNS results, and no redirects. Parse `data[].id` conservatively, deduplicate IDs, and report a sanitized failure on unsupported account endpoints or formats. Discovery returns no credentials, does not infer model capacities, and never activates or persists candidates. Version checks prevent importing a result against changed settings. Batch import skips already registered IDs on the same platform, shares the model-write guard, and saves only selected new IDs, disabled and without usage confirmation. Manual entry remains available.
 
-Keep Pi native transient retry (up to three extra attempts) and transport retries zero. Settings must remain consistent on native retries. SSE bytes including heartbeats reset the HTTP idle deadline; absence of reasoning text is not idle or failure. Genuine timeout and cancellation still settle through the existing controlled stream. Do not add task-level retries or live probes as an implicit configuration check.
+Missing `thinkingMode` on an update preserves its old value; explicit null clears the selection to provider default. `defaultThinkingLevel` supports the same reset. Always-on models require `thinkingLevelMap.off = null`; omitting call options alone can otherwise cause Pi Anthropic to emit disabled thinking. Unverified effort values remain unspecified. Capability fields must be explicitly cleared when combining model config with host defaults so one profile cannot inherit another profile's thinking/compatibility.
 
-## Required evidence
+Capture config/runtime/version and resource snapshot at host-request admission. Foreground reply, tool continuation, native compaction and child execution use that snapshot; same-request steer/followUp does not refresh instructions. Independent prompt suggestions/work activity use the same resolution with their original deadlines and output allowances. Preserve Pi native retry and zero transport retries.
 
-Use real public SDK serialization with HTTP replaced locally to capture endpoint/model/mode/budget and tool continuation, child/background, automatic compaction and native retry requests. Preserve legacy missing-field payload tests, settings save/restart/CAS/secret tests and heartbeat/stall/cancel tests. Do not call a live provider or expose keys in fixtures/logs.
+Instructions enter native `agentsFilesOverride`/systemPrompt. Connector target-selection guidance is collected before `DefaultResourceLoader.reload()` and appended through the public loader mechanism for every provider. It must survive disabling the duplicate reminder.
 
-Offline evidence proves request construction and lifecycle consistency. It does not prove provider-side internal reasoning, billing, Skill loading quality or task accuracy. Future evaluations must call the same runtime entry instead of copying an override.
+Only exact verified DeepSeek tuples with OpenAI Completions receive the transient `<host_request_instructions>` copy immediately before the final wire user: official `deepseek-flash` at `https://api.deepseek.com` or `/v1`, and Ark `deepseek-v4.1-flash` at `https://ark.cn-beijing.volces.com/api/plan/v3`. Never select this exception by provider alias alone. Kimi receives no second copy, no custom Context, no encoded system-message insertion. The general rule explanation is protocol-neutral. Native compaction retains its own prompt and allowance. Long-term removal/unification stays in issue #4; offline structure tests do not prove rule-following.
+
+## 4. Validation & Error Matrix
+
+| Condition | Result |
+| --- | --- |
+| Business account, including old manage-model grant | 403 on model/platform administration |
+| Missing credential, incomplete capacity, disabled platform/model or unconfirmed usage | Not selectable; explicit request fails before provider call |
+| Existing key with changed provider, endpoint or API and no explicit key entry | MODEL_API_KEY_REQUIRED |
+| Stale global version or unexpected disk changes | MODEL_SETTINGS_CONFLICT; no runtime publication |
+| Deleting the platform that holds the system default model | DEFAULT_MODEL_PLATFORM; move the default model first |
+| Active foreground/background request | Settings busy; preserve request snapshot |
+| Invalid API/compatibility/capability/null-mapped selected level | INVALID_INPUT |
+| Save failure or revoked authorization before commit | No settings/runtime publication; preserve original failure category |
+
+Keep Origin, CSRF, current-account and workspace/session scope guards. Return only safe public configuration; do not expose env values or provider secrets in API errors, fixtures or logs.
+
+## 5. Good / Base / Bad Cases
+
+- Good: two platforms expose the same remote model ID with distinct stable profile IDs and credentials; selecting one resolves only that platform.
+- Base: old DeepSeek file loads without rewriting, saves to schema 7 and retains original session selection and missing-mode wire behavior.
+- Bad: an arbitrary provider named deepseek inherits the instruction patch, or Kimi receives the default model's explicit thinking selection through object spread.
+
+## 6. Tests Required
+
+`tests/access.test.ts` checks administrator reads and writes, legacy grant denial, revocation and per-session access. `tests/e2e/model-selection.spec.ts` exercises the formal administrator and business interfaces.
+
+Use actual Pi SDK serialization with intercepted HTTP for both APIs. Assert endpoint/auth binding, tools/schema/tool-result IDs, thinking defaults and level overrides, platform/model compat precedence, schema round trip/CAS/permissions/secret redaction, cross-profile capability isolation and same-session DeepSeek→Kimi→DeepSeek. Test Kimi rule update/clear/tool continuation fixed snapshot, no duplicate reminder, native compaction isolation and required connector guidance. Test disabled-model history remains readable and can be switched. Keep heartbeat/stall/cancellation/retry coverage.
+
+Run typecheck, lint, relevant/full Vitest, build and desktop admin/selection Playwright checks. Real Kimi streaming, behavioral rule compliance, account entitlement and cross-model quality remain pending until credentials are supplied; never infer them from mocked HTTP.
+
+## 7. Wrong vs Correct
+
+Wrong: branch on provider alias, insert a system message into every API, or assume omission prevents disabled thinking.
+
+Correct: resolve explicit platform protocol and model capabilities; let Pi encode native context; gate the known DS exception by API plus normalized endpoint and model, and register always-on thinking as off:null.

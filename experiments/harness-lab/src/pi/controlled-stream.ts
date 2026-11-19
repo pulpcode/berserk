@@ -1,7 +1,7 @@
 import { createAssistantMessageEventStream, type AssistantMessage, type Context, type Model, type Api, type SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { ModelRuntime } from '@earendil-works/pi-coding-agent';
-import { providerPayload } from './model-runtime.js';
-import { resolveModelThinking, type LabConfig } from '../server/config.js';
+import { modelReasoning, providerPayload } from './model-runtime.js';
+import { isVerifiedDeepSeekModel, type LabConfig } from '../server/config.js';
 import type { UsageSummary } from '../contracts/index.js';
 import { tokenUsage } from './compaction-history.js';
 import type { ModelPermits } from '../background/model-permits.js';
@@ -51,10 +51,9 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
       if (purpose === 'compaction') usage.compactionAttempts++; else usage.replyAttempts++;
       admission?.started();
       progress();
-      const thinking = resolveModelThinking(config, config.thinkingMode);
       const upstream = runtime.streamSimple(selected, context, {
         ...options, signal: combined,
-        reasoning: thinking.thinkingMode === 'high' ? 'high' : undefined,
+        reasoning: modelReasoning(config),
         apiKey: config.apiKey, maxRetries: 0,
         fetch: async (input, init) => {
           transportActive = true;
@@ -70,7 +69,7 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
         ...(config.llmRequestTimeoutMs ? { timeoutMs: config.llmRequestTimeoutMs } : {}),
         onPayload: payload => {
           const compatible = providerPayload(config, payload);
-          if (purpose === 'compaction') return compatible;
+          if (purpose === 'compaction' || !isVerifiedDeepSeekModel(config)) return compatible;
           if (!Array.isArray(compatible.messages)) throw new Error('Provider message payload unavailable');
           const messages: unknown[] = compatible.messages;
           const index = messages.findLastIndex(message => typeof message === 'object' && message !== null && 'role' in message && message.role === 'user');
