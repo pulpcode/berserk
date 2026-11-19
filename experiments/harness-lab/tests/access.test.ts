@@ -5,6 +5,8 @@ import { join } from 'node:path';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, describe, expect, it } from 'vitest';
 import { AccessStore } from '../src/access/store.js';
+import { migrateAdministratorAccounts } from '../src/access/administrator-schema.js';
+import { SystemRoles } from '../src/access/system-roles.js';
 import { openDatabase } from '../src/access/database.js';
 import { PiLab } from '../src/pi/lab.js';
 import { createApp } from '../src/server/app.js';
@@ -14,10 +16,14 @@ import type { AuthSession, TaskSpace } from '../src/contracts/access.js';
 
 const cleanups:Array<()=>Promise<unknown>>=[];
 afterEach(async()=>{for(const fn of cleanups.splice(0).reverse())await fn();});
-async function setup(managers = ['a'], publicOrigin?: string) {
+async function setup(managers = ['a'], publicOrigin?: string, withAdministrator = false) {
   const dir=await mkdtemp(join(tmpdir(),'axon-access-'));cleanups.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir);const store=new AccessStore(db);
   for(const name of ['a','b','c'])await store.saveAccount({username:name,displayName:name,seatId:name,seatName:`席位 ${name}`,password:'test-password-123',createPublicTask:managers.includes(name),manageModelSettings:name==='a'});
+  if (withAdministrator) {
+    migrateAdministratorAccounts(db);
+    await store.saveAdministratorAccount({username:'system-admin',displayName:'管理员席',password:'test-password-123'});
+  }
   db.close();
   const config=testConfig(dir,{seatId:'a',publicOrigin,auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});
   const fake=await fakeRuntime(config,()=>({text:'任务处理完成'})); const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab);cleanups.push(()=>app.close());
@@ -97,30 +103,39 @@ describe('authenticated task scopes',()=>{
     expect((await app.inject({method:'POST',url:'/api/tasks',headers,payload:input('private')})).statusCode).toBe(200);
     expect((await app.inject('/api/health')).statusCode).toBe(200);
   });
-  it('limits model configuration to managers while every seat can select a safe model for its own idle conversations', async () => {
-    const { app, lab, config } = await setup();
+  it('limits model configuration to independent administrators while seats select a safe model for their own idle conversations', async () => {
+    const { app, lab, config, dir } = await setup(['a'], undefined, true);
+    const roles = new SystemRoles(lab.access!.db);
+    roles.grant('a');
+    const admin = await login(app, 'system-admin');
     const a = await login(app, 'a'), b = await login(app, 'b');
     expect((await app.inject('/api/models')).statusCode).toBe(401);
-    const initial = (await a.call('/api/settings/models')).json();
+    expect((await app.inject('/api/settings/models')).statusCode).toBe(401);
+    expect(a.auth.identity?.manageModelSettings).toBe(true);
+    expect(roles.has(a.auth.identity!.userId)).toBe(true);
+    const initial = (await admin.call('/api/settings/models')).json();
     const settings = { provider: config.provider, model: config.model, baseUrl: 'https://alternate.invalid/v1', apiKey: 'catalog-test-only-secret', expectedVersion: initial.version, contextWindow: 65536, maxOutputTokens: 2048 };
-    const added = await a.call('/api/settings/models', settings);
+    const added = await admin.call('/api/settings/models', settings);
     expect(added.statusCode, added.body).toBe(201);
     const profile = added.json();
     const safe = await b.call('/api/models');
     expect(safe.statusCode).toBe(200);
     expect(safe.json()).toMatchObject({ defaultModelId: 'default', models: [{ id: 'default' }, { id: profile.id }] });
     for (const hidden of ['baseUrl', 'apiKey', config.apiKey, config.baseUrl, settings.apiKey, settings.baseUrl]) expect(safe.payload).not.toContain(hidden);
-    for (const url of ['/api/settings/model', '/api/settings/models']) expect((await b.call(url)).statusCode).toBe(403);
-    expect((await b.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).statusCode).toBe(403);
-    for (const url of ['/api/settings/model', `/api/settings/models/${profile.id}`]) expect((await b.call(url, { ...settings, expectedVersion: profile.version }, 'PUT')).statusCode).toBe(403);
-    expect((await a.call('/api/settings/model')).statusCode).toBe(200);
-    expect((await a.call('/api/settings/models')).json().models).toHaveLength(2);
     const taskA = (await a.call('/api/tasks', input('private'))).json<TaskSpace>();
     const taskB = (await b.call('/api/tasks', input('private'))).json<TaskSpace>();
     const wa = (await a.call(`/api/tasks/${taskA.id}/workspace`, {})).json();
     const wb = (await b.call(`/api/tasks/${taskB.id}/workspace`, {})).json();
     const sa = (await a.call('/api/sessions', { workspaceId: wa.id })).json();
     const sb = (await b.call('/api/sessions', { workspaceId: wb.id, modelId: profile.id })).json();
+    expect(sa.modelId).toBe('default');
+    for (const seat of [a, b]) {
+      for (const url of ['/api/settings/model', '/api/settings/models']) expect((await seat.call(url)).statusCode).toBe(403);
+      expect((await seat.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).statusCode).toBe(403);
+      for (const url of ['/api/settings/model', `/api/settings/models/${profile.id}`]) expect((await seat.call(url, { ...settings, expectedVersion: profile.version }, 'PUT')).statusCode).toBe(403);
+    }
+    expect((await admin.call('/api/settings/model')).statusCode).toBe(200);
+    expect((await admin.call('/api/settings/models')).json().models).toHaveLength(2);
     expect(sb.modelId).toBe(profile.id);
     expect((await b.call(`/api/sessions/${sa.id}/model`, { modelId: profile.id }, 'PUT')).statusCode).toBe(404);
     expect((await a.call(`/api/sessions/${sb.id}/model`, { modelId: 'default' }, 'PUT')).statusCode).toBe(404);
@@ -130,13 +145,22 @@ describe('authenticated task scopes',()=>{
     }
     const pending = lab.start(sb.id, '预留中的会话', {}, 'b');
     expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().error.code).toBe('SESSION_BUSY');
-    expect((await a.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).json().error.code).toBe('MODEL_SETTINGS_BUSY');
+    expect((await admin.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).json().error.code).toBe('MODEL_SETTINGS_BUSY');
     await pending.run(() => {});
     lab.backgroundHooks = { isSessionReserved: id => id === sb.id, isActive: () => false };
     expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().error.code).toBe('SESSION_BUSY');
     lab.backgroundHooks = undefined;
     expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().modelId).toBe(profile.id);
     expect(lab.get(sa.id, 'a').modelId).toBe('default');
+    const settingsPath = join(dir, 'model-settings.json');
+    const saved = await readFile(settingsPath);
+    roles.revoke('system-admin');
+    expect((await admin.call('/api/settings/models')).statusCode).toBe(401);
+    expect((await admin.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).statusCode).toBe(401);
+    expect(await readFile(settingsPath)).toEqual(saved);
+    roles.revoke('a');
+    expect((await a.call('/api/models')).statusCode).toBe(200);
+    expect((await a.call('/api/settings/models')).statusCode).toBe(403);
   });
 
   it('requires explicit production credentials and rejects test-seat bypass, CSRF and stale views',async()=>{

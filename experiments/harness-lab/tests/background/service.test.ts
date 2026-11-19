@@ -6,6 +6,7 @@ import type { FastifyInstance } from 'fastify';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { openDatabase } from '../../src/access/database.js';
 import { AccessStore } from '../../src/access/store.js';
+import { migrateAdministratorAccounts } from '../../src/access/administrator-schema.js';
 import { HandoffFiles } from '../../src/collaboration/files.js';
 import { ModelSettingsStore } from '../../src/server/model-settings.js';
 import * as backgroundRuntime from '../../src/pi/background-runner.js';
@@ -35,10 +36,14 @@ async function login(app: FastifyInstance, name: string) {
   return {auth, headers, call: (url: string, payload?: object, method: 'POST' | 'PUT' = 'POST') => app.inject({url, method: payload === undefined ? 'GET' : method, headers, ...(payload === undefined ? {} : {payload})})};
 }
 type Client = Awaited<ReturnType<typeof login>>;
-async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent?: boolean; backlogLimit?: number; docker?: boolean; modePolicies?: boolean} = {}) {
+async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent?: boolean; backlogLimit?: number; docker?: boolean; modePolicies?: boolean; administrator?: boolean} = {}) {
   const dataDir = await mkdtemp(join(tmpdir(), 'axon-background-api-')); cleanup.push(() => rm(dataDir, {recursive: true, force: true}));
   const db = await openDatabase(dataDir); const access = new AccessStore(db);
   for (const username of ['a', 'b']) await access.saveAccount({username, displayName: username, seatId: username, seatName: `席位 ${username}`, password: 'test-password-123', createPublicTask: true, manageModelSettings: username === 'a'});
+  if (options.administrator) {
+    migrateAdministratorAccounts(db);
+    await access.saveAdministratorAccount({username: 'queue-admin', displayName: '队列管理员', password: 'test-password-123'});
+  }
   db.close();
   const config = testConfig(dataDir, {seatId: 'a', auth: {secret: 'test-signing-key-at-least-32-characters', sessionMs: 28800000}});
   const fake = await fakeRuntime(config, options.reply ?? (() => ({text: '预处理结果：请核对时间与地点。'})));
@@ -119,7 +124,8 @@ describe('information intake and native background service', () => {
     context.store.grant('seat', 'b', 'other', 'manage');
     context.lab.access!.db.prepare('UPDATE seats SET control_scenarios=1 WHERE id=?').run('b');
     const capabilities = (await b.call('/api/information/access')).json();
-    expect(capabilities).toMatchObject({ canManageQueue: false, canReviewDeliveries: false });
+    expect(capabilities).toMatchObject({ canReviewDeliveries: false });
+    expect((await b.call('/api/information/queue', {revision: 0, enabled: false}, 'PUT')).statusCode).toBe(403);
     expect(capabilities.sources.every((source: {permission:string}) => source.permission === 'view')).toBe(true);
     expect(capabilities.seats.map((seat: {id:string}) => seat.id)).toEqual(['a']);
     expect((await b.call('/api/information/events')).statusCode).toBe(200);
@@ -159,7 +165,7 @@ describe('information intake and native background service', () => {
   });
 
   it('bounds unmatched backlog, persists basic rule edits and requires explicit processing of old information', async () => {
-    const context = await setup({backlogLimit: 1}); const a = await login(context.app, 'a'); const b = await login(context.app, 'b');
+    const context = await setup({backlogLimit: 1, administrator: true}); const a = await login(context.app, 'a'); const b = await login(context.app, 'b');
     context.store.grant('seat', 'b', 'special', 'view');
     const first = await context.source('events', message('unmatched')); expect(first.statusCode).toBe(202);
     expect((await context.source('events', message('overflow'))).statusCode).toBe(429);
@@ -174,7 +180,17 @@ describe('information intake and native background service', () => {
     expect((await settled(context.store, processed.json<BackgroundJob>().id)).status).toBe('succeeded');
     expect(context.store.listJobs()).toHaveLength(1);
     const currentControl = (await a.call('/api/information/queue')).json<BackgroundControl>();
-    const stopped = await a.call('/api/information/queue', {revision: currentControl.revision, enabled: false}, 'PUT'); expect(stopped.statusCode, stopped.body).toBe(200);
+    const pause = {revision: currentControl.revision, enabled: false};
+    expect((await context.app.inject({url: '/api/information/queue', method: 'PUT', payload: pause})).statusCode).toBe(401);
+    expect((await a.call('/api/information/queue', pause, 'PUT')).statusCode).toBe(403);
+    expect((await a.call('/api/information/queue')).json()).toEqual(currentControl);
+    const admin = await login(context.app, 'queue-admin');
+    expect((await admin.call('/api/information/queue')).json()).toEqual(currentControl);
+    expect((await admin.call('/api/information/rules')).statusCode).toBe(403);
+    const stopped = await admin.call('/api/information/queue', pause, 'PUT'); expect(stopped.statusCode, stopped.body).toBe(200);
+    expect(stopped.json()).toMatchObject({enabled: false, updatedByUserId: admin.auth.identity!.userId});
+    expect((await a.call('/api/information/queue')).json()).toEqual(stopped.json());
+    expect((await admin.call('/api/information/queue', {...pause, enabled: true}, 'PUT')).statusCode).toBe(409);
     expect((await b.call('/api/information/queue', {revision: stopped.json<BackgroundControl>().revision, enabled: true}, 'PUT')).statusCode).toBe(403);
     const sourcePaused = await a.call('/api/information/sources/special', {revision: 0, accepting: false}, 'PUT'); expect(sourcePaused.statusCode, sourcePaused.body).toBe(200);
     expect((await context.source('events', message('new-paused'))).statusCode).toBe(503);
@@ -458,7 +474,7 @@ describe('information intake and native background service', () => {
   });
 
   it('keeps queued seat analysis and its session reservation across a stopped service, then claims it exactly once', async () => {
-    const context = await setup(); const a = await login(context.app, 'a'), b = await login(context.app, 'b');
+    const context = await setup({administrator: true}); const a = await login(context.app, 'a'), b = await login(context.app, 'b');
     const {deliveries} = await delivered(context, a); const delivery = deliveries.find(item => item.recipientSeatId === 'b')!;
     const target = await task(b); context.store.setControl('queue', 0, false, a.auth.identity!.userId);
     const response = await b.call(`/api/inbox/${delivery.id}/analyses`, {clientActionId: randomUUID(), taskSpaceId: target.id, goal: '重启后分析', mode: 'background', includeResult: true, fileIds: []});
@@ -472,8 +488,8 @@ describe('information intake and native background service', () => {
     const restoredB = await login(app, 'b');
     expect((await restoredB.call(`/api/sessions/${action.sessionId}/messages`, {text: '等待中的会话'})).statusCode).toBe(409);
     expect((await restoredB.call(`/api/tasks/${target.id}/archive`, {revision: 1})).statusCode).toBe(409);
-    const restoredA = await login(app, 'a'); const control = (await restoredA.call('/api/information/queue')).json<BackgroundControl>();
-    expect((await restoredA.call('/api/information/queue', {revision: control.revision, enabled: true}, 'PUT')).statusCode).toBe(200);
+    const administrator = await login(app, 'queue-admin'); const control = (await administrator.call('/api/information/queue')).json<BackgroundControl>();
+    expect((await administrator.call('/api/information/queue', {revision: control.revision, enabled: true}, 'PUT')).statusCode).toBe(200);
     expect((await settled(store, action.jobId!)).status).toBe('succeeded');
     expect(store.listJobs()).toHaveLength(2); expect(store.listDeliveries()).toHaveLength(2); expect(context.fake.calls).toHaveLength(2);
     expect(lab.get(action.sessionId!, 'b').messages.filter(item => item.role === 'user')).toHaveLength(1);
@@ -544,23 +560,48 @@ it('aggregates all authorized sources before stable paging, deduplicates multi-t
 });
 
 
-it('free debug freezes original policy ACL/profile/recipients without granting scenario access, and retired wire IDs remain receipt-only', async()=>{
-  const {app,lab,store,source}=await setup({modePolicies:true});
-  store.revoke('seat','a','other');store.grant('seat','b','other','manage');
-  const a=await login(app,'a'),b=await login(app,'b');
-  await createRule(a,['a']);
-  const debugRule=await b.call('/api/information/rules',{clientActionId:randomUUID(),name:'自由调试',sourceId:'other',profileId:'debug',recipientSeatIds:['b'],enabled:true});expect(debugRule.statusCode,debugRule.body).toBe(200);
-  const run=`run-${randomUUID()}`;let mode:'scenario'|'free_debug'='free_debug';
-  lab.scenario={verifyIncoming:async()=>run,modeFor:async()=>mode,isWritable:()=>true,assertWritable:()=>{},activeId:()=>run} as unknown as NonNullable<PiLab['scenario']>;
-  const control=store.getControl('queue',true);store.setControl('queue',control.revision,false);
-  const debugInput={...message(),scenarioInstanceId:run},accepted=await source('events',debugInput);expect(accepted.statusCode,accepted.body).toBe(202);
-  const debug=store.getEvent(accepted.json().eventId),debugJob=store.getJob(debug.initialJobId!);expect(debug).toMatchObject({sourceId:'special',policySourceId:'other'});expect(debugJob).toMatchObject({sourceId:'special',policySourceId:'other',ruleSnapshot:{rule:{sourceId:'other',recipientSeatIds:['b']},profile:{id:'debug'}}});
-  expect((await a.call(`/api/information/events/${debug.id}`)).statusCode).toBe(404);expect((await b.call(`/api/information/events/${debug.id}`)).statusCode).toBe(200);
-  expect((await a.call('/api/information/jobs')).json().items).toHaveLength(0);expect((await b.call('/api/information/jobs')).json().items).toHaveLength(1);
-  mode='scenario';const scene=await source('events',{...message(),scenarioInstanceId:run});expect(scene.statusCode,scene.body).toBe(202);const event=store.getEvent(scene.json().eventId);expect(event.policySourceId).toBe('special');
-  expect((await b.call(`/api/information/events/${event.id}`)).statusCode).toBe(404);expect((await a.call(`/api/information/events/${event.id}`)).statusCode).toBe(200);expect((await b.call(`/api/information/events/${debug.id}`)).statusCode).toBe(200);
-  const paused=store.getControl('source:special',true);store.setControl('source:special',paused.revision,false);expect((await source('events',debugInput)).statusCode).toBe(202);
-  expect((await source('events',message(),'other')).statusCode).not.toBe(202);
-  expect((await b.call('/api/information/sources/other',{accepting:true,revision:0},'PUT')).statusCode).toBe(410);
-  expect(()=>new BackgroundStore(lab.access!.db)).not.toThrow();
+it('both run modes use the current canonical rule while retaining their own visibility and historical rules', async () => {
+  const { app, lab, store, source } = await setup({modePolicies: true});
+  store.revoke('seat', 'a', 'other');
+  store.grant('seat', 'b', 'other', 'manage');
+  const a = await login(app, 'a'), b = await login(app, 'b');
+  const sharedRule = await createRule(a, ['a']);
+  const oldRule = store.createRule(b.auth.identity!.userId, randomUUID(), {name:'旧自由调试', sourceId:'other', profileId:'debug', recipientSeatIds:['b'], enabled:true});
+  expect((await a.call('/api/information/rules')).json().items).toEqual([sharedRule]);
+  expect((await b.call('/api/information/rules')).json().items).toEqual([]);
+  expect((await b.call(`/api/information/rules/${oldRule.id}`)).json()).toEqual(oldRule);
+  expect((await b.call('/api/information/rules', {clientActionId:randomUUID(),name:'新调试规则',sourceId:'other',profileId:'debug',recipientSeatIds:['b'],enabled:true})).statusCode).toBe(410);
+
+  let run = `run-${randomUUID()}`;
+  let mode: 'scenario' | 'free_debug' = 'free_debug';
+  lab.scenario = {verifyIncoming: async () => run, modeFor: async () => mode, isWritable: (id:string) => id === run, assertWritable: () => {}, activeId: () => run} as unknown as NonNullable<PiLab['scenario']>;
+  const debugInput = {...message(), scenarioInstanceId: run};
+  const accepted = await source('events', debugInput); expect(accepted.statusCode, accepted.body).toBe(202);
+  const debug = store.getEvent(accepted.json().eventId);
+  const debugJob = await settled(store, debug.initialJobId!);
+  expect(debug).toMatchObject({sourceId:'special', policySourceId:'other', ruleSourceId:'special'});
+  expect(debugJob).toMatchObject({status:'succeeded', sourceId:'special', policySourceId:'other', ruleSnapshot:{rule:{id:sharedRule.id, sourceId:'special', recipientSeatIds:['a']},profile:{id:'material'}}});
+  await vi.waitFor(() => expect(store.listDeliveries(debugJob.id)).toMatchObject([{recipientSeatId:'a', status:'delivered'}]));
+  expect((await a.call(`/api/information/events/${debug.id}`)).statusCode).toBe(404);
+  expect((await b.call(`/api/information/events/${debug.id}`)).statusCode).toBe(200);
+  expect((await a.call('/api/inbox')).json().items.map((item: InboxItem) => item.event.id)).toEqual([debug.id]);
+  expect((await b.call('/api/inbox')).json().items).toEqual([]);
+  expect((await a.call('/api/information/jobs')).json().items).toHaveLength(0);
+  expect((await b.call('/api/information/jobs')).json().items).toHaveLength(1);
+  const paused = store.getControl('source:special', true);
+  const frozen = store.setControl('source:special', paused.revision, false);
+  expect((await source('events', debugInput)).json()).toEqual(accepted.json());
+  store.setControl('source:special', frozen.revision, true);
+
+  mode = 'scenario'; run = `run-${randomUUID()}`;
+  const scene = await source('events', {...message(), scenarioInstanceId:run}); expect(scene.statusCode, scene.body).toBe(202);
+  const event = store.getEvent(scene.json().eventId);
+  expect(event.policySourceId).toBe('special');
+  expect(store.getJob(event.initialJobId!).ruleSnapshot?.rule.id).toBe(sharedRule.id);
+  expect((await b.call(`/api/information/events/${event.id}`)).statusCode).toBe(404);
+  expect((await a.call(`/api/information/events/${event.id}`)).statusCode).toBe(200);
+  expect((await source('events', message(), 'other')).statusCode).not.toBe(202);
+  expect((await b.call('/api/information/sources/other', {accepting:true, revision:0}, 'PUT')).statusCode).toBe(410);
+  expect(store.getRule(oldRule.id)).toEqual(oldRule);
+  expect(() => new BackgroundStore(lab.access!.db)).not.toThrow();
 });

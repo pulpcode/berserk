@@ -1,0 +1,6 @@
+{
+  "seats": [
+    {"id": "seat-admin", "name": "管理员席", "type": "administrator", "responsibility": "维护平台配置、共享模型、专家、技能与连接器。"},
+    {"id": "seat-overall", "name": "总体席", "type": "business", "responsibility": "协调跨席位工作，按现有业务授权管理公共任务、分派和验收。"}
+  ]
+}

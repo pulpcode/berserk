@@ -1,0 +1,3 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file":".trellis/spec/backend/task-access.md","reason":"既有账号登录、独立管理员和业务任务隔离"}
+{"file":".trellis/spec/backend/commands.md","reason":"保留下达接口和既有校验"}

@@ -182,7 +182,10 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
     });
   }
   const requireModelSettings = async (request: FastifyRequest) => {
-    if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN', '当前席位无权管理模型配置。', 403);
+    if (!lab.access) return;
+    const account = accountIdentityOf(request);
+    if (account.role !== 'administrator') throw new RequestError('FORBIDDEN', '只有管理员席可以管理模型配置。', 403);
+    new SystemRoles(lab.access.db).requireAdministrator(account.userId);
   };
   const modelBody = { type: 'object', additionalProperties: false, required: ['provider', 'model', 'baseUrl', 'expectedVersion'], properties: {
       provider: { type: 'string', minLength: 1, maxLength: 80 }, model: { type: 'string', minLength: 1, maxLength: 200 },

@@ -28,7 +28,7 @@ async function setup(page: Page, reply: Parameters<typeof fakeRuntime>[1] = () =
   });
   return { lab, fake, adminId, writes, close: async () => { if (!page.isClosed()) { await page.goto('about:blank').catch(() => {}); await page.unrouteAll({ behavior: 'ignoreErrors' }); } await lab.close(); await app.close(); await rm(dir, { recursive: true, force: true }); } };
 }
-async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '系统管理员' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible({ timeout: 15000 }); }
+async function login(page: Page) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: '管理员席' }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible({ timeout: 15000 }); }
 async function personal(page: Page) {
   await page.getByRole('button', { name: '对话保存位置', exact: true }).click(); await page.getByRole('menuitem', { name: '新建个人空间', exact: true }).click();
   const space = page.getByRole('dialog', { name: '新建个人空间', exact: true });

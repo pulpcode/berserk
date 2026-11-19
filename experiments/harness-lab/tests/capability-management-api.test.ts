@@ -40,7 +40,7 @@ test('authenticated management trial/publication and five-level defaults preserv
     expect((await app.inject('/api/capabilities/library')).statusCode).toBe(401);
     expect((await call(admin,'/api/capabilities/library?seatId=owner')).statusCode).toBe(400);
     // Private workspace access does not turn an administrator into a business actor.
-    for(const path of ['/api/settings/models','/api/information/access','/api/continuous/access','/api/me/preferences/expert','/api/context/catalog','/api/workbench/items']) {
+    for(const path of ['/api/information/access','/api/continuous/access','/api/me/preferences/expert','/api/context/catalog','/api/workbench/items']) {
       const denied=await call(admin,path);expect(denied.statusCode,path).toBe(403);
     }
     expect(await ok(admin,'/api/tasks')).toEqual([]);

@@ -493,20 +493,25 @@ test('reopening an unregistered submission preserves its draft and allows a new 
 });
 
 
-test('mode policy rule scope remains editable without canonical-source management', async ({ page }) => {
+test('rules list offers only the live source and keeps the prior debug rule for history', async ({ page }) => {
   const env = await setup(false, undefined, false, true); await env.attach(page);
+  const legacy = env.store.createRule(env.actor.userId, randomUUID(), { ...env.ruleInput, name: '旧调试处理规则', sourceId: 'incoming-debug', recipientSeatIds: ['b'] });
   try {
     await login(page, 'a'); await page.getByRole('button', {name: '工作总览', exact: true}).click();
     await page.getByRole('button', {name: '处理与投递规则', exact: true}).click();
+    await expect(page.getByRole('combobox', {name: '规则来源', exact: true}).locator('option')).toHaveText(['全部来源', '情报接入']);
+    await expect(page.getByRole('button', {name: '新建规则', exact: true})).toHaveCount(0);
+    await expect(page.getByRole('button', {name: /旧调试处理规则/})).toHaveCount(0);
+    env.store.grant('seat', 'a', 'incoming', 'manage');
+    await page.reload();
     await page.getByRole('button', {name: '新建规则', exact: true}).click();
-    await expect(page.getByRole('combobox', {name: '接入来源', exact: true})).toHaveValue('incoming-debug');
-    await expect(page.getByRole('combobox', {name: '接入来源', exact: true}).locator('option:checked')).toHaveText('情报接入 · 自由调试');
-    await expect(page.getByLabel('席位 A', {exact: true})).toHaveCount(0);
-    await page.getByLabel('规则名称').fill('调试处理规则'); await page.getByLabel('席位 B', {exact: true}).check();
+    await expect(page.getByRole('combobox', {name: '接入来源', exact: true})).toHaveValue('incoming');
+    await expect(page.getByRole('combobox', {name: '接入来源', exact: true}).locator('option:checked')).toHaveText('情报接入');
+    await page.getByLabel('规则名称').fill('共用处理规则'); await page.getByLabel('席位 A', {exact: true}).check();
     await page.getByRole('button', {name: '保存规则', exact: true}).click();
     await expect(page.locator('.information-rules').getByRole('status')).toContainText('规则已保存');
-    expect(env.store.listRules()).toHaveLength(1);
-    expect(env.store.listRules()[0]).toMatchObject({sourceId: 'incoming-debug', recipientSeatIds: ['b']});
+    expect(env.store.enabledRule('incoming')).toMatchObject({recipientSeatIds: ['a']});
+    expect(env.store.getRule(legacy.id)).toEqual(legacy);
     expect(env.fake.calls).toHaveLength(0);
   } finally { await env.close(); }
 });

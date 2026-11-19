@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { chromium, expect, test, type Page, type Route } from '@playwright/test';
 import { openDatabase } from '../../src/access/database';
 import { AccessStore } from '../../src/access/store';
+import { migrateAdministratorAccounts } from '../../src/access/administrator-schema';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
@@ -19,15 +20,17 @@ async function setup() {
   const dir = await mkdtemp(join(tmpdir(), 'axon-model-selection-'));
   const db = await openDatabase(dir);
   const access = new AccessStore(db);
-  const adminId = await access.saveAccount({ username: 'admin', displayName: '模型管理员', seatId: 'admin', seatName: '管理席位', password, createPublicTask: true, manageModelSettings: true });
+  const coordinatorId = await access.saveAccount({ username: 'coordinator', displayName: '总体用户', seatId: 'coordinator', seatName: '总体席', password, createPublicTask: true, manageModelSettings: true });
   await access.saveAccount({ username: 'member', displayName: '普通用户', seatId: 'member', seatName: '普通席位', password, createPublicTask: false, manageModelSettings: false });
-  const tasks = ['模型项目 A', '模型项目 B'].map(title => access.create(access.identity(adminId)!, { title, goal: '验证会话模型选择', visibility: 'public', clientActionId: randomUUID() }));
+  migrateAdministratorAccounts(db);
+  const administratorId = await access.saveAdministratorAccount({ username: 'system-admin', displayName: '系统管理员', password });
+  const tasks = ['模型项目 A', '模型项目 B'].map(title => access.create(access.identity(coordinatorId)!, { title, goal: '验证会话模型选择', visibility: 'public', clientActionId: randomUUID() }));
   db.close();
-  const config = testConfig(dir, { seatId: 'admin', auth: { secret: 'test-only-signing-key-at-least-32-characters', sessionMs: 28800000 } });
+  const config = testConfig(dir, { seatId: 'coordinator', auth: { secret: 'test-only-signing-key-at-least-32-characters', sessionMs: 28800000 } });
   const fake = await fakeRuntime(config, () => ({ text: '默认模型测试完成', delayMs: 1200 }));
   const lab = await PiLab.create(config, fake.runtime);
   const sessions: Record<string, SessionSnapshot[]> = {};
-  for (const seat of ['admin', 'member']) {
+  for (const seat of ['coordinator', 'member']) {
     sessions[seat] = [];
     for (const task of tasks) {
       const workspace = await lab.workspaces.ensureWorkspace(task.id, seat, task.title);
@@ -39,26 +42,34 @@ async function setup() {
   const prepareReply = async (route: Route) => {
     const request = route.request();
     const url = new URL(request.url());
-    const response = await app.inject({ method: request.method() as 'GET' | 'POST' | 'PUT' | 'DELETE', url: url.pathname + url.search, headers: { ...request.headers(), host: '127.0.0.1', origin: 'http://localhost:4310' }, ...(request.postDataBuffer() ? { payload: request.postDataBuffer()! } : {}) });
+    const response = await app.inject({ method: request.method() as 'GET' | 'POST' | 'PUT' | 'DELETE', url: url.pathname + url.search, headers: { ...await request.allHeaders(), host: '127.0.0.1', origin: 'http://localhost:4310' }, ...(request.postDataBuffer() ? { payload: request.postDataBuffer()! } : {}) });
     return () => route.fulfill({ status: response.statusCode, headers: Object.fromEntries(Object.entries(response.headers).filter(([, value]) => value !== undefined).map(([key, value]) => [key, String(value)])), body: response.rawPayload });
   };
   return {
-    lab, fake, sessions, prepareReply,
+    lab, fake, sessions, prepareReply, administratorId,
     attach: async (page: Page) => { pages.push(page); await page.route('**/api/**', async route => { await (await prepareReply(route))(); }); },
     close: async () => { for (const page of pages) if (!page.isClosed()) { await page.goto('about:blank'); await page.unrouteAll({ behavior: 'wait' }); } await app.close(); await rm(dir, { recursive: true, force: true }); },
   };
 }
-async function login(page: Page, username: string) {
+async function signIn(page: Page, choice: string) {
   await page.goto('/');
-  await page.getByLabel('席位', { exact: true }).selectOption(username);
+  await page.getByLabel('席位', { exact: true }).selectOption(choice);
   await page.getByLabel('密码', { exact: true }).fill(password);
   await page.getByRole('button', { name: '登录', exact: true }).click();
   await expect(page.getByRole('button', { name: '登录', exact: true })).toHaveCount(0);
+}
+async function login(page: Page, seat: string) {
+  await signIn(page, seat);
   await enter(page, 'A');
   await expect(selector(page)).toBeEnabled();
 }
+async function loginAdministrator(page: Page, accountId: string) {
+  await signIn(page, 'account:' + accountId);
+  await expect(page).toHaveURL(/\/capabilities$/);
+}
 async function addModel(page: Page) {
   await page.getByRole('button', { name: '设置', exact: true }).click();
+  await page.getByRole('button', { name: '模型', exact: true }).click();
   await page.getByRole('button', { name: '添加模型', exact: true }).click();
   await page.getByLabel('服务商标识', { exact: true }).fill('test-local');
   await page.getByLabel('模型 ID', { exact: true }).fill('deterministic-alternative');
@@ -88,10 +99,14 @@ test('thinking settings preserve legacy until an explicit supported mode is save
   if (zoomContext) page = await zoomContext.newPage();
   const env = await setup(); await env.attach(page);
   try {
-    await login(page, 'admin');
+    await loginAdministrator(page, env.administratorId);
     await page.getByRole('button', { name: '设置', exact: true }).click();
+    await page.getByRole('button', { name: '模型', exact: true }).click();
     await expect(page.getByLabel('推理模式', { exact: true })).toHaveValue('legacy');
     await page.getByLabel('上下文容量（token）', { exact: true }).fill('65536');
+    await page.getByRole('button', { name: '账户', exact: true }).click();
+    await page.getByRole('button', { name: '模型', exact: true }).click();
+    await expect(page.getByLabel('上下文容量（token）', { exact: true })).toHaveValue('65536');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
     await expect(page.getByText('已保存，下次发送消息时使用新配置。', { exact: true })).toBeVisible();
     expect(env.lab.modelSettings().thinkingExplicit).toBe(false);
@@ -141,7 +156,7 @@ test('administrators maintain the model catalog while ordinary seats select mode
   const forbiddenSettingsReads: string[] = [];
   member.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/settings/model')) forbiddenSettingsReads.push(request.url()); });
   try {
-    await login(page, 'admin');
+    await loginAdministrator(page, env.administratorId);
     const modelId = await addModel(page);
     await page.getByLabel('模型 ID', { exact: true }).fill('deterministic-reviewed');
     await page.getByLabel('上下文容量（token）', { exact: true }).fill('65536');
@@ -150,9 +165,15 @@ test('administrators maintain the model catalog while ordinary seats select mode
     await expect(page.getByRole('combobox', { name: '管理模型', exact: true }).locator('option:checked')).toContainText('deterministic-reviewed');
     await expect(page.locator('#model-key')).toHaveValue('');
     await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: '设置', exact: true }).click();
+    await page.getByRole('button', { name: '账户', exact: true }).click();
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByRole('button', { name: '退出登录', exact: true }).click();
+    await login(page, 'coordinator');
     await expect(selector(page).locator(`option[value="${modelId}"]`)).toContainText('deterministic-reviewed');
-    await selector(page).selectOption(modelId);
-    await expect(selector(page)).toHaveValue(modelId);
+    await page.getByRole('button', { name: '设置', exact: true }).click();
+    await expect(page.getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
+    await page.keyboard.press('Escape');
 
     const choicesResponse = member.waitForResponse(response => new URL(response.url()).pathname === '/api/models');
     await login(member, 'member');
@@ -204,7 +225,7 @@ test('failed and delayed model selection stays with its conversation; busy and q
   await env.attach(page); await env.attach(member);
   let release: (() => Promise<void>) | undefined;
   try {
-    await login(page, 'admin');
+    await loginAdministrator(page, env.administratorId);
     const modelId = await addModel(page);
     await page.keyboard.press('Escape');
     await login(member, 'member');

@@ -15,7 +15,7 @@ export function InformationRules({ visible, capabilities, tasks, selectedId, sel
   const rules = useInformationQuery<BackgroundPage<InformationRule>>(`/api/information/rules?${query}`, visible);
   const [editor, setEditor] = useState<Editor>(); const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
   const lock = useRef(false); const generation = useRef(0);
-  const ruleSources = capabilities.ruleSources ?? capabilities.sources;
+  const ruleSources = capabilities.sources;
   const managed = ruleSources.filter(source => source.permission === 'manage');
   const source = ruleSources.find(source => source.sourceId === editor?.draft.sourceId);
   const profile = capabilities.profiles.find(item => item.id === editor?.draft.profileId);

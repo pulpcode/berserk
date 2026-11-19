@@ -5,7 +5,7 @@ import type { BackgroundService, IncomingInformation, InformationFilter } from '
 import { page } from '../background/service.js';
 import type { BackgroundAnalysisInput, BackgroundJobStatus, InformationRuleInput, DeliveryReviewDecisionInput } from '../contracts/background.js';
 import { RequestError } from '../contracts/errors.js';
-import { identityOf } from './auth.js';
+import { accountIdentityOf, identityOf } from './auth.js';
 import { sendFile } from './file-response.js';
 
 declare module 'fastify' { interface FastifyContextConfig { axonSource?: boolean } }
@@ -30,8 +30,12 @@ const ruleFields = {name:{type:'string',minLength:1,maxLength:100},sourceId:id,p
 const ruleRequired = ['name','sourceId','profileId','recipientSeatIds','enabled'];
 
 export async function backgroundRoutes(app:FastifyInstance, background?:BackgroundService, env:NodeJS.ProcessEnv = process.env,resolveCredential?: (sourceId:string,receiptOnly?:boolean)=>string) {
-  app.get('/api/information/access',request => background?.capabilities(identityOf(request)) ?? {enabled:false,sources:[],profiles:[],seats:[],canManageQueue:false,queue:{key:'queue',enabled:false,revision:1,updatedAt:new Date(0).toISOString()}});
+  app.get('/api/information/access',request => background?.capabilities(identityOf(request)) ?? {enabled:false,sources:[],profiles:[],seats:[],queue:{key:'queue',enabled:false,revision:1,updatedAt:new Date(0).toISOString()}});
   app.get<{Querystring:Query}>('/api/inbox',{schema:{querystring:listQuery}},request => background?.inbox(identityOf(request),filter(request.query)) ?? page([],filter(request.query)));
+  app.get('/api/information/queue', async request => {
+    accountIdentityOf(request);
+    return background?.queueStatus() ?? null;
+  });
   if (!background) return;
   app.get<{Params:{id:string};Querystring:{clientActionId?:string}}>('/api/inbox/:id/handling',{schema:{params:params(),querystring:body({clientActionId:uuid},[])}},request => background.inboxHandling(identityOf(request),request.params.id,request.query.clientActionId));
   app.put<{Params:{id:string};Body:{state:'pending'|'completed';revision:number;clientActionId:string}}>('/api/inbox/:id/handling',{schema:{params:params(),querystring:empty,body:body({state:{enum:['pending','completed']},revision:{type:'integer',minimum:1},clientActionId:uuid})}},request => background.handleInbox(identityOf(request),request.params.id,request.body));
@@ -77,9 +81,8 @@ export async function backgroundRoutes(app:FastifyInstance, background?:Backgrou
   app.post<{Body:InformationRuleInput & {clientActionId:string}}>('/api/information/rules',{schema:{querystring:empty,body:body({...ruleFields,clientActionId:uuid},[...ruleRequired,'clientActionId'])}},request => {const {clientActionId,...input}=request.body; return background.saveRule(identityOf(request),input,{clientActionId});});
   app.put<{Params:{id:string};Body:InformationRuleInput & {revision:number}}>('/api/information/rules/:id',{schema:{params:params(),querystring:empty,body:body({...ruleFields,revision:{type:'integer',minimum:1}},[...ruleRequired,'revision'])}},request => {const {revision,...input}=request.body; return background.saveRule(identityOf(request),input,{id:request.params.id,revision});});
   app.get('/api/information/sources',request => background.capabilities(identityOf(request)).sources);
-  app.put<{Params:{id:string};Body:{accepting:boolean;revision:number}}>('/api/information/sources/:id',{schema:{params:params({id}),querystring:empty,body:body({accepting:{type:'boolean'},revision:{type:'integer',minimum:0}})}},request => background.control(identityOf(request),`source:${request.params.id}`,request.body.accepting,request.body.revision));
-  app.get('/api/information/queue',request => background.capabilities(identityOf(request)).queue);
-  app.put<{Body:{enabled:boolean;revision:number}}>('/api/information/queue',{schema:{querystring:empty,body:body({enabled:{type:'boolean'},revision:{type:'integer',minimum:0}})}},request => background.control(identityOf(request),'queue',request.body.enabled,request.body.revision));
+  app.put<{Params:{id:string};Body:{accepting:boolean;revision:number}}>('/api/information/sources/:id',{schema:{params:params({id}),querystring:empty,body:body({accepting:{type:'boolean'},revision:{type:'integer',minimum:0}})}},request => background.controlSource(identityOf(request),request.params.id,request.body.accepting,request.body.revision));
+  app.put<{Body:{enabled:boolean;revision:number}}>('/api/information/queue',{schema:{querystring:empty,body:body({enabled:{type:'boolean'},revision:{type:'integer',minimum:0}})}},request => background.controlQueue(accountIdentityOf(request).userId,request.body.enabled,request.body.revision));
   app.get<{Params:{id:string}}>('/api/inbox/:id',{schema:{params:params(),querystring:empty}},request => background.inboxDetail(identityOf(request),request.params.id));
   for (const [prefix,scope] of [['information/events','event'],['inbox','inbox']] as const) app.get<{Params:{id:string;fileId:string}}>(`/api/${prefix}/:id/files/:fileId`,{schema:{params:params({id:uuid,fileId:uuid}),querystring:empty}},async (request,reply) => sendFile(reply,await background.openFile(identityOf(request),scope,request.params.id,request.params.fileId)));
   app.post<{Params:{id:string};Body:{taskSpaceId:string}}>('/api/inbox/:id/analysis-options',{schema:{params:params(),querystring:empty,body:body({taskSpaceId:uuid})}},request => background.analysisOptions(identityOf(request),request.params.id,request.body.taskSpaceId));

@@ -1,0 +1,11 @@
+{
+  "seats": [
+    {"id": "seat-admin", "name": "管理员席", "type": "administrator", "responsibility": "维护平台配置、共享模型、专家、技能与连接器。"},
+    {"id": "seat-director", "name": "导演席", "type": "director", "responsibility": "准备演练、控制轮次和演练时间、投放演练事件并核对结果。"},
+    {"id": "seat-control", "name": "控制席", "type": "control", "responsibility": "核对任务和资料，经确认下达指令并查看执行回执。"},
+    {"id": "seat-overall", "name": "总体席", "type": "business", "responsibility": "协调跨席位工作，按现有业务授权管理公共任务、分派和验收。"},
+    {"id": "seat-intelligence", "name": "情报席", "type": "business", "responsibility": "核实来源与事实，辨别矛盾和缺项并研判情报变化。"},
+    {"id": "seat-planning", "name": "筹划席", "type": "business", "responsibility": "综合任务和业务资料，编制或修订方案并交接成果。"},
+    {"id": "seat-situation", "name": "态势席", "type": "business", "responsibility": "核查区域、对象、资源和行动状态，分析变化与约束。"}
+  ]
+}

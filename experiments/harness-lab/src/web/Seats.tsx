@@ -64,9 +64,10 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
     return ()=>channel.removeEventListener('message',changed);
   },[channel]);
   const client=useMemo(()=>state?.identity ? createApiClient(state.identity.seatId,state,()=>{clearPrivateState();setState(undefined);setPassword('');setReload(x=>x+1);}) : undefined,[state]);
-  const selectedUser=state?.loginUsers?.find(user=>`account:${user.id}`===loginChoice);
+  const loginUsers=state?.loginUsers ?? [];
+  const selectedUser=loginUsers.find(user=>`account:${user.id}`===loginChoice);
   const selectedSeat=state?.loginSeats?.find(seat=>seat.id===loginChoice);
-  const hasChoices=Boolean(state?.loginSeats?.length || state?.loginUsers?.length);
+  const hasChoices=Boolean(state?.loginSeats?.length || loginUsers.length);
   useEffect(()=>()=>client?.dispose(),[client]);
   useEffect(()=>{
     if(!state?.identity)return;
@@ -104,7 +105,9 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
     <label htmlFor="login-seat">席位</label><select id="login-seat" name="loginIdentity" autoComplete="username" value={loginChoice} onChange={e=>{setLoginChoice(e.target.value);setPassword('');setShow(false);setError('');}} disabled={busy || !hasChoices} required>
       <option value="" disabled>{hasChoices?'请选择席位':'暂无可用席位'}</option>
       {state?.loginSeats?.map(seat=><option key={seat.id} value={seat.id}>{seat.name}</option>)}
-      {state?.loginUsers?.map(user=><option key={`account:${user.id}`} value={`account:${user.id}`}>{user.name}</option>)}
+      {loginUsers.map(user => <option key={`account:${user.id}`} value={`account:${user.id}`}>
+        {loginUsers.length === 1 ? '管理员席' : user.name}
+      </option>)}
     </select>
     {!hasChoices && <p role="status">暂无可用席位，请联系管理员。</p>}
     <label htmlFor="login-password">密码</label><div className="login-password"><input id="login-password" name="password" type={show?'text':'password'} autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={256} disabled={busy} required/>

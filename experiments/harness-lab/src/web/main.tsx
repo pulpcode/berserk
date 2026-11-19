@@ -94,6 +94,7 @@ function App(view: SeatView) {
 function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, logout, logoutError, personalOnly = false, administratorAccount }: Omit<SeatView, 'identity'> & { identity?: Identity; personalOnly?: boolean; administratorAccount?: AdministratorIdentity }) {
   const { api, domId, storageKey } = useApi();
   const canCollaborate=identity?.canCollaborate!==false;
+  const modelSettingsAvailable = !identity || Boolean(administratorAccount);
   const chat = useChat(canCollaborate);
   const suggestionPreference = usePromptSuggestionPreference();
   const workActivityPreference = useWorkActivityPreference();
@@ -715,8 +716,8 @@ function BusinessApp({ active: seatActive, seatId, seats, switchSeat, identity, 
       <div className="composer-dock" onFocusCapture={() => { dockFocus.current = true; }} onBlurCapture={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node)) dockFocus.current = false; }}>
         {newContent && <button className="new-content" onClick={() => { if (scroll.current) scroll.current.scrollTop = scroll.current.scrollHeight; follow.current = true; setNewContent(false); markVisibleRead(); }}><ArrowDown size={15} aria-hidden="true" />有新内容</button>}
         <div className="composer-container">
-          {!chat.loading && chat.models && !chat.modelsError && !chat.selectedModel?.configured && <div className="notice configuration-notice"><CircleAlert size={16} aria-hidden="true" /><span>{chat.models.models.some(model => model.configured && model.contextReady) ? '当前模型尚未配置，请在下方选择一个可用模型。' : !identity || identity.manageModelSettings ? '模型尚未配置，请在侧栏左下角的“设置”中完成配置后开始对话。' : '模型尚未配置，请联系具有模型管理权限的席位完成配置。'}</span></div>}
-          {!chat.loading && chat.selectedModel?.configured && !chat.selectedModel.contextReady && <div className="notice configuration-notice" role="status"><CircleAlert size={16} aria-hidden="true" /><span>{!identity || identity.manageModelSettings ? '请在侧栏左下角的“设置”中补齐模型的上下文容量与输出能力，草稿会保留。' : '当前模型参数尚未完整配置，请选择其他可用模型或联系模型管理席位。'}</span></div>}
+          {!chat.loading && chat.models && !chat.modelsError && !chat.selectedModel?.configured && <div className="notice configuration-notice"><CircleAlert size={16} aria-hidden="true" /><span>{chat.models.models.some(model => model.configured && model.contextReady) ? '当前模型尚未配置，请在下方选择一个可用模型。' : modelSettingsAvailable ? '模型尚未配置，请在侧栏左下角的“设置”中完成配置后开始对话。' : '模型尚未配置，请联系管理员席完成配置。'}</span></div>}
+          {!chat.loading && chat.selectedModel?.configured && !chat.selectedModel.contextReady && <div className="notice configuration-notice" role="status"><CircleAlert size={16} aria-hidden="true" /><span>{modelSettingsAvailable ? '请在侧栏左下角的“设置”中补齐模型的上下文容量与输出能力，草稿会保留。' : '当前模型参数尚未完整配置，请选择其他可用模型或联系管理员席。'}</span></div>}
           {(chat.modelsError || chat.modelError) && <div className="notice error-notice" role="alert"><CircleAlert size={16} aria-hidden="true" /><span>{chat.modelsError || chat.modelError}</span><button onClick={() => { void chat.refreshModels().catch(() => {}); if (chat.selected) void chat.refresh(chat.selected); }}>重新读取模型</button></div>}
           {!snapshot?.active && !snapshot?.recoveryWarning && snapshot?.lastResult?.status === 'interrupted' && <div className="notice" role="status"><CircleAlert size={17} aria-hidden="true" /><span>{snapshot.lastResult.message || '上次处理已中断，已保存内容保留，可继续发送消息。'}</span></div>}
           {snapshot?.recoveryWarning && <div className="notice error-notice" role="alert"><CircleAlert size={17} aria-hidden="true" /><span>{snapshot.recoveryWarning}</span><button onClick={() => void newChat()}>新建对话</button></div>}

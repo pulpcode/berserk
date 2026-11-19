@@ -4,6 +4,13 @@
 
 `server/config.ts` resolves the endpoint/model capability and optional `thinkingMode`; `ModelSettingsStore` persists it in the existing model profile. `pi/model-runtime.ts` exports `configuredRuntime` for product and future evaluation callers. Pi registration, the request-scoped AgentSession and `controlled-stream.ts` use the same captured profile. No second configuration system or custom Agent loop is introduced.
 
+## Shared model settings access
+
+- In formal mode, `GET /api/settings/model`, `GET /api/settings/models`, `PUT /api/settings/model`, `POST /api/settings/models` and `PUT /api/settings/models/:id` require the current independent administrator. These exact route shapes pass the administrator route filter and use the model settings guard reading `accountIdentityOf` plus `SystemRoles`.
+- Anonymous requests receive 401. Ordinary and director seats receive 403 even with `seats.manage_model` present. Origin, CSRF and active view checks still apply to authenticated mutations. Isolated test mode retains its previous routes.
+- Good case: the administrator maintains Settings → Models. Workspace owners use `GET /api/models` and their own idle session's model selector. The safe model list omits endpoints and credentials. A business seat's legacy flag or account-scope workspace projection must never authorize shared writes.
+- Regression coverage: `tests/access.test.ts` checks administrator reads/writes, legacy grant denial, revocation and per-session access. `tests/e2e/model-selection.spec.ts` exercises the formal administrator and business interfaces.
+
 ## Compatibility
 
 Modes are explicit `off` or `high`. Absence is meaningful: preserve the legacy wire behavior, not an implied new `thinking:disabled` field. The existing provider named `deepseek` retains its prior disabled mapping when no explicit supported adapter is selected; other legacy aliases keep their prior payload. Public settings distinguish explicit selection from legacy behavior. Saving an unrelated field must not silently select off.

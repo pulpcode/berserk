@@ -100,7 +100,7 @@ LAB_TEST_SEATS='[{"id":"test-seat","name":"席位 A"},{"id":"seat-b","name":"席
 
 所有席位都可在输入框底部选择已配置的模型，每个对话分别保存，刷新或服务重启后仍保留。选择不会修改其他对话或全局配置；回复和后台分析进行中不能切换。未配置密钥或容量不完整的模型不可选。
 
-只有具有 `--manage-model` 权限的席位能通过侧栏“设置 → 模型”添加、选择编辑模型配置，填写服务商标识、模型 ID、HTTPS API 地址与 API Key；普通席位的设置仅显示账户。当前使用 OpenAI Chat Completions 兼容接口。配置保存前需要所有会话结束当前回复，保存成功后下一次请求生效，无需重启。
+管理员席通过侧栏「设置 → 模型」添加、编辑共享模型配置，填写服务商标识、模型 ID、HTTPS API 地址与 API Key。业务席位可在自己的会话里选择已开放的模型。当前使用 OpenAI Chat Completions 兼容接口。配置保存前需要所有会话结束当前回复，保存成功后下一次请求生效，无需重启。
 
 API Key 不会回传到页面，输入框每次打开都为空；同一服务商和地址下留空表示保留现有密钥。更换服务商或地址时必须重新填写对应密钥。关闭窗口会清除尚未提交的密钥，不把密钥存入浏览器缓存。保存冲突或结果不明时，先读取最新配置核对，再手动保存，不会自动重试。
 
@@ -281,6 +281,8 @@ macOS 优先使用已安装的 Chrome；其他环境需先准备 Playwright Chro
 
 ## 业务任务与账号入口
 
+新服务先准备一份席位清单，保留实际需要的席位。按下文现有离线命令初始化数据和开通入口，然后按 [Axon 部署规范](../../docs/axon-deployment.md#席位配置与部署核对) 运行 `npm run seats:check`。清单不创建账号，也不授予现有功能权限。
+
 正式启动默认要求登录。一个启用的业务账号固定绑定一个席位；任务空间的说明对启用席位可见，文件／会话仍按任务 × 席位分别保存。个人空间仅所属席位可访问和管理，每个启用席位均可创建自己的空间。任务空间内的工作分派、成果提交与验收继续使用原有确认流程。
 
 系统“管理员”使用独立账号，无需绑定任何席位。总体席继续承担业务职责；其名称、任务或模型权限均不会授予管理员身份。管理员与普通业务用户共用“下拉选择身份＋密码”的登录表单；管理员作为用户选项，登录后进入同一 Axon 界面的能力中心，专家页提供“创建专家”入口。管理员可新建对话并使用账号独有的个人空间和文件，不访问公共任务空间或其他用户的私有资料。管理员账号仍不绑定业务席位，其个人范围不加入业务席位目录。能力中心共用专家、技能、连接器三类页面；技能支持受控内置目录与R3组织技能包，连接器未接入时展示真实空状态。
@@ -308,11 +310,11 @@ npm run access:admin -- reset --data-dir /绝对路径/数据目录 --backup-dir
 在实验目录内开通账号（密码由终端隐蔽输入两次，不放在命令参数或对话中）：
 
 ```sh
-npm run access:admin -- account --data-dir /绝对路径/数据目录 --username operator-a --name 席位A用户 --seat seat-a --seat-name 席位A --manage-tasks --manage-model --service-stopped
+npm run access:admin -- account --data-dir /绝对路径/数据目录 --username operator-a --name 席位A用户 --seat seat-a --seat-name 席位A --manage-tasks --service-stopped
 npm run access:admin -- account --data-dir /绝对路径/数据目录 --username operator-b --name 席位B用户 --seat seat-b --seat-name 席位B --service-stopped
 ```
 
-`--manage-tasks` 授权该席位创建、编辑、归档和重新开启所有任务空间的说明，不受创建席位限制；未获授权的席位即使曾创建任务，也不能管理这些说明。该权限不允许读取其他席位的文件／会话或个人空间，不改变工作分派与验收的参与者权限。旧参数 `--create-public` 仍可使用，含义与 `--manage-tasks` 相同；内部沿用 `createPublicTask`／`create_public` 字段，无需迁移数据。`--manage-model` 仍独立控制共享模型设置。
+`--manage-tasks` 授权该席位创建、编辑、归档和重新开启所有任务空间的说明，不受创建席位限制；未获授权的席位即使曾创建任务，也不能管理这些说明。该权限不允许读取其他席位的文件／会话或个人空间，不改变工作分派与验收的参与者权限。旧参数 `--create-public` 与 `--manage-tasks` 相同。共享模型配置由管理员席通过「设置 → 模型」维护。已有的 `--manage-model` 标志仅为兼容保留，业务席位仍可在自己的会话里选择开放的模型。
 
 场景控制使用独立的 `controlScenarios` 席位能力：新席位及旧数据迁移均默认关闭，不从任务、来源、模型或总览管理权限推导。离线 `account` 命令可显式传 `--control-scenarios` 授予、`--no-control-scenarios` 撤销，两者不能同时使用；省略这两个新参数会保留既有场景授权。与原账号维护命令一致，保存账号需要重新输入密码并使旧登录失效。实际导演页面和控制接口还需校验配置指定的导演席；授予此能力本身不授予业务审批、来源管理或公共任务管理权。
 
@@ -408,7 +410,7 @@ npm run background:admin -- list --data-dir /绝对路径/数据目录 --service
 | planning | seat-planning | 筹划席 | fixtures/seat-responsibilities/planning.md |
 | situation | seat-situation | 态势席 | fixtures/seat-responsibilities/situation.md |
 
-用现有 `access:admin account` 开通账号，总体席加 `--manage-tasks --manage-model`，其他席位不加。然后在服务停止时统一维护职责，例如：
+用现有 `access:admin account` 开通账号，总体席加 `--manage-tasks`，其他席位不加。然后在服务停止时统一维护职责，例如：
 
 ```sh
 npm run access:admin -- seat --data-dir /绝对路径/数据目录 --seat seat-overall --seat-name 总体席 --responsibility-file fixtures/seat-responsibilities/overall.md --service-stopped

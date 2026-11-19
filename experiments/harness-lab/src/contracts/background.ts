@@ -65,8 +65,10 @@ export interface DeliveryReviewDetail extends DeliveryReviewSummary {
   canDecide: boolean; jobDetail: InformationJobDetail;
 }
 export interface BackgroundEvent {
-  /** Frozen authority/rule scope selected from the authenticated run mode. */
+  /** Frozen access scope selected from the authenticated run mode. */
   policySourceId?: string;
+  /** Shared rule source when it differs from the frozen access scope. */
+  ruleSourceId?: string;
   /** Verified host metadata, never inferred from business text. */
   scenarioInstanceId?: string;
   auditOnly?: true;
@@ -117,6 +119,7 @@ export type BackgroundDelivery = BackgroundDeliveryBase & (
   {eventId?: never; sourceId?: never; streamEpochId: string}
 );
 export interface BackgroundControl { key: string; enabled: boolean; revision: number; updatedAt: string; updatedByUserId?: string }
+export type BackgroundQueueStatus = BackgroundControl & {blockedReason?: string};
 export interface InformationSource {
   sourceId: string; name: string; allowedProfileIds: string[]; allowedRecipientSeatIds: string[];
   accepting: boolean; revision: number; permission: InformationPermission;
@@ -126,12 +129,10 @@ export interface InformationHistorySource { sourceId: string; name: string; grou
 export interface InformationCapabilities {
   /** Original policy permissions; group metadata never expands authorization. */
   historySources?: InformationHistorySource[];
-  /** Original rule scopes, labelled by business integration and operation mode. */
-  ruleSources?: InformationSource[];
   enabled: boolean; sources: InformationSource[]; profiles: InformationProfile[];
   seats: Array<{ id: string; name: string; responsibility?: string; responsibilityRevision?: number }>;
   deliveryReviewSeatId?: string; canReviewDeliveries?: boolean; pendingDeliveryReviews?: number;
-  canManageQueue: boolean; queue: BackgroundControl & {blockedReason?: string};
+  queue: BackgroundQueueStatus;
 }
 export interface BackgroundPage<T> { items: T[]; total: number; offset: number; limit: number }
 export interface BackgroundEventSummary extends BackgroundEvent { contentRestricted?: boolean; jobs: BackgroundJob[]; deliveries: BackgroundDelivery[] }

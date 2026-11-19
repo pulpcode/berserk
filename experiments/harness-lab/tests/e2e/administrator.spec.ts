@@ -4,13 +4,15 @@ import { join } from 'node:path';
 import { test, expect, type Page } from '@playwright/test';
 import { openDatabase } from '../../src/access/database';
 import { AccessStore } from '../../src/access/store';
+import { parseBackgroundConfig } from '../../src/background/config';
+import { BackgroundStore } from '../../src/background/store';
 import { migrateAdministratorAccounts } from '../../src/access/administrator-schema';
 import { SystemRoles } from '../../src/access/system-roles';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 
-async function setup() {
+async function setup(withQueue = false) {
   const dir = await mkdtemp(join(tmpdir(), 'axon-system-admin-web-'));
   const db = await openDatabase(dir); const access = new AccessStore(db);
   await access.saveAccount({ username: 'business', displayName: '总体业务用户', seatId: 'overall', seatName: '总体席', password: 'test-password-123', createPublicTask: true, manageModelSettings: true });
@@ -20,7 +22,12 @@ async function setup() {
   const config = testConfig(dir, { seatId: 'overall', auth: { secret: 'test-only-signing-key-at-least-32-characters', sessionMs: 28800000 } });
   const fake = await fakeRuntime(config, () => ({ text: '合成样例已核对。' }));
   const lab = await PiLab.create(config, fake.runtime);
-  const app = await createApp(lab, false, undefined, undefined, { runtimeFactory: async () => fake.runtime });
+  const background = withQueue ? { config: parseBackgroundConfig({ enabled: true,
+    sources: [{ sourceId: 'incoming', name: '情报接入', credentialRef: 'QUEUE_TEST_TOKEN', allowedProfileIds: ['review'], allowedRecipientSeatIds: ['overall'] }],
+    profiles: [{ id: 'review', name: '核对资料', goal: '核对来源', tools: ['source_read'] }],
+  }), env: { QUEUE_TEST_TOKEN: 'test-queue-source-credential' } } : undefined;
+  const app = await createApp(lab, false, background, undefined, { runtimeFactory: async () => fake.runtime });
+  if (withQueue) new BackgroundStore(lab.access!.db).grant('seat', 'overall', 'incoming', 'manage');
   const paths: string[] = []; const writes: string[] = []; const pages: Page[] = [];
   async function attach(page: Page) {
     pages.push(page);
@@ -40,10 +47,11 @@ async function setup() {
 async function login(page: Page, path = '/') {
   await page.goto(path);
   const selector = page.getByLabel('席位', { exact: true });
-  await expect(selector.locator('option')).toHaveText(['请选择席位', '总体席', '系统管理员']);
+  await expect(selector.locator(':scope > option')).toHaveText(['请选择席位', '总体席', '管理员席']);
+  await expect(selector.locator('optgroup')).toHaveCount(0);
   await expect(page.getByRole('button', { name: '管理员登录', exact: true })).toHaveCount(0);
   await expect(page.getByLabel('管理员账号', { exact: true })).toHaveCount(0);
-  await selector.selectOption({ label: '系统管理员' });
+  await selector.selectOption({ label: '管理员席' });
   await page.getByLabel('密码', { exact: true }).fill('test-password-123');
   await page.getByRole('button', { name: '登录', exact: true }).click();
   await expect(page.getByRole('heading', { name: '能力中心', exact: true })).toBeVisible();
@@ -52,7 +60,7 @@ async function login(page: Page, path = '/') {
 }
 
 function businessRequests(paths: string[]) {
-  return paths.filter(path => /^\/api\/(settings|context|information|continuous|collaboration|commands|scenarios|work|work-items|background)(\/|$)/.test(path) || /^\/api\/tasks\/[^/]+\/(context|work|execution|progress|plan|annotations|expert-default)(\/|$)/.test(path));
+  return paths.filter(path => /^\/api\/(context|information|continuous|collaboration|commands|scenarios|work|work-items|background)(\/|$)/.test(path) || /^\/api\/tasks\/[^/]+\/(context|work|execution|progress|plan|annotations|expert-default)(\/|$)/.test(path));
 }
 
 async function expectSidebarSpacing(page: Page) {
@@ -65,6 +73,35 @@ async function expectSidebarSpacing(page: Page) {
   expect(capabilities!.y - newChat!.y - newChat!.height).toBeLessThanOrEqual(20);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 }
+
+test('only the administrator can pause or resume global job claiming in Settings', async ({ page, browser }) => {
+  const env = await setup(true);
+  const context = await browser.newContext();
+  const overall = await context.newPage();
+  await env.attach(page); await env.attach(overall);
+  try {
+    await login(page);
+    await page.getByRole('button', { name: '设置', exact: true }).click();
+    await page.getByRole('button', { name: '后台作业', exact: true }).click();
+    await page.getByRole('button', { name: '暂停领取后台作业', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: '后台作业领取已暂停' })).toBeVisible();
+
+    await overall.goto('/');
+    await overall.getByLabel('席位', { exact: true }).selectOption('overall');
+    await overall.getByLabel('密码', { exact: true }).fill('test-password-123');
+    await overall.getByRole('button', { name: '登录', exact: true }).click();
+    await overall.getByRole('button', { name: '工作总览', exact: true }).click();
+    await overall.getByRole('button', { name: '处理运行', exact: true }).click();
+    await expect(overall.getByText('后台作业领取已暂停', { exact: true })).toBeVisible();
+    await expect(overall.getByRole('button', { name: /^(暂停|恢复)领取后台作业$/ })).toHaveCount(0);
+    await expect(overall.getByRole('button', { name: '处理与投递规则', exact: true })).toBeVisible();
+    await overall.getByRole('button', { name: '设置', exact: true }).click();
+    await expect(overall.getByRole('button', { name: '后台作业', exact: true })).toHaveCount(0);
+
+    await page.getByRole('button', { name: '恢复领取后台作业', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: '后台作业领取已启用' })).toBeVisible();
+  } finally { await env.close(); await context.close(); }
+});
 
 test('independent administrator manages experts without mounting a seat workbench', async ({ page }) => {
   const env = await setup(); await env.attach(page);
@@ -111,8 +148,7 @@ test('independent administrator manages experts without mounting a seat workbenc
     await page.getByRole('button', { name: '展开侧边栏', exact: true }).click();
     await page.getByRole('button', { name: '设置', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toContainText('系统管理员');
-    await expect(page.getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: '个人偏好', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: '模型', exact: true })).toBeVisible();
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: '退出登录', exact: true }).click();
     await expect(page.getByRole('button', { name: '登录', exact: true })).toBeVisible();
@@ -154,7 +190,7 @@ test('an administrator creates personal spaces and resumes ordinary two-turn cha
       await expect(page.getByText('合成样例已核对。', { exact: true })).toHaveCount(index + 1);
       await expect(input).toBeEnabled();
     }
-    expect(env.fake.calls).toHaveLength(2);
+    expect(env.fake.calls.filter(call => call.context.tools?.length)).toHaveLength(2);
     const sessionUrl = page.url();
     expect(env.writes.filter(path => path === '/api/sessions')).toHaveLength(1);
     await page.reload();
@@ -197,7 +233,7 @@ test('an administrator creates personal spaces and resumes ordinary two-turn cha
     expect(env.lab.workspaces.listAll()[0].seatId).toBe(`account-${String(admin.id)}`);
     await page.getByRole('button', { name: '设置', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toContainText('系统管理员');
-    await expect(page.getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: '模型', exact: true })).toBeVisible();
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: '退出登录', exact: true }).click();
     await expect(page.getByRole('button', { name: '登录', exact: true })).toBeVisible();

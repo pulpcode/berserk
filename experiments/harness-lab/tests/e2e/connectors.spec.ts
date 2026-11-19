@@ -68,7 +68,7 @@ const input = (page: Page) => page.getByRole('textbox', { name: '发送消息', 
 test('administrator configures, explicitly discovers, opens scope and enables separately; CAS keeps local edits', async ({ page }) => {
   const env = await setup(); await env.attach(page);
   try {
-    await login(page, '系统管理员'); await page.getByRole('tab', { name: '连接器', exact: true }).click();
+    await login(page, '管理员席'); await page.getByRole('tab', { name: '连接器', exact: true }).click();
     await expect(page.locator('.connector-card')).toHaveCount(3); await page.locator('.connector-card').first().getByText(/工具（/).click(); await page.screenshot({ path: test.info().outputPath('connector-cards-1440.png') }); await page.setViewportSize({ width: 1060, height: 900 }); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await page.screenshot({ path: test.info().outputPath('connector-cards-1060.png') }); await page.setViewportSize({ width: 1440, height: 960 });
     const initial = env.a.records.length;
     await page.getByRole('button', { name: '添加 MCP', exact: true }).click();
@@ -130,7 +130,7 @@ test('two connector choices persist through reload and first send without leakin
 test('expert form preserves explicit connection action contracts through save, reload and copy', async ({ page }) => {
   const env = await setup(); await env.attach(page);
   try {
-    await login(page, '系统管理员'); await page.getByRole('button', { name: '创建专家', exact: true }).click(); await page.getByRole('dialog', { name: '创建专家', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click();
+    await login(page, '管理员席'); await page.getByRole('button', { name: '创建专家', exact: true }).click(); await page.getByRole('dialog', { name: '创建专家', exact: true }).getByRole('button', { name: '手动创建', exact: true }).click();
     const manager = page.locator('dialog.capability-management-panel'); await manager.getByLabel('专家名称', { exact: true }).fill('连接依赖专家'); await manager.getByLabel('简介', { exact: true }).fill('保留固定连接动作契约'); await manager.getByLabel('专业指令', { exact: true }).fill('按明确来源查询资料。');
     const group = manager.getByRole('group', { name: '连接器依赖', exact: true }); const connection = group.locator('.management-tool-group').filter({ has: page.getByRole('heading', { name: '资料连接甲', exact: true }) }); await connection.getByRole('checkbox', { name: /lookup/ }).check();
     const savedResponse = page.waitForResponse(response => response.request().method() === 'PUT' && /experts\/[^/]+\/draft$/.test(new URL(response.url()).pathname)); await manager.getByRole('button', { name: '保存草稿', exact: true }).click(); expect((await savedResponse).status()).toBe(200); await expect(connection.getByRole('checkbox', { name: /lookup/ })).toBeChecked();

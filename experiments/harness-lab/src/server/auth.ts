@@ -64,8 +64,11 @@ export async function registerAuth(app: FastifyInstance, access: AccessStore, co
     const personalPath = /^\/api\/connectors\/[^/]+\/credential$/.test(path) || path === '/api/info' || path === '/api/models' || path === '/api/activity'
       || /^\/api\/(?:workspaces|tasks|sessions)(?:\/|$)/.test(path)
       || /^\/api\/capabilities\/(?:access|library|experts|skills|connectors)(?:\/|$)/.test(path);
+    const modelSettingsPath = path === '/api/settings/model' || path === '/api/settings/models'
+      || /^\/api\/settings\/models\/[^/]+$/.test(path);
+    const queueControlPath = path === '/api/information/queue';
     if(request.accountIdentity && !request.identity && !authRoute && path!=='/api/health'
-      && !path.startsWith('/api/admin/') && !personalPath) {
+      && !path.startsWith('/api/admin/') && !personalPath && !modelSettingsPath && !queueControlPath) {
       throw new RequestError('FORBIDDEN','管理员账号不能访问业务工作台。',403);
     }
     if(!['GET','HEAD','OPTIONS'].includes(request.method)) {

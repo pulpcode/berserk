@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AccessStore } from '../src/access/store.js';
+import { migrateAdministratorAccounts } from '../src/access/administrator-schema.js';
 import { openDatabase } from '../src/access/database.js';
 import { parseBackgroundConfig } from '../src/background/config.js';
 import { BackgroundStore } from '../src/background/store.js';
@@ -41,6 +42,8 @@ async function setup(contextFailure?: 'missing-scope' | 'missing-context' | 'uns
   const baseUrl = await mock.listen(); cleanup.push(() => mock.close()); mock.advance('intel');
   const db = await openDatabase(dir); const access = new AccessStore(db);
   for (const name of ['a', 'b', 'c']) await access.saveAccount({username: name, displayName: name, seatId: name, seatName: `席位 ${name}`, password: 'test-password-123', createPublicTask: true, manageModelSettings: name === 'a'});
+  migrateAdministratorAccounts(db);
+  await access.saveAdministratorAccount({username: 'queue-admin', displayName: '队列管理员', password: 'test-password-123'});
   db.close();
   const config = testConfig(dir, {seatId: 'a', auth: {secret: 'test-context-background-at-least-32-characters', sessionMs: 28800000}});
   const fake = await fakeRuntime(config, context => {
@@ -79,7 +82,7 @@ async function setup(contextFailure?: 'missing-scope' | 'missing-context' | 'uns
   for (const source of background.sources) for (const seat of ['a', 'c']) store.grant('seat', seat, source.sourceId, 'manage');
   const source = (path: string, payload: object, sourceId = 'intel-source') => app.inject({method: 'POST', url: `/api/integrations/${sourceId}/${path}`, headers: {authorization: `Bearer ${sourceId === 'intel-source' ? env.INTEL_SOURCE_TOKEN : env.LEGACY_SOURCE_TOKEN}`}, payload});
   const a = await login(app, 'a'), b = await login(app, 'b'), c = await login(app, 'c');
-  return {dir, app, lab, store, mock, fake, source, background, a, b, c};
+  return {dir, app, lab, store, mock, fake, source, background, a, b, c, loginAdministrator: () => login(app, 'queue-admin')};
 }
 type Fixture = Awaited<ReturnType<typeof setup>>;
 
@@ -122,7 +125,8 @@ describe('background multi-source permission and evidence integration', () => {
     f.background.sources[0].systemId = 'changed-after-admission'; f.background.profiles[0].goal = 'CHANGED_AFTER_ADMISSION';
     expect(f.store.getEvent(event.id).systemId).toBe('intel');
     expect(f.store.getJob(queued.id).ruleSnapshot?.profile.goal).toBe('查询实际来源及任务资料');
-    const start = await f.a.call('/api/information/queue', {revision: 1, enabled: true}, 'PUT'); expect(start.statusCode, start.body).toBe(200);
+    const administrator = await f.loginAdministrator();
+    const start = await administrator.call('/api/information/queue', {revision: 1, enabled: true}, 'PUT'); expect(start.statusCode, start.body).toBe(200);
     const job = await settled(f, queued.id);
     expect(f.mock.requests).toEqual(expect.arrayContaining([
       expect.objectContaining({method: 'GET', path: '/intel/reports/report-west-01?revision=2', status: 200}),
@@ -180,9 +184,9 @@ describe('background multi-source permission and evidence integration', () => {
     expect(capabilities.profiles.find(profile => profile.id === 'analysis')).toMatchObject({configurationError: expect.any(String)});
     expect(capabilities.profiles.find(profile => profile.id === 'analysis')?.contextScope).toBeUndefined();
     expect(capabilities.profiles.find(profile => profile.id === 'legacy')).toEqual({id: 'legacy', name: '旧方案', goal: '旧方式处理'});
-    expect(capabilities.canManageQueue).toBe(true);
     for (const path of ['/api/information/sources', '/api/information/queue']) expect((await f.a.call(path)).statusCode).toBe(200);
-    const stop = await f.a.call('/api/information/queue', {revision: 0, enabled: false}, 'PUT'); expect(stop.statusCode, stop.body).toBe(200);
+    const administrator = await f.loginAdministrator();
+    const stop = await administrator.call('/api/information/queue', {revision: 0, enabled: false}, 'PUT'); expect(stop.statusCode, stop.body).toBe(200);
 
     const invalidRule = {sourceId: 'intel-source', profileId: 'analysis', name: '配置缺失的规则', recipientSeatIds: ['a'], enabled: true};
     const errorStatus = contextFailure === 'missing-scope' ? 403 : 503;
@@ -200,7 +204,7 @@ describe('background multi-source permission and evidence integration', () => {
     await rule(f.a, true, ['c']);
     const event = await accept(f, [], true);
     expect(f.store.getJob(event.initialJobId!).status).toBe('queued');
-    const start = await f.a.call('/api/information/queue', {revision: stop.json().revision, enabled: true}, 'PUT');
+    const start = await administrator.call('/api/information/queue', {revision: stop.json().revision, enabled: true}, 'PUT');
     expect(start.statusCode, start.body).toBe(200);
     const job = await settled(f, event.initialJobId!);
     const delivery = f.store.listDeliveries(job.id)[0];
