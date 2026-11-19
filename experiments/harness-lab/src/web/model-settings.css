@@ -12,3 +12,18 @@
   .model-catalog-actions { flex-wrap: wrap; }
   .model-catalog-actions select { flex-basis: 100%; }
 }
+
+.model-management { min-width: 0; }
+.model-management-tabs { display: flex; gap: 8px; padding: 20px 28px 0; }
+.model-management-tabs button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.model-check { display: flex; align-items: center; gap: 8px; margin: 12px 0; font-size: 13px; }
+.model-check input { flex: 0 0 auto; }
+.model-discovery { display: grid; justify-items: start; gap: 8px; }
+.model-discovery-list { display: grid; gap: 6px; max-height: 240px; overflow: auto; width: 100%; }
+.model-discovery-list span { overflow-wrap: anywhere; }
+.model-capability-levels { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.model-capability-levels .model-check { margin: 4px 0; }
+.model-settings-form textarea { width: 100%; box-sizing: border-box; resize: vertical; border: 1px solid var(--line); border-radius: var(--control-radius); padding: 10px 12px; background: var(--surface); color: var(--text); font-family: var(--font-mono, monospace); font-size: 13px; }
+
+.settings-field select { width: 100%; min-height: var(--control-height); box-sizing: border-box; padding: 9px 30px 9px 12px; border: 1px solid var(--line); border-radius: var(--control-radius); color: var(--text); background: var(--surface); font: inherit; font-size: var(--control-font-size); }
+.model-catalog-controls > label { display: block; margin-bottom: 9px; font-size: 13px; font-weight: 500; }

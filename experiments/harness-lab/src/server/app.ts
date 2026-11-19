@@ -35,7 +35,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { PiLab } from '../pi/lab.js';
 import { RequestError } from '../contracts/errors.js';
-import type { ComposerSelection, ModelSettingsUpdate } from '../contracts/index.js';
+import type { ComposerSelection, ModelSettingsUpdate, ModelPlatformUpdate, PlatformModelImport } from '../contracts/index.js';
 import { fileRoutes } from './file-routes.js';
 import { apiScope } from './seat-scope.js';
 import { collaborationRoutes } from './collaboration-routes.js';
@@ -181,14 +181,27 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       throw new RequestError('FORBIDDEN','此环境未启用账号管理。',403);
     });
   }
-  const requireModelSettings = async (request: FastifyRequest) => {
-    if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN', '当前席位无权管理模型配置。', 403);
+  const authorizeModelSettings = (request: FastifyRequest) => {
+    if (request.authValid && !request.authValid()) throw new RequestError('AUTH_REQUIRED', '账号已失效，请重新登录。', 401);
+    if (lab.access) {
+      const actor = accountIdentityOf(request);
+      if (actor.role !== 'administrator') throw new RequestError('FORBIDDEN', '仅系统管理员可管理模型配置。', 403);
+      new SystemRoles(lab.access.db).requireAdministrator(actor.userId);
+    }
   };
-  const modelBody = { type: 'object', additionalProperties: false, required: ['provider', 'model', 'baseUrl', 'expectedVersion'], properties: {
+  const requireModelSettings = async (request: FastifyRequest) => authorizeModelSettings(request);
+  const modelBody = { type: 'object', additionalProperties: false, required: ['model', 'expectedVersion'], properties: {
       provider: { type: 'string', minLength: 1, maxLength: 80 }, model: { type: 'string', minLength: 1, maxLength: 200 },
       baseUrl: { type: 'string', minLength: 1, maxLength: 2048 }, expectedVersion: { type: 'string', format: 'uuid' },
       apiKey: { type: 'string', maxLength: 4096 },
-      thinkingMode: { type: 'string', enum: ['off', 'high'] },
+      thinkingMode: { anyOf: [{ type: 'string', enum: ['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'] }, {type:'null'}] },
+      platformId: { type: 'string', minLength: 1, maxLength: 100 }, displayName: { type: 'string', minLength: 1, maxLength: 200 },
+      api: {type:'string',enum:['openai-completions','anthropic-messages']}, enabled: {type:'boolean'}, usageConfirmed: {type:'boolean'},
+      input: {type:'array',minItems:1,maxItems:2,uniqueItems:true,items:{type:'string',enum:['text','image']}},
+      thinkingLevels: {type:'array',maxItems:7,uniqueItems:true,items:{type:'string',enum:['off','minimal','low','medium','high','xhigh','max']}},
+      defaultThinkingLevel: {anyOf:[{type:'string',enum:['off','minimal','low','medium','high','xhigh','max']},{type:'null'}]},
+      thinkingLevelMap: {type:'object',additionalProperties:{anyOf:[{type:'string',maxLength:80},{type:'null'}]}},
+      compat: {type:'object'},
       contextWindow: { type: 'integer', minimum: 8192, maximum: 2000000 },
       maxOutputTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
       compactionReserveTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
@@ -198,9 +211,28 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   app.get(`${scope.base}/models`, { schema: { querystring: settingsQuery } }, async () => lab.modelChoices());
   app.get(`${scope.base}/settings/model`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery } }, async () => lab.modelSettings());
   app.get(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery } }, async () => lab.modelCatalog());
-  app.put<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/model`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelSettings(request.body));
-  app.post<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async (request, reply) => reply.code(201).send(await lab.updateModelProfile(request.body, 'default', true)));
-  app.put<{ Params: { id: string }; Body: ModelSettingsUpdate }>(`${scope.base}/settings/models/:id`, { preHandler: requireModelSettings, schema: { params: scope.params({ id: modelId }), querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelProfile(request.body, request.params.id));
+  app.put<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/model`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelSettings(request.body, () => authorizeModelSettings(request)));
+  app.post<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async (request, reply) => reply.code(201).send(await lab.updateModelProfile(request.body, 'default', true, () => authorizeModelSettings(request))));
+  app.put<{ Params: { id: string }; Body: ModelSettingsUpdate }>(`${scope.base}/settings/models/:id`, { preHandler: requireModelSettings, schema: { params: scope.params({ id: modelId }), querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelProfile(request.body, request.params.id, false, () => authorizeModelSettings(request)));
+  const platformBody = {type:'object',additionalProperties:false,required:['name','provider','baseUrl','api','expectedVersion'],properties:{
+    name:{type:'string',minLength:1,maxLength:100},provider:{type:'string',minLength:1,maxLength:80},baseUrl:{type:'string',minLength:1,maxLength:2048},
+    api:{type:'string',enum:['openai-completions','anthropic-messages']},modelsPath:{type:'string',maxLength:301},apiKey:{type:'string',maxLength:4096},
+    enabled:{type:'boolean'},compat:{type:'object'},expectedVersion:{type:'string',format:'uuid'},
+  }};
+  app.get(`${scope.base}/settings/platforms`, {preHandler:requireModelSettings,schema:{querystring:settingsQuery}},async()=>({version:lab.modelCatalog().version,platforms:lab.modelCatalog().platforms}));
+  app.post<{Body:ModelPlatformUpdate}>(`${scope.base}/settings/platforms`, {preHandler:requireModelSettings,schema:{querystring:settingsQuery,body:platformBody}},async(request,reply)=>reply.code(201).send(await lab.updateModelPlatform(request.body,'default',true,()=>authorizeModelSettings(request))));
+  app.put<{Params:{id:string};Body:ModelPlatformUpdate}>(`${scope.base}/settings/platforms/:id`, {preHandler:requireModelSettings,schema:{params:scope.params({id:{type:'string',minLength:1,maxLength:100}}),querystring:settingsQuery,body:platformBody}},async request=>lab.updateModelPlatform(request.body,request.params.id,false,()=>authorizeModelSettings(request)));
+  const platformModelParams = scope.params({id:{type:'string',minLength:1,maxLength:101}});
+  app.get<{Params:{id:string}}>(`${scope.base}/settings/platforms/:id/models`, {preHandler:requireModelSettings,schema:{querystring:settingsQuery,params:platformModelParams}}, async request => {
+    const version = lab.modelSettings().version;
+    const models = await lab.discoverModels(request.params.id);
+    authorizeModelSettings(request);
+    if (lab.modelSettings().version !== version) throw new RequestError('MODEL_SETTINGS_CONFLICT', '平台或模型配置已更新，请重新获取模型。', 409);
+    return { version, models };
+  });
+  app.post<{Params:{id:string};Body:PlatformModelImport}>(`${scope.base}/settings/platforms/:id/models`, {preHandler:requireModelSettings,schema:{querystring:settingsQuery,params:platformModelParams,body:{
+    type:'object',additionalProperties:false,required:['expectedVersion','modelIds'],properties:{expectedVersion:{type:'string',format:'uuid'},modelIds:{type:'array',minItems:1,maxItems:100,items:{type:'string',minLength:1,maxLength:200}}},
+  }}}, async request => lab.importPlatformModels(request.params.id,request.body,() => authorizeModelSettings(request)));
   const uuid = { type: 'string', format: 'uuid' };
   const workspaceBody = { type: 'object', properties: { workspaceId: uuid }, additionalProperties: false };
   app.get(`${scope.base}/workspaces`, async request => lab.workspaces.list(scope.seat(request)));

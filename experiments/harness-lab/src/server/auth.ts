@@ -61,11 +61,13 @@ export async function registerAuth(app: FastifyInstance, access: AccessStore, co
       if(request.accountIdentity && isBusinessIdentity(request.accountIdentity)) request.identity=request.accountIdentity;
     }
     if(!authRoute && path!=='/api/health' && !request.accountIdentity) throw unauthorized();
+    const modelSettingsPath = /^\/api\/settings\/(?:model|models|platforms)(?:\/[^/]+)?$/.test(path)
+      || /^\/api\/settings\/platforms\/[^/]+\/models$/.test(path);
     const personalPath = /^\/api\/connectors\/[^/]+\/credential$/.test(path) || path === '/api/info' || path === '/api/models' || path === '/api/activity'
       || /^\/api\/(?:workspaces|tasks|sessions)(?:\/|$)/.test(path)
       || /^\/api\/capabilities\/(?:access|library|experts|skills|connectors)(?:\/|$)/.test(path);
     if(request.accountIdentity && !request.identity && !authRoute && path!=='/api/health'
-      && !path.startsWith('/api/admin/') && !personalPath) {
+      && !path.startsWith('/api/admin/') && !personalPath && !modelSettingsPath) {
       throw new RequestError('FORBIDDEN','管理员账号不能访问业务工作台。',403);
     }
     if(!['GET','HEAD','OPTIONS'].includes(request.method)) {

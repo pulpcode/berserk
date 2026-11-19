@@ -338,7 +338,7 @@ export function useChat(enabled = true) {
   const chooseModel = useCallback(async (modelId: string, owner = draftKey) => {
     const target = movedDrafts.current.get(owner) || owner;
     const model = models?.models.find(item => item.id === modelId);
-    if (!model?.configured || !model.contextReady || creatingRef.current || modelLocks.current.has(target)) return;
+    if (!model?.configured || !model.contextReady || model.available === false || creatingRef.current || modelLocks.current.has(target)) return;
     if (target.startsWith('workspace:') || target.startsWith('task-home:')) {
       draftModelsRef.current = { ...draftModelsRef.current, [target]: modelId };
       setDraftModels(draftModelsRef.current); persist(MODEL_DRAFT_KEY, draftModelsRef.current);
@@ -442,7 +442,7 @@ export function useChat(enabled = true) {
     const text = (draftsRef.current[key] || '').trim();
     const files = attachments.current(key);
     const picks = composerSelections.current(key);
-    if (!text || files.some(file => file.status !== 'ready') || !model?.configured || !model.contextReady || modelsError || modelErrors[key] || modelLocks.current.has(key)) return;
+    if (!text || files.some(file => file.status !== 'ready') || !model?.configured || !model.contextReady || model.available === false || modelsError || modelErrors[key] || modelLocks.current.has(key)) return;
     const id = targetSessionId || selected || await create();
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.expert?.availability.available === false) return;
     const before = snapshotsRef.current[id];

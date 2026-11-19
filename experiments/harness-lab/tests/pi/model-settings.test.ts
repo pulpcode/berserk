@@ -65,7 +65,7 @@ it('accepts explicit thinking through all settings HTTP routes without weakening
   expect(changed.json()).toMatchObject({ thinkingMode: 'high', thinkingExplicit: true });
   const version = lab.modelSettings().version;
   for (const route of [{ method: 'PUT' as const, url: '/api/settings/model' }, { method: 'POST' as const, url: '/api/settings/models' }, { method: 'PUT' as const, url: `/api/settings/models/${profile.id}` }]) {
-    for (const extra of [{ thinkingMode: 'medium' }, { thinkingMode: null }, { thinkingMode: true }, { thinkingMode: 'high', unexpectedAuthority: true }]) {
+    for (const extra of [{ thinkingMode: 'medium' }, { thinkingMode: true }, { thinkingMode: 'high', unexpectedAuthority: true }]) {
       const rejected = await app.inject({ ...route, payload: { ...update(lab.modelSettings()), ...extra } });
       expect(rejected.statusCode).toBe(400);
       expect(lab.modelSettings().version).toBe(version);
@@ -85,7 +85,7 @@ it('uses the new endpoint, key and model on the next real adapter call and resto
   const session = await lab.createSession();
   await lab.start(session.id, '切换前').run(() => {});
   expect(calls[0]).toMatchObject({ url: 'https://old-model.invalid/v1/chat/completions', authorization: `Bearer ${config.apiKey}`, body: { model: config.model, thinking: { type: 'disabled' } } });
-  const saved = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(original, { provider: 'compatible-new', model: 'model-v2', baseUrl: 'https://NEW-model.invalid:443/v2/', apiKey: 'new-secret-only', contextWindow: 131072, maxOutputTokens: 8192 }) });
+  const saved = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(original, { provider: 'compatible-new', model: 'model-v2', baseUrl: 'https://NEW-model.invalid:443/v2/', apiKey: 'new-secret-only', usageConfirmed: true, contextWindow: 131072, maxOutputTokens: 8192 }) });
   expect(saved.statusCode).toBe(200);
   const next = saved.json<ModelSettings>();
   expect(next).toMatchObject({ provider: 'compatible-new', model: 'model-v2', baseUrl: 'https://new-model.invalid/v2', source: 'local', configured: true });
@@ -99,7 +99,7 @@ it('uses the new endpoint, key and model on the next real adapter call and resto
   expect(calls[1].body).not.toHaveProperty('thinking');
   const path = join(dir, 'model-settings.json');
   expect((await stat(path)).mode & 0o777).toBe(0o600);
-  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 4, version: next.version, apiKey: 'new-secret-only', contextWindow: 131072, maxOutputTokens: 8192 });
+  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 7, version: next.version, credentials: { 'platform:default': 'new-secret-only' }, models: [expect.objectContaining({ contextWindow: 131072, maxOutputTokens: 8192 })] });
   await app.close();
   const restarted = await PiLab.create({ ...config, apiKey: 'different-env-key' }); cleanup.push(() => restarted.close());
   expect(restarted.modelSettings()).toEqual(next);
@@ -116,7 +116,7 @@ it('retains a key only for the same provider and normalized destination, and rej
   const calls = captureProvider();
   const { app, lab, config } = await setup({ baseUrl: 'https://SAME.invalid:443/v1/' });
   const original = lab.modelSettings();
-  const request = update(original, { model: 'other-model', baseUrl: 'https://same.invalid/v1', apiKey: '   ', contextWindow: 131072, maxOutputTokens: 8192 });
+  const request = update(original, { model: 'other-model', baseUrl: 'https://same.invalid/v1', apiKey: '   ', usageConfirmed: true, contextWindow: 131072, maxOutputTokens: 8192 });
   const first = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: request });
   expect(first.statusCode).toBe(200);
   const next = first.json<ModelSettings>();
@@ -238,7 +238,7 @@ it('keeps history readable but rejects unknown capacity before reserving or writ
   const calls = captureProvider(); const { app, lab } = await setup();
   const session = await lab.createSession();
   await lab.start(session.id, '已有历史').run(() => {});
-  const changed = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(lab.modelSettings(), { model: 'unknown-capacity-model' }) });
+  const changed = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(lab.modelSettings(), { model: 'unknown-capacity-model', usageConfirmed: true }) });
   expect(changed.statusCode).toBe(200);
   expect(changed.json()).toMatchObject({ contextReady: false, contextWindow: null, maxOutputTokens: null, contextSource: 'unknown', outputSource: 'unknown' });
   const before = lab.get(session.id);

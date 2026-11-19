@@ -18,7 +18,7 @@ async function mockApi(page: Page) {
   const instructions = new Map<string, InstructionFile>(workspaces.map(item => [item.id, { fileId: 'workspace', name: 'AGENTS.md', content: `${item.name}：使用中文回答`, hash: `hash-${item.id}-1`, editable: true }]));
   const common: InstructionFile = { fileId: 'common', name: '通用 AGENTS.md', content: '尊重事实，说明来源。', hash: 'common-hash', editable: false };
   const skills = [{ id: 'synthesis', name: '资料综合写作', description: '综合资料并注明来源', version: '1.0', hash: 'skill-hash' }];
-  let modelSettings: ModelSettings = { provider: 'deepseek', model: 'deepseek-flash', baseUrl: 'https://api.deepseek.com', configured: true, source: 'environment', version: 'model-v1', contextWindow: 1000000, maxOutputTokens: 393216, compactionReserveTokens: 16384, compactionKeepRecentTokens: 20000, contextSource: 'preset', outputSource: 'preset', contextReady: true };
+  let modelSettings: ModelSettings = { platformId: 'default', provider: 'deepseek', model: 'deepseek-flash', baseUrl: 'https://api.deepseek.com', configured: true, source: 'environment', version: 'model-v1', contextWindow: 1000000, maxOutputTokens: 393216, compactionReserveTokens: 16384, compactionKeepRecentTokens: 20000, contextSource: 'preset', outputSource: 'preset', contextReady: true };
   const compactions = new Map<string, CompactionDetail>();
   const modelFaults = { read: false, write: false, conflict: false, busy: false };
   const modelWrites: ModelSettingsUpdate[] = [];
@@ -72,7 +72,7 @@ async function mockApi(page: Page) {
       { id: 'plan', title: '协作方案参考', description: '方案结构与编制要点' },
     ], limits: { agentRunTimeoutMs: null, httpIdleTimeoutMs: 300000, llmRequestTimeoutMs: null, maxOutputTokens: modelSettings.maxOutputTokens } });
     if (path === '/api/models') return json({ defaultModelId: 'default', models: [{ id: 'default', provider: modelSettings.provider, model: modelSettings.model, configured: modelSettings.configured, contextReady: modelSettings.contextReady, contextWindow: modelSettings.contextWindow, maxOutputTokens: modelSettings.maxOutputTokens }] });
-    if (path === '/api/settings/models' && request.method === 'GET') return json({ version: modelSettings.version, models: [{ ...modelSettings, id: 'default' }] });
+    if (path === '/api/settings/models' && request.method === 'GET') return json({ version: modelSettings.version, models: [{ ...modelSettings, id: 'default' }], platforms: [{ id: 'default', name: 'DeepSeek', provider: modelSettings.provider, baseUrl: modelSettings.baseUrl, api: 'openai-completions', configured: modelSettings.configured, enabled: true, version: modelSettings.version }] });
     let body = '';
     if (request.method !== 'GET') for await (const chunk of request) body += chunk;
     if (path === '/api/settings/model' || path === '/api/settings/models/default') {
@@ -82,14 +82,14 @@ async function mockApi(page: Page) {
       if (modelFaults.write) return json({ error: { code: 'MODEL_SETTINGS_SAVE_FAILED', message: '模型配置保存失败' } }, 503);
       if (modelFaults.busy) return json({ error: { code: 'MODEL_SETTINGS_BUSY', message: '仍有会话正在回复，请结束后再保存。' } }, 409);
       if (modelFaults.conflict || update.expectedVersion !== modelSettings.version) return json({ error: { code: 'MODEL_SETTINGS_CONFLICT', message: '模型配置已被更新，请读取最新配置后再保存。' } }, 409);
-      if ((update.provider !== modelSettings.provider || update.baseUrl !== modelSettings.baseUrl) && !update.apiKey?.trim()) return json({ error: { code: 'MODEL_API_KEY_REQUIRED', message: '更换提供方或端点时，请输入新的 API Key。' } }, 400);
-      const changed = update.model !== modelSettings.model || update.provider !== modelSettings.provider || update.baseUrl !== modelSettings.baseUrl;
+      if (update.platformId !== 'default') return json({ error: { code: 'MODEL_PLATFORM_NOT_FOUND', message: '平台不存在。' } }, 404);
+      const changed = update.model !== modelSettings.model;
       const contextWindow = update.contextWindow ?? (changed ? null : modelSettings.contextWindow);
       const maxOutputTokens = update.maxOutputTokens ?? (changed ? null : modelSettings.maxOutputTokens);
       const compactionReserveTokens = update.compactionReserveTokens ?? (changed ? null : modelSettings.compactionReserveTokens) ?? (contextWindow ? Math.min(16384, Math.floor(contextWindow / 4)) : null);
       const compactionKeepRecentTokens = update.compactionKeepRecentTokens ?? (changed ? null : modelSettings.compactionKeepRecentTokens) ?? (contextWindow && compactionReserveTokens ? Math.min(20000, Math.floor((contextWindow - compactionReserveTokens) / 2)) : null);
       if (contextWindow && maxOutputTokens && (maxOutputTokens > contextWindow || (compactionReserveTokens! + compactionKeepRecentTokens!) >= contextWindow)) return json({ error: { code: 'INVALID_MODEL_PARAMETERS', message: '输出能力不能超过上下文容量，压缩预留量与保留量之和须小于上下文容量。' } }, 400);
-      modelSettings = { contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextReady: Boolean(contextWindow && maxOutputTokens && compactionReserveTokens && compactionKeepRecentTokens), contextSource: update.contextWindow ? 'explicit' : changed ? 'unknown' : modelSettings.contextSource, outputSource: update.maxOutputTokens ? 'explicit' : changed ? 'unknown' : modelSettings.outputSource, provider: update.provider, model: update.model, baseUrl: update.baseUrl, configured: Boolean(update.apiKey?.trim()) || modelSettings.configured, version: `model-v${modelWrites.length + 1}`, source: 'local' };
+      modelSettings = { ...modelSettings, contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextReady: Boolean(contextWindow && maxOutputTokens && compactionReserveTokens && compactionKeepRecentTokens), contextSource: update.contextWindow ? 'explicit' : changed ? 'unknown' : modelSettings.contextSource, outputSource: update.maxOutputTokens ? 'explicit' : changed ? 'unknown' : modelSettings.outputSource, model: update.model, version: `model-v${modelWrites.length + 1}`, source: 'local' };
       return json(modelSettings);
     }
     const input = JSON.parse(body || '{}') as { text?: string; requestId?: string; workspaceId?: string; modelId?: string; name?: string; content?: string; expectedHash?: string | null };
@@ -1010,47 +1010,26 @@ test('新建对话页内选空间，离开不创建，项目加号同页且首�
   } finally { await mock.close(); }
 });
 
-test('模型设置保存后更新模型，密钥只写且关闭后清空，手机窗口不溢出', async ({ page }) => {
+test('模型设置只修改所属平台和模型，保存后更新对话模型列表', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     await page.goto('/');
     const trigger = page.getByRole('button', { name: '设置', exact: true });
     await trigger.click();
     const modal = page.getByRole('dialog', { name: '设置', exact: true });
-    const key = page.locator('#model-key');
     await expect(page.getByLabel('模型 ID')).toHaveValue('deepseek-flash');
-    await expect(key).toHaveValue('');
-    await expect(key).toHaveAttribute('type', 'password');
+    await expect(modal.getByLabel('API Key', { exact: true })).toHaveCount(0);
     await page.getByLabel('模型 ID').fill('deepseek-test');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
     await expect(modal.getByText('已保存，下次发送消息时使用新配置。')).toBeVisible();
     expect(mock.modelWrites).toHaveLength(1);
+    expect(mock.modelWrites[0].platformId).toBe('default');
     expect(mock.modelWrites[0].apiKey).toBeUndefined();
     await expect(page.locator('select[aria-label="选择模型"]')).toContainText('deepseek-test');
-    await page.getByLabel('服务商标识').fill('custom');
-    await page.getByLabel('API 地址', { exact: true }).fill('https://models.example.com/v1');
-    await page.getByRole('button', { name: '保存配置', exact: true }).click();
-    await expect(modal.getByRole('alert')).toContainText('请输入新的 API Key');
-    await key.fill('test-ui-secret-never-persist');
-    await page.getByRole('button', { name: '保存配置', exact: true }).click();
-    await expect(modal.getByText('已保存，下次发送消息时使用新配置。')).toBeVisible();
-    await expect(key).toHaveValue('');
-    expect(mock.modelWrites.at(-1)?.apiKey).toBe('test-ui-secret-never-persist');
-    const storage = await page.evaluate(() => JSON.stringify({ session: { ...sessionStorage }, local: { ...localStorage } }));
-    expect(storage).not.toContain('test-ui-secret-never-persist');
-    await key.fill('discard-this-unsaved-key');
     await page.keyboard.press('Escape');
     await expect(trigger).toBeFocused();
     await trigger.click();
-    await expect(key).toHaveValue('');
     await expect(page.getByLabel('模型 ID')).toHaveValue('deepseek-test');
-    await page.setViewportSize({ width: 375, height: 812 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
-    expect(await modal.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(false);
-    await page.getByLabel('模型 ID').focus();
-    await page.keyboard.press('Escape');
-    await expect(modal).toHaveCount(0);
-    expect(mock.modelWrites).toHaveLength(3);
   } finally { await mock.close(); }
 });
 

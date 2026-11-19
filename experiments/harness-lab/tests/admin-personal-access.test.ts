@@ -104,7 +104,8 @@ test('HTTP task metadata uses the current account owner and keeps business endpo
   for(const id of [publicTask.id,foreign.id]){expect((await call(`/api/tasks/${id}`)).statusCode).toBe(404);expect((await call(`/api/tasks/${id}`,{title:'越权',goal:'业务目标',revision:1},'PUT')).statusCode).toBe(404);}
   expect((await call('/api/tasks',{...input(),visibility:'public',goal:'公共任务'})).statusCode).toBe(403);
   expect((await call('/api/tasks',{...input(),ownerUserId:e.second})).statusCode).toBe(400);
-  for(const path of ['/api/context/catalog','/api/information/access','/api/workbench/items','/api/settings/models'])expect((await call(path)).statusCode,path).toBe(403);
+  for(const path of ['/api/context/catalog','/api/information/access','/api/workbench/items'])expect((await call(path)).statusCode,path).toBe(403);
+  expect((await call('/api/settings/models')).statusCode).toBe(200);
   new SystemRoles(lab.access!.db).revoke('admin-a');expect((await call('/api/tasks')).statusCode).toBe(401);
   expect(fake.calls).toHaveLength(0);expect(lab.access!.allSeatIds()).toEqual(['business']);
 },30000);

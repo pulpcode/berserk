@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, describe, expect, it } from 'vitest';
+import { migrateAdministratorAccounts } from '../src/access/administrator-schema.js';
 import { AccessStore } from '../src/access/store.js';
 import { openDatabase } from '../src/access/database.js';
 import { PiLab } from '../src/pi/lab.js';
@@ -14,10 +15,11 @@ import type { AuthSession, TaskSpace } from '../src/contracts/access.js';
 
 const cleanups:Array<()=>Promise<unknown>>=[];
 afterEach(async()=>{for(const fn of cleanups.splice(0).reverse())await fn();});
-async function setup(managers = ['a'], publicOrigin?: string) {
+async function setup(managers = ['a'], publicOrigin?: string, modelAdmin = false) {
   const dir=await mkdtemp(join(tmpdir(),'axon-access-'));cleanups.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir);const store=new AccessStore(db);
   for(const name of ['a','b','c'])await store.saveAccount({username:name,displayName:name,seatId:name,seatName:`席位 ${name}`,password:'test-password-123',createPublicTask:managers.includes(name),manageModelSettings:name==='a'});
+  if(modelAdmin) { migrateAdministratorAccounts(db); await store.saveAdministratorAccount({username:'system-admin',displayName:'系统管理员',password:'test-password-123'}); }
   db.close();
   const config=testConfig(dir,{seatId:'a',publicOrigin,auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});
   const fake=await fakeRuntime(config,()=>({text:'任务处理完成'})); const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab);cleanups.push(()=>app.close());
@@ -97,13 +99,13 @@ describe('authenticated task scopes',()=>{
     expect((await app.inject({method:'POST',url:'/api/tasks',headers,payload:input('private')})).statusCode).toBe(200);
     expect((await app.inject('/api/health')).statusCode).toBe(200);
   });
-  it('limits model configuration to managers while every seat can select a safe model for its own idle conversations', async () => {
-    const { app, lab, config } = await setup();
-    const a = await login(app, 'a'), b = await login(app, 'b');
+  it('limits model configuration to independent administrators while business seats, including legacy model managers, only select models', async () => {
+    const { app, lab, config } = await setup(['a'], undefined, true);
+    const a = await login(app, 'a'), b = await login(app, 'b'), admin = await login(app, 'system-admin');
     expect((await app.inject('/api/models')).statusCode).toBe(401);
-    const initial = (await a.call('/api/settings/models')).json();
+    const initial = (await admin.call('/api/settings/models')).json();
     const settings = { provider: config.provider, model: config.model, baseUrl: 'https://alternate.invalid/v1', apiKey: 'catalog-test-only-secret', expectedVersion: initial.version, contextWindow: 65536, maxOutputTokens: 2048 };
-    const added = await a.call('/api/settings/models', settings);
+    const added = await admin.call('/api/settings/models', settings);
     expect(added.statusCode, added.body).toBe(201);
     const profile = added.json();
     const safe = await b.call('/api/models');
@@ -113,8 +115,10 @@ describe('authenticated task scopes',()=>{
     for (const url of ['/api/settings/model', '/api/settings/models']) expect((await b.call(url)).statusCode).toBe(403);
     expect((await b.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).statusCode).toBe(403);
     for (const url of ['/api/settings/model', `/api/settings/models/${profile.id}`]) expect((await b.call(url, { ...settings, expectedVersion: profile.version }, 'PUT')).statusCode).toBe(403);
-    expect((await a.call('/api/settings/model')).statusCode).toBe(200);
-    expect((await a.call('/api/settings/models')).json().models).toHaveLength(2);
+    expect((await a.call('/api/settings/model')).statusCode).toBe(403);
+    expect((await a.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).statusCode).toBe(403);
+    expect((await admin.call('/api/settings/model')).statusCode).toBe(200);
+    expect((await admin.call('/api/settings/models')).json().models).toHaveLength(2);
     const taskA = (await a.call('/api/tasks', input('private'))).json<TaskSpace>();
     const taskB = (await b.call('/api/tasks', input('private'))).json<TaskSpace>();
     const wa = (await a.call(`/api/tasks/${taskA.id}/workspace`, {})).json();
@@ -130,13 +134,49 @@ describe('authenticated task scopes',()=>{
     }
     const pending = lab.start(sb.id, '预留中的会话', {}, 'b');
     expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().error.code).toBe('SESSION_BUSY');
-    expect((await a.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).json().error.code).toBe('MODEL_SETTINGS_BUSY');
+    expect((await admin.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).json().error.code).toBe('MODEL_SETTINGS_BUSY');
     await pending.run(() => {});
     lab.backgroundHooks = { isSessionReserved: id => id === sb.id, isActive: () => false };
     expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().error.code).toBe('SESSION_BUSY');
     lab.backgroundHooks = undefined;
     expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().modelId).toBe(profile.id);
     expect(lab.get(sa.id, 'a').modelId).toBe('default');
+  });
+
+  it('exposes platform management only to administrators and keeps an unconfigured Kimi profile unavailable', async () => {
+    const { app, lab } = await setup(['a'], undefined, true);
+    const admin = await login(app, 'system-admin'), legacy = await login(app, 'a'), member = await login(app, 'b');
+    const catalog = (await admin.call('/api/settings/models')).json();
+    const input = {name:'Kimi Code',provider:'kimi-coding',baseUrl:'https://api.kimi.com/coding/',api:'anthropic-messages',enabled:false,expectedVersion:catalog.version};
+    for(const actor of [legacy,member]) {
+      expect((await actor.call('/api/settings/platforms')).statusCode).toBe(403);
+      expect((await actor.call('/api/settings/platforms', input)).statusCode).toBe(403);
+    }
+    const noCsrf = await app.inject({url:'/api/settings/platforms',method:'POST',headers:{cookie:admin.headers.cookie,origin:admin.headers.origin,'x-axon-view':admin.headers['x-axon-view']},payload:input});
+    expect(noCsrf.statusCode).toBe(403);
+    const stale = await app.inject({url:'/api/settings/platforms',method:'POST',headers:{...admin.headers,'x-axon-view':'stale-view'},payload:input});
+    expect(stale.statusCode).toBe(409);
+    const created = await admin.call('/api/settings/platforms', input); expect(created.statusCode,created.body).toBe(201);
+    const platform = created.json(); expect(platform).toMatchObject({name:'Kimi Code',configured:false,enabled:false,api:'anthropic-messages'});
+    expect(platform.apiKey).toBeUndefined();
+    const directory = `/api/settings/platforms/${platform.id}/models`;
+    expect((await member.call(directory)).statusCode).toBe(403);
+    expect((await member.call(directory, { expectedVersion: platform.version, modelIds: ['other'] })).statusCode).toBe(403);
+    expect((await admin.call(directory)).json().error.code).toBe('MODEL_DISCOVERY_UNSUPPORTED');
+    expect((await admin.call(`/api/settings/platforms/${platform.id}`,input,'PUT')).json().error.code).toBe('MODEL_SETTINGS_CONFLICT');
+    const model = await admin.call('/api/settings/models',{platformId:platform.id,model:'k3.1-pro',displayName:'Kimi K3.1 Pro',enabled:false,usageConfirmed:false,thinkingLevels:[],thinkingLevelMap:{off:null},expectedVersion:platform.version});
+    expect(model.statusCode,model.body).toBe(201); expect(model.json()).toMatchObject({configured:false,contextReady:false,available:false,platformId:platform.id});
+    const choices = await member.call('/api/models'); expect(choices.statusCode).toBe(200);
+    for(const hidden of ['baseUrl','credentialEnv','BERSERK_TEST_UNSET_KIMI_KEY','api.kimi.com']) expect(choices.body).not.toContain(hidden);
+    expect(choices.json().models.find((item:{id:string})=>item.id===model.json().id)).toMatchObject({available:false});
+    const imported = await admin.call(directory, { expectedVersion: model.json().version, modelIds: ['k3.1-pro', 'platform-model', 'platform-model'] });
+    expect(imported.statusCode, imported.body).toBe(200);
+    const models = imported.json().models.filter((item: { platformId: string }) => item.platformId === platform.id);
+    expect(models).toHaveLength(2);
+    expect(models[0].id).toBe(model.json().id);
+    expect(models[1]).toMatchObject({ model: 'platform-model', available: false, enabled: false, usageConfirmed: false });
+    expect((await admin.call(directory, { expectedVersion: model.json().version, modelIds: ['stale-model'] })).json().error.code).toBe('MODEL_SETTINGS_CONFLICT');
+    expect(lab.workspaces.listAll()).toHaveLength(0);
   });
 
   it('requires explicit production credentials and rejects test-seat bypass, CSRF and stale views',async()=>{

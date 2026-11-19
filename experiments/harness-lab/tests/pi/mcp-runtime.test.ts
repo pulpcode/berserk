@@ -193,6 +193,10 @@ describe('request-local MCP approval and strict evidence', () => {
     const aBefore = a.endpoint.httpRecords.length, bBefore = b.endpoint.httpRecords.length;
     const run = state.lab.start(state.session.id, 'Read from the appropriate service', {}, state.identity.seatId, undefined, state.identity.userId); requestId = run.requestId; const done = run.run(() => {});
     const question = await pending(state); expect(question.kind).toBe('question'); expect(a.endpoint.httpRecords).toHaveLength(aBefore); expect(b.endpoint.httpRecords).toHaveLength(bBefore);
+    // Required target guidance belongs to native context even when no DeepSeek payload reminder applies.
+    expect(state.fake.calls[0].context.systemPrompt).toContain('外部服务有多个候选');
+    expect(state.fake.calls[0].context.systemPrompt).toContain(JSON.stringify(questions()));
+    expect(state.fake.calls[0].context.systemPrompt).not.toContain('host_request_instructions');
     expect(state.lab.get(state.session.id).interactions?.filter(item => item.kind === 'confirmation')).toHaveLength(0);
     state.lab.respondInteraction(state.session.id, question.interactionId, {requestId, kind: 'question', action: 'answer', answers: [{questionId: questions()[0].id, optionIds: [beta]}]}, state.identity.seatId);
     const confirmation = await pending(state); expect(confirmation).toMatchObject({kind: 'confirmation', action: {parameters: {query: 'selected-only'}, mcp: {connectorId: beta, connectionName: 'Beta'}}});

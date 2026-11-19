@@ -10,7 +10,7 @@ export function SettingsPanel({ identity, logout, logoutError, close, saved, sug
   suggestions?: { enabled: boolean; change: (enabled: boolean) => void };
   identity?: AccountIdentity; logout?: () => void; logoutError?: string; close: () => void; saved: () => Promise<void>;
 }) {
-  const modelAllowed = !identity || (identity.canCollaborate!==false && identity.manageModelSettings);
+  const modelAllowed = !identity || identity.role === 'administrator';
   const [section, setSection] = useState<'model' | 'account' | 'preferences'>(modelAllowed ? 'model' : 'account');
   return <Panel title="设置" className="settings-panel" close={close}>
     <div className="settings-layout">

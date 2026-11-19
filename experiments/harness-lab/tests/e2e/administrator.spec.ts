@@ -110,9 +110,9 @@ test('independent administrator manages experts without mounting a seat workbenc
     await expect(page.getByRole('button', { name: '展开侧边栏', exact: true })).toBeVisible();
     await page.getByRole('button', { name: '展开侧边栏', exact: true }).click();
     await page.getByRole('button', { name: '设置', exact: true }).click();
+    await expect(page.getByRole('button', { name: '模型', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: '账户', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toContainText('系统管理员');
-    await expect(page.getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: '个人偏好', exact: true })).toHaveCount(0);
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: '退出登录', exact: true }).click();
     await expect(page.getByRole('button', { name: '登录', exact: true })).toBeVisible();
@@ -154,7 +154,7 @@ test('an administrator creates personal spaces and resumes ordinary two-turn cha
       await expect(page.getByText('合成样例已核对。', { exact: true })).toHaveCount(index + 1);
       await expect(input).toBeEnabled();
     }
-    expect(env.fake.calls).toHaveLength(2);
+    expect(env.fake.calls.filter(call => Boolean(call.context.tools?.length))).toHaveLength(2);
     const sessionUrl = page.url();
     expect(env.writes.filter(path => path === '/api/sessions')).toHaveLength(1);
     await page.reload();
@@ -196,8 +196,9 @@ test('an administrator creates personal spaces and resumes ordinary two-turn cha
     expect(env.lab.workspaces.listAll()).toHaveLength(1);
     expect(env.lab.workspaces.listAll()[0].seatId).toBe(`account-${String(admin.id)}`);
     await page.getByRole('button', { name: '设置', exact: true }).click();
+    await expect(page.getByRole('button', { name: '模型', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: '账户', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toContainText('系统管理员');
-    await expect(page.getByRole('button', { name: '模型', exact: true })).toHaveCount(0);
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: '退出登录', exact: true }).click();
     await expect(page.getByRole('button', { name: '登录', exact: true })).toBeVisible();

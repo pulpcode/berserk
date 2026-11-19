@@ -380,7 +380,6 @@ input, select { font: inherit; }
 .settings-field input { display: block; width: 100%; min-height: 43px; border: 1px solid #d8dde1; border-radius: 8px; padding: 10px 12px; color: var(--text); background: white; font-size: 13px; }
 .settings-field input::placeholder { color: #7b828a; }
 .settings-field p { font-size: 11px; color: var(--muted); line-height: 1.8; margin: 7px 0 0; }
-.key-state { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 10px; font-weight: 400; margin-left: auto; }
 .settings-form-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--line); padding-top: 20px; margin-top: 6px; }
 .settings-form-footer > span { font-size: 11px; color: var(--muted); }
 .settings-review { margin: 16px 0; padding: 14px; border: 1px solid #ded8cc; border-radius: 8px; background: #faf8f3; font-size: 12px; line-height: 1.8; }

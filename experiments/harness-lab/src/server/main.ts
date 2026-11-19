@@ -1,8 +1,8 @@
-import { loadConfig } from './config.js';
+import { loadServerConfig } from './config.js';
 import { PiLab } from '../pi/lab.js';
 import { createApp } from './app.js';
 
-const config = loadConfig();
+const config = loadServerConfig();
 const lab = await PiLab.create(config);
 const app = await createApp(lab, true);
 await app.listen({ host: config.listenHost ?? '127.0.0.1', port: config.port });
