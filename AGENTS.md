@@ -20,6 +20,10 @@ Managed by Trellis. Edits outside this block are preserved; edits inside may be 
 
 <!-- TRELLIS:END -->
 
+## Issue 记录
+
+- 按 [Issue 管理规范](docs/development/issue-management.md) 记录和跟踪问题。旧编号通过 [迁移索引](.trellis/issues-index.md) 查询。
+
 ## Git 提交约定
 
 - 本项目所有 Git commit message 必须以中文为主体，包括标题和正文；技术名词、标识符及可选的 Conventional Commits 前缀可以保留英文。
