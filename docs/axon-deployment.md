@@ -4,6 +4,10 @@
 - 发布时先准备新版本，再切换 `current` 并重启服务。涉及数据库变更时，先停服并备份数据。发布后检查 `/api/health`，并验证登录、历史任务和会话可正常读取。
 - 旧版本、回滚备份和验收材料集中归档到 `/srv/axon-archive/`。清理前核对运行和回滚引用，并确认归档可恢复。
 
+## 演练实例首次部署
+
+包含 `deploy.sh` 的版本可按 [Axon 预设部署操作手册](axon-preset-deployment.md) 批量开通六席及独立管理员。
+
 ## 席位配置与部署核对
 
 - 在实例的私有配置目录准备 `seats.json`。清单项填写稳定的 `id`、显示名称 `name`、类型 `type` 和职责 `responsibility`。普通业务实例配置管理员和实际办理业务的席位。开启演练时只配置一个导演席，并核对 `simulation.directorSeatId`。开启下达时可配置一个或多个控制席，对照 `commands.seatIds`。使用 [日常业务清单](../experiments/harness-lab/fixtures/seat-deployment.example.json) 或 [演练与下达清单](../experiments/harness-lab/fixtures/seat-deployment.scenario.example.json) 作为示例。
