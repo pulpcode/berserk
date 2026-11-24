@@ -6,6 +6,7 @@ import { resourceItemExplanation, resourceRecordTimes } from '../src/contracts/r
 import { extractResourceResult, projectResourceResult, resourceResultValid, type ResourceRecord, type ResourceResult } from '../src/contracts/resource-results.js';
 import { summarizeResources } from '../src/contracts/resource-summary.js';
 import { ResourceResultCard } from '../src/web/ResourceResultCard.js';
+import { ResourceResultDetails } from '../src/web/ResourceResultDetails.js';
 import legacy from './pi/fixtures/resource-result-v1-overlap.json';
 const at = '2026-11-02T05:00:00Z';
 const evidence = [{ kind: 'declaration' as const, note: '构造边界样例，非历史原句' }];
@@ -89,6 +90,33 @@ describe('E01–E06 v3 evidence presentation, constructed boundary fixtures', ()
     const content = JSON.stringify({format:'resource.model-result.v1',data:p}); expect(extractResourceResult({resourceResult:r},'task_resource_query',false,content)).toEqual(r);
     p.items[0].explanation.availability.state = 'available'; expect(extractResourceResult({resourceResult:r},'task_resource_query',false,JSON.stringify({format:'resource.model-result.v1',data:p}))).toBeNull();
   });
+});
+
+it('marks only the uncounted candidate in compact details and retains the whole candidate range', () => {
+  const counted = row('车辆 A'), unconfirmed = row('车辆 B');
+  unconfirmed.source!.data!.entityId = 'Y';
+  const fixed = result([counted, unconfirmed]);
+  fixed.parameters = { operation: 'query', purpose: 'task', sources: [{ systemId: 'source' }] };
+  fixed.statisticsScope.relation = 'related';
+  const countedItem = fixed.items.find(item => item.name === counted.name)!;
+  countedItem.relation = 'assigned';
+  fixed.items.find(item => item.name === unconfirmed.name)!.relation = 'unconfirmed';
+  fixed.summary = summarizeResources(fixed.records, [countedItem], at);
+  expect(resourceResultValid(fixed)).toBe(true);
+  expect(fixed.summary.itemCount).toBe(1);
+
+  const html = renderToStaticMarkup(createElement(ResourceResultDetails, {
+    result: fixed, page: 0, busy: false, onPage: () => {}, compact: true,
+  }));
+  const rows = Array.from(html.matchAll(/<li><strong>([^<]+)<\/strong><p>([^<]+)<\/p>/g), ([, name, status]) => [name, status]);
+  expect(html).toContain('候选 1–2 / 2');
+  expect(html).toContain('来源范围：source');
+  expect(html).not.toContain('未包含标注版本');
+  expect(html).not.toContain('按任务发现的标注');
+  expect(rows).toEqual([
+    ['车辆 A', '车辆 · 已分配 · 未知'],
+    ['车辆 B', '车辆 · 未确认 · 未知 · 未纳入统计'],
+  ]);
 });
 
 it('bounds overlap explanations for 100 legal aggregates with 500 members without truncating data or counts', () => {

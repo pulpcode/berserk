@@ -3,7 +3,7 @@ import { createAssistantMessageEventStream, InMemoryCredentialStore, InMemoryMod
   type AssistantMessage, type Context, type SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { LabConfig } from '../../src/server/config.js';
 
-export type Reply = { blocks?: Array<{ type: 'text'; text: string } | { type: 'thinking'; thinking: string; redacted?: boolean; thinkingSignature?: string }>; text?: string; toolIds?: string[]; tools?: Array<{ name: string; arguments: Record<string, unknown> }>; error?: string; length?: boolean; waitForAbort?: boolean; usageInput?: number; usageOutput?: number; delayMs?: number };
+export type Reply = { blocks?: Array<{ type: 'text'; text: string } | { type: 'thinking'; thinking: string; redacted?: boolean; thinkingSignature?: string }>; text?: string; textChunks?: AsyncIterable<string>; toolIds?: string[]; tools?: Array<{ name: string; arguments: Record<string, unknown> }>; error?: string; length?: boolean; waitForAbort?: boolean; usageInput?: number; usageOutput?: number; delayMs?: number };
 export interface CapturedCall { context: Context; maxTokens?: number; aborted: boolean }
 
 /** Fake only the provider stream: Pi itself performs the real tool loop and persistence. */
@@ -25,8 +25,20 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
         provider: model.provider, model: model.id, timestamp: Date.now(), stopReason: 'stop',
         usage: { input: plan.usageInput ?? 1, output: plan.usageOutput ?? (plan.length ? model.maxTokens : 1), cacheRead: 0, cacheWrite: 0, totalTokens: (plan.usageInput ?? 1) + (plan.usageOutput ?? (plan.length ? model.maxTokens : 1)),
           cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } } };
-      const emitReply = () => {
+      const emitReply = async () => {
         stream.push({ type: 'start', partial: message });
+        if (plan.text || plan.textChunks) {
+          const block = { type: 'text' as const, text: '' };
+          message.content.push(block);
+          stream.push({ type: 'text_start', contentIndex: 0, partial: message });
+          const append = (delta: string) => {
+            block.text += delta;
+            stream.push({ type: 'text_delta', contentIndex: 0, delta, partial: message });
+          };
+          if (plan.text) append(plan.text);
+          if (plan.textChunks) for await (const chunk of plan.textChunks) append(chunk);
+          stream.push({ type: 'text_end', contentIndex: 0, content: block.text, partial: message });
+        }
         if (plan.waitForAbort) {
           const abort = () => {
             call.aborted = true;
@@ -36,14 +48,6 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
           if (options?.signal?.aborted) abort();
           else options?.signal?.addEventListener('abort', abort, { once: true });
           return;
-        }
-        if (plan.text) {
-          const block = { type: 'text' as const, text: '' };
-          message.content.push(block);
-          stream.push({ type: 'text_start', contentIndex: 0, partial: message });
-          block.text = plan.text;
-          stream.push({ type: 'text_delta', contentIndex: 0, delta: plan.text, partial: message });
-          stream.push({ type: 'text_end', contentIndex: 0, content: plan.text, partial: message });
         }
         for (const original of plan.blocks ?? []) {
           const index = message.content.length;
@@ -74,7 +78,12 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
         message.stopReason = plan.length ? 'length' : (plan.tools?.length || plan.toolIds?.length) ? 'toolUse' : 'stop';
         stream.push({ type: 'done', reason: message.stopReason, message });
       };
-      if (plan.delayMs) setTimeout(emitReply, plan.delayMs); else queueMicrotask(emitReply);
+      const run = () => void emitReply().catch(error => {
+        message.stopReason = 'error';
+        message.errorMessage = String(error);
+        stream.push({ type: 'error', reason: 'error', error: message });
+      });
+      if (plan.delayMs) setTimeout(run, plan.delayMs); else queueMicrotask(run);
       return stream;
     },
   });

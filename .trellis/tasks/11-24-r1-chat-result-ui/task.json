@@ -1,0 +1,31 @@
+{
+  "id": "r1-chat-result-ui",
+  "name": "r1-chat-result-ui",
+  "title": "R1 聊天内流式结果展示与组件化",
+  "description": "汇总 R1.1 至 R1.4 的范围、阶段依赖和验收入口",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-24",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "11-24-r1-2-result-datasets-and-charts",
+    "11-24-r1-3-resource-result-components",
+    "11-24-r1-4-result-ui-acceptance",
+    "11-24-r1-1-streaming-result-ui"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}

@@ -1458,12 +1458,24 @@ test('子事件不抢阅读位置或输入焦点，断线后查询恢复且不�
     expect(await conversation.evaluate(element => element.scrollTop)).toBeLessThan(5);
     const beforeReads = mock.counts.sessionReads.length;
     mock.disconnect('A');
+    const reconnect = page.getByText('连接已断开，正在查询会话状态；消息不会重复发送。', { exact: true });
+    await expect(reconnect).toBeVisible();
     await expect.poll(() => mock.counts.sessionReads.length).toBeGreaterThan(beforeReads);
+    const priorResult: SessionSnapshot = {
+      ...session,
+      active: null,
+      lastResult: { requestId: 'old-request', status: 'succeeded' },
+      messages: [...session.messages, { id: 'prior-result', requestId: 'old-request', role: 'assistant', text: '前一轮的终态快照' }],
+    };
+    await page.route('**/api/sessions/A', route => route.fulfill({ json: priorResult }), { times: 1 });
+    await expect(page.getByText('前一轮的终态快照', { exact: true })).toBeVisible();
+    await expect(reconnect).toBeVisible();
     await expect(page.locator('[data-subagent-id="reconnect-child"]')).toHaveCount(1);
     mock.updateChild('A', { ...child, status: 'succeeded', result: '断线后由查询获取的结果。' });
     mock.finish('A');
     await expect(page.locator('[data-subagent-id="reconnect-child"] > summary')).toContainText('已完成');
     await expect(page.locator('.composer-stop')).toHaveCount(0);
+    await expect(reconnect).toHaveCount(0);
     expect(await conversation.evaluate(element => element.scrollTop)).toBeLessThan(5);
     await expect(input).toHaveValue('断线也不丢失的下一轮草稿');
     await expect(page.getByRole('button', { name: /^会话 A/ }).getByLabel('有新回复未读')).toHaveCount(1);

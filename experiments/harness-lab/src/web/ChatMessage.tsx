@@ -1,8 +1,8 @@
 import { messageAuthoringReceipt } from './authoring-receipt';
 import type { AuthoringReceipt } from '../contracts/authoring';
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, lazy, Suspense, useContext, type ComponentProps, type ReactNode } from 'react';
 import { ChevronDown, Terminal, PencilLine, Wrench } from 'lucide-react';
-import Markdown, { type Components } from 'react-markdown';
+import Markdown, { type Components, type ExtraProps } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { PublicMessage } from '../contracts/index';
 import { HistoricalFile } from './Files';
@@ -14,13 +14,33 @@ import { SelectionHistory } from './ComposerReferences';
 import { ResourceResultCard } from './ResourceResultCard';
 import { toolActionLabel } from './processGroups';
 import { resourceResultValid } from '../contracts/resource-results';
-const MarkdownEvidence = createContext<PublicMessage[]>([]);
+import { readResultUiFence } from './result-ui/markdown-fence';
+
+const ResultUiBlock = lazy(() => import('./result-ui/ResultUiBlock'));
+const MarkdownContext = createContext<{
+  evidence: PublicMessage[];
+  source: string;
+  sessionId?: string;
+  requestId?: string;
+  active: boolean;
+} | null>(null);
+
 function EvidenceLink({href,children}:{href?:string;children?:ReactNode}) {
-  const evidence=useContext(MarkdownEvidence);
-  return <MapLink href={href} messages={evidence} external>{children}</MapLink>;
+  const reply = useContext(MarkdownContext);
+  return <MapLink href={href} messages={reply?.evidence ?? []} external>{children}</MapLink>;
+}
+function ReplyPre({ node, ...props }: ComponentProps<'pre'> & ExtraProps) {
+  const reply = useContext(MarkdownContext);
+  const fence = reply?.sessionId && readResultUiFence(reply.source, node);
+  if (!reply?.sessionId || !fence) return <pre {...props} />;
+
+  return <Suspense fallback={<p role="status">正在加载结果展示…</p>}>
+    <ResultUiBlock {...fence} evidence={reply.evidence} sessionId={reply.sessionId} requestId={reply.requestId} active={reply.active} />
+  </Suspense>;
 }
 const markdownComponents: Components = {
   a: EvidenceLink,
+  pre: ReplyPre,
   table: ({ children }) => <div className="markdown-table" role="region" aria-label="回复表格，可横向滚动" tabIndex={0}><table>{children}</table></div>,
 };
 /** Count only unified-patch hunks; +++ inside a hunk can be real added content. */
@@ -30,7 +50,7 @@ export function patchLineCounts(patch?: string): { added: number; removed: numbe
   if (!lines || firstHunk === undefined || firstHunk < 0) return undefined;
   return lines.slice(firstHunk + 1).reduce((count, line) => ({ added: count.added + Number(line.startsWith('+')), removed: count.removed + Number(line.startsWith('-')) }), { added: 0, removed: 0 });
 }
-export function Message({ message, active, workspaceId, focusKey, focusTransfers, evidence = [], finalAnswer = false, openAuthoring }: { openAuthoring?: (receipt: AuthoringReceipt) => void; finalAnswer?: boolean; evidence?: PublicMessage[]; message: PublicMessage; active: boolean; workspaceId: string; focusKey: string; focusTransfers: ChatFocusTransfer }) {
+export function Message({ message, active, workspaceId, sessionId, focusKey, focusTransfers, evidence = [], finalAnswer = false, openAuthoring }: { openAuthoring?: (receipt: AuthoringReceipt) => void; finalAnswer?: boolean; evidence?: PublicMessage[]; message: PublicMessage; active: boolean; workspaceId: string; sessionId?: string; focusKey: string; focusTransfers: ChatFocusTransfer }) {
   const focusRef = useChatItemFocus<HTMLElement>(focusKey, focusTransfers);
   if (message.role === 'tool' && message.toolName === 'subagent') return <p className="subagent-placeholder">{message.isError ? 'Agent 任务未完成，请查看回复中的说明。' : message.text || !active ? '未记录可展示的 Agent 任务详情。' : '正在准备 Agent 任务…'}</p>;
   const action = toolActionLabel(message.toolName);
@@ -58,6 +78,6 @@ export function Message({ message, active, workspaceId, focusKey, focusTransfers
     </div>
   </details>;
   return <article data-work-message-id={message.id} ref={focusRef} className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
-    <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} /><AnnotationHistoryLinks message={message}/><EvidenceMapLinks messages={[message]}/>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <MarkdownEvidence.Provider value={evidence}><Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>{finalAnswer && <EvidenceMapLinks messages={requestMapEvidence(message,evidence)}/>}</MarkdownEvidence.Provider>}</div>
+    <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} /><AnnotationHistoryLinks message={message}/><EvidenceMapLinks messages={[message]}/>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <MarkdownContext.Provider value={{ evidence, source: message.text, sessionId, requestId: message.requestId, active }}><Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>{finalAnswer && <EvidenceMapLinks messages={requestMapEvidence(message,evidence)}/>}</MarkdownContext.Provider>}</div>
   </article>;
 }

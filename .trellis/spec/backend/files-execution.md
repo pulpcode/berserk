@@ -20,6 +20,8 @@ File references enter Pi as a hidden native custom message berserk.files-input.v
 
 Bash output is archived under executions/<requestId> and mapped to /logs before callbacks, results, errors or native persistence expose it. Success, nonzero exit, cancellation and timeout must never expose Pi's host temporary output path. Log reads are readonly and survive container deletion. Text-only models cannot receive raw image bodies. Binary office/PDF formats are parsed by container scripts. Preview serves only inert UTF-8 text or bounded PNG/JPEG bytes, with nosniff/CSP; HTML/SVG stay text, other formats download as attachments.
 
+Eligible foreground Bash results can carry a versioned chart dataset using the existing native tool receipt and its authorized live and history projections. See [Chat Result UI](../frontend/chat-result-ui.md#r12-calculation-datasets) for the output limits and display contract.
+
 ## Signatures and contracts
 
 - `POST /api/workspaces/:id/uploads {name,size}` registers an upload; `PUT /uploads/:uploadId/content` accepts the binary stream; `GET /uploads/:uploadId` reads status; `DELETE` cancels incomplete uploads without deleting published files.
