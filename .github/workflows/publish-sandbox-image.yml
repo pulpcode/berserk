@@ -2,6 +2,8 @@ name: 发布沙盒镜像
 
 on:
   workflow_dispatch:
+  push:
+    tags: ['sandbox-image-v*']
 
 permissions:
   contents: read
@@ -19,7 +21,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: "24"
       - name: 安装探针依赖
         run: npm ci
       - name: 构建并验证镜像

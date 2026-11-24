@@ -110,7 +110,7 @@ ssh -N -L 4316:127.0.0.1:4316 ubuntu@SERVER
 
 ## 发布方准备沙盒镜像
 
-1. 在 GitHub Actions 手动运行「发布沙盒镜像」工作流，选择应用发布候选所在分支。工作流构建镜像、运行实际执行探针，并推送通过的镜像到 `ghcr.io/pulpcode/berserk-file-runtime`。
+1. 在 GitHub Actions 手动运行「发布沙盒镜像」工作流，选择应用发布候选所在分支。也可在候选提交推送 `sandbox-image-v*` 构建标签触发。工作流构建镜像、运行实际执行探针，并推送通过的镜像到 `ghcr.io/pulpcode/berserk-file-runtime`。
 2. 首次发布时，在 GitHub Packages 将镜像包可见性设为 **Public**。在无仓库凭据的目标网络和主机上验证可按工作流给出的摘要拉取。
 3. 将工作流摘要里的 JSON 保存为仓库根目录的 `release/sandbox-image.json` 并提交。确认最终提交的沙盒相关输入与完成验收的候选提交一致，再创建应用发布标签。
 4. 在目标网络验证一键部署和沙盒操作。可回退的应用版本引用的镜像摘要应保留在 GHCR。回退应用发布目录时，服务读取旧目录中对应的镜像绑定。
