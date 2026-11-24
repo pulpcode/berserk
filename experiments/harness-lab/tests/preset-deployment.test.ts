@@ -105,33 +105,56 @@ test('scenario bootstrap enables exactly the preset, preserves existing sessions
   } finally { await rm(root, { recursive: true, force: true }); }
 }, 60_000);
 
-test('Docker preflight requires Docker by default and skips it only when disabled', async () => {
+test('deployment pulls the release digest and reuses an exact cached image', async () => {
   const root = await mkdtemp(join(tmpdir(), 'axon-docker-preflight-'));
   const log = join(root, 'docker.log');
+  const binding = join(root, 'sandbox-image.json');
+  const image = `ghcr.io/pulpcode/berserk-file-runtime@sha256:${'a'.repeat(64)}`;
+  await writeFile(binding, JSON.stringify({ image, platform: 'linux/amd64' }));
   await writeFile(join(root, 'docker'), [
     '#!/bin/sh',
-    'printf "%s\\n" "$1" >> "$DOCKER_TEST_LOG"',
-    'if [ "$1" = version ]; then printf "26.1\\n"; exit "$DOCKER_TEST_STATUS"; fi',
-    'if [ "$1" = image ]; then exit 1; fi',
+    'printf "%s\\n" "$*" >> "$DOCKER_TEST_LOG"',
+    'case "$1" in',
+    '  version) printf "26.1\\n"; exit "$DOCKER_TEST_STATUS";;',
+    '  image) exit "$DOCKER_TEST_CACHE";;',
+    '  pull) exit "$DOCKER_TEST_PULL";;',
+    'esac',
   ].join('\n'), { mode: 0o700 });
-  const run = (enabled: string | undefined, status: string) => {
-    const env = { ...process.env, PATH: `${root}:${process.env.PATH}`, PORT: '4316',
-      DOCKER_TEST_LOG: log, DOCKER_TEST_STATUS: status, LAB_EXECUTION_ENABLED: enabled };
-    return spawnSync(process.execPath, ['--import', 'tsx', 'scripts/deploy-preflight.ts'], { cwd: app, env, encoding: 'utf8' });
-  };
+  const run = (overrides: NodeJS.ProcessEnv = {}, path = binding) => spawnSync(process.execPath, [
+    '--import', 'tsx', '--input-type=module', '--eval',
+    `import { pathToFileURL } from 'node:url';
+     import { deployPreflight } from './scripts/deploy-preflight.ts';
+     Object.defineProperties(process, { platform: { value: 'linux' }, arch: { value: 'x64' } });
+     console.log(deployPreflight(process.env, pathToFileURL(process.argv[1])));`, path,
+  ], { cwd: app, encoding: 'utf8', env: { ...process.env, PATH: `${root}:${process.env.PATH}`, PORT: '4316',
+    DOCKER_TEST_LOG: log, DOCKER_TEST_STATUS: '0', DOCKER_TEST_CACHE: '1', DOCKER_TEST_PULL: '0', ...overrides } });
   try {
-    const disabled = run('false', '1');
+    const missing = join(root, 'missing.json');
+    expect(run({}, missing).stderr).toContain('缺少 release/sandbox-image.json');
+    const disabled = run({ LAB_EXECUTION_ENABLED: 'false' }, missing);
     expect(disabled.status, disabled.stderr).toBe(0);
+    expect(run({ LAB_EXECUTION_IMAGE: 'berserk-file-runtime:w01-5' }).stderr).toContain('镜像摘要冲突');
     await expect(stat(log)).rejects.toMatchObject({ code: 'ENOENT' });
 
-    const unavailable = run(undefined, '1');
+    const unavailable = run({ DOCKER_TEST_STATUS: '1' });
     expect(unavailable.status).toBe(1);
     expect(unavailable.stderr).toContain('沙盒已启用');
-    expect(await readFile(log, 'utf8')).toBe('version\n');
 
-    const available = run(undefined, '0');
+    await writeFile(log, '');
+    const available = run();
     expect(available.status, available.stderr).toBe(0);
     expect(available.stdout.trim()).toBe('4316');
-    expect(await readFile(log, 'utf8')).toBe('version\nversion\nimage\nbuild\nrun\n');
+    expect(await readFile(log, 'utf8')).toContain(`pull --platform=linux/amd64 ${image}\n`);
+    expect(await readFile(log, 'utf8')).toContain('run --rm --pull=never');
+
+    await writeFile(log, '');
+    expect(run({ DOCKER_TEST_CACHE: '0' }).status).toBe(0);
+    expect(await readFile(log, 'utf8')).not.toMatch(/^pull /m);
+
+    await writeFile(log, '');
+    const failed = run({ DOCKER_TEST_PULL: '1' });
+    expect(failed.status).toBe(1);
+    expect(failed.stderr).toContain(`无法从 GHCR 拉取沙盒镜像 ${image}`);
+    expect(await readFile(log, 'utf8')).not.toMatch(/^run /m);
   } finally { await rm(root, { recursive: true, force: true }); }
 }, 30_000);

@@ -1,0 +1,45 @@
+name: 发布沙盒镜像
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ghcr.io/pulpcode/berserk-file-runtime
+    defaults:
+      run:
+        working-directory: experiments/harness-lab
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: 安装探针依赖
+        run: npm ci
+      - name: 构建并验证镜像
+        run: |
+          docker build --platform linux/amd64 \
+            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            -t "$IMAGE:sha-$GITHUB_SHA" execution-image
+          EXECUTION_IMAGE="$IMAGE:sha-$GITHUB_SHA" npm run probe:execution
+      - name: 推送并输出部署绑定
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          tag="$IMAGE:sha-$GITHUB_SHA"
+          docker push "$tag"
+          reference=$(docker image inspect --format '{{range .RepoDigests}}{{println .}}{{end}}' "$tag" |
+            awk -v prefix="$IMAGE@" 'index($0, prefix) == 1 { print; exit }')
+          [[ $reference =~ @sha256:[a-f0-9]{64}$ ]]
+          {
+            printf '构建提交：`%s`\n\n' "$GITHUB_SHA"
+            printf '```json\n{\n  "image": "%s",\n  "platform": "linux/amd64"\n}\n```\n' "$reference"
+          } >> "$GITHUB_STEP_SUMMARY"
