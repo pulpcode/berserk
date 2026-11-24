@@ -20,7 +20,7 @@ export type { ResultUiSnapshot };
 const maxContent = 32_768;
 const maxPatches = 32;
 const maxChildren = 8;
-const { stack, metrics, bar } = resourceUiComponents;
+const { stack, metrics, bar, view } = resourceUiComponents;
 
 function record(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -42,7 +42,16 @@ function decodeBlock(value: unknown): ResultUiBlock | undefined {
 }
 
 function leaf(catalog: Catalog, type?: string) {
-  return catalog === resourceUiCatalog ? type === metrics || type === bar : type === 'ChartView' || type === 'ResultTable';
+  return catalog === resourceUiCatalog ? type === metrics || type === bar || type === view
+    : type === 'ChartView' || type === 'ResultTable';
+}
+
+function validLeafProps(type: string, props: Record<string, unknown>) {
+  if (type === 'ChartView') return Boolean(datasetChartConfig(props));
+  if (type === view) {
+    return Object.keys(props).length === 1 && (props.section === 'sources' || props.section === 'details');
+  }
+  return Object.keys(props).length === 0;
 }
 
 function validPatch(value: unknown, catalog: Catalog): boolean {
@@ -54,8 +63,7 @@ function validPatch(value: unknown, catalog: Catalog): boolean {
   if (!record(element) || Object.keys(element).length !== 3 || !record(element.props)
     || !Array.isArray(element.children) || typeof element.type !== 'string') return false;
   if (leaf(catalog, element.type)) {
-    return element.children.length === 0 && (element.type === 'ChartView'
-      ? Boolean(datasetChartConfig(element.props)) : Object.keys(element.props).length === 0);
+    return element.children.length === 0 && validLeafProps(element.type, element.props);
   }
   return element.type === stack && !Object.keys(element.props).length && element.children.length <= maxChildren
     && element.children.every(key) && new Set(element.children).size === element.children.length;
@@ -66,7 +74,9 @@ function renderable(compiled: Partial<Spec>, catalog?: Catalog): { spec?: Spec; 
   if (!catalog || !root || !compiled.elements || !Object.hasOwn(compiled.elements, root)) return { complete: false };
   const element = compiled.elements[root];
   if (element.type !== stack) return { complete: false };
-  const children = (element.children ?? []).filter(id => leaf(catalog, compiled.elements?.[id]?.type));
+  const resolved = (element.children ?? []).filter(id => leaf(catalog, compiled.elements?.[id]?.type));
+  const firstView = resolved.find(id => compiled.elements?.[id]?.type === view);
+  const children = resolved.filter(id => compiled.elements?.[id]?.type !== view || id === firstView);
   if (!children.length) return { complete: false };
   const elements = Object.fromEntries(children.map(id => [id, compiled.elements![id]]));
   elements[root] = { ...element, children };

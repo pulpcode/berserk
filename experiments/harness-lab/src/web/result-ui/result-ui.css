@@ -27,6 +27,15 @@
 .chat-result-ui-values dl div { display: flex; justify-content: space-between; gap: 8px; }
 .chat-result-ui-values dd { margin: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .chat-result-ui p.chat-result-ui-notice { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+.chat-result-ui-disclosure { border-top: 1px solid var(--line); padding-top: 8px; font-size: 13px; }
+.chat-result-ui-disclosure summary { width: fit-content; max-width: 100%; min-height: 24px; padding: 4px 0; cursor: pointer; }
+.chat-result-ui-disclosure > summary { color: var(--accent); font-weight: 600; }
+.chat-result-ui-disclosure > p:not(.chat-result-ui-notice) { margin: 6px 0; }
+.chat-result-ui-disclosure .resource-result-sources :is(p, ul) { margin-block: 4px; }
+.chat-result-ui-disclosure ul.resource-result-items { margin: 8px 0; padding: 0; list-style: none; }
+.chat-result-ui-disclosure .resource-result-items > li { margin: 0; padding: 6px 0; }
+.chat-result-ui-disclosure .resource-result-items > li > p { margin: 2px 0 0; color: var(--muted); }
+.chat-result-ui-read-error { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
 .chat-result-ui-table { min-width: 0; }
 .chat-result-ui-table-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
 .chat-result-ui-table table { width: 100%; border-collapse: collapse; font-size: 13px; }

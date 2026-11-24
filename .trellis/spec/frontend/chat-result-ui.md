@@ -80,3 +80,10 @@ Run `tests/pi/result-dataset.test.ts` for receipt validation and replay, `tests/
 ### Renderer and data source
 
 Pass fixed numeric values from the validated receipt to the chart component. Keep tool execution, result persistence, and optional file publication outside the renderer.
+
+## R1.3 resource sources and details
+
+- A `resource-v1` stack may contain one `ResourceResultView` leaf. Its props contain only `section`, with value `sources` or `details`, and its child list is empty. Existing metric and bar leaves remain valid.
+- A resource block with this leaf shows the fixed time, applicable scope, and important coverage gaps once. Its disclosure starts closed. The sources view displays fixed origins, coverage, and exclusions. The details view adds quantity groups, ten candidates per page, and per-item evidence. A task candidate outside `resourceStatisticsItems` has a visible exclusion label.
+- Opening or paging rereads the existing authorized session snapshot for the exact `resultRef`. The inline block shares the refreshed result across its metrics, chart, and details. Failed reads clear this block's data and keep its retry control. Paging preserves keyboard focus while loading. The ordinary process card also reuses the underlying React details and read logic.
+- Run `tests/e2e/resource-result-details.spec.ts` for streaming before reply completion, compact copy, keyboard disclosure and paging, per-item evidence, map navigation, restart replay, denied reads, and retry.

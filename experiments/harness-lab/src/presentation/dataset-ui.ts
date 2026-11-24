@@ -16,6 +16,7 @@ export const datasetUiInstructions = [
   '列类型可用 string、number、boolean 或 datetime。datetime 用含时区的 ISO 时间。每行都提供已声明的列，缺失用 null，行和列 ID 各自唯一。使用有限数值，整数须在 JavaScript 安全整数范围内。',
   'bash 返回数据集回执后，复制其中的 resultRef，在普通 Markdown 回复中加入以下展示块。每个块使用不同短 ID。从行首开始写围栏，每行都是完整 JSON。只填写已返回的列 ID 和显示选项。',
   'ChartView 的 kind 可用 bar、pie、line、radar、scatter。bar、pie、radar 的 x 用文字或布尔列，line 的 x 用数值或时间列，scatter 的 x 用数值列。y 是至多八个互异的数值列 ID。bar 可选 horizontal，pie 可选 donut。pie 和 scatter 仅有一个 y。radar 至少三个 y，列须提供 radarScale，含 min、max、direction（higher 或 lower）和 source。',
+  '比较类别用柱状图，连续趋势用折线图，同一总体的构成用饼图，比较已知量程的多项指标用雷达图，查看两个变量的对应关系用散点图。用户重视精确读数时保留表格。',
   '只展示表格时保留 Stack 和 ResultTable；可以在围栏后继续说明统计口径。命令未返回有效回执时请说明限制或重新计算。',
   '```' + resourceUiFence,
   JSON.stringify({ id: 'orders', catalog: datasetUiCatalog, resultRef: 'dataset:从工具结果复制' }),

@@ -5,6 +5,10 @@ import { readResultUiSnapshot, type ResultUiSnapshot } from '../src/web/result-u
 
 const example = resourceUiInstructions.split('\n').filter(line => line.startsWith('{')).map(line => line.replace('resource:从工具结果复制', 'resource:request:call'));
 const body = (lines: string[]) => lines.join('\n') + '\n';
+const resourceViewPatch = (section: unknown, props = {}, children: string[] = [], id = 'details') => JSON.stringify({
+  op: 'add', path: `/elements/${id}`, value: { type: 'ResourceResultView', props: { section, ...props }, children },
+});
+const withDetails = () => [example[0], example[1], example[2].replace('["metrics","chart"]', '["metrics","chart","details"]'), ...example.slice(3)];
 
 describe('resource UI SpecStream', () => {
   it('grows from complete lines, uses one stable block, and ignores identical cumulative snapshots', () => {
@@ -60,6 +64,35 @@ describe('resource UI SpecStream', () => {
     const nested = body(example.slice(0, 4).concat(example[2].replace('/overview', '/chart')));
     expect(readResultUiSnapshot(undefined, nested, true).status).toBe('invalid');
   });
+
+  it.each(['sources', 'details'])('renders the %s disclosure only once its complete patch arrives', section => {
+    const open = readResultUiSnapshot(undefined, body(withDetails()), false);
+    expect(open.spec?.elements.overview.children).toEqual(['metrics', 'chart']);
+    const closed = readResultUiSnapshot(open, open.source + body([resourceViewPatch(section)]), true);
+    expect(closed).toMatchObject({
+      status: 'ready',
+      spec: { elements: { overview: { children: ['metrics', 'chart', 'details'] }, details: { props: { section } } } },
+    });
+  });
+
+  it.each([
+    resourceViewPatch('all'),
+    resourceViewPatch(undefined),
+    resourceViewPatch('details', { url: '/api/sessions/invalid' }),
+    resourceViewPatch('sources', {}, ['chart']),
+  ])('rejects an invalid resource disclosure and keeps the overview (%s)', patch => {
+    const result = readResultUiSnapshot(undefined, body([...withDetails(), patch]), true);
+    expect(result.status).toBe('invalid');
+    expect(result.spec?.elements.overview.children).toEqual(['metrics', 'chart']);
+  });
+
+  it('limits a resource block to one disclosure', () => {
+    const lines = withDetails();
+    lines[2] = lines[2].replace('["metrics","chart","details"]', '["metrics","chart","details","sources"]');
+    const result = readResultUiSnapshot(undefined, body([...lines, resourceViewPatch('details'), resourceViewPatch('sources', {}, [], 'sources')]), true);
+    expect(result.status).toBe('invalid');
+    expect(result.spec?.elements.overview.children).toEqual(['metrics', 'chart', 'details']);
+  });
 });
 
 describe('dataset UI SpecStream', () => {
@@ -81,6 +114,7 @@ describe('dataset UI SpecStream', () => {
 
   it.each([
     { type: 'ResourceBar', props: {}, children: [] },
+    { type: 'ResourceResultView', props: { section: 'details' }, children: [] },
     { type: 'ChartView', props: { kind: 'bar', x: 'team', y: ['count'], values: [12, 8] }, children: [] },
     { type: 'ChartView', props: { kind: 'line', x: 'time', y: ['count'], horizontal: true }, children: [] },
     { type: 'ChartView', props: { kind: 'line', x: { $state: '/column' }, y: ['count'] }, children: [] },
