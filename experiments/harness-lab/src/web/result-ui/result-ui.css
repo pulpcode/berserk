@@ -27,3 +27,17 @@
 .chat-result-ui-values dl div { display: flex; justify-content: space-between; gap: 8px; }
 .chat-result-ui-values dd { margin: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .chat-result-ui p.chat-result-ui-notice { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+.chat-result-ui-table { min-width: 0; }
+.chat-result-ui-table-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+.chat-result-ui-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.chat-result-ui-table caption { padding: 8px 10px; color: var(--text); text-align: left; font-weight: 600; }
+.chat-result-ui-table :is(th, td) { min-width: 5.5rem; max-width: 20rem; padding: 6px 10px; border-top: 1px solid var(--line); color: var(--text); text-align: left; vertical-align: top; }
+.chat-result-ui-table thead th { background: var(--accent-soft); }
+.chat-result-ui-table tbody th { font-weight: normal; }
+.chat-result-ui-table .chat-result-ui-number { text-align: right; font-variant-numeric: tabular-nums; }
+.chat-result-ui-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; color: var(--muted); font-size: 12px; }
+.chat-result-ui-pagination button { min-height: 24px; }
+.chat-result-ui-values dd { overflow-wrap: anywhere; }
+.chat-result-ui-values dt, .chat-result-ui-values dd { min-width: 0; }
+.chat-result-ui-values .chat-result-ui-table { margin-top: 4px; }
+.chat-result-ui-values:has(.chat-result-ui-table) dd { white-space: normal; }

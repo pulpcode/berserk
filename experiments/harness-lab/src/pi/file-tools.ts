@@ -8,8 +8,10 @@ import { Type } from 'typebox';
 import type { RequestSandbox } from '../execution/docker.js';
 import type { FileService } from '../files/service.js';
 import type { FileOutput } from '../contracts/index.js';
+import { resultDatasetMaxBytes } from '../contracts/result-dataset.js';
 import { checkDirectory } from '../resources/files.js';
 import { FILE_OUTPUT } from './file-history.js';
+import { datasetBashResult } from './result-dataset-receipt.js';
 
 /** Pi's accumulator uses a host temporary path. All external forms use our own durable log. */
 export function mapBashLogText(text: string, virtualLog: string) {
@@ -34,7 +36,7 @@ export function workspaceFileTools(sandbox: RequestSandbox) {
     defineTool(createFindToolDefinition('/workspace', { operations: { exists: path => sandbox.exists(path), glob: (pattern, cwd, options) => sandbox.glob(pattern, cwd, options) } })),
   ];
 }
-export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: string; background?: boolean; logsDir: string; requestId: string; workspaceId: string; sessionId: string; manager: SessionManager; files: Pick<FileService, 'publish'>; signal: AbortSignal; output: (file: FileOutput) => void }) {
+export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: string; background?: boolean; logsDir: string; requestId: string; workspaceId: string; sessionId: string; manager: SessionManager; files: Pick<FileService, 'publish'>; signal: AbortSignal; authorizeDataset?: () => void; output: (file: FileOutput) => void }) {
   const bash = createBashToolDefinition('/workspace', { exposeSessionEnvironment: false, operations: { exec: (...args) => sandbox.exec(...args) } });
   const commandGuidance = options.background
     ? 'bash 调用由服务端命令规则检查。后台不能等待人工确认；待审或禁止的命令不执行，工具返回原因。可选择获准步骤继续；无法完成时如实说明已完成内容和限制。'
@@ -57,6 +59,7 @@ export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: s
         } catch { throw new Error('命令日志不可用，尚未启动命令；请检查存储状态。'); }
         let written = 0;
         let logAvailable = true;
+        let datasetBytes = options.authorizeDataset ? Buffer.allocUnsafe(resultDatasetMaxBytes) : undefined;
         const temporaryLogs = new Set<string>();
         const mapped = <T extends { content: Array<{ type: string; text?: string }>; details?: unknown }>(result: T): T => {
           if (result.details && typeof result.details === 'object' && 'fullOutputPath' in result.details
@@ -74,6 +77,8 @@ export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: s
               let offset = 0;
               while (offset < bytes.length) offset += writeSync(fd, bytes, offset, bytes.length - offset);
               written += bytes.length;
+              if (written > resultDatasetMaxBytes) datasetBytes = undefined;
+              else if (datasetBytes) bytes.copy(datasetBytes, written - bytes.length);
             } catch { logAvailable = false; throw new Error('命令日志保存失败。'); }
             executionOptions.onData(bytes);
           } }),
@@ -98,6 +103,16 @@ export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: s
           await Promise.all([...temporaryLogs].map(path => unlink(path).catch(() => {})));
         }
         if (failure) throw failure;
+        if (result && !result.details?.truncation?.truncated && datasetBytes && written) {
+          const structured = datasetBashResult(datasetBytes.subarray(0, written), {
+            sessionId: options.sessionId, requestId: options.requestId, toolCallId: args[0],
+          }, virtualLog);
+          if (structured) {
+            options.authorizeDataset?.();
+            args[2]?.throwIfAborted();
+            return structured;
+          }
+        }
         return result!;
       },
     }),

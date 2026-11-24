@@ -5,6 +5,7 @@ import type { SessionExpert } from './capabilities.js';
 export type * from './capabilities.js';
 import type { TaskDiscovery } from './continuous.js';
 import type { ResourceResult } from './resource-results.js';
+import type { ResultDatasetReceipt } from './result-dataset.js';
 import type { SpatialResult } from './spatial.js';
 import type { AnnotationResult } from './annotation-results.js';
 import type { AnnotationContext, AnnotationSelection, LoadedAnnotationSelection } from './annotations.js';
@@ -36,6 +37,7 @@ export interface PublicMessage {
   resultMissing?: true;
   annotationResult?: AnnotationResult | null;
   spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null;
+  resultDataset?: ResultDatasetReceipt;
   taskDiscovery?: TaskDiscovery | null;
   attachments?: FileRef[];
   selections?: LoadedComposerSelection;
@@ -264,7 +266,7 @@ export type StreamEvent = {
   | { type: 'assistant.updated'; message: PublicMessage }
   | { type: 'tool.started'; toolCallId: string; toolName: string; toolInput?: PublicToolInput }
   | { type: 'tool.updated'; toolCallId: string; toolName: string; text: string; toolDetails?: PublicToolDetails }
-  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; toolInput?: PublicToolInput; toolDetails?: PublicToolDetails; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null; taskDiscovery?: TaskDiscovery | null }
+  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; toolInput?: PublicToolInput; toolDetails?: PublicToolDetails; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null; resultDataset?: ResultDatasetReceipt; taskDiscovery?: TaskDiscovery | null }
   | { type: 'interaction.updated'; interaction: Interaction }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'files.output'; file: FileOutput }

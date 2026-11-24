@@ -44,3 +44,39 @@ Run `tests/result-ui-stream.test.ts` for fragmented lines, repeated snapshots, r
 ## Implementation guidance
 
 Feed the compiler only from the merged assistant message. Subscribing directly to both `text.delta` and `assistant.updated` duplicates patches. Keep ordinary React presentations and chart parameters in the web module. Supply exact category values through the chart's keyboard-accessible disclosure.
+
+## R1.2 calculation datasets
+
+### Scope and signatures
+
+- An eligible foreground `bash` call can supply fixed values for chat charts and tables. `LAB_RESULT_UI_ENABLED` gates result capture and generation guidance. Stored results remain available through authorized history.
+- Use the same `berserk-ui-v1` fence with catalog `dataset-v1`, a `Stack` root, empty props for `ResultTable`, and `ChartView` props `{kind, x, y, horizontal?, donut?}`. The model selects existing column IDs. `horizontal` applies to bars and `donut` applies to pies.
+
+### Data contract
+
+- A successful command can emit one UTF-8 JSON object with `format: "result-dataset.v1"`, typed columns, row IDs, and provenance. The shared contract caps data at 48 KiB, 32 columns, and 1,000 rows.
+- The Pi tool result stores the validated dataset and its digest in native `details`. Model-facing text contains `resultRef`, column descriptors, and the row count. The existing `tool.completed` event and session snapshot project a scoped `resultDataset` only from the validated receipt.
+- Consume a preceding completed `bash` receipt with the exact session, request, and tool-call identity. The browser renders from the recorded values, including after a restart or source file edit.
+
+### Validation and states
+
+| Condition | Outcome |
+| --- | --- |
+| Oversized, truncated, invalid UTF-8 or invalid JSON output | No dataset reference. Ordinary command output and logs remain available |
+| Incomplete fence while streaming | Render resolved components as their complete patch lines arrive |
+| Missing, invalid, or foreign receipt | Show the unavailable-result notice |
+| Chart column, unit, scale or shape mismatch | Display chart validation feedback and retain the valid table |
+
+### Good, base, and bad cases
+
+- Good. A CSV summary supplies a chart and table in the active turn. The same values survive a source edit and service restart.
+- Base. An ordinary command keeps its existing output. An explicit file download uses its own file tool.
+- Bad. The chart consumes values from model-authored patches or a reference copied from another turn.
+
+### Tests required
+
+Run `tests/pi/result-dataset.test.ts` for receipt validation and replay, `tests/web/result-dataset-chart.test.ts` for normal and invalid mappings, and `tests/e2e/result-dataset.spec.ts` for CSV upload, chart timing before reply close, and restart after a source edit. Keep the R1.1 streaming browser regression.
+
+### Renderer and data source
+
+Pass fixed numeric values from the validated receipt to the chart component. Keep tool execution, result persistence, and optional file publication outside the renderer.

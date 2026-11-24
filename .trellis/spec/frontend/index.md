@@ -16,6 +16,8 @@ This product targets desktop browsers only (user decision, 2026-10-13). Do not a
 
 ## Pre-Development and Quality Check
 
+Read [Chat Result UI](./chat-result-ui.md) for streamed presentation blocks, authorized tool results, chart inputs, and history rendering.
+
 Read [R4 Connectors and Remote MCP](../backend/connectors-r4.md) for fixed legacy business mappings, personal credentials, remote protocol/network admission, original confirmation/history and desktop connection selection.
 Read [Conversation Work Activity](../backend/work-activity.md) for the collapsible work panel, verified business facts, semantic interpretations, navigation authorization and memory-only analysis.
 

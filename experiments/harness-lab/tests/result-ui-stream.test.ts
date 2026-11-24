@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { resourceUiInstructions } from '../src/presentation/resource-ui';
+import { datasetUiCatalog } from '../src/presentation/dataset-ui';
 import { readResultUiSnapshot, type ResultUiSnapshot } from '../src/web/result-ui/spec-stream';
 
 const example = resourceUiInstructions.split('\n').filter(line => line.startsWith('{')).map(line => line.replace('resource:从工具结果复制', 'resource:request:call'));
@@ -19,7 +20,7 @@ describe('resource UI SpecStream', () => {
         expect(snapshot.status).toBe('ready');
       }
     }
-    expect(snapshot?.block).toEqual({ id: 'resources', resultRef: 'resource:request:call' });
+    expect(snapshot?.block).toEqual({ id: 'resources', resultRef: 'resource:request:call', catalog: 'resource-v1' });
     expect(snapshot?.spec?.elements.overview.children).toEqual(['metrics', 'chart']);
     expect(readResultUiSnapshot(snapshot, source, true)).toMatchObject({ status: 'ready', patchCount: 4 });
   });
@@ -58,5 +59,35 @@ describe('resource UI SpecStream', () => {
     expect(readResultUiSnapshot(undefined, body(example).replace('resource-v1', 'resource-v2'), true).spec).toBeUndefined();
     const nested = body(example.slice(0, 4).concat(example[2].replace('/overview', '/chart')));
     expect(readResultUiSnapshot(undefined, nested, true).status).toBe('invalid');
+  });
+});
+
+describe('dataset UI SpecStream', () => {
+  const block = { id: 'orders', catalog: datasetUiCatalog, resultRef: 'dataset:request:call' };
+  const patch = (path: string, value: unknown) => ({ op: 'add', path, value });
+  const base = [
+    block, patch('/root', 'overview'),
+    patch('/elements/overview', { type: 'Stack', props: {}, children: ['chart', 'table'] }),
+    patch('/elements/chart', { type: 'ChartView', props: { kind: 'bar', x: 'team', y: ['orders'] }, children: [] }),
+  ];
+  const source = (values: unknown[]) => body(values.map(value => JSON.stringify(value)));
+
+  it('renders a complete chart definition before the table and fence finish', () => {
+    const open = readResultUiSnapshot(undefined, source(base), false);
+    expect(open).toMatchObject({ status: 'ready', block, spec: { elements: { overview: { children: ['chart'] } } } });
+    const complete = readResultUiSnapshot(open, source([...base, patch('/elements/table', { type: 'ResultTable', props: {}, children: [] })]), true);
+    expect(complete).toMatchObject({ status: 'ready', spec: { elements: { overview: { children: ['chart', 'table'] } } } });
+  });
+
+  it.each([
+    { type: 'ResourceBar', props: {}, children: [] },
+    { type: 'ChartView', props: { kind: 'bar', x: 'team', y: ['count'], values: [12, 8] }, children: [] },
+    { type: 'ChartView', props: { kind: 'line', x: 'time', y: ['count'], horizontal: true }, children: [] },
+    { type: 'ChartView', props: { kind: 'line', x: { $state: '/column' }, y: ['count'] }, children: [] },
+    { type: 'ChartView', props: { kind: 'radar', x: 'time', y: ['count', 'count'] }, children: [] },
+  ])('rejects unknown components, model-supplied values and invalid field selections (%j)', element => {
+    const invalid = readResultUiSnapshot(undefined, source([...base.slice(0, -1), patch('/elements/chart', element)]), true);
+    expect(invalid.status).toBe('invalid');
+    expect(invalid.spec).toBeUndefined();
   });
 });

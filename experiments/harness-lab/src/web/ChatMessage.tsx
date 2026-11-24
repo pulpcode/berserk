@@ -34,7 +34,7 @@ function ReplyPre({ node, ...props }: ComponentProps<'pre'> & ExtraProps) {
   const fence = reply?.sessionId && readResultUiFence(reply.source, node);
   if (!reply?.sessionId || !fence) return <pre {...props} />;
 
-  return <Suspense fallback={<p role="status">正在加载资源统计…</p>}>
+  return <Suspense fallback={<p role="status">正在加载结果展示…</p>}>
     <ResultUiBlock {...fence} evidence={reply.evidence} sessionId={reply.sessionId} requestId={reply.requestId} active={reply.active} />
   </Suspense>;
 }

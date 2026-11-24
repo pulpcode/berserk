@@ -1,15 +1,22 @@
 import { createContext, lazy, Suspense, useContext, useMemo, useState } from 'react';
 import { JSONUIProvider, Renderer, type ComponentRegistry } from '@json-render/react';
 import type { PublicMessage } from '../../contracts/index';
+import type { ResultDatasetV1 } from '../../contracts/result-dataset';
 import { resourceResultValid, type ResourceResult, type ResourceSummary } from '../../contracts/resource-results';
+import { datasetUiCatalog } from '../../presentation/dataset-ui';
 import { resourceUiComponents } from '../../presentation/resource-ui';
 import { resourceResultCandidate } from '../ResourceResultCard';
 import { availabilityLabels, resourceRelationLabels } from '../annotations/ResourceFields';
+import { datasetChartConfig } from './dataset-chart';
+import { datasetFromEvidence } from './dataset-evidence';
+import { ResultDatasetTable } from './ResultDatasetTable';
 import { readResultUiSnapshot, type ResultUiSnapshot } from './spec-stream';
 import './result-ui.css';
 
 const ResultContext = createContext<ResourceResult | null>(null);
+const DatasetContext = createContext<ResultDatasetV1 | null>(null);
 const ResourceBar = lazy(() => import('./ResourceBar').then(({ ResourceBar }) => ({ default: ResourceBar })));
+const ResultDatasetChart = lazy(() => import('./ResultDatasetChart').then(({ ResultDatasetChart }) => ({ default: ResultDatasetChart })));
 
 function ResourceMetrics({ summary }: { summary: ResourceSummary }) {
   return <dl className="chat-result-ui-metrics">
@@ -31,6 +38,17 @@ const registry = {
     const result = useContext(ResultContext);
     return result && <Suspense fallback={<p className="chat-result-ui-notice" role="status">正在绘制柱状图…</p>}>
       <ResourceBar result={result} />
+    </Suspense>;
+  },
+  ResultTable: function TableNode() {
+    const dataset = useContext(DatasetContext);
+    return dataset && <ResultDatasetTable columns={dataset.columns} rows={dataset.rows} />;
+  },
+  ChartView: function ChartNode({ element }) {
+    const dataset = useContext(DatasetContext);
+    const config = useMemo(() => datasetChartConfig(element.props), [element.props]);
+    return dataset && config && <Suspense fallback={<p className="chat-result-ui-notice" role="status">正在绘制图表…</p>}>
+      <ResultDatasetChart dataset={dataset} config={config} />
     </Suspense>;
   },
 } satisfies ComponentRegistry;
@@ -55,6 +73,16 @@ function ResourceResultScope({ result }: { result: ResourceResult }) {
   </header>;
 }
 
+function DatasetScope({ dataset }: { dataset: ResultDatasetV1 }) {
+  const { source, scope, method } = dataset.provenance;
+  return <header className="chat-result-ui-heading">
+    <h3>计算结果</h3>
+    <p>来源 {source}</p>
+    <p>范围 {scope}</p>
+    <p>方法 {method}</p>
+  </header>;
+}
+
 export default function ResultUiBlock({ lines, closed, evidence, sessionId, requestId, active }: {
   lines: string;
   closed: boolean;
@@ -67,20 +95,31 @@ export default function ResultUiBlock({ lines, closed, evidence, sessionId, requ
   const snapshot = readResultUiSnapshot(previous, lines, closed);
   if (snapshot !== previous) setPrevious(snapshot);
 
-  const candidate = snapshot.block && resourceResultCandidate(evidence, snapshot.block.resultRef, sessionId, requestId);
+  const datasetBlock = snapshot.block?.catalog === datasetUiCatalog;
+  const candidate = snapshot.block && !datasetBlock && resourceResultCandidate(evidence, snapshot.block.resultRef, sessionId, requestId);
   const result = useMemo(() => resourceResultValid(candidate) ? candidate : undefined, [candidate]);
-  const display = result && snapshot.spec;
+  const ref = snapshot.block?.resultRef;
+  const dataset = useMemo(() => datasetBlock && ref ? datasetFromEvidence(evidence, ref, sessionId, requestId) : undefined,
+    [datasetBlock, evidence, ref, sessionId, requestId]);
+  const dataAvailable = Boolean(result || dataset);
+  const { spec } = snapshot;
+  const display = spec && dataAvailable;
+  const label = datasetBlock ? '计算结果展示' : '资源展示';
   let notice: string | undefined;
-  if (snapshot.status === 'invalid') notice = '资源展示格式有误。';
-  else if (snapshot.block && !result && (!active || closed)) notice = '原资源结果不可用。';
-  else if (!closed && !active) notice = '资源展示未完成。';
-  else if (!display) notice = '正在生成资源展示…';
+  if (snapshot.status === 'invalid') notice = `${label}格式有误。`;
+  else if (snapshot.block && !dataAvailable && (!active || closed)) notice = datasetBlock ? '原计算结果不可用。' : '原资源结果不可用。';
+  else if (!closed && !active) notice = `${label}未完成。`;
+  else if (!display) notice = `正在生成${snapshot.block ? label : '结果展示'}…`;
 
-  return <section className="chat-result-ui" aria-label="资源展示" data-result-ui-block={snapshot.block?.id}>
-    {display && <ResultContext.Provider value={result}>
+  return <section className="chat-result-ui" aria-label={label} data-result-ui-block={snapshot.block?.id}>
+    {spec && result && <ResultContext.Provider value={result}>
       <ResourceResultScope result={result} />
-      <JSONUIProvider registry={registry}><Renderer spec={display} registry={registry} /></JSONUIProvider>
+      <JSONUIProvider registry={registry}><Renderer spec={spec} registry={registry} /></JSONUIProvider>
     </ResultContext.Provider>}
+    {spec && dataset && <DatasetContext.Provider value={dataset}>
+      <DatasetScope dataset={dataset} />
+      <JSONUIProvider registry={registry}><Renderer spec={spec} registry={registry} /></JSONUIProvider>
+    </DatasetContext.Provider>}
     {notice && <p className="chat-result-ui-notice" role={active && snapshot.status === 'pending' ? 'status' : undefined}>{notice}</p>}
   </section>;
 }
