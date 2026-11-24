@@ -27,16 +27,6 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
           cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } } };
       const emitReply = async () => {
         stream.push({ type: 'start', partial: message });
-        if (plan.waitForAbort) {
-          const abort = () => {
-            call.aborted = true;
-            message.stopReason = 'aborted';
-            stream.push({ type: 'error', reason: 'aborted', error: message });
-          };
-          if (options?.signal?.aborted) abort();
-          else options?.signal?.addEventListener('abort', abort, { once: true });
-          return;
-        }
         if (plan.text || plan.textChunks) {
           const block = { type: 'text' as const, text: '' };
           message.content.push(block);
@@ -48,6 +38,16 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
           if (plan.text) append(plan.text);
           if (plan.textChunks) for await (const chunk of plan.textChunks) append(chunk);
           stream.push({ type: 'text_end', contentIndex: 0, content: block.text, partial: message });
+        }
+        if (plan.waitForAbort) {
+          const abort = () => {
+            call.aborted = true;
+            message.stopReason = 'aborted';
+            stream.push({ type: 'error', reason: 'aborted', error: message });
+          };
+          if (options?.signal?.aborted) abort();
+          else options?.signal?.addEventListener('abort', abort, { once: true });
+          return;
         }
         for (const original of plan.blocks ?? []) {
           const index = message.content.length;

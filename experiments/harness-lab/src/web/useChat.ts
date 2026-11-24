@@ -22,6 +22,9 @@ function initialWorkspace(key: string) {
   try { return sessionStorage.getItem(key) || ''; } catch { return ''; }
 }
 const reason = (error: unknown) => error instanceof Error ? error.message : '连接异常，请稍后查询会话状态。';
+const replyConnectionNotice = '连接已断开，正在查询会话状态；消息不会重复发送。';
+type ChatError = string | { recoveryRequestId: string };
+const errorText = (error: ChatError | undefined) => typeof error === 'object' ? replyConnectionNotice : error;
 
 // Keep navigation order stable while status and streamed content change.
 function mergeById<T extends { id: string }>(previous: T[], incoming: T[]): T[] {
@@ -100,7 +103,7 @@ export function useChat(enabled = true) {
   const [interactionSubmissions, setInteractionSubmissions] = useState<Record<string, InteractionSubmission>>({});
   const [pending, setPending] = useState<Record<string, boolean>>({});
   const [completedForeground, setCompletedForeground] = useState<{ sessionId: string; requestId: string }>();
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, ChatError>>({});
   const [readErrors, setReadErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(enabled);
   const [creating, setCreating] = useState(false);
@@ -210,6 +213,16 @@ export function useChat(enabled = true) {
       // Polling may observe completion before the final SSE frame arrives.
       if (stream && !stream.terminal && !result.active) return;
       put(result);
+      setErrors(previous => {
+        const error = previous[id];
+        if (typeof error !== 'object') {
+          return error === replyConnectionNotice && !result.active && result.lastResult ? { ...previous, [id]: '' } : previous;
+        }
+        const { recoveryRequestId } = error;
+        const settled = result.active?.requestId !== recoveryRequestId
+          && (result.lastResult?.requestId === recoveryRequestId || result.turns?.some(turn => turn.requestId === recoveryRequestId));
+        return settled ? { ...previous, [id]: '' } : previous;
+      });
       setPending(previous => ({ ...previous, [id]: false }));
       setReadErrors(previous => ({ ...previous, [id]: '' }));
       setModelErrors(previous => previous[id] ? { ...previous, [id]: '' } : previous);
@@ -524,11 +537,11 @@ export function useChat(enabled = true) {
     };
     try {
       await sendMessage(id, text, receive, { ...selectionInput(picks), ...(files.length ? { uploadIds: files.filter(file => file.uploadId).map(file => file.uploadId!), fileRefs: files.filter(file => !file.uploadId).map(file => ({ path: file.path! })) } : {}) });
-      if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: '连接已断开，正在查询会话状态；消息不会重复发送。' }));
+      if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: stream.requestId ? { recoveryRequestId: stream.requestId } : replyConnectionNotice }));
     } catch (error) {
-      setErrors(previous => ({ ...previous, [id]: reason(error) }));
       // After admission, a reload/disconnection can interrupt the stream while the
       // server still owns this request. Only its terminal snapshot may restore it.
+      if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: stream.requestId ? { recoveryRequestId: stream.requestId } : reason(error) }));
       if (!stream.requestId) recover(id);
     }
     finally {
@@ -580,5 +593,6 @@ export function useChat(enabled = true) {
     recoverableSelectionDiffers: JSON.stringify(selectionInput({ ...composerSelections.recovery[selected], connectorIds: undefined })) !== JSON.stringify(selectionInput({ ...composerSelections.all[draftKey], connectorIds: undefined })),
     submitted: submitted[selected] || '', restoreSubmitted: () => { draft(draftKey, submittedRef.current[selected] || ''); composerSelections.restore(draftKey); },
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],
-    pending: pending[selected] || false, error: errors[selected] || readErrors[selected] || errors[`workspace:${workspaceId}`] || errors[''] || '', refresh, bootstrap };
+    pending: pending[selected] || false, error: errorText(errors[selected]) || readErrors[selected]
+      || errorText(errors[`workspace:${workspaceId}`]) || errorText(errors['']) || '', refresh, bootstrap };
 }

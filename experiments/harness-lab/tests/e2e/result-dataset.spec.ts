@@ -16,14 +16,19 @@ import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 import { basemapFixture } from './basemap-fixtures';
 
-const csv = Buffer.from('team\n' + '甲班\n'.repeat(12) + '乙班\n'.repeat(8), 'utf8');
+const teamA = '甲班（临时跨单位多部门协作工单保障组）';
+const teamB = '乙班（临时区域联合登记与核对工单保障组）';
+const csv = Buffer.from('team\n' + `${teamA}\n`.repeat(12) + `${teamB}\n`.repeat(8), 'utf8');
 const compute = `
 import csv, json
 from collections import Counter
+from itertools import accumulate
 
 with open('orders.csv', encoding='utf-8', newline='') as source:
     counts = Counter(row['team'] for row in csv.DictReader(source))
 total = sum(counts.values())
+teams = sorted(counts)
+running = list(accumulate(counts[team] for team in teams))
 def scale(maximum):
     return {'min': 0, 'max': maximum, 'direction': 'higher', 'source': '样例测试量程'}
 
@@ -32,15 +37,17 @@ print(json.dumps({
     'columns': [
         {'id': 'team', 'label': '班组', 'type': 'string'},
         {'id': 'orders', 'label': '工单数', 'type': 'number', 'unit': '件', 'radarScale': scale(20)},
+        {'id': 'cumulative', 'label': '累计工单数', 'type': 'number', 'unit': '件'},
         {'id': 'hours', 'label': '平均耗时', 'type': 'number', 'unit': '小时'},
         {'id': 'sequence', 'label': '排序', 'type': 'number', 'radarScale': scale(2)},
         {'id': 'share', 'label': '工单占比', 'type': 'number', 'unit': '%', 'radarScale': scale(100)}
     ],
     'rows': [
         {'id': f'team-{idx}', 'values': {
-            'team': team, 'orders': count, 'hours': None, 'sequence': idx + 1, 'share': 100 * count / total
+            'team': team, 'orders': counts[team], 'cumulative': running[idx], 'hours': None,
+            'sequence': idx + 1, 'share': 100 * counts[team] / total
         }}
-        for idx, (team, count) in enumerate(sorted(counts.items()))
+        for idx, team in enumerate(teams)
     ],
     'provenance': {'source': 'orders.csv', 'scope': '本批工单', 'method': '按班组计数'}
 }, ensure_ascii=False, separators=(',', ':')))
@@ -94,7 +101,7 @@ test('renders five chart types from a real CSV calculation during streaming and 
     fence[1] = fence[1]!.replace('dataset:从工具结果复制', receipt.resultRef);
     const charts = [
       { kind: 'pie', x: 'team', y: ['orders'] },
-      { kind: 'line', x: 'sequence', y: ['orders'] },
+      { kind: 'line', x: 'sequence', y: ['orders', 'cumulative'] },
       { kind: 'radar', x: 'team', y: ['orders', 'sequence', 'share'] },
       { kind: 'scatter', x: 'sequence', y: ['orders'] },
     ];
@@ -183,8 +190,20 @@ test('renders five chart types from a real CSV calculation during streaming and 
     expect(lab.get(session.id, 'alpha').messages.filter(message => message.role === 'tool').map(message => message.toolName)).toEqual(['bash']);
     const width = (await bar.boundingBox())!.width;
     await page.getByRole('button', { name: '打开态势地图', exact: true }).click();
+    await page.getByRole('separator', { name: '调整对话与地图宽度' }).press('Home');
     await expect.poll(async () => (await bar.boundingBox())!.width).toBeLessThan(width);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    const line = block.locator('[data-result-ui-dataset-chart="line"] svg');
+    await expect(line.getByText('累计工单数（件）', { exact: true })).toBeVisible();
+    const region = block.getByRole('region', { name: '结果表格，可横向滚动' });
+    await expect.poll(() => region.evaluate(element => element.scrollWidth - element.clientWidth)).toBeGreaterThan(0);
+    await region.focus();
+    await expect(region).toBeFocused();
+    await page.keyboard.press('ArrowRight');
+    await expect.poll(() => region.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+    const displayedValues = block.getByRole('figure', { name: '柱状图', exact: true });
+    await displayedValues.getByText('查看图表数值', { exact: true }).press('Enter');
+    await expect(displayedValues.getByRole('cell', { name: teamA, exact: true })).toBeVisible();
   } finally {
     finish();
     proxy.closeAllConnections();

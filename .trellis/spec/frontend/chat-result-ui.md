@@ -87,3 +87,9 @@ Pass fixed numeric values from the validated receipt to the chart component. Kee
 - A resource block with this leaf shows the fixed time, applicable scope, and important coverage gaps once. Its disclosure starts closed. The sources view displays fixed origins, coverage, and exclusions. The details view adds quantity groups, ten candidates per page, and per-item evidence. A task candidate outside `resourceStatisticsItems` has a visible exclusion label.
 - Opening or paging rereads the existing authorized session snapshot for the exact `resultRef`. The inline block shares the refreshed result across its metrics, chart, and details. Failed reads clear this block's data and keep its retry control. Paging preserves keyboard focus while loading. The ordinary process card also reuses the underlying React details and read logic.
 - Run `tests/e2e/resource-result-details.spec.ts` for streaming before reply completion, compact copy, keyboard disclosure and paging, per-item evidence, map navigation, restart replay, denied reads, and retry.
+
+## R1.4 interrupted streams
+
+- After `response.started`, an SSE connection error or EOF without a terminal frame uses the existing session snapshot lookup. Keep the original request ID, preserve the view of that request, and leave the send count at one.
+- Clear the recovery notice when the admitted request has a matching terminal result. An older or unrelated terminal result is insufficient.
+- `tests/e2e/result-ui.spec.ts` drops the connection after the first chart, rereads the active request, then stops it. The test compares the request ID and checks the chart, ordinary prose, incomplete fence state and persisted history.

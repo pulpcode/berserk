@@ -14,7 +14,20 @@ import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 import { basemapFixture } from './basemap-fixtures';
 
-test('streams a real resource result before reply completion and restores it with generation disabled', async ({ page, baseURL }) => {
+function resourceFence(resultRef: string, id = 'resources') {
+  const lines = resourceUiInstructions.split('\n').slice(-7);
+  lines[1] = JSON.stringify({ ...JSON.parse(lines[1]), id, resultRef });
+  return lines;
+}
+
+const prompts = {
+  original: '查询固定资源并用图表展示。',
+  cancel: '查询资源后停止回复。',
+  malformed: '查询资源并验证损坏的展示描述。',
+  unavailable: '验证外会话和缺失的原始结果。',
+};
+
+test('streams real resource results, handles interrupted and invalid replies, and restores history with generation disabled', async ({ page, baseURL }) => {
   test.setTimeout(60_000);
   const dir = await mkdtemp(join(tmpdir(), 'berserk-result-ui-'));
   const db = await openDatabase(dir);
@@ -32,19 +45,35 @@ test('streams a real resource result before reply completion and restores it wit
     auth: { secret: 'result-ui-browser-secret-at-least-thirty-two-characters', sessionMs: 28_800_000 },
   });
   let resourceRef: AnnotationRef;
+  let originalResultRef: string;
   let sendBar!: () => void;
   let finishReply!: () => void;
   const barGate = new Promise<void>(resolve => { sendBar = resolve; });
   const replyGate = new Promise<void>(resolve => { finishReply = resolve; });
-  const runtime = await fakeRuntime(config, (context, index) => {
-    if (index === 0) return { tools: [{ name: 'task_resource_query', arguments: { operation: 'query', purpose: 'task', annotations: [{ ref: resourceRef }] } }] };
-    const result = context.messages.findLast(message => message.role === 'toolResult' && message.toolName === 'task_resource_query');
-    if (result?.role !== 'toolResult') throw new Error('Missing resource tool result');
+  const runtime = await fakeRuntime(config, context => {
+    const user = context.messages.findLast(message => message.role === 'user');
+    const prompt = user?.role === 'user' && (typeof user.content === 'string' ? user.content : user.content.find(part => part.type === 'text')?.text);
+    if (prompt === prompts.unavailable) return { text: [
+      '本会话没有原始查询。',
+      resourceFence(originalResultRef, 'foreign').join('\n'),
+      resourceFence('resource:missing-request:missing-call', 'missing').join('\n'),
+    ].join('\n\n') };
+    const result = context.messages.at(-1);
+    if (result?.role !== 'toolResult') return { tools: [{ name: 'task_resource_query', arguments: { operation: 'query', purpose: 'task', annotations: [{ ref: resourceRef }] } }] };
     const part = result.content.find(content => content.type === 'text');
     if (!part) throw new Error('Missing resource result data');
-    const resultRef: string = JSON.parse(part.text).data.resultRef;
-    if (index === 1) return { tools: [{ name: 'task_resource_query', arguments: { operation: 'summarize', resultRef, relation: 'assigned' } }] };
-    const example = resourceUiInstructions.split('\n').slice(-7).join('\n').replace('resource:从工具结果复制', resultRef).split('\n');
+    const { resultRef, parameters } = JSON.parse(part.text).data;
+    if (prompt === prompts.original && parameters.operation === 'query') return { tools: [{ name: 'task_resource_query', arguments: { operation: 'summarize', resultRef, relation: 'assigned' } }] };
+    if (prompt === prompts.cancel) return { text: '停止前已查询资源。\n\n' + resourceFence(resultRef, 'cancelled').slice(0, -1).join('\n') + '\n', waitForAbort: true };
+    if (prompt === prompts.malformed) return { text: [
+      '有效图表应保留。\n',
+      ...resourceFence(resultRef, 'malformed').slice(0, -1),
+      '{invalid-result-patch',
+      '```\n',
+      '普通正文仍可阅读。',
+    ].join('\n') };
+    originalResultRef = resultRef;
+    const example = resourceFence(resultRef);
     return { textChunks: (async function* () {
       yield '以下是本轮获准读取的资源。\n\n```berserk-ui';
       yield '-v1\n' + example.slice(1, 5).join('\n') + '\n';
@@ -58,6 +87,8 @@ test('streams a real resource result before reply completion and restores it wit
   let app = await createApp(lab);
   let api = new URL(await app.listen({ host: '127.0.0.1', port: 0 }));
   const web = new URL(baseURL!);
+  let disconnectReply: (() => void) | undefined;
+  let sentMessages = 0;
   // Keep requests same-origin for the browser and pipe real Fastify SSE without buffering.
   const proxy = createServer((incoming, outgoing) => {
     const isApi = incoming.url?.startsWith('/api/');
@@ -67,6 +98,10 @@ test('streams a real resource result before reply completion and restores it wit
     const forward = request(new URL(incoming.url!, target), { method: incoming.method, headers }, upstream => {
       outgoing.writeHead(upstream.statusCode!, upstream.headers);
       upstream.pipe(outgoing);
+      if (incoming.method === 'POST' && incoming.url?.endsWith('/messages')) {
+        sentMessages++;
+        disconnectReply = () => outgoing.destroy();
+      }
     });
     forward.on('error', () => { outgoing.destroy(); });
     outgoing.on('close', () => { forward.destroy(); });
@@ -118,7 +153,7 @@ test('streams a real resource result before reply completion and restores it wit
       await expect(submit).toBeEnabled();
       await submit.click();
     };
-    await send('查询固定资源并用图表展示。');
+    await send(prompts.original);
 
     const block = page.locator('[data-result-ui-block="resources"]');
     const chart = block.locator('[data-result-ui-chart] svg');
@@ -131,7 +166,7 @@ test('streams a real resource result before reply completion and restores it wit
     await expect(block).toContainText('车辆');
     await expect(block).toContainText('设施');
     expect(lab.get(session.id, 'alpha').active).toBeTruthy();
-    expect(runtime.calls[2].context.systemPrompt).toContain('berserk-ui-v1');
+    expect(runtime.calls.at(-1)?.context.systemPrompt).toContain('berserk-ui-v1');
     const messages = lab.get(session.id, 'alpha').messages;
     expect(messages.find(message => message.resourceResult)?.resourceResult?.items).toHaveLength(4);
     const result = messages.findLast(message => message.resourceResult)?.resourceResult;
@@ -165,6 +200,57 @@ test('streams a real resource result before reply completion and restores it wit
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await block.screenshot({ path: test.info().outputPath('resource-ui-split.png') });
 
+    const cancelled = page.locator('[data-result-ui-block="cancelled"]');
+    const malformed = page.locator('[data-result-ui-block="malformed"]');
+    await test.step('reconnect the interrupted message stream and stop the server-owned reply', async () => {
+      const sentBefore = sentMessages;
+      await send(prompts.cancel);
+      await expect(cancelled.locator('[data-result-ui-chart] svg')).toBeVisible();
+      const requestId = lab.get(session.id, 'alpha').active?.requestId;
+      expect(requestId).toBeTruthy();
+      const recovered = page.waitForResponse(response => new URL(response.url()).pathname === `/api/sessions/${session.id}`
+        && response.request().method() === 'GET' && response.ok());
+      expect(disconnectReply).toBeDefined();
+      disconnectReply!();
+      const connectionNotice = page.getByText('连接已断开，正在查询会话状态；消息不会重复发送。', { exact: true });
+      await expect(connectionNotice).toBeVisible();
+      const snapshot = await (await recovered).json();
+      expect(snapshot.active?.requestId).toBe(requestId);
+      await expect(cancelled).toHaveCount(1);
+      await expect(cancelled.locator('[data-result-ui-chart] svg')).toBeVisible();
+      await expect(page.getByText(prompts.cancel, { exact: true })).toHaveCount(1);
+      const stop = page.getByRole('button', { name: '停止回复', exact: true });
+      await expect(stop).toBeEnabled();
+      await stop.click();
+      await expect.poll(() => lab.get(session.id, 'alpha').lastResult?.status).toBe('cancelled');
+      expect(runtime.calls.some(call => call.aborted)).toBe(true);
+      await expect(cancelled.getByText('资源展示未完成。', { exact: true })).toBeVisible();
+      await expect(cancelled.locator('[data-result-ui-chart] svg')).toBeVisible();
+      await expect(page.getByText('停止前已查询资源。', { exact: true })).toBeVisible();
+      await expect(connectionNotice).toHaveCount(0);
+      expect(sentMessages).toBe(sentBefore + 1);
+    });
+
+    await test.step('keep valid results and prose when later patches fail or evidence is unavailable', async () => {
+      await send(prompts.malformed);
+      await expect(malformed.getByText('资源展示格式有误。', { exact: true })).toBeVisible();
+      await expect(malformed.locator('[data-result-ui-chart] svg')).toBeVisible();
+      await expect(page.getByText('有效图表应保留。', { exact: true })).toBeVisible();
+      await expect(page.getByText('普通正文仍可阅读。', { exact: true })).toBeVisible();
+      await expect(page.locator('pre code').filter({ hasText: 'invalid-result-patch' })).toHaveCount(0);
+
+      await openSession(second.id);
+      await send(prompts.unavailable);
+      for (const id of ['foreign', 'missing']) {
+        const unavailable = page.locator(`[data-result-ui-block="${id}"]`);
+        await expect(unavailable.getByText('原资源结果不可用。', { exact: true })).toBeVisible();
+        await expect(unavailable.locator('svg')).toHaveCount(0);
+      }
+      await expect(page.getByText('本会话没有原始查询。', { exact: true })).toBeVisible();
+      await expect.poll(() => lab.get(second.id, 'alpha').lastResult?.status).toBe('succeeded');
+      await openSession(session.id);
+    });
+
     await app.close();
     const disabled = { ...config, resultUiEnabled: false };
     const disabledRuntime = await fakeRuntime(disabled, () => ({ text: '普通文字回复。' }));
@@ -174,6 +260,10 @@ test('streams a real resource result before reply completion and restores it wit
     await page.reload();
     await expect(chart).toBeVisible();
     await expect(block).toHaveCount(1);
+    await expect(cancelled.getByText('资源展示未完成。', { exact: true })).toBeVisible();
+    await expect(cancelled.locator('[data-result-ui-chart] svg')).toBeVisible();
+    await expect(malformed.getByText('资源展示格式有误。', { exact: true })).toBeVisible();
+    await expect(malformed.locator('[data-result-ui-chart] svg')).toBeVisible();
     await openSession(second.id);
     await send('普通问候。');
     await expect(page.getByText('普通文字回复。')).toBeVisible();
