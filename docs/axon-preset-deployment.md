@@ -30,19 +30,25 @@ sudo install -d -o "$(id -un)" -g "$(id -gn)" -m 0700 /etc/axon/4316
 
 Axon 由 systemd 在宿主机运行。启用 Agent 容器执行时，运维须先安装 Docker 并启动守护进程。若宿主使用标准 Docker systemd 单元，可执行 `sudo systemctl start docker`，再检查 `systemctl is-active docker`。部署入口使用 Axon 服务实际运行的用户及其 Docker 配置检查 daemon 连通性和权限。
 
-沙盒默认开启，省略 `LAB_EXECUTION_ENABLED` 与设为 `true` 等效。此时，部署入口在切换版本前准备 `LAB_EXECUTION_IMAGE` 对应的镜像。默认镜像可在 `experiments/harness-lab` 下用 `docker build -t berserk-file-runtime:w01-5 execution-image` 构建。镜像应通过一次与服务运行条件一致的容器执行检查。任何一步失败都停止发布切换。设为 `false` 时，部署入口跳过 Docker 和镜像步骤，容器执行工具不注册。
+沙盒默认开启。正式发布适用于 `linux/amd64`，从 Git 标签中的 `release/sandbox-image.json` 读取公开 GHCR 镜像的 SHA256 摘要。本地缺镜像时自动匿名拉取，已有同摘要时直接复用。拉取或试运行失败会在写库、停服或切换版本前退出。显式设置 `LAB_EXECUTION_ENABLED=false` 时跳过 Docker 和镜像步骤。
+
+源码工作区的开发启动仍可使用本地构建的镜像。使用 `deploy.sh` 安装的服务按其发布目录选择版本绑定。
+
+现有实例升级时，如果 `instance.env` 设置了旧的 `LAB_EXECUTION_IMAGE` 标签，请删除该覆盖，使服务使用发布版本绑定的镜像。
 
 ## 2. 从 GitHub 拉取代码
 
 在服务器的源码目录执行，并记录本次部署的提交号。
 
 ```bash
-git clone --branch main git@github.com:pulpcode/berserk.git
+git clone git@github.com:pulpcode/berserk.git
 cd berserk
+# vX.Y.Z 替换为获准部署的正式发布标签
+git checkout --detach vX.Y.Z
 git rev-parse HEAD
 ```
 
-检出本次批准部署的发布标签或提交。部署通过 Git 提交生成发布目录，工作区临时改动需要先进入发布提交。仓库随版本提供 `scenario` 预设，定义席位 ID、显示名、职责、账号和权限。部署人员选择预设即可。
+确认该发布版本包含 `release/sandbox-image.json`。部署通过 Git 提交生成发布目录，工作区临时改动需要先进入发布提交。仓库随版本提供 `scenario` 预设，定义席位 ID、显示名、职责、账号和权限。部署人员选择预设即可。
 
 ## 3. 准备实例私有配置
 
@@ -97,7 +103,16 @@ ssh -N -L 4316:127.0.0.1:4316 ubuntu@SERVER
 | --- | --- |
 | 预检报告缺少配置或凭据 | 按报错补齐对应实例配置，再使用同一预设和数据目录重试。 |
 | 预检报告席位 ID、账号绑定或授权冲突 | 核对部署目标与现有数据库，按实例实际配置处理差异。 |
+| 镜像无法拉取 | 核对 Docker 和部署主机到 `ghcr.io` 的连通性，确认目标摘要已公开发布后重试。 |
 | 服务启动失败 | 先确认演练来源已启动。执行 `journalctl -u axon-4316.service -n 100 --no-pager`，按日志核对启动配置、端口和数据目录。 |
 | 服务健康但登录选项不齐 | 在未登录状态检查 `/api/auth/session` 的 `loginSeats` 和 `loginUsers`，确认服务使用初始化时的同一数据目录。 |
 
 同一实例重复执行时跳过配置一致的账号，保留密码、会话和数据。启动或登录选项验证失败时，部署尝试恢复原 `current` 链接及原运行服务。数据目录保留供排查及重试。已有实例升级或回退按 [Axon 部署规范](axon-deployment.md) 处理版本、配置和数据库备份。
+
+
+## 发布方准备沙盒镜像
+
+1. 在 GitHub Actions 手动运行「发布沙盒镜像」工作流，选择应用发布候选所在分支。也可在候选提交推送 `sandbox-image-v*` 构建标签触发。工作流构建镜像、运行实际执行探针，并推送通过的镜像到 `ghcr.io/pulpcode/berserk-file-runtime`。
+2. 首次发布时，在 GitHub Packages 将镜像包可见性设为 **Public**。在无仓库凭据的目标网络和主机上验证可按工作流给出的摘要拉取。
+3. 将工作流摘要里的 JSON 保存为仓库根目录的 `release/sandbox-image.json` 并提交。确认最终提交的沙盒相关输入与完成验收的候选提交一致，再创建应用发布标签。
+4. 在目标网络验证一键部署和沙盒操作。可回退的应用版本引用的镜像摘要应保留在 GHCR。回退应用发布目录时，服务读取旧目录中对应的镜像绑定。
