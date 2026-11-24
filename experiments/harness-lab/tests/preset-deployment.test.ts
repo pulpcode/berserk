@@ -125,7 +125,13 @@ test('deployment pulls the release digest and reuses an exact cached image', asy
     `import { pathToFileURL } from 'node:url';
      import { deployPreflight } from './scripts/deploy-preflight.ts';
      Object.defineProperties(process, { platform: { value: 'linux' }, arch: { value: 'x64' } });
-     console.log(deployPreflight(process.env, pathToFileURL(process.argv[1])));`, path,
+     const binding = pathToFileURL(process.argv[1]);
+     const { managedSandboxReleaseEnv } = await import('./src/server/sandbox-release.ts');
+     const startup = managedSandboxReleaseEnv(process.env, binding);
+     const port = deployPreflight(process.env, binding);
+     if (process.env.EXPECT_MANAGED_IMAGE && startup.LAB_EXECUTION_IMAGE !== process.env.EXPECT_MANAGED_IMAGE)
+       throw new Error('服务启动未绑定已验证摘要');
+     console.log(port);`, path,
   ], { cwd: app, encoding: 'utf8', env: { ...process.env, PATH: `${root}:${process.env.PATH}`, PORT: '4316',
     DOCKER_TEST_LOG: log, DOCKER_TEST_STATUS: '0', DOCKER_TEST_CACHE: '1', DOCKER_TEST_PULL: '0', ...overrides } });
   try {
@@ -148,7 +154,9 @@ test('deployment pulls the release digest and reuses an exact cached image', asy
     expect(await readFile(log, 'utf8')).toContain('run --rm --pull=never');
 
     await writeFile(log, '');
-    expect(run({ DOCKER_TEST_CACHE: '0' }).status).toBe(0);
+    await writeFile(join(root, '.managed-deployment'), '');
+    const cached = run({ DOCKER_TEST_CACHE: '0', EXPECT_MANAGED_IMAGE: image });
+    expect(cached.status, cached.stderr).toBe(0);
     expect(await readFile(log, 'utf8')).not.toMatch(/^pull /m);
 
     await writeFile(log, '');

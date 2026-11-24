@@ -1,11 +1,10 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const bindingPath = new URL('../../../../release/sandbox-image.json', import.meta.url);
 const imagePattern = /^ghcr\.io\/pulpcode\/berserk-file-runtime@sha256:[a-f0-9]{64}$/;
 
 export function sandboxReleaseEnv(
   env: NodeJS.ProcessEnv = process.env,
-  required = false,
   path = bindingPath,
 ): NodeJS.ProcessEnv {
   if (env.LAB_EXECUTION_ENABLED === 'false') return env;
@@ -15,7 +14,6 @@ export function sandboxReleaseEnv(
     raw = readFileSync(path, 'utf8');
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-    if (!required) return env;
     throw new Error('缺少 release/sandbox-image.json，请检出包含镜像摘要的正式发布版本。');
   }
   const binding = JSON.parse(raw) as { image?: unknown; platform?: unknown } | null;
@@ -29,4 +27,12 @@ export function sandboxReleaseEnv(
     throw new Error('LAB_EXECUTION_IMAGE 与发行版本的镜像摘要冲突，请从 instance.env 移除该覆盖。');
   }
   return { ...env, LAB_EXECUTION_IMAGE: binding.image };
+}
+
+export function managedSandboxReleaseEnv(
+  env: NodeJS.ProcessEnv = process.env,
+  path = bindingPath,
+): NodeJS.ProcessEnv {
+  const marker = new URL('.managed-deployment', path);
+  return existsSync(marker) ? sandboxReleaseEnv(env, path) : env;
 }

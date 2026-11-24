@@ -6,7 +6,7 @@ export function deployPreflight(env = process.env, bindingPath?: URL) {
   if (["LAB_AUTH_MODE", "LAB_SESSION_SECRET", "LAB_DATA_DIR"].some(key => env[key] !== undefined)) {
     throw new Error("instance.env 中的认证与数据目录由 auth.env 管理。");
   }
-  const { execution, port } = loadServerConfig({ ...sandboxReleaseEnv(env, true, bindingPath), LAB_SESSION_SECRET: "preflight-only-configuration-value" });
+  const { execution, port } = loadServerConfig({ ...sandboxReleaseEnv(env, bindingPath), LAB_SESSION_SECRET: "preflight-only-configuration-value" });
   if (execution?.enabled) {
     const docker = (...args: string[]) => execFileSync("docker", args, { stdio: ["ignore", 2, 2] });
     try {

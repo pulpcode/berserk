@@ -32,6 +32,8 @@ Axon 由 systemd 在宿主机运行。启用 Agent 容器执行时，运维须�
 
 沙盒默认开启。正式发布适用于 `linux/amd64`，从 Git 标签中的 `release/sandbox-image.json` 读取公开 GHCR 镜像的 SHA256 摘要。本地缺镜像时自动匿名拉取，已有同摘要时直接复用。拉取或试运行失败会在写库、停服或切换版本前退出。显式设置 `LAB_EXECUTION_ENABLED=false` 时跳过 Docker 和镜像步骤。
 
+源码工作区的开发启动仍可使用本地构建的镜像。使用 `deploy.sh` 安装的服务按其发布目录选择版本绑定。
+
 现有实例升级时，如果 `instance.env` 设置了旧的 `LAB_EXECUTION_IMAGE` 标签，请删除该覆盖，使服务使用发布版本绑定的镜像。
 
 ## 2. 从 GitHub 拉取代码

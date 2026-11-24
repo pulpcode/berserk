@@ -74,6 +74,8 @@ instance_node() {
   env -i HOME="$HOME" PATH="$PATH" "$node_bin" --env-file="$config_dir/instance.env" "$@"
 }
 port=$(instance_node --import tsx scripts/deploy-preflight.ts) || fail '实例配置或执行沙盒检查失败'
+mkdir -p -- "$release/release"
+touch -- "$release/release/.managed-deployment"
 
 # An instance name is bound to its own data and private configuration. Refuse
 # to replace existing systemd configuration owned by another deployment.
