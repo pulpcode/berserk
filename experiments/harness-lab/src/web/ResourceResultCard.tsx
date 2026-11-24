@@ -21,8 +21,11 @@ function readableText(text:string,result:ResourceResult):string {
  for(const id of new Set([...result.records.map(row=>row.id),...result.items.map(item=>item.id),...(result.spatialCoverage?.unclassified?.map(row=>row.id)||[]),...result.exclusions.map(row=>row.id)]))text=text.replaceAll(id,locatorLabel(id,result));
  return text;
 }
-export function authorizedResourceResult(messages:PublicMessage[], original:ResourceResult) {
-  return messages.find(m=>m.role==='tool'&&!m.isError&&!m.resultMissing&&m.toolName==='task_resource_query'&&m.resourceResult?.resultRef===original.resultRef&&resourceResultValid(m.resourceResult))?.resourceResult;
+export function resourceResultCandidate(messages: readonly PublicMessage[], resultRef: string, sessionId: string, requestId?: string) {
+  const matches = messages.filter(message => message.role === 'tool' && !message.isError && !message.resultMissing
+    && message.toolName === 'task_resource_query' && message.resourceResult?.resultRef === resultRef
+    && message.resourceResult.owner?.sessionId === sessionId);
+  return (matches.find(message => message.requestId === requestId) ?? matches[0])?.resourceResult;
 }
 export function ResourceResultCard({result}:{result:ResourceResult}) {
   const {api}=useApi();const request=useRef(0);
@@ -37,8 +40,8 @@ export function ResourceResultCard({result}:{result:ResourceResult}) {
     setView({origin:result,page,busy:true});
     try {
       const snapshot=await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(result.owner.sessionId)}`);
-      const current=authorizedResourceResult(snapshot.messages,result);
-      if(!current)throw new Error('此结果已不可读取或不再获准展示。');
+      const current=resourceResultCandidate(snapshot.messages,result.resultRef,result.owner.sessionId);
+      if(!resourceResultValid(current))throw new Error('此结果已不可读取或不再获准展示。');
       if(generation===request.current)setView({origin:result,result:current,page:Math.min(page,Math.max(0,Math.ceil(current.items.length/10)-1)),busy:false});
     }catch(error){if(generation===request.current)setView({origin:result,page:0,busy:false,error:error instanceof Error?error.message:'无法读取结果。'});}
   }

@@ -123,6 +123,8 @@ Use semantic labelled controls, visible focus, a polite status region, reduced-m
 
 Render model Markdown without raw HTML execution. Enable GFM through remark-gfm, retain table/header/cell semantics and wrap wide tables in a named, keyboard-scrollable region. Keep busy, stopping, failed and recovery-required states understandable without exposing internal paths or JSON in the main chat.
 
+Read [Chat Result UI](./chat-result-ui.md) when updating inline resource visualization, SpecStream parsing or fixed result bindings.
+
 For bash results, the executor's exact cancellation response (optionally followed by its archived /logs reference) renders as “命令已停止” without failure styling, including existing native history. Keep the original body and isError unchanged. Do not infer individual tool cancellation from the whole request status or substring matches: nonzero exits, timeouts and cleanup failures still render as failures.
 
 ### Composer references (W01-9)

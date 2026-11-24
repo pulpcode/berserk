@@ -1,0 +1,46 @@
+# Chat Result UI
+
+## Scope
+
+R1.1 adds resource metrics and a category bar chart to the existing desktop conversation. Keep the ordinary Markdown reply and its tool details available in the same turn.
+
+## Entry points
+
+- `src/presentation/resource-ui.ts` defines the fence, catalog and model instructions.
+- `ChatPresentation` supplies the session and preceding public tool messages to `ChatMessage`.
+- `readResultUiSnapshot(previous, lines, closed)` accepts complete fence-body lines from the current cumulative text snapshot.
+- `LAB_RESULT_UI_ENABLED` accepts `true` or `false` and defaults to `false`. Eligible foreground requests receive either generation instructions or an instruction to use ordinary Markdown. History rendering is independent of the setting.
+
+## Format and data
+
+`berserk-ui-v1` is a dedicated top-level code fence beginning in column one. Its first nonblank line contains `id`, `catalog: "resource-v1"` and the exact `resultRef`. Subsequent lines are native json-render SpecStream patches for `/root` or `/elements/<id>`. The root is a `Stack` with a list of distinct child IDs. The leaves `ResourceMetrics` and `ResourceBar` use empty props and no children.
+
+The browser resolves the reference from preceding successful `task_resource_query` projections in the same session. Prefer the current request's projection when present. The existing live and historical tool projections supply authorization, and the browser validates the selected ResourceResult. Pi retains the original text and tool result. Reopening a conversation decodes that saved text and result using the existing snapshot request.
+
+The category chart uses `resourceStatisticsItems` and counts items by category. Levels of resource identity, quantity and evidence remain in the original result. Display a null entity count as unknown with the known entity count beside it. Carry the fixed statistics time and applicable relation, availability, spatial scope and coverage.
+
+## Validation and user states
+
+| State | Outcome |
+| --- | --- |
+| Full patch line with a resolvable registered leaf | Render immediately, including while the assistant is still responding |
+| Incomplete line or unresolved leaf in an open stream | Wait for a complete patch or show the available registered leaves |
+| Identical cumulative text | Reuse the snapshot |
+| Replaced cumulative text | Rebuild from that snapshot's own lines |
+| Invalid version, operation, component or graph | Hide raw patch content and report the invalid block. Retain any already validated renderable leaves |
+| Result missing from current authorized evidence | Report the original result as unavailable |
+| Reply stops with an open fence | Mark the block incomplete |
+| Ordinary, quoted, list-nested or enclosing Markdown example | Keep it as code |
+
+## Examples
+
+- The sample in `resourceUiInstructions` is also an executable parser and browser fixture. It compiles a stack with metrics and a bar chart from one fixed resource reference.
+- A plain Markdown answer can sit before and after that fence. A dashboard option or model-supplied bar value in a component's props fails validation.
+
+## Verification
+
+Run `tests/result-ui-stream.test.ts` for fragmented lines, repeated snapshots, replacement, invalid patches and terminal validation. Run `tests/web/result-ui-markdown.test.ts` for CommonMark handling and exact line boundaries. Run `tests/e2e/result-ui.spec.ts` against real local Pi and tool execution with a deterministic provider. It holds the response open while looking for metrics and then SVG bars, checks counts and unknowns, drags the desktop splitter, restarts with generation disabled, and opens the original session again.
+
+## Implementation guidance
+
+Feed the compiler only from the merged assistant message. Subscribing directly to both `text.delta` and `assistant.updated` duplicates patches. Keep ordinary React presentations and chart parameters in the web module. Supply exact category values through the chart's keyboard-accessible disclosure.
