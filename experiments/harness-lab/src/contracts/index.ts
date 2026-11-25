@@ -1,4 +1,5 @@
 import type { McpCallEvidence } from './mcp.js';
+import type { ConnectorReference } from './connectors.js';
 export type * from './prompt-suggestions.js';
 import type { AuthoringIntent, AuthoringReceipt } from './authoring.js';
 import type { SessionExpert } from './capabilities.js';
@@ -41,6 +42,7 @@ export interface PublicMessage {
   taskDiscovery?: TaskDiscovery | null;
   attachments?: FileRef[];
   selections?: LoadedComposerSelection;
+  connectorRefs?: ConnectorReference[];
 }
 export interface SubagentSummary {
   subagentId: string;

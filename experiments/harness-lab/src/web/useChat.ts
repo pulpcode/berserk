@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { InputQueueState, Interaction, InteractionResponse, AppInfo, ModelChoices, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
-import { isConnectionFailure, useApi } from './api';
+import { ApiFailure, isConnectionFailure, useApi } from './api';
 import { clearInteractionDraft, type InteractionSubmission } from './InteractionCard';
 import { randomUUID } from './random-uuid';
 import { sessionAction } from './session-action';
@@ -65,6 +65,9 @@ export function useChat(enabled = true) {
   const DRAFT_VERSION_KEY = storageKey('berserk.draft-versions');
   const draftVersions = useRef(stored(DRAFT_VERSION_KEY));
   const SENT_KEY = storageKey('berserk.submitted');
+  const CONNECTOR_SEND_KEY = storageKey('axon.connector-send-baselines');
+  // Compare disconnected sends with the server's last result before sending, including after reload.
+  const connectorSends = useRef(stored(CONNECTOR_SEND_KEY));
   const READ_KEY = storageKey('berserk.read-results');
   const CREATION_ACTION_KEY = storageKey('berserk.session-actions');
   const attachments = useAttachments();
@@ -152,6 +155,11 @@ export function useChat(enabled = true) {
     setSubmitted(submittedRef.current);
     persist(SENT_KEY, submittedRef.current);
   }, [SENT_KEY]);
+  const markConnectorSend = useCallback((id: string, marker: string | undefined) => {
+    if (marker === undefined) delete connectorSends.current[id];
+    else connectorSends.current[id] = marker;
+    persist(CONNECTOR_SEND_KEY, connectorSends.current);
+  }, [CONNECTOR_SEND_KEY]);
   const recover = useCallback((id: string) => {
     recoverAttachments(id);
     const text = submittedRef.current[id];
@@ -177,17 +185,18 @@ export function useChat(enabled = true) {
     setSessions(previous => mergeById(previous, [snapshot]));
     activitiesRef.current = mergeById(activitiesRef.current, [activityOf(snapshot, activitiesRef.current.find(item => item.id === id))]);
     setActivities(activitiesRef.current);
-    if (!snapshot.active && snapshot.lastResult) {
-      if (snapshot.lastResult.status === 'succeeded') { rememberSubmitted(id, ''); clearSubmittedAttachments(id); clearSubmittedSelections(id); }
-      if (snapshot.lastResult.status === 'failed') recover(id);
-      const userMessageSaved = snapshot.messages.some(message => message.role === 'user' && message.requestId === snapshot.lastResult!.requestId);
-      if (snapshot.lastResult.status === 'cancelled' && !userMessageSaved) recover(id);
-      if (snapshot.lastResult.status === 'interrupted') {
-        if (userMessageSaved) { rememberSubmitted(id, ''); clearSubmittedAttachments(id); clearSubmittedSelections(id); }
-        else recover(id);
+    const marker = connectorSends.current[id];
+    const result = snapshot.lastResult;
+    if (!snapshot.active && result && marker?.replace(/^pending:/, '') !== result.requestId && (marker === undefined || !snapshot.recoveryWarning)) {
+      const userMessageSaved = snapshot.messages.some(message => message.role === 'user' && message.requestId === result.requestId);
+      if (result.status === 'succeeded' || userMessageSaved && (result.status === 'interrupted' || marker !== undefined)) {
+        rememberSubmitted(id, ''); clearSubmittedAttachments(id); clearSubmittedSelections(id);
+      } else if (result.status === 'failed' || !userMessageSaved && (result.status === 'cancelled' || result.status === 'interrupted')) {
+        recover(id);
       }
+      if (marker !== undefined) markConnectorSend(id, result.requestId);
     }
-  }, [recover, rememberSubmitted, clearSubmittedAttachments, clearSubmittedSelections]);
+  }, [recover, rememberSubmitted, clearSubmittedAttachments, clearSubmittedSelections, markConnectorSend]);
 
   const applyInputQueue = useCallback((id: string, inputQueue: InputQueueState) => {
     const current = snapshotsRef.current[id];
@@ -212,11 +221,17 @@ export function useChat(enabled = true) {
       }
       // Polling may observe completion before the final SSE frame arrives.
       if (stream && !stream.terminal && !result.active) return;
+      const baseline = result.lastResult?.requestId || '';
+      const notAccepted = !result.active && !result.recoveryWarning && connectorSends.current[id] === `pending:${baseline}`;
       put(result);
+      if (notAccepted) {
+        recover(id);
+        markConnectorSend(id, baseline);
+      }
       setErrors(previous => {
         const error = previous[id];
         if (typeof error !== 'object') {
-          return error === replyConnectionNotice && !result.active && result.lastResult ? { ...previous, [id]: '' } : previous;
+          return error === replyConnectionNotice && !result.active && (result.lastResult || notAccepted) ? { ...previous, [id]: '' } : previous;
         }
         const { recoveryRequestId } = error;
         const settled = result.active?.requestId !== recoveryRequestId
@@ -227,7 +242,7 @@ export function useChat(enabled = true) {
       setReadErrors(previous => ({ ...previous, [id]: '' }));
       setModelErrors(previous => previous[id] ? { ...previous, [id]: '' } : previous);
     } catch (error) { if (revision === (revisions.current[id] || 0)) setReadErrors(previous => ({ ...previous, [id]: reason(error) })); }
-  }, [api, put]);
+  }, [api, put, recover, markConnectorSend]);
 
   const applyInteraction = useCallback((item: Interaction) => {
     const current = snapshotsRef.current[item.sessionId];
@@ -460,7 +475,10 @@ export function useChat(enabled = true) {
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.expert?.availability.available === false) return;
     const before = snapshotsRef.current[id];
     const activity = activitiesRef.current.find(item => item.id === id);
-    if (!before || before.active || before.backgroundJob || activity?.active || activity?.backgroundJob) return;
+    if (!before || before.active || before.backgroundJob || activity?.active || activity?.backgroundJob || connectorSends.current[id]?.startsWith('pending:')) return;
+    const baseline = before.lastResult?.requestId || '';
+    const hasConnectorRefs = Boolean(picks.connectorRefs?.length);
+    markConnectorSend(id, hasConnectorRefs ? `pending:${baseline}` : undefined);
     const token = Symbol();
     const stream = { token, requestId: undefined as string | undefined, terminal: false };
     streams.current.set(id, stream);
@@ -469,7 +487,7 @@ export function useChat(enabled = true) {
     rememberSubmitted(id, text);
     consumeAttachments(id, files); consumeSelections(id, picks);
     if ((draftsRef.current[id] || '').trim() === text) draft(id, '');
-    let messages: PublicMessage[] = [...before.messages, { id: 'sending-user', role: 'user', text }];
+    let messages: PublicMessage[] = [...before.messages, { id: 'sending-user', role: 'user', text, ...(hasConnectorRefs ? { connectorRefs: picks.connectorRefs } : {}) }];
     let assistantNumber = 0;
     let structuredAssistant = false;
     put({ ...before, messages, lastResult: null });
@@ -541,14 +559,18 @@ export function useChat(enabled = true) {
     } catch (error) {
       // After admission, a reload/disconnection can interrupt the stream while the
       // server still owns this request. Only its terminal snapshot may restore it.
-      if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: stream.requestId ? { recoveryRequestId: stream.requestId } : reason(error) }));
-      if (!stream.requestId) recover(id);
+      const unknown = hasConnectorRefs && (!(error instanceof ApiFailure) || isConnectionFailure(error));
+      if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: stream.requestId ? { recoveryRequestId: stream.requestId } : unknown ? replyConnectionNotice : reason(error) }));
+      if (!stream.requestId && !unknown) {
+        if (hasConnectorRefs) markConnectorSend(id, baseline);
+        recover(id);
+      }
     }
     finally {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModelId, models, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInputQueue, applyInteraction, sendMessage, recover, refresh]);
+  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModelId, models, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInputQueue, applyInteraction, sendMessage, recover, refresh, markConnectorSend]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -568,7 +590,7 @@ export function useChat(enabled = true) {
 
   function hasDraft(id: string) {
     const selection = composerSelections.current(id);
-    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.authoring || selection.skill || selection.agent || selection.contextRefs?.length || selection.annotationRefs?.length || selection.connectorIds?.length);
+    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.authoring || selection.skill || selection.agent || selection.contextRefs?.length || selection.annotationRefs?.length || selection.connectorRefs?.length);
   }
 
   return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
@@ -590,9 +612,9 @@ export function useChat(enabled = true) {
     draft: drafts[draftKey] || '',
     // An input event from the previous render can arrive after first-session creation moved its draft.
     setDraft: (text: string) => draft(movedDrafts.current.get(draftKey) || draftKey, text),
-    recoverableSelectionDiffers: JSON.stringify(selectionInput({ ...composerSelections.recovery[selected], connectorIds: undefined })) !== JSON.stringify(selectionInput({ ...composerSelections.all[draftKey], connectorIds: undefined })),
-    submitted: submitted[selected] || '', restoreSubmitted: () => { draft(draftKey, submittedRef.current[selected] || ''); composerSelections.restore(draftKey); },
+    recoverableSelectionDiffers: JSON.stringify(selectionInput({ ...composerSelections.recovery[selected] })) !== JSON.stringify(selectionInput({ ...composerSelections.all[draftKey] })),
+    submitted: connectorSends.current[selected]?.startsWith('pending:') ? '' : submitted[selected] || '', restoreSubmitted: () => { draft(draftKey, submittedRef.current[selected] || ''); composerSelections.restore(draftKey); },
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],
-    pending: pending[selected] || false, error: errorText(errors[selected]) || readErrors[selected]
+    pending: pending[selected] || connectorSends.current[selected]?.startsWith('pending:') || false, error: errorText(errors[selected]) || readErrors[selected]
       || errorText(errors[`workspace:${workspaceId}`]) || errorText(errors['']) || '', refresh, bootstrap };
 }

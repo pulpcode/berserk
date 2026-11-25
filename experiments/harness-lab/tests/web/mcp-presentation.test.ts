@@ -18,9 +18,12 @@ it('historical unknown result remains uncertain with its captured source after c
   const html = renderToStaticMarkup(createElement(InteractionCard, { interaction: { ...confirmation, status: 'approved', execution: 'unknown' }, canRespond: false, respond: async () => {}, query: async () => {} }));
   expect(html).toContain('同名资料 · 连接甲'); expect(html).toContain('执行结果未确认'); expect(html).not.toContain('执行已完成'); expect(html).toContain('object-17');
 });
-it('composer submissions carry only selected safe IDs without mutating retained session choices', () => {
-  const connectorIds = ['connection-a', 'connection-b']; const value = { connectorIds };
-  const input = selectionInput(value); expect(input).toEqual({ connectorIds }); input.connectorIds!.pop(); expect(value.connectorIds).toEqual(['connection-a', 'connection-b']);
+it('composer submissions carry only selected IDs and keep the display snapshot intact', () => {
+  const connectorRefs = [{connectorId:'connection-a',revisionId:'revision-a',name:'资料甲'}, {connectorId:'connection-b',revisionId:'revision-b',name:'资料乙'}];
+  const input = selectionInput({ connectorRefs });
+  expect(input).toEqual({ connectorIds: ['connection-a', 'connection-b'] });
+  input.connectorIds!.pop();
+  expect(connectorRefs).toHaveLength(2);
 });
 it('the original v3 authoring confirmation exposes both exact connector-reference candidates from a v2 proposal',()=>{
   const content={schemaVersion:2 as const,name:'资料专家',description:'保留固定动作引用',instructions:'核对来源',skillIds:[],allowedTools:['ask_user']};

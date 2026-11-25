@@ -1,4 +1,4 @@
-import { MCP_ADMISSION, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, decodeMcpAdmission, decodeMcpPolicy, decodeMcpInteraction, mcpArgumentsDigest, type McpAdmissionRecord } from './mcp-history.js';
+import { MCP_ADMISSION, MCP_ADMISSION_V2, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, readMcpAdmission, decodeMcpPolicy, decodeMcpInteraction, mcpArgumentsDigest, type McpAdmission } from './mcp-history.js';
 import { isMcpCallEvidence } from '../contracts/mcp.js';
 import { authoringConfirmationSchema, authoringConfirmationSchemaV2, validAuthoringConfirmation } from './authoring-history.js';
 import { isAuthoringReceipt } from '../contracts/authoring.js';
@@ -148,7 +148,7 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
   const calls = new Map<string, { name: string; arguments: Record<string, unknown> }>();
   const returned = new Set<string>();
   const mcpParameters = new Map<string,Record<string,unknown>>();
-  const mcpAdmissions = new Map<string, McpAdmissionRecord>();
+  const mcpAdmissions = new Map<string, McpAdmission>();
   const policies = new Map<string, { decision: string; ruleId: string; reason: string; version: string }>();
   const commandPolicies = new Map<string, CommandPolicyRecord>();
   let requestId: string | undefined;
@@ -218,8 +218,8 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
         || (terminal.status === 'succeeded' && !returned.has(`${terminal.requestId}:${item.toolCallId}`))))) throw stateError();
       requestId = undefined; continue;
     }
-    if (entry.customType === MCP_ADMISSION) {
-      const admission = decodeMcpAdmission(entry.data,workspaceId,sessionId);
+    if (entry.customType === MCP_ADMISSION || entry.customType === MCP_ADMISSION_V2) {
+      const admission = readMcpAdmission(entry.customType,entry.data,workspaceId,sessionId);
       if (admission.requestId !== requestId || mcpAdmissions.has(requestId)) throw stateError();
       mcpAdmissions.set(requestId,admission);continue;
     }

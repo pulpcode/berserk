@@ -191,7 +191,7 @@ test('drag and drop has keyboard alternative and never fetches Markdown remote i
   await page.route('https://external.invalid/**', route => { externalLoads++; return route.abort(); });
   const data = await page.evaluateHandle(() => { const transfer = new DataTransfer(); transfer.items.add(new File(['# 标题\n![外图](https://external.invalid/pixel.png)'], '说明.md', { type: 'text/markdown' })); return transfer; });
   await page.locator('form.composer').dispatchEvent('drop', { dataTransfer: data });
-  await expect(page.getByRole('button', { name: '添加附件' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '添加文件或能力' })).toBeVisible();
   await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();
   await page.getByRole('button', { name: '项目文件', exact: true }).click(); await page.getByRole('button', { name: '预览 说明.md' }).click();
   await expect(page.getByRole('region', { name: '说明.md 预览' })).toContainText('[图片：外图]'); expect(externalLoads).toBe(0); expect(app.sent).toHaveLength(0);

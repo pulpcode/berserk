@@ -384,7 +384,7 @@ test('a capability-only draft in a prepared conversation is preserved when reope
     await expect(page.getByRole('alert')).toContainText('提交结果尚需核对');
     await page.locator('.session-item').click();
     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('');
-    await page.getByRole('button', { name: '添加附件', exact: true }).click();
+    await page.getByRole('button', { name: '添加文件或能力', exact: true }).click();
     await page.getByRole('button', { name: '使用 Skill', exact: true }).click();
     await page.getByRole('option', { name: /结果检查/ }).click();
     await inbox(page); await page.locator('.information-continuation').getByRole('button', { name: '进入关联对话', exact: true }).click();

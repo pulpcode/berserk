@@ -1,4 +1,6 @@
 import { RequestMcpTools } from './mcp-tools.js';
+import { MCP_ADMISSION_V2, mcpConnectorReferences, readMcpAdmission } from './mcp-history.js';
+import type { ConnectorReference } from '../contracts/connectors.js';
 import type { ConnectorService } from '../connectors/service.js';
 import { loadManagementSkills, managementSkillKind } from '../authoring/management-skills.js';
 import { AuthoringService, type AuthoringContext } from '../authoring/service.js';
@@ -1090,12 +1092,17 @@ export class PiLab {
     const selections = composerHistory(entries, record.workspaceId, id);
     const interrupted = new Map(unfinishedRequests(entries).filter(request => request.requestId !== record.active?.id).map(request => [request.requestId, request]));
     let requestId: string | undefined;
+    let connectorRefs: ConnectorReference[] | undefined;
     const inputRequests = new Set<string>();
     let assistantOrdinal = 0;
     const toolInputs = new Map<string, { name: string; input: ReturnType<typeof publicToolInput> }>();
     for (const entry of entries) {
-      if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) { requestId = (entry.data as { requestId: string }).requestId; assistantOrdinal = 0; toolInputs.clear(); }
+      if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) { requestId = (entry.data as { requestId: string }).requestId; connectorRefs = undefined; assistantOrdinal = 0; toolInputs.clear(); }
       if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) requestId = undefined;
+      if (entry.type === 'custom' && entry.customType === MCP_ADMISSION_V2) {
+        const admission = readMcpAdmission(entry.customType, entry.data, record.workspaceId, id);
+        if (admission.schemaVersion === 2 && admission.requestId === requestId) connectorRefs = mcpConnectorReferences(admission);
+      }
       if (entry.type !== 'message') continue;
       const message = entry.message;
       if (message.role !== 'user' && message.role !== 'assistant' && message.role !== 'toolResult') continue;
@@ -1122,6 +1129,7 @@ export class PiLab {
         id: entry.id, ...(requestId ? { requestId } : {}), role: message.role === 'toolResult' ? 'tool' : message.role, text, ...(projected ?? {}),
         ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, toolStatus: 'completed', toolInput: toolInputs.get(message.toolCallId)?.input, toolDetails: publicToolDetails(message.toolName, message.details, message.isError), isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text), spatialResult, resourceResult, taskDiscovery, resultDataset } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && selections.has(requestId) ? { selections: selections.get(requestId) } : {}),
+        ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && connectorRefs ? { connectorRefs } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
       });
       if (message.role === 'user' && requestId) inputRequests.add(requestId);
@@ -1998,7 +2006,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
           identity: { seatId: record.seatId, ...(active.actorUserId ? { userId: active.actorUserId } : {}) }, mode: child ? 'delegated' : active.background ? 'background' : this.executionMode ?? 'interactive',
           tools: session.getActiveToolNames(), model: { id: active.model.id, version: active.model.version }, runtime: 'axon/pi-0.85.1' };
         record.manager.appendCustomEntry(EXECUTION_MANIFEST, manifest);
-        active.mcp?.record();
+        active.mcp?.record(active.input?.connectorIds);
       }
       active.timings = { assemblyMs: performance.now() - assemblyStart, toolsMs: [] };
       if (active.files?.length) await session.sendCustomMessage({ customType: FILE_INPUT, display: false,

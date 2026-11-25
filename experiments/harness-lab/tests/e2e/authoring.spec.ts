@@ -41,7 +41,7 @@ async function assisted(page: Page, kind: '专家' | '技能') {
   await page.getByRole('dialog', { name: `创建${kind}`, exact: true }).getByRole('button', { name: '辅助创建', exact: true }).click();
 }
 async function selectMethod(page: Page, id: string) {
-  await page.getByRole('button', { name: '添加附件', exact: true }).click(); await page.getByRole('button', { name: '使用 Skill', exact: true }).click();
+  await page.getByRole('button', { name: '添加文件或能力', exact: true }).click(); await page.getByRole('button', { name: '使用 Skill', exact: true }).click();
   await page.getByRole('option').filter({ hasText: id }).click();
 }
 async function send(page: Page, text: string) { const input = page.getByRole('textbox', { name: '发送消息', exact: true }); await input.fill(text); await input.press('Enter'); }
@@ -89,7 +89,7 @@ test('one create action chooses a method, opens the shared draft page and preser
     await spaceTrigger.click(); const currentSpaceItem = spaceMenu.getByRole('menuitemradio', { name: '创作个人空间', exact: true }); await expect(currentSpaceItem).toBeFocused();
     await page.keyboard.press('ArrowDown'); await expect(spaceMenu.getByRole('menuitem', { name: '新建个人空间', exact: true })).toBeFocused(); await page.keyboard.press('ArrowUp'); await expect(currentSpaceItem).toBeFocused();
     await page.keyboard.press('End'); await expect(spaceMenu.getByRole('menuitem', { name: '新建个人空间', exact: true })).toBeFocused(); await page.keyboard.press('Home'); await expect(currentSpaceItem).toBeFocused(); await page.keyboard.press('Escape');
-    await page.getByRole('button', { name: '添加附件', exact: true }).click(); await page.getByRole('button', { name: 'Agents', exact: true }).click();
+    await page.getByRole('button', { name: '添加文件或能力', exact: true }).click(); await page.getByRole('button', { name: 'Agents', exact: true }).click();
     await expect(page.getByRole('listbox', { name: '可选引用', exact: true })).toBeVisible();
     await expect(page.getByRole('option').filter({ hasText: /skill-creator|expert-manager/ })).toHaveCount(0); await page.keyboard.press('Escape');
     expect(env.writes.filter(w => w.path === '/api/sessions')).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
@@ -107,7 +107,7 @@ test('one create action chooses a method, opens the shared draft page and preser
       await page.getByRole('button', { name: '对话保存位置', exact: true }).click(); await page.getByRole('menuitem', { name: '新建个人空间', exact: true }).click();
       const nextSpace = page.getByRole('dialog', { name: '新建个人空间', exact: true }); await nextSpace.getByLabel('空间名称', { exact: true }).fill('另一份创作草稿'); await nextSpace.getByRole('button', { name: '创建并开始对话', exact: true }).click(); await expect(nextSpace).toBeHidden(); await preparing;
       await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeDisabled(); await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('保留尚未发送的创作需求');
-      await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '添加附件', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '移除 Skill', exact: true })).toBeDisabled();
+      await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '添加文件或能力', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '移除 Skill', exact: true })).toBeDisabled();
       expect(env.writes.filter(w => w.path === '/api/sessions')).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
     } finally { releaseSpace(); await page.unroute(heldWorkspace); }
     await expect(page.locator('.new-chat-space-name')).not.toHaveText(originalSpace); await expect(page.getByLabel('对话保存位置', { exact: true })).toBeEnabled();
@@ -132,7 +132,7 @@ test('one create action chooses a method, opens the shared draft page and preser
       await page.getByRole('button', { name: '能力中心', exact: true }).click();
       const reading = page.waitForRequest(request => new URL(request.url()).pathname === '/api/admin/capabilities/authoring-skills');
       page.once('dialog', dialog => dialog.accept()); await assisted(page, '专家'); await reading;
-      await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '添加附件', exact: true })).toBeDisabled();
+      await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '添加文件或能力', exact: true })).toBeDisabled();
       expect(env.writes.filter(w => w.path === '/api/sessions')).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
     } finally { releaseMetadata(); await page.unroute(heldMetadata); }
     await expect(page.getByRole('button', { name: '查看 Skill：expert-manager', exact: true })).toBeVisible(); await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeEnabled(); await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('保留尚未发送的创作需求');

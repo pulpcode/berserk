@@ -47,6 +47,7 @@ async function setup(streaming = false) {
   if (streaming) await app.listen({ host: '127.0.0.1', port: 4310 });
   const pages: Page[] = []; const writes: Array<{ path: string; body: Record<string, unknown> }> = [];
   let dropCredential = false;
+  let dropMessage = false;
   async function attach(page: Page) {
     pages.push(page);
     await page.route('**/api/**', async route => {
@@ -56,14 +57,21 @@ async function setup(streaming = false) {
       if (streaming) { await route.continue(); return; }
       const response = await app.inject({ method: request.method() as 'GET' | 'POST' | 'PUT' | 'DELETE', url: url.pathname + url.search, headers: { ...await request.allHeaders(), host: '127.0.0.1', origin: 'http://localhost:4310' }, ...(request.postDataBuffer() ? { payload: request.postDataBuffer()! } : {}) });
       if (dropCredential && request.method() === 'PUT' && url.pathname.endsWith('/credential') && response.statusCode === 200) { dropCredential = false; await route.abort('failed'); return; }
+      if (dropMessage && request.method() === 'POST' && url.pathname.endsWith('/messages') && response.statusCode === 200) { dropMessage = false; await route.abort('failed'); return; }
       await route.fulfill({ status: response.statusCode, headers: Object.fromEntries(Object.entries(response.headers).filter(([, value]) => value !== undefined).map(([key, value]) => [key, String(value)])), body: response.rawPayload });
     });
   }
-  return { lab, fake, controls, actor, base, first, second, own, workspace, a, b, writes, attach, dropNextCredential: () => { dropCredential = true; }, close: async () => { await lab.close(); for (const page of pages) if (!page.isClosed()) { await page.goto('about:blank').catch(() => {}); await page.unrouteAll({ behavior: 'wait' }); } await app.close(); await a.close(); await b.close(); await rm(dir, { recursive: true, force: true }); } };
+  return { lab, fake, controls, actor, base, first, second, own, workspace, a, b, writes, attach, dropNextCredential: () => { dropCredential = true; }, dropNextMessage: () => { dropMessage = true; }, close: async () => { await lab.close(); for (const page of pages) if (!page.isClosed()) { await page.goto('about:blank').catch(() => {}); await page.unrouteAll({ behavior: 'wait' }); } await app.close(); await a.close(); await b.close(); await rm(dir, { recursive: true, force: true }); } };
 }
 async function login(page: Page, name: string) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: name }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible(); }
 async function connectors(page: Page) { await page.getByRole('button', { name: '能力中心', exact: true }).click(); await page.getByRole('tab', { name: '连接器', exact: true }).click(); }
 const input = (page: Page) => page.getByRole('textbox', { name: '发送消息', exact: true });
+async function chooseConnector(page: Page, name: RegExp) {
+  await page.getByRole('button', { name: '添加文件或能力', exact: true }).click();
+  await page.getByRole('button', { name: '使用连接器', exact: true }).click();
+  await page.getByRole('checkbox', { name }).check();
+  await page.getByRole('button', { name: '完成选择', exact: true }).click();
+}
 
 test('administrator configures, explicitly discovers, opens scope and enables separately; CAS keeps local edits', async ({ page }) => {
   const env = await setup(); await env.attach(page);
@@ -110,20 +118,90 @@ test('ordinary users save only their own credentials without browser persistence
   } finally { await env.close(); await second.close(); }
 });
 
-test('two connector choices persist through reload and first send without leaking to a new draft', async ({ page }) => {
+test('connector references follow the submitted message and the next turn starts empty', async ({ page }) => {
   const env = await setup(); await env.attach(page);
   try {
     await login(page, '席位甲'); await page.goto(`/?new&workspace=${env.workspace.id}`); await expect(input(page)).toBeEnabled(); await input(page).fill('保留输入正文');
-    await page.getByRole('button', { name: '添加附件', exact: true }).click(); await page.getByRole('button', { name: '连接器', exact: true }).click();
+    await page.getByRole('button', { name: '添加文件或能力', exact: true }).click(); await page.getByRole('button', { name: '使用连接器', exact: true }).click();
     const picker = page.getByRole('group', { name: '可选连接器', exact: true }); await picker.getByRole('checkbox', { name: /^资料连接甲/ }).check(); await picker.getByRole('checkbox', { name: /^资料连接乙/ }).check(); await page.getByRole('button', { name: '完成选择', exact: true }).click();
-    const chips = page.getByLabel('本会话连接器', { exact: true }); await expect(chips).toContainText('资料连接甲'); await expect(chips).toContainText('资料连接乙'); await expect(input(page)).toHaveValue('保留输入正文'); expect(env.fake.calls).toHaveLength(0); expect(await env.lab.list()).toHaveLength(0);
+    const chips = page.getByLabel('本条消息引用', { exact: true }); await expect(chips).toContainText('资料连接甲'); await expect(chips).toContainText('资料连接乙'); await expect(input(page)).toHaveValue('保留输入正文'); expect(env.fake.calls).toHaveLength(0); expect(await env.lab.list()).toHaveLength(0);
     await page.reload(); await expect(chips).toContainText('资料连接乙'); await expect(input(page)).toHaveValue('保留输入正文'); await input(page).press('Enter'); await expect(page.getByLabel('Axon 的回复')).toContainText('合成回复已完成');
-    await expect(chips).toContainText('资料连接甲'); await expect(chips).toContainText('资料连接乙'); const sent = env.writes.find(item => item.path.endsWith('/messages'))!; expect(sent.body.connectorIds).toEqual([env.first.connection.connectorId, env.second.connection.connectorId]);
-    await page.reload(); await expect(chips).toContainText('资料连接甲'); await expect(page.getByLabel('Axon 的回复')).toContainText('合成回复已完成'); await page.screenshot({ path: test.info().outputPath('connector-chips-1440.png') }); await page.setViewportSize({ width: 1060, height: 900 }); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await page.screenshot({ path: test.info().outputPath('connector-chips-1060.png') });
-    await page.getByRole('button', { name: '新建对话', exact: true }).click(); await expect(page.getByLabel('本会话连接器', { exact: true })).toHaveCount(0); await expect(input(page)).toHaveValue('');
-    // Input predictions use an independent tool-free model call; only one native chat turn was sent.
-    expect(env.fake.calls.filter(call => call.context.tools?.length)).toHaveLength(1);
+    await expect(chips).toHaveCount(0);
+    const history = page.getByRole('group', { name: '本条消息引用的连接器', exact: true });
+    await expect(history).toContainText('资料连接甲');
+    await expect(history).toContainText('资料连接乙');
+    const sends = () => env.writes.filter(item => item.path.endsWith('/messages'));
+    expect(sends()[0].body.connectorIds).toEqual([env.first.connection.connectorId, env.second.connection.connectorId]);
+
+    await page.reload();
+    await expect(history).toContainText('资料连接甲');
+    await expect(chips).toHaveCount(0);
+    await page.screenshot({ path: test.info().outputPath('connector-chips-1440.png') });
+    await page.setViewportSize({ width: 1060, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: test.info().outputPath('connector-chips-1060.png') });
+
+    await input(page).fill('整理上一轮结果');
+    await input(page).press('Enter');
+    await expect(page.getByLabel('Axon 的回复')).toHaveCount(2);
+    expect(sends()[1].body).not.toHaveProperty('connectorIds');
+    await expect(history).toHaveCount(1);
+    await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await expect(chips).toHaveCount(0);
+    await expect(input(page)).toHaveValue('');
+    expect(env.fake.calls.filter(call => call.context.tools?.length)).toHaveLength(2);
   } finally { await env.close(); }
+});
+
+test('legacy choices are dropped and a lost response recovers the saved message from history', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    await login(page, '席位甲'); await page.goto(`/?new&workspace=${env.workspace.id}`);
+    await chooseConnector(page, /^资料连接甲/);
+    await input(page).fill('原草稿正文');
+    await page.evaluate(({ owner, connectorId }) => {
+      const key = Object.keys(sessionStorage).find(key => key.startsWith('axon.composer-selections:'))!;
+      sessionStorage.setItem(key, JSON.stringify({ [owner]: {connectorIds:[connectorId]} }));
+    }, { owner: `workspace:${env.workspace.id}`, connectorId: env.first.connection.connectorId });
+    await page.reload();
+    await expect(input(page)).toHaveValue('原草稿正文');
+    await expect(page.getByLabel('本条消息引用', { exact: true })).toHaveCount(0);
+
+    await chooseConnector(page, /^资料连接甲/);
+    env.dropNextMessage();
+    await input(page).press('Enter');
+    const history = page.getByRole('group', { name: '本条消息引用的连接器', exact: true });
+    await expect(page.getByLabel('Axon 的回复')).toContainText('合成回复已完成');
+    await expect(history).toContainText('资料连接甲');
+    await expect(input(page)).toHaveValue('');
+    await expect(page.getByLabel('本条消息引用', { exact: true })).toHaveCount(0);
+    expect(env.writes.filter(item => item.path.endsWith('/messages'))).toHaveLength(1);
+  } finally { await env.close(); }
+});
+
+test('rejected connector input preserves a newer draft and offers explicit reference recovery', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  let reject!: () => void;
+  const rejected = new Promise<void>(resolve => { reject = resolve; });
+  try {
+    await login(page, '席位甲'); await page.goto(`/?new&workspace=${env.workspace.id}`);
+    await chooseConnector(page, /^资料连接甲/);
+    await page.route('**/api/sessions/*/messages', async route => {
+      await rejected;
+      await route.fulfill({ status: 409, json: { error: { code: 'CONNECTOR_UNAVAILABLE', message: '连接器不可用，请重新选择。' } } });
+    }, {times:1});
+    await input(page).fill('原先带引用的草稿');
+    await input(page).press('Enter');
+    await expect(page.getByLabel('本条消息引用', { exact: true })).toHaveCount(0);
+    await input(page).fill('后续新草稿');
+    reject();
+    const restore = page.getByRole('button', { name: '恢复刚才发送的内容', exact: true });
+    await expect(restore).toBeVisible();
+    await expect(input(page)).toHaveValue('后续新草稿');
+    await restore.click();
+    await expect(input(page)).toHaveValue('原先带引用的草稿');
+    await expect(page.getByLabel('本条消息引用', { exact: true })).toContainText('资料连接甲');
+  } finally { reject(); await env.close(); }
 });
 
 
@@ -144,11 +222,11 @@ test('running requests freeze connector changes and library staging preserves th
   const env = await setup(true); await env.attach(page);
   try {
     await login(page, '席位甲'); await page.goto(`/?new&workspace=${env.workspace.id}`); await expect(input(page)).toBeEnabled();
-    await input(page).fill('固定连接开始处理'); await page.getByRole('button', { name: '添加附件', exact: true }).click(); await page.getByRole('button', { name: '连接器', exact: true }).click(); await page.getByRole('group', { name: '可选连接器', exact: true }).getByRole('checkbox', { name: /^资料连接甲/ }).check(); await page.getByRole('button', { name: '完成选择', exact: true }).click();
-    env.controls.hold = true; await input(page).press('Enter'); await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled(); await expect(page.getByRole('button', { name: '移除连接器资料连接甲', exact: true })).toBeDisabled(); await expect(page.getByRole('button', { name: '添加附件', exact: true })).toBeDisabled(); await input(page).fill('保留下一条独立草稿');
+    await input(page).fill('固定连接开始处理'); await page.getByRole('button', { name: '添加文件或能力', exact: true }).click(); await page.getByRole('button', { name: '使用连接器', exact: true }).click(); await page.getByRole('group', { name: '可选连接器', exact: true }).getByRole('checkbox', { name: /^资料连接甲/ }).check(); await page.getByRole('button', { name: '完成选择', exact: true }).click();
+    env.controls.hold = true; await input(page).press('Enter'); await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled(); await expect(page.getByRole('group', { name: '本条消息引用的连接器', exact: true })).toContainText('资料连接甲'); await expect(page.getByRole('button', { name: '移除连接器资料连接甲', exact: true })).toHaveCount(0); await expect(page.getByRole('button', { name: '添加文件或能力', exact: true })).toBeDisabled(); await input(page).fill('保留下一条独立草稿');
     const session = (await env.lab.list(env.workspace.id, 'one'))[0]; await connectors(page); await page.getByRole('button', { name: '查看连接器资料连接乙（名称较长的独立服务）', exact: true }).click(); const detail = page.locator('dialog.connector-detail-panel'); await detail.getByLabel('使用空间', { exact: true }).selectOption(env.workspace.id); await detail.getByRole('button', { name: '用于对话', exact: true }).click(); await expect(detail.getByRole('alert')).toContainText('正在执行');
-    await detail.getByRole('button', { name: '关闭面板', exact: true }).click(); await page.goto(`/?session=${session.id}`); await expect(input(page)).toHaveValue('保留下一条独立草稿'); await page.getByRole('button', { name: '停止回复', exact: true }).click(); await expect(page.getByRole('button', { name: '移除连接器资料连接甲', exact: true })).toBeEnabled();
-    await connectors(page); await page.getByRole('button', { name: '查看连接器资料连接乙（名称较长的独立服务）', exact: true }).click(); await detail.getByLabel('使用空间', { exact: true }).selectOption(env.workspace.id); await detail.getByRole('button', { name: '用于对话', exact: true }).click(); await expect(input(page)).toHaveValue('保留下一条独立草稿'); await expect(page.getByLabel('本会话连接器', { exact: true })).toContainText('资料连接乙');
+    await detail.getByRole('button', { name: '关闭面板', exact: true }).click(); await page.goto(`/?session=${session.id}`); await expect(input(page)).toHaveValue('保留下一条独立草稿'); await page.getByRole('button', { name: '停止回复', exact: true }).click(); await expect(page.getByRole('button', { name: '添加文件或能力', exact: true })).toBeEnabled(); await expect(page.getByRole('group', { name: '本条消息引用的连接器', exact: true })).toContainText('资料连接甲'); await expect(page.getByLabel('本条消息引用', { exact: true })).toHaveCount(0);
+    await connectors(page); await page.getByRole('button', { name: '查看连接器资料连接乙（名称较长的独立服务）', exact: true }).click(); await detail.getByLabel('使用空间', { exact: true }).selectOption(env.workspace.id); await detail.getByRole('button', { name: '用于对话', exact: true }).click(); await expect(input(page)).toHaveValue('保留下一条独立草稿'); await expect(page.getByLabel('本条消息引用', { exact: true })).toContainText('资料连接乙');
     // Input predictions use an independent tool-free model call; only one native chat turn was sent.
     expect(env.fake.calls.filter(call => call.context.tools?.length)).toHaveLength(1); expect(env.writes.filter(item => item.path.endsWith('/messages'))).toHaveLength(1);
   } finally { await env.close(); }
@@ -158,12 +236,14 @@ test('running requests freeze connector changes and library staging preserves th
 test('original live confirmation shows exact connection account tool and inert arguments before any remote call', async ({ page }) => {
   const env = await setup(true); await env.attach(page);
   try {
-    await login(page, '席位甲'); await page.goto(`/?new&workspace=${env.workspace.id}`); await expect(input(page)).toBeEnabled(); await page.getByRole('button', { name: '添加附件', exact: true }).click(); await page.getByRole('button', { name: '连接器', exact: true }).click(); const picker = page.getByRole('group', { name: '可选连接器', exact: true }); await picker.getByRole('checkbox', { name: /^资料连接甲/ }).check(); await picker.getByRole('checkbox', { name: /^资料连接乙/ }).check(); await page.getByRole('button', { name: '完成选择', exact: true }).click();
+    await login(page, '席位甲'); await page.goto(`/?new&workspace=${env.workspace.id}`); await expect(input(page)).toBeEnabled(); await page.getByRole('button', { name: '添加文件或能力', exact: true }).click(); await page.getByRole('button', { name: '使用连接器', exact: true }).click(); const picker = page.getByRole('group', { name: '可选连接器', exact: true }); await picker.getByRole('checkbox', { name: /^资料连接甲/ }).check(); await picker.getByRole('checkbox', { name: /^资料连接乙/ }).check(); await page.getByRole('button', { name: '完成选择', exact: true }).click();
     env.controls.query = '核对 <img src=x onerror="window.untrusted=1"> 参数'; env.controls.toolName = mcpToolName(env.first.connection.connectorId, 'lookup'); await input(page).fill('仅查询资料连接甲'); await input(page).press('Enter'); const confirm = page.locator('.composer-interaction.confirmation-card'); await expect(confirm.getByRole('button', { name: '确认执行', exact: true })).toBeVisible(); await expect(confirm).toContainText('资料连接甲'); await expect(confirm).toContainText('无需凭证'); await expect(confirm).toContainText('lookup'); await expect(confirm.getByLabel('本次外发参数', { exact: true })).toHaveText(JSON.stringify({ query: env.controls.query }, null, 2)); await expect(confirm.locator('img')).toHaveCount(0); expect(env.a.records.filter(item => item.method === 'tools/call')).toHaveLength(0); expect(env.b.records.filter(item => item.method === 'tools/call')).toHaveLength(0);
     await confirm.getByRole('button', { name: '拒绝', exact: true }).click(); await expect(page.getByLabel('Axon 的回复')).toContainText('合成回复已完成'); expect(env.a.records.filter(item => item.method === 'tools/call')).toHaveLength(0);
+    await env.lab.connectors!.lifecycle(env.actor, env.second.connection.connectorId, { action: 'disable', expectedStateRevision: env.second.connection.stateRevision, clientActionId: randomUUID() });
     env.controls.toolName = mcpToolName(env.first.connection.connectorId, 'lookup'); await input(page).fill('重新提出相同查询，等待本次批准'); await input(page).press('Enter'); await expect(confirm.getByRole('button', { name: '确认执行', exact: true })).toBeVisible();
     for (const width of [1440, 1060]) { await page.setViewportSize({ width, height: 960 }); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await page.screenshot({ path: test.info().outputPath(`connector-confirmation-${width}.png`) }); }
     await confirm.getByRole('button', { name: '确认执行', exact: true }).click(); await expect(page.getByLabel('Axon 的回复').last()).toContainText('合成回复已完成'); expect(env.a.records.filter(item => item.method === 'tools/call')).toHaveLength(1); expect(env.b.records.filter(item => item.method === 'tools/call')).toHaveLength(0); expect(env.a.records.find(item => item.method === 'tools/call')?.params?.arguments).toEqual({ query: env.controls.query });
-    const session = (await env.lab.list(env.workspace.id, 'one'))[0]; const snapshot = await env.lab.get(session.id, 'one'); expect(snapshot.messages.find(message => message.toolDetails?.mcp)?.toolDetails?.mcp).toMatchObject({ connectionName: '资料连接甲', accountLabel: '无需凭证', toolName: 'lookup', status: 'success' }); await page.reload(); await expect(page.getByLabel('本会话连接器', { exact: true })).toContainText('资料连接甲');
+    const session = (await env.lab.list(env.workspace.id, 'one'))[0]; const snapshot = await env.lab.get(session.id, 'one'); expect(snapshot.messages.find(message => message.toolDetails?.mcp)?.toolDetails?.mcp).toMatchObject({ connectionName: '资料连接甲', accountLabel: '无需凭证', toolName: 'lookup', status: 'success' }); expect(env.writes.filter(item => item.path.endsWith('/messages'))[1].body).not.toHaveProperty('connectorIds');
+    await page.reload(); await expect(page.getByRole('group', { name: '本条消息引用的连接器', exact: true })).toContainText('资料连接甲'); await expect(page.getByLabel('本条消息引用', { exact: true })).toHaveCount(0);
   } finally { await env.close(); }
 });

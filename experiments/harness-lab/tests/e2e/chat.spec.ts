@@ -1491,7 +1491,7 @@ test('启动工作区归属读取完成前保护输入，随后文字归入初�
     await page.goto('/');
     const input = page.getByRole('textbox', { name: '发送消息' });
     await expect(input).toBeDisabled();
-    await expect(page.getByRole('button', { name: '添加附件' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: '添加文件或能力' })).toBeDisabled();
     await expect.poll(() => Boolean(mock.faults.releaseActivity)).toBe(true);
     mock.faults.releaseActivity!(); mock.faults.releaseActivity = undefined;
     await expect(input).toBeEditable();

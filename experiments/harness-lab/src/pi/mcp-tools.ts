@@ -9,7 +9,7 @@ import { RequestError } from '../contracts/errors.js';
 import type { ConnectorService } from '../connectors/service.js';
 import { RemoteMcpSession } from '../connectors/remote.js';
 import { validateMcpArguments } from '../connectors/schema.js';
-import { MCP_ADMISSION, MCP_POLICY, mcpToolName, mcpArgumentsDigest, mcpRule, mcpTargetQuestion } from './mcp-history.js';
+import { MCP_ADMISSION, MCP_ADMISSION_V2, MCP_POLICY, mcpToolName, mcpArgumentsDigest, mcpRule, mcpTargetQuestion } from './mcp-history.js';
 
 interface Options {
   service: ConnectorService; principal: ConnectorPrincipal; connectorIds: string[];
@@ -84,10 +84,15 @@ export class RequestMcpTools {
   assertCurrent(): void {for (const item of this.admitted.values()) if(!this.selectedTarget||item.source.connectorId===this.selectedTarget)this.options.service.assertAdmission(item.admission,this.options.principal);}
   has(name: string): boolean {return this.admitted.has(name);}
   tools(): ToolDefinition[] {return [...this.admitted.values()].map(item => item.tool);}
-  record(): void {
+  record(explicitConnectorIds?: string[]): void {
     const {manager,workspaceId,requestId,principal} = this.options;
-    manager.appendCustomEntry(MCP_ADMISSION,{schemaVersion:1,requestId,sessionId:manager.getSessionId(),workspaceId,userId:principal.userId,
-      tools:this.sourceTools(),...(this.selectionQuestion()?{targetQuestion:this.selectionQuestion()}: {})});
+    const admission = {requestId,sessionId:manager.getSessionId(),workspaceId,userId:principal.userId,tools:this.sourceTools()};
+    const targetQuestion = this.selectionQuestion();
+    if (explicitConnectorIds?.length) {
+      manager.appendCustomEntry(MCP_ADMISSION_V2, {...admission,schemaVersion:2,explicitConnectorIds:[...explicitConnectorIds]});
+    } else {
+      manager.appendCustomEntry(MCP_ADMISSION, {...admission,schemaVersion:1,...(targetQuestion ? {targetQuestion} : {})});
+    }
   }
   async confirm(name: string, toolCallId: string, args: unknown, signal?: AbortSignal,originalArguments:unknown=args): Promise<boolean> {
     const item = this.admitted.get(name);

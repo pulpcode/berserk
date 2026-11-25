@@ -5,19 +5,36 @@ import { useApi } from './api';
 import type { AnnotationSelection } from '../contracts/annotations';
 import { isAnnotationSelection } from './annotations/helpers';
 import type { ContextRef } from '../contracts/context';
+import type { ConnectorReference } from '../contracts/connectors';
 import { isRef, refKey } from './situation/evidence';
 
-export interface DraftSelection { connectorIds?: string[]; authoring?: AuthoringIntent; skill?: SkillInfo; agent?: AgentInfo; contextRefs?: ContextRef[]; annotationRefs?: AnnotationSelection[] }
+export interface DraftSelection { connectorRefs?: ConnectorReference[]; authoring?: AuthoringIntent; skill?: SkillInfo; agent?: AgentInfo; contextRefs?: ContextRef[]; annotationRefs?: AnnotationSelection[] }
 type SelectionMap = Record<string, DraftSelection>;
-function cleanConnectorIds(ids: unknown[]): string[] { return [...new Set(ids.filter((id): id is string => typeof id === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(id)))].slice(0, 8); }
+function cleanConnectorRefs(refs: unknown[]): ConnectorReference[] {
+  const validId = (id: unknown) => typeof id === 'string' && /^[a-zA-Z0-9_-]{1,160}$/.test(id);
+  const selected = new Map<string, ConnectorReference>();
+  for (const ref of refs) {
+    if (!ref || typeof ref !== 'object') continue;
+    const { connectorId, revisionId, name } = ref as ConnectorReference;
+    if (!validId(connectorId) || !validId(revisionId) || typeof name !== 'string' || !name.length || name.length > 128) continue;
+    if (!selected.has(connectorId)) selected.set(connectorId, { connectorId, revisionId, name });
+    if (selected.size === 8) break;
+  }
+  return [...selected.values()];
+}
+
+function hasSelections(value?: DraftSelection): boolean {
+  return Boolean(value?.connectorRefs?.length || value?.authoring || value?.skill || value?.agent || value?.contextRefs?.length || value?.annotationRefs?.length);
+}
 function load(key: string): SelectionMap {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(key) || '{}');
     if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
     return Object.fromEntries(Object.entries(value).filter(([, item]) => item && typeof item === 'object').map(([id, item]) => {
-      const { skill, agent, contextRefs, annotationRefs, authoring, connectorIds } = item as DraftSelection;
+      const { skill, agent, contextRefs, annotationRefs, authoring, connectorRefs } = item as DraftSelection;
       return [id, {
-        ...(Array.isArray(connectorIds) ? { connectorIds: cleanConnectorIds(connectorIds) } : {}),
+        // Legacy connectorIds were session preferences and do not opt in the next draft.
+        ...(Array.isArray(connectorRefs) ? { connectorRefs: cleanConnectorRefs(connectorRefs) } : {}),
         ...(authoring && ['expert', 'skill'].includes(authoring.kind) && (authoring.targetId === undefined || typeof authoring.targetId === 'string') ? { authoring } : {}),
         ...(Array.isArray(annotationRefs) ? {annotationRefs:annotationRefs.filter(isAnnotationSelection).slice(0,20)} : {}),
         ...(Array.isArray(contextRefs) ? {contextRefs: contextRefs.filter(isRef).slice(0,20)} : {}),
@@ -29,7 +46,7 @@ function load(key: string): SelectionMap {
 }
 function save(key: string, value: SelectionMap) { try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* Keep in-memory editing usable. */ } }
 export function selectionInput(value: DraftSelection): ComposerSelection {
-  return { ...(value.connectorIds?.length ? { connectorIds: [...value.connectorIds] } : {}), ...(value.authoring?.targetId && value.skill?.id === (value.authoring.kind === 'expert' ? 'expert-manager' : 'skill-creator') ? { authoring: value.authoring } : {}), ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash, ...(value.skill.revisionId ? { revisionId: value.skill.revisionId, packageDigest: value.skill.packageDigest } : {}) } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
+  return { ...(value.connectorRefs?.length ? { connectorIds: value.connectorRefs.map(ref => ref.connectorId) } : {}), ...(value.authoring?.targetId && value.skill?.id === (value.authoring.kind === 'expert' ? 'expert-manager' : 'skill-creator') ? { authoring: value.authoring } : {}), ...(value.annotationRefs?.length ? {annotationRefs:value.annotationRefs} : {}), ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash, ...(value.skill.revisionId ? { revisionId: value.skill.revisionId, packageDigest: value.skill.packageDigest } : {}) } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
 }
 export function useComposerSelections() {
   const { storageKey } = useApi();
@@ -50,18 +67,17 @@ export function useComposerSelections() {
   const setAuthoring = useCallback((owner: string, authoring?: AuthoringIntent) => update(old => ({ ...old, [owner]: { ...old[owner], authoring } })), [update]);
   const setContextRefs = useCallback((owner: string, refs: ContextRef[]) => update(old => ({...old,[owner]:{...old[owner],contextRefs:[...new Map(refs.map(ref=>[refKey(ref),ref])).values()].slice(0,20)}})),[update]);
   const setAnnotationRefs = useCallback((owner:string,refs:AnnotationSelection[])=>update(old=>({...old,[owner]:{...old[owner],annotationRefs:[...new Map(refs.map(ref=>[JSON.stringify(ref),ref])).values()]}})),[update]);
-  const setConnectorIds = useCallback((owner: string, ids: string[]) => update(old => ({ ...old, [owner]: { ...old[owner], connectorIds: cleanConnectorIds(ids) } })), [update]);
+  const setConnectorRefs = useCallback((owner: string, refs: ConnectorReference[]) => update(old => ({ ...old, [owner]: { ...old[owner], connectorRefs: refs.length ? cleanConnectorRefs(refs) : undefined } })), [update]);
   const move = useCallback((from: string, to: string) => update(old => ({ ...old, [to]: { ...old[from], ...old[to] }, [from]: {} })), [update]);
   const clearSubmitted = useCallback((owner: string) => {
     submitted.current = { ...submitted.current, [owner]: {} }; save(sentKey, submitted.current);
     recoverable.current = { ...recoverable.current, [owner]: {} }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
   }, [sentKey, recoveryKey, setRecovery]);
   const consume = useCallback((owner: string, value: DraftSelection) => {
-    const messageSelection = { ...value }; delete messageSelection.connectorIds;
-    submitted.current = { ...submitted.current, [owner]: messageSelection }; save(sentKey, submitted.current);
+    submitted.current = { ...submitted.current, [owner]: value }; save(sentKey, submitted.current);
     recoverable.current = { ...recoverable.current, [owner]: {} }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
     update(old => ({ ...old, [owner]: {
-      connectorIds: old[owner]?.connectorIds,
+      ...(old[owner]?.connectorRefs !== value.connectorRefs ? { connectorRefs: old[owner]?.connectorRefs } : {}),
       ...(old[owner]?.authoring !== value.authoring ? {authoring: old[owner]?.authoring} : {}),
       ...(old[owner]?.annotationRefs !== value.annotationRefs ? {annotationRefs:old[owner]?.annotationRefs} : {}),
       ...(old[owner]?.contextRefs !== value.contextRefs ? {contextRefs:old[owner]?.contextRefs} : {}),
@@ -71,16 +87,16 @@ export function useComposerSelections() {
   }, [sentKey, recoveryKey, update, setRecovery]);
   const recover = useCallback((owner: string, allowAutomatic: boolean) => {
     const value = submitted.current[owner];
-    if (!value?.authoring && !value?.skill && !value?.agent && !value?.contextRefs?.length && !value?.annotationRefs?.length) return;
+    if (!hasSelections(value)) return;
     // Restore automatically only into empty slots; keep the original choice for
     // the existing explicit recovery action when a newer draft already exists.
     recoverable.current = { ...recoverable.current, [owner]: value }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
-    if (allowAutomatic) update(old => ({ ...old, [owner]: old[owner]?.authoring || old[owner]?.skill || old[owner]?.agent || old[owner]?.contextRefs?.length || old[owner]?.annotationRefs?.length ? old[owner] : { ...value, ...old[owner] } }));
+    if (allowAutomatic) update(old => ({ ...old, [owner]: hasSelections(old[owner]) ? old[owner] : { ...value } }));
     submitted.current = { ...submitted.current, [owner]: {} }; save(sentKey, submitted.current);
   }, [recoveryKey, sentKey, update, setRecovery]);
   const restore = useCallback((owner: string) => {
     const recovered = recoverable.current[owner];
-    update(old => ({ ...old, [owner]: { ...(recovered?.authoring || recovered?.skill || recovered?.agent || recovered?.contextRefs?.length || recovered?.annotationRefs?.length ? recovered : submitted.current[owner] || {}), connectorIds: old[owner]?.connectorIds } }));
+    update(old => ({ ...old, [owner]: { ...(hasSelections(recovered) ? recovered : submitted.current[owner]) } }));
   }, [update]);
-  return { all, recovery, set, setAuthoring, setContextRefs, setAnnotationRefs, setConnectorIds, move, consume, recover, restore, clearSubmitted, current: (owner: string) => current.current[owner] || {} };
+  return { all, recovery, set, setAuthoring, setContextRefs, setAnnotationRefs, setConnectorRefs, move, consume, recover, restore, clearSubmitted, current: (owner: string) => current.current[owner] || {} };
 }

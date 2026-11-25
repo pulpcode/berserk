@@ -39,7 +39,7 @@ const visible = (page: Page) => page.locator('[data-seat]:visible');
 const input = (page: Page) => visible(page).getByRole('textbox', { name: '发送消息' });
 const picks = (page: Page) => visible(page).getByLabel('本轮选择');
 async function menu(page: Page, name: string) {
-  await visible(page).getByRole('button', { name: '添加附件' }).click();
+  await visible(page).getByRole('button', { name: '添加文件或能力' }).click();
   await visible(page).getByRole('button', { name, exact: true }).click();
 }
 async function selectSkill(page: Page, name = 'synthesis') {
@@ -292,7 +292,7 @@ for (const newerText of ['新的目标', '原始目标']) test(`busy input keeps
     env.controls.delayReply = 1200;
     await visible(page).getByRole('button', { name: '发送消息', exact: true }).click();
     await expect.poll(() => env.messages.length).toBe(1);
-    await expect(visible(page).getByRole('button', { name: '添加附件' })).toBeDisabled();
+    await expect(visible(page).getByRole('button', { name: '添加文件或能力' })).toBeDisabled();
     await input(page).fill(newerText);
     await expect(visible(page).getByRole('alert')).toContainText('重新选择');
     // Rich choices are editable again after settlement. Explicitly replace any recovered original choices.
