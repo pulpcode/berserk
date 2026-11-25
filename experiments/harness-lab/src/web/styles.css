@@ -94,6 +94,10 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .message.user { display: flex; justify-content: flex-end; }
 .message.user .message-content { max-width: 87%; border-radius: 14px 14px 4px 14px; padding: 12px 18px; background: #f0f2f3; }
 .message.user p { margin: 0; white-space: pre-wrap; }
+.message-references { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.message-references:empty { display: none; }
+.message-references > :is(.evidence-map-links, .selection-chips, .message-attachments) { margin: 0; }
+.message-references > .message-attachments { padding: 0; }
 .assistant .message-content { padding-left: var(--reply-inset, 36px); }
 .message-content p { margin: 0 0 16px; }
 .message-content p:last-child { margin-bottom: 0; }
@@ -1007,7 +1011,7 @@ button.text-action.danger-action:hover:not(:disabled) { background: var(--danger
 .settings-account-details dd { margin: 0; overflow-wrap: anywhere; }
 .settings-logout { display: inline-flex; align-items: center; gap: var(--control-gap); }
 
-.model-picker { position: relative; display: flex; align-items: center; min-width: 0; max-width: min(55%, 240px); margin-right: auto; }
+.model-picker { position: relative; display: flex; align-items: center; min-width: 0; max-width: min(55%, 240px); margin-left: auto; }
 .model-picker select { appearance: none; width: 100%; min-width: 0; min-height: 32px; padding: 6px 23px 6px 8px; border: 0; border-radius: var(--control-radius); background: transparent; color: var(--muted); font: inherit; font-size: 12px; line-height: 20px; text-overflow: ellipsis; cursor: pointer; }
 .model-picker select:hover:not(:disabled) { background: var(--control-hover); color: var(--text); }
 .model-picker select:disabled { cursor: not-allowed; opacity: .6; }

@@ -66,6 +66,17 @@ async function setup(streaming = false) {
 async function login(page: Page, name: string) { await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption({ label: name }); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible(); }
 async function connectors(page: Page) { await page.getByRole('button', { name: '能力中心', exact: true }).click(); await page.getByRole('tab', { name: '连接器', exact: true }).click(); }
 const input = (page: Page) => page.getByRole('textbox', { name: '发送消息', exact: true });
+async function expectModelOnRight(page: Page) {
+  const toolbar = page.locator('.composer-toolbar:visible');
+  const model = toolbar.getByRole('combobox', { name: '选择模型', exact: true });
+  await expect(model).toBeEnabled();
+  const tools = (await toolbar.boundingBox())!;
+  const picker = (await model.boundingBox())!;
+  const send = (await toolbar.getByRole('button', { name: '发送消息', exact: true }).boundingBox())!;
+  expect(picker.x).toBeGreaterThan(tools.x + tools.width / 2);
+  expect(send.x - picker.x - picker.width).toBeGreaterThanOrEqual(0);
+  expect(send.x - picker.x - picker.width).toBeLessThanOrEqual(8);
+}
 async function chooseConnector(page: Page, name: RegExp) {
   await page.getByRole('button', { name: '添加文件或能力', exact: true }).click();
   await page.getByRole('button', { name: '使用连接器', exact: true }).click();
@@ -122,6 +133,7 @@ test('connector references follow the submitted message and the next turn starts
   const env = await setup(); await env.attach(page);
   try {
     await login(page, '席位甲'); await page.goto(`/?new&workspace=${env.workspace.id}`); await expect(input(page)).toBeEnabled(); await input(page).fill('保留输入正文');
+    await expectModelOnRight(page);
     await page.getByRole('button', { name: '添加文件或能力', exact: true }).click(); await page.getByRole('button', { name: '使用连接器', exact: true }).click();
     const picker = page.getByRole('group', { name: '可选连接器', exact: true }); await picker.getByRole('checkbox', { name: /^资料连接甲/ }).check(); await picker.getByRole('checkbox', { name: /^资料连接乙/ }).check(); await page.getByRole('button', { name: '完成选择', exact: true }).click();
     const chips = page.getByLabel('本条消息引用', { exact: true }); await expect(chips).toContainText('资料连接甲'); await expect(chips).toContainText('资料连接乙'); await expect(input(page)).toHaveValue('保留输入正文'); expect(env.fake.calls).toHaveLength(0); expect(await env.lab.list()).toHaveLength(0);
@@ -130,15 +142,20 @@ test('connector references follow the submitted message and the next turn starts
     const history = page.getByRole('group', { name: '本条消息引用的连接器', exact: true });
     await expect(history).toContainText('资料连接甲');
     await expect(history).toContainText('资料连接乙');
+    const references = (await history.boundingBox())!;
+    const body = (await page.getByLabel('你的消息', { exact: true }).getByText('保留输入正文', { exact: true }).boundingBox())!;
+    expect(references.y + references.height).toBeLessThan(body.y);
     const sends = () => env.writes.filter(item => item.path.endsWith('/messages'));
     expect(sends()[0].body.connectorIds).toEqual([env.first.connection.connectorId, env.second.connection.connectorId]);
 
     await page.reload();
     await expect(history).toContainText('资料连接甲');
     await expect(chips).toHaveCount(0);
+    await expectModelOnRight(page);
     await page.screenshot({ path: test.info().outputPath('connector-chips-1440.png') });
     await page.setViewportSize({ width: 1060, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expectModelOnRight(page);
     await page.screenshot({ path: test.info().outputPath('connector-chips-1060.png') });
 
     await input(page).fill('整理上一轮结果');
