@@ -2,11 +2,13 @@ import { capabilityDigest } from '../capabilities/service.js';
 import { createHash } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 import type { ConfirmationInteraction, InteractionQuestion } from '../contracts/index.js';
+import type { ConnectorReference } from '../contracts/connectors.js';
 import { isMcpSource, isMcpConfirmation, type McpSource } from '../contracts/mcp.js';
 import { stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
 
 export const MCP_ADMISSION = 'berserk.mcp-admission.v1';
+export const MCP_ADMISSION_V2 = 'berserk.mcp-admission.v2';
 export const MCP_POLICY = 'berserk.mcp-policy.v1';
 export const MCP_REQUESTED = 'berserk.interaction.requested.v2';
 export const MCP_RESOLVED = 'berserk.interaction.resolved.v2';
@@ -17,6 +19,11 @@ export interface McpAdmissionRecord {
   tools: Array<{name: string; source: McpSource}>;
   targetQuestion?: InteractionQuestion;
 }
+interface McpExplicitAdmissionRecord extends Omit<McpAdmissionRecord, 'schemaVersion'> {
+  schemaVersion: 2;
+  explicitConnectorIds: string[];
+}
+export type McpAdmission = McpAdmissionRecord | McpExplicitAdmissionRecord;
 export function mcpTargetQuestion(tools:McpAdmissionRecord['tools'],requestId:string):InteractionQuestion {
   const sources=[...new Map(tools.map(tool=>[tool.source.connectorId,tool.source])).values()];
   return {id:`mcp_target_${requestId}`,prompt:'本次要使用哪个连接？',options:sources.map(source=>({id:source.connectorId,label:source.connectionName,description:`连接标识 ${source.connectorId}`}))};
@@ -32,6 +39,30 @@ export function decodeMcpAdmission(value: unknown, workspaceId: string, sessionI
     || new Set(value.tools.map(tool => tool.name)).size !== value.tools.length) throw stateError();
   if (value.targetQuestion!==undefined && (!isDeepStrictEqual(value.targetQuestion,mcpTargetQuestion(value.tools as McpAdmissionRecord['tools'],String(value.requestId))) || new Set((value.tools as McpAdmissionRecord['tools']).map(tool=>tool.source.connectorId)).size<2)) throw stateError();
   return structuredClone(value) as unknown as McpAdmissionRecord;
+}
+export function readMcpAdmission(type: typeof MCP_ADMISSION | typeof MCP_ADMISSION_V2, value: unknown, workspaceId: string, sessionId?: string): McpAdmission {
+  if (type === MCP_ADMISSION) return decodeMcpAdmission(value, workspaceId, sessionId);
+  if (!object(value) || value.schemaVersion !== 2 || value.targetQuestion !== undefined) throw stateError();
+  const { explicitConnectorIds, ...original } = value;
+  const admission = decodeMcpAdmission({ ...original, schemaVersion: 1 }, workspaceId, sessionId);
+  const sources = new Map<string, McpSource>();
+  for (const { source } of admission.tools) {
+    const previous = sources.get(source.connectorId);
+    if (previous && (previous.revisionId !== source.revisionId || previous.connectionName !== source.connectionName)) throw stateError();
+    sources.set(source.connectorId, source);
+  }
+  if (!Array.isArray(explicitConnectorIds) || !explicitConnectorIds.length || explicitConnectorIds.length > 8
+    || explicitConnectorIds.length !== sources.size || new Set(explicitConnectorIds).size !== explicitConnectorIds.length
+    || !explicitConnectorIds.every((id): id is string => typeof id === 'string' && sources.has(id))) throw stateError();
+  return { ...admission, schemaVersion: 2, explicitConnectorIds: [...explicitConnectorIds] };
+}
+
+export function mcpConnectorReferences(admission: McpExplicitAdmissionRecord): ConnectorReference[] {
+  const sources = new Map(admission.tools.map(({ source }) => [source.connectorId, source]));
+  return admission.explicitConnectorIds.map(connectorId => {
+    const { revisionId, connectionName } = sources.get(connectorId)!;
+    return { connectorId, revisionId, name: connectionName };
+  });
 }
 export function decodeMcpInteraction(value: unknown): ConfirmationInteraction {
   if (!object(value) || Object.keys(value).some(key => !['schemaVersion','interactionId','workspaceId','sessionId','requestId','toolCallId','toolName','createdAt','resolvedAt','reason','kind','status','action','rule'].includes(key))

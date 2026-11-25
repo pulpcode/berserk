@@ -169,6 +169,8 @@ User-facing role selectors are named `Agents`; internal `agent` fields and subag
 
 Composer visual contract: keep one compact input surface with wrapping selection chips and the existing textarea autosizing. Do not show an idle readiness slogan. Category choices are concise rows; secondary headers retain back/close actions and agent read-only context. Ready file chips retain non-root paths and renamed originals visibly so touch users can distinguish files. Scope compact attachment styling to the composer; the Files panel keeps its full metadata and upload/error controls.
 
+Show user message references above the message text, matching their place above the composer textarea. Keep the model selector at the right of the composer toolbar, beside the message action in both new drafts and existing conversations.
+
 ### Test seats and work handoff (W01-8)
 
 `Seats` reads public `/api/info`; optional `testSeats` and `defaultSeatId` enable the test selector. Absence keeps single-seat URLs and storage keys. This selector is a test identity, not login. Each visited seat retains a mounted App with its own immutable `ApiContext`; inactive seats remain hidden/inert so pending streams, uploads, caches and independent drafts keep their original owner. Never mutate a global selected-seat HTTP client. Only visible seats mark replies read or update scroll positions. Shared model information refreshes when entering a seat.

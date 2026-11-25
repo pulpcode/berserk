@@ -122,9 +122,9 @@ test('IME and reference menu own their keys, Escape rejects the candidate, and o
     await box(page).dispatchEvent('keydown', { key: 'Enter', code: 'Enter', isComposing: true, keyCode: 229 });
     await expect(box(page)).toHaveValue(''); expect(state.counts.sends).toBe(1);
     await box(page).dispatchEvent('compositionend'); await expect(candidate(page)).toBeVisible();
-    await page.getByRole('button', { name: '添加附件', exact: true }).click(); await expect(candidate(page)).toBeHidden();
+    await page.getByRole('button', { name: '添加文件或能力', exact: true }).click(); await expect(candidate(page)).toBeHidden();
     await box(page).press('Escape'); await expect(candidate(page)).toBeVisible();
-    await page.getByRole('button', { name: '添加附件', exact: true }).focus(); await page.keyboard.press('Tab'); await expect(box(page)).toHaveValue('');
+    await page.getByRole('button', { name: '添加文件或能力', exact: true }).focus(); await page.keyboard.press('Tab'); await expect(box(page)).toHaveValue('');
     await box(page).focus(); await box(page).press('Escape'); await expect(candidate(page)).toBeHidden();
     await box(page).fill('请'); await box(page).fill(''); await expect(candidate(page)).toBeHidden(); expect(state.counts.suggestions).toBe(1);
   } finally { await state.close(); }

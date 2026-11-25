@@ -11,7 +11,7 @@ import type { ConnectorActor, ConnectorConfigInput, ConnectorPrincipal } from '.
 import type { ConfirmationInteraction } from '../../src/contracts/interactions.js';
 import { PiLab } from '../../src/pi/lab.js';
 import { RequestMcpTools } from '../../src/pi/mcp-tools.js';
-import { MCP_ADMISSION, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, mcpToolName } from '../../src/pi/mcp-history.js';
+import { MCP_ADMISSION, MCP_ADMISSION_V2, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, mcpToolName, readMcpAdmission } from '../../src/pi/mcp-history.js';
 import { interactionHistory } from '../../src/pi/interactions.js';
 import { startControlledMcp, type ControlledMcpOptions } from '../../scripts/mcp-controlled-fixture.js';
 import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
@@ -75,10 +75,22 @@ describe('MCP through original native Pi request/confirmation/history', () => {
     expect(a.endpoint.records.filter(item => item.method === 'tools/call')).toHaveLength(1); expect(b.endpoint.records.filter(item => item.method === 'tools/call')).toHaveLength(1);
     const tools = state.fake.calls[0].context.tools!.filter(tool => tool.name.startsWith('mcp_')); expect(new Set(tools.map(tool => tool.name)).size).toBe(2);
     expect(JSON.stringify(state.fake.calls[1].context.messages)).toContain('Alpha'); expect(JSON.stringify(state.fake.calls[1].context.messages)).toContain('Beta');
-    const entries = await native(state); expect(entries.filter(entry => entry.type === 'custom' && entry.customType === MCP_ADMISSION)).toHaveLength(1);
+    const entries = await native(state);
+    const admission = entries.find(entry => entry.type === 'custom' && entry.customType === MCP_ADMISSION_V2);
+    expect(admission).toMatchObject({data:{schemaVersion:2,explicitConnectorIds:[a.id,b.id]}});
+    if (admission?.type !== 'custom') throw new Error('Missing explicit admission');
+    const data = readMcpAdmission(MCP_ADMISSION_V2, admission.data, state.session.workspaceId, state.session.id);
+    expect(() => readMcpAdmission(MCP_ADMISSION_V2, {...data,explicitConnectorIds:[a.id,a.id]}, state.session.workspaceId, state.session.id)).toThrow();
+    expect(() => readMcpAdmission(MCP_ADMISSION_V2, {...data,explicitConnectorIds:[a.id,randomUUID()]}, state.session.workspaceId, state.session.id)).toThrow();
     expect(entries.filter(entry => entry.type === 'custom' && entry.customType === MCP_REQUESTED)).toHaveLength(2); expect(entries.filter(entry => entry.type === 'custom' && entry.customType === MCP_RESOLVED)).toHaveLength(2);
     const before = a.endpoint.records.length + b.endpoint.records.length; await state.lab.close(); const restored = await PiLab.create(state.config, state.fake.runtime); clean.push(() => restored.close());
-    expect(restored.get(state.session.id).interactions?.map(item => item.status)).toEqual(['approved', 'approved']); expect(restored.get(state.session.id).recoveryWarning).toBeUndefined();
+    const restoredSnapshot = restored.get(state.session.id);
+    expect(restoredSnapshot.interactions?.map(item => item.status)).toEqual(['approved', 'approved']);
+    expect(restoredSnapshot.recoveryWarning).toBeUndefined();
+    expect(restoredSnapshot.messages.find(message => message.role === 'user')?.connectorRefs).toEqual([
+      {connectorId:a.id,revisionId:a.detail.revision.revisionId,name:'Alpha'},
+      {connectorId:b.id,revisionId:b.detail.revision.revisionId,name:'Beta'},
+    ]);
     expect(a.endpoint.records.length + b.endpoint.records.length).toBe(before);
   });
   it.each(['reject', 'cancel'] as const)('sends no business POST when confirmation is %s', async decision => {
@@ -143,6 +155,8 @@ describe('MCP through original native Pi request/confirmation/history', () => {
     respond(state,confirmation,'approve');await done;
     expect(endpoint.records.find(record=>record.method==='tools/call')?.authorization).toBe('Bearer first-user-token');
     expect(state.lab.get(state.session.id).lastResult?.status).toBe('succeeded');
+    expect(state.lab.get(state.session.id).messages.find(message => message.role === 'user')?.connectorRefs).toBeUndefined();
+    expect((await native(state)).find(entry => entry.type === 'custom' && entry.customType === MCP_ADMISSION)).toMatchObject({data:{schemaVersion:1}});
   });
   it.each(['general','expert'] as const)('%s does not silently prefer a cached connection over an uncached authorized candidate',async mode=>{
     const state=await setup(plan());const cached=await seed(state.service,{label:'Cached service'}),uncached=await seed(state.service,{label:'Personal service'},true);

@@ -1,5 +1,5 @@
 import { isDeepStrictEqual } from 'node:util';
-import { MCP_ADMISSION, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, decodeMcpAdmission } from './mcp-history.js';
+import { MCP_ADMISSION, MCP_ADMISSION_V2, MCP_POLICY, MCP_REQUESTED, MCP_RESOLVED, readMcpAdmission } from './mcp-history.js';
 import { managementSkillKind } from '../authoring/management-skills.js';
 import { EXPERT_BINDING, EXECUTION_MANIFEST, decodeExpertBinding, decodeExecutionManifest } from './capability-history.js';
 import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
@@ -171,8 +171,8 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       manifests.add(manifest.requestId);
       continue;
     }
-    if (entry.customType === MCP_ADMISSION) {
-      const admission = decodeMcpAdmission(entry.data,workspaceId,parentSessionId);
+    if (entry.customType === MCP_ADMISSION || entry.customType === MCP_ADMISSION_V2) {
+      const admission = readMcpAdmission(entry.customType,entry.data,workspaceId,parentSessionId);
       if (readonly || admission.requestId !== currentRequest || currentRequestHasUser || mcpAdmissions.has(admission.requestId) || !manifests.has(admission.requestId)) throw stateError();
       const manifestEntry = entries.find(e => e.type === 'custom' && e.customType === EXECUTION_MANIFEST && (e.data as {requestId?:unknown})?.requestId === admission.requestId);
       const manifest = manifestEntry?.type === 'custom' ? decodeExecutionManifest(manifestEntry.data,workspaceId,parentSessionId) : undefined;

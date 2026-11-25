@@ -56,7 +56,6 @@
 .session-expert-identity { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 42%; padding: 4px 6px; color: var(--muted); font-size: 12px; line-height: 24px; }
 .session-expert-identity > svg { flex-shrink: 0; color: var(--accent); }
 .session-expert-identity > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.composer-toolbar:has(.session-expert-identity) .model-picker { margin-left: auto; margin-right: 0; }
 .session-expert-notice { margin-bottom: 8px; font-size: 12px; }
 .expert-unavailable { display: flex; gap: 7px; align-items: center; color: var(--danger); margin: 8px 0 0; line-height: 1.6; }
 .expert-update { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; color: var(--muted); }

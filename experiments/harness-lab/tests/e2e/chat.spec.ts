@@ -225,6 +225,13 @@ test('resolved references stay visible during streaming, polling and navigation 
     await expect(user.getByLabel('本条消息使用的能力')).toContainText('analyst');
     await expect(user.getByRole('button', { name: '在地图查看 · H05 · 证据版本 1', exact: true })).toBeVisible();
     await expect(user.getByLabel('本条消息引用的文件')).toContainText('方案.md');
+    const body = (await user.getByText('慢速回复', { exact: true }).boundingBox())!;
+    for (const reference of [user.getByLabel('本条消息使用的能力'), user.getByLabel('地图操作结果'), user.getByLabel('本条消息引用的文件')]) {
+      const box = (await reference.boundingBox())!;
+      expect(box.y + box.height).toBeLessThan(body.y);
+    }
+    const file = (await user.getByLabel('本条消息引用的文件').getByRole('listitem').boundingBox())!;
+    expect(file.x).toBeCloseTo(body.x, 0);
     await user.getByRole('button', { name: 'Skill · 资料综合写作', exact: true }).click();
     await expect(page.getByRole('dialog')).toContainText('本轮实际加载的 Skill 正文');
     await page.getByRole('button', { name: '关闭面板', exact: true }).click();
@@ -1491,7 +1498,7 @@ test('启动工作区归属读取完成前保护输入，随后文字归入初�
     await page.goto('/');
     const input = page.getByRole('textbox', { name: '发送消息' });
     await expect(input).toBeDisabled();
-    await expect(page.getByRole('button', { name: '添加附件' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: '添加文件或能力' })).toBeDisabled();
     await expect.poll(() => Boolean(mock.faults.releaseActivity)).toBe(true);
     mock.faults.releaseActivity!(); mock.faults.releaseActivity = undefined;
     await expect(input).toBeEditable();

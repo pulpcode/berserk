@@ -7,9 +7,8 @@ import remarkGfm from 'remark-gfm';
 import type { PublicMessage } from '../contracts/index';
 import { HistoricalFile } from './Files';
 import { useChatItemFocus, type ChatFocusTransfer } from './useChatItemFocus';
-import { MapLink, EvidenceMapLinks } from './situation/MapContext';
+import { AnnotationHistoryLinks, MapLink, EvidenceMapLinks } from './situation/MapContext';
 import { requestMapEvidence } from './situation/evidence';
-import { AnnotationHistoryLinks } from './situation/MapContext';
 import { SelectionHistory } from './ComposerReferences';
 import { ResourceResultCard } from './ResourceResultCard';
 import { toolActionLabel } from './processGroups';
@@ -78,6 +77,19 @@ export function Message({ message, active, workspaceId, sessionId, focusKey, foc
     </div>
   </details>;
   return <article data-work-message-id={message.id} ref={focusRef} className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
-    <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} /><AnnotationHistoryLinks message={message}/><EvidenceMapLinks messages={[message]}/>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <MarkdownContext.Provider value={{ evidence, source: message.text, sessionId, requestId: message.requestId, active }}><Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>{finalAnswer && <EvidenceMapLinks messages={requestMapEvidence(message,evidence)}/>}</MarkdownContext.Provider>}</div>
+    <div className="message-content">{message.role === 'user' ? <>
+      <div className="message-references">
+        <EvidenceMapLinks messages={[message]} />
+        <AnnotationHistoryLinks message={message} />
+        <SelectionHistory selections={message.selections} connectorRefs={message.connectorRefs} />
+        {!!message.attachments?.length && <ul className="message-attachments" aria-label="本条消息引用的文件">
+          {message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}
+        </ul>}
+      </div>
+      <p>{message.text}</p>
+    </> : <MarkdownContext.Provider value={{ evidence, source: message.text, sessionId, requestId: message.requestId, active }}>
+      <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>
+      {finalAnswer && <EvidenceMapLinks messages={requestMapEvidence(message, evidence)} />}
+    </MarkdownContext.Provider>}</div>
   </article>;
 }

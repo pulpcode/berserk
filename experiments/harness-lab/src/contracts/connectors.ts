@@ -19,6 +19,7 @@ export interface ConnectorLifecycleInput { action: 'disable' | 'restore'; expect
 export interface ConnectorCredentialInput { value: string; expectedVersion: number; clientActionId: string }
 export interface RevokeConnectorCredentialInput { expectedVersion: number; clientActionId: string }
 export interface ConnectorSelection { connectorId: string; revisionId: string }
+export interface ConnectorReference extends ConnectorSelection { name: string }
 /** Explicit reference only; legacy experts omit this field and acquire no MCP tools. */
 export interface ConnectorRequirement { connectorId: string; actions: ConnectorExposure[] }
 export interface ConnectorCallSummary { schemaVersion: 1; connectorId: string; revisionId: string; connectorName: string; action: string; contractDigest: string; subjectId: string; credentialVersion: number; argumentsDigest: string }
