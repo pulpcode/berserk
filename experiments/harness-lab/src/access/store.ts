@@ -6,8 +6,9 @@ import { BackgroundStore } from '../background/store.js';
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
 import type { AccountIdentity, AdministratorIdentity, Identity, TaskContext, TaskInput, TaskSpace } from '../contracts/access.js';
+import { modelProfileIdPattern, type UserModelPreference, type UserModelPreferenceUpdate } from '../contracts/index.js';
 import { UUID } from '../workspaces/store.js';
-import { stateError } from '../resources/files.js';
+import { parseJsonStrict, stateError } from '../resources/files.js';
 import { RequestError } from '../contracts/errors.js';
 import { normalizeTaskContext } from './context.js';
 import { SystemRoles } from './system-roles.js';
@@ -51,10 +52,8 @@ export class AccessStore {
       const tables=new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row=>String(row.name)));
       if(['seats','accounts','auth_sessions','task_spaces','task_actions'].some(name=>!tables.has(name)))throw stateError();
       this.upgradeOverview(version);
-      return;
-    }
-    if(version!==1)throw stateError();
-    db.exec(`BEGIN IMMEDIATE;
+    } else if (version === 1) {
+      db.exec(`BEGIN IMMEDIATE;
       CREATE TABLE IF NOT EXISTS seats(id TEXT PRIMARY KEY, name TEXT NOT NULL, create_public INTEGER NOT NULL, manage_model INTEGER NOT NULL);
       CREATE TABLE IF NOT EXISTS accounts(id TEXT PRIMARY KEY, username TEXT UNIQUE NOT NULL, display_name TEXT NOT NULL, seat_id TEXT NOT NULL REFERENCES seats(id), salt TEXT NOT NULL, password_hash TEXT NOT NULL, enabled INTEGER NOT NULL);
       CREATE UNIQUE INDEX IF NOT EXISTS one_enabled_account_per_seat ON accounts(seat_id) WHERE enabled=1;
@@ -62,7 +61,13 @@ export class AccessStore {
       CREATE TABLE IF NOT EXISTS task_spaces(id TEXT PRIMARY KEY, data TEXT NOT NULL CHECK(json_valid(data)));
       CREATE TABLE IF NOT EXISTS task_actions(user_id TEXT NOT NULL, action_id TEXT NOT NULL, input TEXT NOT NULL, task_id TEXT NOT NULL REFERENCES task_spaces(id), PRIMARY KEY(user_id,action_id));
       PRAGMA user_version=2; COMMIT;`);
-    this.upgradeOverview(2);
+      this.upgradeOverview(2);
+    } else throw stateError();
+    db.exec(`CREATE TABLE IF NOT EXISTS user_model_preferences (
+      user_id TEXT PRIMARY KEY REFERENCES accounts(id),
+      revision INTEGER NOT NULL CHECK(revision >= 0),
+      data TEXT NOT NULL CHECK(json_valid(data))
+    )`);
   }
   private upgradeOverview(version: number) {
     const base = baseSchemaVersion(version);
@@ -73,6 +78,33 @@ export class AccessStore {
     this.db.exec('BEGIN IMMEDIATE');
     try { upgradeSeatColumns(this.db,version,false); this.db.exec(`PRAGMA user_version=${scenarioSchemaVersion(base === 9 ? 9 : 7, version)}; COMMIT`); }
     catch (error) { this.db.exec('ROLLBACK'); throw error; }
+  }
+  getUserModelPreference(userId: string): UserModelPreference {
+    const row = this.db.prepare('SELECT revision, data FROM user_model_preferences WHERE user_id=?').get(userId);
+    if (!row) return { revision: 0, choice: { mode: 'system' } };
+    const revision = Number(row.revision);
+    const choice = parseJsonStrict(String(row.data)) as Record<string, unknown> | null;
+    if (!Number.isSafeInteger(revision) || revision < 1 || !choice || typeof choice !== 'object') throw stateError();
+    if (choice.mode === 'system' && Object.keys(choice).length === 1) return { revision, choice: { mode: 'system' } };
+    if (choice.mode === 'model' && Object.keys(choice).length === 2 && typeof choice.modelId === 'string' && modelProfileIdPattern.test(choice.modelId)) {
+      return { revision, choice: { mode: 'model', modelId: choice.modelId } };
+    }
+    throw stateError();
+  }
+  saveUserModelPreference(userId: string, input: UserModelPreferenceUpdate): UserModelPreference {
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const current = this.getUserModelPreference(userId);
+      if (current.revision !== input.expectedRevision) throw new RequestError('PREFERENCE_CONFLICT', '个人默认模型已在其他页面更新，请刷新后重试。', 409);
+      const revision = current.revision + 1;
+      this.db.prepare(`INSERT INTO user_model_preferences (user_id, revision, data) VALUES (?, ?, ?)
+        ON CONFLICT(user_id) DO UPDATE SET revision=excluded.revision, data=excluded.data`).run(userId, revision, JSON.stringify(input.choice));
+      this.db.exec('COMMIT');
+      return { revision, choice: input.choice };
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      throw error;
+    }
   }
   seatName(id: string): string { return String(this.db.prepare('SELECT name FROM seats WHERE id=?').get(id)?.name ?? id); }
   allSeatIds() { return this.db.prepare('SELECT id FROM seats').all().map(row=>String(row.id)); }

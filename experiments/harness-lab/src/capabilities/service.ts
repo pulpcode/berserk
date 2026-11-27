@@ -9,6 +9,7 @@ import type {
   ExpertRef, ExpertRevision, ExpertSummary, SessionExpert, SkillRevision,
 } from '../contracts/capabilities.js';
 import { RequestError } from '../contracts/errors.js';
+import { modelProfileIdPattern } from '../contracts/index.js';
 import { atomicWrite, checkDirectory, hashContent, Mutex, parseJsonStrict, readControlled } from '../resources/files.js';
 
 export const GENERAL_EXPERT_ID = 'axon-general';
@@ -40,8 +41,10 @@ export interface ExpertDefinition {
 }
 export interface CreationIntent {
   principalId: string; clientActionId: string; inputDigest: string; sessionId: string;
+  resolvedModelId?: string;
   expertRef: ExpertRef; digest: string; selectionSource?: 'explicit' | 'task' | 'personal' | 'seat' | 'general'; state: 'prepared' | 'completed' | 'blocked'; createdAt: string;
 }
+const creationInputDigest = (input: unknown, resolvedModelId?: string) => capabilityDigest(resolvedModelId === undefined ? input : { input, resolvedModelId });
 export interface LegacySession { sessionId: string; workspaceId: string; seatId: string }
 interface AcceptedRequest { ref: ExpertRef; principalId?: string; seatId?: string; cancel: () => void; skills: SkillRevision[] }
 
@@ -356,9 +359,10 @@ export class CapabilityService {
     let intent: CreationIntent;
     try {
       const value = parseJsonStrict(String(row.data));
-      if (!object(value) || !exactKeys(value, ['principalId', 'clientActionId', 'inputDigest', 'sessionId', 'expertRef', 'digest', 'selectionSource', 'state', 'createdAt'])
+      if (!object(value) || !exactKeys(value, ['principalId', 'clientActionId', 'inputDigest', 'sessionId', 'expertRef', 'digest', 'selectionSource', 'state', 'createdAt', 'resolvedModelId'])
         || value.principalId !== principalId || value.clientActionId !== clientActionId || !uuidPattern.test(String(value.sessionId))
         || !digestPattern.test(String(value.inputDigest)) || !digestPattern.test(String(value.digest))
+        || (value.resolvedModelId !== undefined && (typeof value.resolvedModelId !== 'string' || !modelProfileIdPattern.test(value.resolvedModelId)))
         || (value.selectionSource !== undefined && !['explicit','task','personal','seat','general'].includes(String(value.selectionSource)))
         || !['prepared', 'completed', 'blocked'].includes(String(value.state)) || typeof value.createdAt !== 'string'
         || !Number.isFinite(Date.parse(value.createdAt)) || !object(value.expertRef)
@@ -366,10 +370,10 @@ export class CapabilityService {
       validRef(value.expertRef as unknown as ExpertRef);
       intent = value as unknown as CreationIntent;
     } catch { throw invalid(); }
-    if (input !== undefined && intent.inputDigest !== capabilityDigest(input)) throw new RequestError('SESSION_CREATION_CONFLICT', '此创建操作的参数已变化，请重新发起。', 409);
+    if (input !== undefined && intent.inputDigest !== creationInputDigest(input, intent.resolvedModelId)) throw new RequestError('SESSION_CREATION_CONFLICT', '此创建操作的参数已变化，请重新发起。', 409);
     return structuredClone(intent);
   }
-  async reserveCreation(input: { principalId: string; clientActionId: string; input: unknown; expertRef?: ExpertRef; expectedDigest?: string; sessionId?: string; seatId?: string; allowUnselectable?: boolean; resolveDefault?: () => Promise<{ expertRef: ExpertRef; digest: string; source?: 'task'|'personal'|'seat'|'general' }> }): Promise<CreationIntent> {
+  async reserveCreation(input: { principalId: string; clientActionId: string; input: unknown; expertRef?: ExpertRef; expectedDigest?: string; sessionId?: string; seatId?: string; allowUnselectable?: boolean; resolveModel?: () => string; resolveDefault?: () => Promise<{ expertRef: ExpertRef; digest: string; source?: 'task'|'personal'|'seat'|'general' }> }): Promise<CreationIntent> {
     if (!input.principalId || !uuidPattern.test(input.clientActionId)) throw new RequestError('INVALID_INPUT', '创建操作标识无效。');
     if (input.sessionId !== undefined && !uuidPattern.test(input.sessionId)) throw new RequestError('INVALID_INPUT', '会话标识无效。');
     return this.lock.run(async () => {
@@ -378,6 +382,7 @@ export class CapabilityService {
         if (input.sessionId !== undefined && existing.sessionId !== input.sessionId) throw new RequestError('SESSION_CREATION_CONFLICT', '此创建操作已固定其他会话标识。', 409);
         return existing;
       }
+      const resolvedModelId = input.resolveModel?.();
       let revision: ExpertRevision; let selectionSource: CreationIntent['selectionSource'] = 'explicit';
       if (input.expertRef) {
         revision = await this.current(input.expertRef.expertId);
@@ -388,9 +393,9 @@ export class CapabilityService {
         revision = resolved ? await this.resolve(resolved.expertRef, resolved.digest) : await this.current();
       }
       this.assertAdmission(revision, input.principalId, input.seatId);
-      const intent: CreationIntent = { principalId: input.principalId, clientActionId: input.clientActionId, inputDigest: capabilityDigest(input.input),
+      const intent: CreationIntent = { principalId: input.principalId, clientActionId: input.clientActionId, inputDigest: creationInputDigest(input.input, resolvedModelId),
         sessionId: input.sessionId ?? randomUUID(), expertRef: { expertId: revision.expertId, revisionId: revision.revisionId }, digest: revision.digest,
-        selectionSource, state: 'prepared', createdAt: new Date().toISOString() };
+        ...(resolvedModelId === undefined ? {} : { resolvedModelId }), selectionSource, state: 'prepared', createdAt: new Date().toISOString() };
       this.db.prepare('INSERT INTO creation_intents VALUES(?,?,?)').run(intent.principalId, intent.clientActionId, JSON.stringify(intent));
       return intent;
     });

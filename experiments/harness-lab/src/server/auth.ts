@@ -61,9 +61,10 @@ export async function registerAuth(app: FastifyInstance, access: AccessStore, co
       if(request.accountIdentity && isBusinessIdentity(request.accountIdentity)) request.identity=request.accountIdentity;
     }
     if(!authRoute && path!=='/api/health' && !request.accountIdentity) throw unauthorized();
-    const modelSettingsPath = /^\/api\/settings\/(?:model|models|platforms)(?:\/[^/]+)?$/.test(path)
+    const modelSettingsPath = path === '/api/settings/default-model' || /^\/api\/settings\/(?:model|models|platforms)(?:\/[^/]+)?$/.test(path)
       || /^\/api\/settings\/platforms\/[^/]+\/models$/.test(path);
     const personalPath = /^\/api\/connectors\/[^/]+\/credential$/.test(path) || path === '/api/info' || path === '/api/models' || path === '/api/activity'
+      || path === '/api/me/preferences/model'
       || /^\/api\/(?:workspaces|tasks|sessions)(?:\/|$)/.test(path)
       || /^\/api\/capabilities\/(?:access|library|experts|skills|connectors)(?:\/|$)/.test(path);
     const queueControlPath = path === '/api/information/queue';

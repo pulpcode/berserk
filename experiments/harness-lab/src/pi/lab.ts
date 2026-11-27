@@ -73,7 +73,7 @@ import type { WorkActivityRequest, WorkActivityResponse, WorkActivityView } from
 import { syntheticTrialToolNames } from './trial-tools.js';
 import { Type } from 'typebox';
 import type { ComposerSelection, LoadedComposerSelection, AgentInfo, ActivityOverview, AppInfo, PublicMessage, RequestResult, RequestState, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile, ModelSettings, ModelSettingsUpdate, ModelPlatform, ModelPlatformUpdate, ModelCatalog, ModelChoices, ModelProfile, CompactionSummary, CompactionDetail, UsageSummary, SubagentSummary } from '../contracts/index.js';
-import type { PlatformModelImport } from '../contracts/index.js';
+import type { PlatformModelImport, UserModelPreference, UserModelPreferenceUpdate } from '../contracts/index.js';
 import { compactionSummary, guardPersistence, openStrictSession } from './compaction-history.js';
 import { controlledStream, emptyUsage, providerError } from './controlled-stream.js';
 export { providerError } from './controlled-stream.js';
@@ -255,7 +255,7 @@ export class PiLab {
   private execution?: DockerExecutionService;
   private constructor(private currentConfig: LabConfig, runtime: ModelRuntime, readonly workspaces: WorkspaceStore, readonly resources: ResourceService, private readonly settings: ModelSettingsStore) {
     const config = currentConfig;
-    this.runtimes.set('default', runtime);
+    this.runtimes.set(settings.defaultModelId(), runtime);
     this.sessionDir = join(config.dataDir, 'sessions');
     this.agentDir = join(config.dataDir, 'agent');
     this.files = new FileService(workspaces, config.fileLimits);
@@ -274,7 +274,8 @@ export class PiLab {
     await assertDataMode(config.dataDir,!!config.auth);
     const settings = await ModelSettingsStore.open(config);
     await assertCapabilityMigrationReady(config.dataDir);
-    config = { ...config, ...settings.config() };
+    const defaultModelId = settings.defaultModelId();
+    config = { ...config, ...settings.config(defaultModelId) };
     if (!runtime) runtime = await configuredRuntime(config);
     else if (config.apiKey) await runtime.setRuntimeApiKey(config.provider, config.apiKey);
     const database = config.auth || config.testSeats ? await openDatabase(config.dataDir) : undefined;
@@ -290,7 +291,7 @@ export class PiLab {
     }
     for (const seat of config.testSeats ?? []) if (!workspaces.list(seat.id).workspaces.length) await workspaces.create('默认工作区', undefined, seat.id);
     const lab = new PiLab(config, runtime, workspaces, new ResourceService(workspaces), settings);
-    for (const profile of settings.catalog().models) if (profile.id !== 'default') {
+    for (const profile of settings.catalog().models) if (profile.id !== defaultModelId) {
       lab.runtimes.set(profile.id, await configuredRuntime({ ...config, ...settings.config(profile.id) }));
     }
     lab.requestGuard = options.requestGuard;
@@ -426,14 +427,29 @@ export class PiLab {
   modelChoices(): ModelChoices { return this.settings.choices(); }
   discoverModels(platformId: string) { return this.settings.discover(platformId); }
 
-  private requestModel(id: string): RequestModel {
-    const config = { ...this.currentConfig, ...this.settings.config(id) };
-    if (config.enabled === false || config.usageConfirmed === false) throw new RequestError('MODEL_UNAVAILABLE', '所选模型尚未开放使用，请选择其他模型或联系管理员。', 503);
+  private runtimeForModel(id: string): ModelRuntime {
     const runtime = this.runtimes.get(id);
     if (!runtime) throw new RequestError('MODEL_UNAVAILABLE', '所选模型暂时不可用，请重新选择。', 503);
-    if (!config.apiKey) throw new RequestError('MODEL_NOT_CONFIGURED', '所选模型尚未配置，请选择其他模型或联系管理员。', 503);
-    if (!config.contextReady) throw new RequestError('MODEL_CONTEXT_REQUIRED', '所选模型的上下文容量和最大输出量尚未配置完整。', 400);
-    return { id, config, runtime, version: this.settings.info(id).version };
+    return runtime;
+  }
+
+  private requestModel(id: string): RequestModel {
+    const config = { ...this.currentConfig, ...this.settings.requestConfig(id) };
+    return { id, config, runtime: this.runtimeForModel(id), version: this.settings.info(id).version };
+  }
+
+  getUserModelPreference(userId: string): UserModelPreference {
+    if (!this.access) throw new RequestError('AUTH_REQUIRED', '请登录后继续。', 401);
+    return this.access.getUserModelPreference(userId);
+  }
+
+  saveUserModelPreference(userId: string, input: UserModelPreferenceUpdate): UserModelPreference {
+    if (!this.access) throw new RequestError('AUTH_REQUIRED', '请登录后继续。', 401);
+    if (input.choice.mode === 'model') {
+      if (this.settingsUpdating) throw settingsBusy();
+      this.requestModel(input.choice.modelId);
+    }
+    return this.access.saveUserModelPreference(userId, input);
   }
 
   selectModel(id: string, modelId: string, seatId?: string): SessionSnapshot {
@@ -455,7 +471,7 @@ export class PiLab {
   }
 
   async updateModelSettings(input: ModelSettingsUpdate, authorize?: () => void): Promise<ModelSettings> {
-    await this.updateModelProfile(input, 'default', false, authorize);
+    await this.updateModelProfile(input, this.settings.defaultModelId(), false, authorize);
     return this.settings.info();
   }
 
@@ -466,7 +482,22 @@ export class PiLab {
     this.settingsUpdating = true;
   }
 
-  async updateModelProfile(input: ModelSettingsUpdate, id = 'default', create = false, authorize?: () => void): Promise<ModelProfile> {
+  async setDefaultModel(modelId: string, expectedVersion: string, authorize?: () => void): Promise<ModelCatalog> {
+    this.reserveModelSettingsUpdate(authorize);
+    try {
+      const next = this.settings.prepareDefaultModel(modelId, expectedVersion);
+      this.runtimeForModel(modelId);
+      await this.settings.saveDefaultModel(next, authorize);
+      this.currentConfig = { ...this.currentConfig, ...next.config };
+      for (const record of this.records.values()) {
+        record.prediction?.controller?.abort();
+        record.workAnalysis?.controller.abort();
+      }
+      return this.settings.catalog();
+    } finally { this.settingsUpdating = false; }
+  }
+
+  async updateModelProfile(input: ModelSettingsUpdate, id = this.settings.defaultModelId(), create = false, authorize?: () => void): Promise<ModelProfile> {
     this.reserveModelSettingsUpdate(authorize);
     try {
       const next = this.settings.prepare(input, id, create);
@@ -479,7 +510,7 @@ export class PiLab {
       await this.settings.save(next, authorize);
       // No await after the file commit: new requests see matching runtime and settings.
       this.runtimes.set(next.id, runtime);
-      if (next.id === 'default') this.currentConfig = config;
+      if (next.id === this.settings.defaultModelId()) this.currentConfig = { ...this.currentConfig, ...this.settings.config(next.id) };
       return { id: next.id, ...this.settings.info(next.id) };
     } finally { this.settingsUpdating = false; }
   }
@@ -499,7 +530,7 @@ export class PiLab {
       // Publish synchronously after the single CAS file commit, just like model updates.
       for (const { modelId, config, runtime } of replacements) {
         this.runtimes.set(modelId, runtime);
-        if (modelId === 'default') this.currentConfig = config;
+        if (modelId === this.settings.defaultModelId()) this.currentConfig = config;
       }
       return this.settings.catalog().platforms!.find(platform => platform.id === next.id)!;
     } finally { this.settingsUpdating = false; }
@@ -532,12 +563,19 @@ export class PiLab {
     } finally { this.settingsUpdating = false; }
   }
 
+  private validateNewSessionModel(id: string, implicit: boolean) {
+    if (this.settingsUpdating) throw settingsBusy();
+    // Offline map probes and legacy callers can prepare an empty session before the original slot is configured.
+    if (implicit && id === 'default' && id === this.settings.defaultModelId() && !this.currentConfig.apiKey
+      && this.currentConfig.enabled !== false && this.currentConfig.usageConfirmed !== false) return;
+    this.requestModel(id);
+  }
+
   async createSession(workspaceId?: string, seatId = this.config.seatId ?? 'test-seat', workItemId?: string, sessionId?: string, modelId?: string,
     selection: ExpertSessionSelection & { userId?: string } = {}): Promise<SessionSnapshot> {
     this.requestGuard?.();
     this.access?.assertCanUseWorkspace(seatId);
     if (workItemId && this.access?.isPersonalScope(seatId)) throw new RequestError('FORBIDDEN', '个人空间不能关联业务工作。', 403);
-    if (modelId !== undefined) { if (this.settingsUpdating) throw settingsBusy(); this.requestModel(modelId); }
     if (sessionId && !UUID.test(sessionId)) throw new RequestError('INVALID_INPUT', '会话标识无效。');
     workspaceId ??= this.workspaces.list(seatId).defaultWorkspaceId;
     this.workspaces.get(workspaceId, seatId);
@@ -547,6 +585,11 @@ export class PiLab {
       ...(selection.expertRef ? { expertRef: selection.expertRef } : {}), ...(selection.expectedDigest ? { expectedDigest: selection.expectedDigest } : {}) };
     const intent = await this.capabilities.reserveCreation({ principalId, clientActionId: actionId, input,
       expertRef: selection.expertRef, expectedDigest: selection.expectedDigest, seatId, allowUnselectable: this.executionMode === 'trial',
+      resolveModel: () => {
+        const resolved = modelId ?? this.settings.defaultModelId();
+        this.validateNewSessionModel(resolved, modelId === undefined);
+        return resolved;
+      },
       ...(!sessionId && selection.userId && this.management ? { resolveDefault: () => this.management!.resolveDefault({userId: selection.userId!, seatId, taskId: this.workspaces.get(workspaceId!, seatId).taskSpaceId}) } : {}), ...(sessionId ? { sessionId } : {}) });
     if (intent.state === 'blocked' || sessionId && intent.sessionId !== sessionId && this.records.has(sessionId)) {
       throw new RequestError('SESSION_CREATION_RECOVERY_REQUIRED', '会话创建需要核对原记录，不会重新创建或重发消息。', 409);
@@ -574,7 +617,9 @@ export class PiLab {
       throw new RequestError('SESSION_CREATION_RECOVERY_REQUIRED', '原会话缺失或损坏，请核对记录；不会另建会话。', 409);
     }
     const release = this.workspaces.acquireWrite(workspaceId, seatId);
-    const pending = this.createSessionInternal(workspaceId, seatId, workItemId, sessionId, modelId,
+    // Creation intents from before the catalog pointer was introduced used the legacy slot.
+    const resolvedModelId = intent.resolvedModelId ?? modelId ?? 'default';
+    const pending = this.createSessionInternal(workspaceId, seatId, workItemId, sessionId, resolvedModelId, modelId === undefined,
       { schemaVersion: 1, sessionId, workspaceId, seatId, expertRef: intent.expertRef, digest: intent.digest, boundAt: intent.createdAt,
         ...(selection.userId ? { userId: selection.userId } : {}) }, principalId);
     this.preparingSessions.set(sessionId, pending);
@@ -585,7 +630,7 @@ export class PiLab {
     } finally { release(); this.preparingSessions.delete(sessionId); }
   }
   private async createSessionInternal(workspaceId: string, seatId: string, workItemId: string | undefined, sessionId: string,
-    modelId: string | undefined, binding: ExpertBinding, principalId: string): Promise<SessionSnapshot> {
+    modelId: string, implicitModel: boolean, binding: ExpertBinding, principalId: string): Promise<SessionSnapshot> {
     const workspace = this.workspaces.get(workspaceId, seatId);
     const expert = await this.capabilities.resolve(binding.expertRef, binding.digest);
     this.capabilities.assertAdmission(binding.expertRef, principalId, seatId);
@@ -601,12 +646,11 @@ export class PiLab {
     if (manager.getEntries().some(entry => entry.type !== 'custom' || ![EXPERT_BINDING, MODEL_SELECTION].includes(entry.customType))
       || existing && !isDeepStrictEqual(existing, binding)) throw new RequestError('SESSION_CREATION_RECOVERY_REQUIRED', '创建中断的会话包含无法确认的记录，已保留现场。', 409);
     validateHistoryEvidence(manager.getBranch(), workspaceId, sessionId);
-    if (manager.getEntries().filter(entry => entry.type === 'custom' && entry.customType === MODEL_SELECTION).length > 1
-      || manager.getEntries().some(entry => entry.type === 'custom' && entry.customType === MODEL_SELECTION)
-        && selectedModelId(manager.getBranch(), workspaceId, sessionId) !== (modelId ?? 'default')) throw stateError();
+    const modelSelections = manager.getEntries().filter(entry => entry.type === 'custom' && entry.customType === MODEL_SELECTION);
+    if (modelSelections.length > 1 || modelSelections.length && selectedModelId(manager.getBranch(), workspaceId, sessionId) !== modelId) throw stateError();
+    this.validateNewSessionModel(modelId, implicitModel);
     if (!existing) manager.appendCustomEntry(EXPERT_BINDING, binding);
-    if (modelId !== undefined && !manager.getEntries().some(entry => entry.type === 'custom' && entry.customType === MODEL_SELECTION)) {
-      if (this.settingsUpdating) throw settingsBusy(); this.requestModel(modelId);
+    if (!modelSelections.length) {
       manager.appendCustomEntry(MODEL_SELECTION, { schemaVersion: 1, workspaceId, sessionId, modelId });
     }
     this.access?.assertCanUseWorkspace(seatId);
@@ -656,7 +700,7 @@ export class PiLab {
     if (this.settingsUpdating) throw settingsBusy();
     if(input.contextPrincipal?.scenarioInstanceId!==undefined){if(!this.scenario)throw new RequestError('TASK_READ_ONLY','资料已只读，请重新进入后操作。',409);this.scenario.assertWritable(input.contextPrincipal.scenarioInstanceId);}
     if (this.serviceRecords.get(input.sessionId)?.active) throw new RequestError('SESSION_BUSY', '后台会话正在执行。', 409);
-    if (!this.config.apiKey || !this.config.contextReady) throw new RequestError('MODEL_NOT_CONFIGURED', '请先配置模型及上下文容量。', 503);
+    this.settings.requestConfig(this.settings.defaultModelId());
     if (input.tools.includes('information_suggest_recipients') && !input.recordRecipientSuggestion) throw new RequestError('RECIPIENT_SUGGESTION_UNAVAILABLE', '补充建议记录服务不可用，未启动模型。', 503);
     if (input.tools.includes('information_record_task_assessment') && !input.recordTaskAssessment) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '任务判断记录服务不可用，未启动模型。', 503);
     for (const name of ['files', 'logs', 'sessions']) { await mkdir(join(directory, name), { recursive: true, mode: 0o700 }); await checkDirectory(join(directory, name)); }
@@ -670,7 +714,7 @@ export class PiLab {
     if (input.tools.includes('spatial_analyze') && (!input.streamEpochId || !input.contextPrincipal || !this.context)) throw new RequestError('SPATIAL_FORBIDDEN','后台空间分析需要持续研判及明确来源范围。',403);
     this.validateSpatialHistory(record);
     if (this.settingsUpdating) throw settingsBusy();
-    const active: Active = { model: this.requestModel('default'), id: input.requestId, background: true, service: { ...input, resources: structuredClone(input.resources), roles: structuredClone(input.roles), tools: [...input.tools], files: structuredClone(input.files) },
+    const active: Active = { model: this.requestModel(this.settings.defaultModelId()), id: input.requestId, background: true, service: { ...input, resources: structuredClone(input.resources), roles: structuredClone(input.roles), tools: [...input.tools], files: structuredClone(input.files) },
       status: 'responding', phase: 'preparing', acceptedAt: Date.now(), compacting: false, compactions: [], compactionStartIds: new Set(), usage: emptyUsage(), controller: new AbortController(), changes: [] };
     record.active = active; this.watchPersistence(record); this.serviceRecords.set(input.sessionId, record);
     let started = false;
@@ -1165,7 +1209,7 @@ export class PiLab {
       ...this.summary(record),
       ...(!record.service && this.capabilities.sourceForSession(id) ? {expertDefaultSource:this.capabilities.sourceForSession(id)} : {}),
       ...(!record.service ? { expert: { ...this.capabilities.sessionExpert(record.expert ?? this.generalExpert, record.binding?.userId ?? `seat:${record.seatId}`, record.seatId),
-        ...(record.binding?.legacy || !record.binding ? { legacy: true as const } : {}) } } : {}), modelId: record.service ? 'default' : selectedModelId(entries, record.workspaceId, id), ...(backgroundJob ? { backgroundJob: { ...backgroundJob } } : {}), id, workspaceId: record.workspaceId, title: messages.find(message => message.role === 'user')?.text.slice(0, 40) || '新会话',
+        ...(record.binding?.legacy || !record.binding ? { legacy: true as const } : {}) } } : {}), modelId: record.service ? record.active?.model.id ?? this.settings.defaultModelId() : selectedModelId(entries, record.workspaceId, id), ...(backgroundJob ? { backgroundJob: { ...backgroundJob } } : {}), id, workspaceId: record.workspaceId, title: messages.find(message => message.role === 'user')?.text.slice(0, 40) || '新会话',
       updatedAt: entries.at(-1)?.timestamp || record.manager.getHeader()!.timestamp,
       ...(record.intake ? {inputQueue: record.intake.state()} : {}),
       messages, active: requestState(record.active), turns: conversationTurns(entries, messages, record.active?.id),
@@ -1863,7 +1907,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     if (internal && record.manager.getBranch().some(entry => entry.type === 'custom' && [RESOURCE_ENTRY, RESULT_ENTRY].includes(entry.customType)
       && (entry.data as { requestId?: string })?.requestId === internal.requestId)) throw new RequestError('SESSION_BUSY', '该后台请求已有执行记录，不会自动重新运行。', 409);
     if (record.warning) throw new RequestError('RECOVERY_REQUIRED', record.warning, 409);
-    const model = this.requestModel(internal?.background ? 'default' : selectedModelId(record.manager.getBranch(), record.workspaceId, id));
+    const model = this.requestModel(internal?.background ? this.settings.defaultModelId() : selectedModelId(record.manager.getBranch(), record.workspaceId, id));
     if (!internal?.background) this.bindLegacy(record, actorUserId);
     if (input.authoring !== undefined && !validAuthoringIntent(input.authoring)) throw new RequestError('INVALID_INPUT', '能力创作意图格式无效。');
     const methodKind = input.skill && managementSkillKind(input.skill.id);

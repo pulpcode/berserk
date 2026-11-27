@@ -1012,14 +1012,54 @@ button.text-action.danger-action:hover:not(:disabled) { background: var(--danger
 .settings-logout { display: inline-flex; align-items: center; gap: var(--control-gap); }
 
 .model-picker { position: relative; display: flex; align-items: center; min-width: 0; max-width: min(55%, 240px); margin-left: auto; }
-.model-picker select { appearance: none; width: 100%; min-width: 0; min-height: 32px; padding: 6px 23px 6px 8px; border: 0; border-radius: var(--control-radius); background: transparent; color: var(--muted); font: inherit; font-size: 12px; line-height: 20px; text-overflow: ellipsis; cursor: pointer; }
-.model-picker select:hover:not(:disabled) { background: var(--control-hover); color: var(--text); }
-.model-picker select:disabled { cursor: not-allowed; opacity: .6; }
-.model-picker > svg { position: absolute; right: 6px; pointer-events: none; color: var(--muted); }
+.model-picker-trigger { display: flex; align-items: center; gap: 4px; width: 100%; min-width: 0; min-height: 32px; padding: 5px 6px 5px 8px; border: 0; background: transparent; color: var(--muted); font-size: 12px; font-weight: 400; line-height: 20px; }
+.model-picker-trigger > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.model-picker-trigger > svg { transition: transform 150ms ease; }
+.model-picker-trigger[aria-expanded="true"] > svg { transform: rotate(180deg); }
+.model-picker-trigger[data-unavailable="true"] { color: var(--warning); }
+.model-picker-trigger:hover:not(:disabled), .model-picker-trigger[aria-expanded="true"] { background: var(--control-hover); color: var(--text); }
+.model-picker-popover { position: fixed; inset: auto; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: 0 12px 32px #252b3220, 0 2px 6px #252b320d; overflow: hidden; font-size: 13px; }
+.model-picker-popover:popover-open { display: flex; flex-direction: column; }
+.model-picker-header { display: grid; gap: 8px; padding: 10px 12px; background: #fafbfc; border-bottom: 1px solid var(--line); }
+.model-picker-policy { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.model-picker-policy > span { display: grid; flex: 1 1 145px; }
+.model-picker-policy small { color: var(--warning); font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.model-picker-header p { margin: 0; }
+.model-picker-search-wrap { position: relative; display: flex; align-items: center; }
+.model-picker-search-wrap > svg { position: absolute; left: 9px; color: var(--muted); pointer-events: none; }
+.model-picker-search { width: 100%; min-height: 32px; padding: 4px 8px 4px 28px; border: 1px solid var(--line); border-radius: var(--control-radius); color: inherit; background: var(--surface); font: inherit; font-size: 12px; }
+.model-picker-search:focus { border-color: var(--control-border-hover); }
+.model-picker-models { min-height: 0; padding: 6px 8px 8px; overflow-y: auto; overscroll-behavior: contain; }
+.model-picker-models [role="group"] + [role="group"] { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); }
+.model-picker-models h3 { margin: 4px 8px 4px; font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--muted); overflow-wrap: anywhere; }
+.model-picker-models > p { margin: 12px 8px; font-size: 12px; color: var(--muted); text-align: center; }
+.model-picker-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px; align-items: center; padding: 1px 0; }
+.model-picker-option { display: flex; align-items: center; gap: 7px; min-height: 34px; min-width: 0; padding: 6px 8px; border-color: transparent; background: transparent; font-weight: 400; overflow-wrap: anywhere; text-align: left; }
+.model-picker-option:hover:not(:disabled) { background: var(--control-hover); border-color: transparent; }
+.model-picker-option[aria-pressed="true"] { background: var(--accent-soft); color: #244032; font-weight: 500; }
+.model-picker-option[aria-pressed="true"]:hover:not(:disabled) { background: var(--control-pressed); }
+.model-picker-option[aria-pressed="true"] svg { color: var(--accent); }
+.model-picker-option:disabled { color: var(--muted); opacity: .72; }
+.model-picker-unselected { visibility: hidden; }
+.model-picker-option-label { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.model-picker-badges { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.model-picker-badges span { padding: 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 500; line-height: 1.5; }
+.model-picker-badge-system { background: var(--faint); color: #4c5661; }
+.model-picker-badge-personal { background: var(--accent-soft); color: var(--accent); }
+.model-picker-option[aria-pressed="true"] .model-picker-badge-personal { background: #d6e4da; }
+.model-picker-badge-status { background: var(--warning-soft); color: var(--warning); }
+.model-picker-default { min-height: 28px; padding: 3px 7px; border-color: transparent; background: transparent; color: var(--muted); font-size: 12px; font-weight: 400; white-space: nowrap; }
+.model-picker-row:hover .model-picker-default:not(:disabled), .model-picker-row:focus-within .model-picker-default:not(:disabled), .model-picker-default:hover:not(:disabled) { color: var(--accent); }
+.model-picker-default:hover:not(:disabled) { background: var(--control-hover); border-color: transparent; }
+.model-picker-default[data-active="true"] { color: var(--accent); font-weight: 500; }
+.model-picker-reset { border-color: var(--line); background: var(--surface); color: var(--accent); font-weight: 500; }
+.model-picker-reset:hover:not(:disabled) { border-color: var(--control-border-hover); background: var(--control-hover); }
+.model-picker-default[aria-disabled="true"] { cursor: wait; opacity: .6; }
+.model-picker-popover :focus-visible { outline-offset: -2px; }
 .composer-toolbar:has(.model-picker) { gap: 4px; }
 .composer-toolbar:has(.model-picker) .attach-button { margin-right: 0; }
 @media (max-width: 767px), (pointer: coarse) {
-  .model-picker select { min-height: 44px; }
+  .model-picker-trigger { min-height: 44px; }
 }
 
 .app-content { height: 100%; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }

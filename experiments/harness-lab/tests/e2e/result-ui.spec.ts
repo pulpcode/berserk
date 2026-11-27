@@ -142,7 +142,7 @@ test('streams real resource results, handles interrupted and invalid replies, an
         && response.request().method() === 'GET' && response.ok());
       await page.goto(`${origin}/?session=${id}`);
       await loaded;
-      await expect(page.getByRole('combobox', { name: '选择模型', exact: true })).toBeEnabled();
+      await expect(page.getByRole('button', { name: '选择模型', exact: true })).toBeEnabled();
     };
     await openSession(session.id);
     const send = async (text: string) => {

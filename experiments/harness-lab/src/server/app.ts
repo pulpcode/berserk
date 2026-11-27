@@ -35,7 +35,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { PiLab } from '../pi/lab.js';
 import { RequestError } from '../contracts/errors.js';
-import type { ComposerSelection, ModelSettingsUpdate, ModelPlatformUpdate, PlatformModelImport } from '../contracts/index.js';
+import { modelProfileIdPattern, type ComposerSelection, type ModelSettingsUpdate, type ModelPlatformUpdate, type PlatformModelImport, type UserModelPreferenceUpdate } from '../contracts/index.js';
 import { fileRoutes } from './file-routes.js';
 import { apiScope } from './seat-scope.js';
 import { collaborationRoutes } from './collaboration-routes.js';
@@ -207,12 +207,32 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       compactionReserveTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
       compactionKeepRecentTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
     } };
-  const modelId = { type: 'string', pattern: '^(default|[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$' };
+  const modelId = { type: 'string', pattern: modelProfileIdPattern.source };
   app.get(`${scope.base}/models`, { schema: { querystring: settingsQuery } }, async () => lab.modelChoices());
+  if (lab.access) {
+    const preferenceUserId = (request: FastifyRequest): string => {
+      const actor = accountIdentityOf(request);
+      if (request.authValid && !request.authValid()) throw new RequestError('AUTH_REQUIRED', '账号已失效，请重新登录。', 401);
+      return actor.userId;
+    };
+    app.get('/api/me/preferences/model', { schema: { querystring: settingsQuery } }, request => lab.getUserModelPreference(preferenceUserId(request)));
+    app.put<{ Body: UserModelPreferenceUpdate }>('/api/me/preferences/model', { schema: { querystring: settingsQuery, body: {
+      type: 'object', additionalProperties: false, required: ['expectedRevision', 'choice'], properties: {
+        expectedRevision: { type: 'integer', minimum: 0, maximum: Number.MAX_SAFE_INTEGER },
+        choice: { oneOf: [
+          { type: 'object', additionalProperties: false, required: ['mode'], properties: { mode: { const: 'system' } } },
+          { type: 'object', additionalProperties: false, required: ['mode', 'modelId'], properties: { mode: { const: 'model' }, modelId } },
+        ] },
+      },
+    } } }, request => lab.saveUserModelPreference(preferenceUserId(request), request.body));
+  }
   app.get(`${scope.base}/settings/model`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery } }, async () => lab.modelSettings());
   app.get(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery } }, async () => lab.modelCatalog());
   app.put<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/model`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelSettings(request.body, () => authorizeModelSettings(request)));
-  app.post<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async (request, reply) => reply.code(201).send(await lab.updateModelProfile(request.body, 'default', true, () => authorizeModelSettings(request))));
+  app.put<{ Body: { expectedVersion: string; modelId: string } }>(`${scope.base}/settings/default-model`, { preHandler: requireModelSettings, schema: {
+    querystring: settingsQuery, body: { type: 'object', additionalProperties: false, required: ['expectedVersion', 'modelId'], properties: { expectedVersion: { type: 'string', format: 'uuid' }, modelId } },
+  } }, request => lab.setDefaultModel(request.body.modelId, request.body.expectedVersion, () => authorizeModelSettings(request)));
+  app.post<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async (request, reply) => reply.code(201).send(await lab.updateModelProfile(request.body, undefined, true, () => authorizeModelSettings(request))));
   app.put<{ Params: { id: string }; Body: ModelSettingsUpdate }>(`${scope.base}/settings/models/:id`, { preHandler: requireModelSettings, schema: { params: scope.params({ id: modelId }), querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelProfile(request.body, request.params.id, false, () => authorizeModelSettings(request)));
   const platformBody = {type:'object',additionalProperties:false,required:['name','provider','baseUrl','api','expectedVersion'],properties:{
     name:{type:'string',minLength:1,maxLength:100},provider:{type:'string',minLength:1,maxLength:80},baseUrl:{type:'string',minLength:1,maxLength:2048},

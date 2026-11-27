@@ -6,6 +6,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig, type Reply } from '../pi/fake-runtime';
+import { selectChatModel } from './model-picker-fixtures';
 import type { WorkActivityEvidence } from '../../src/contracts/work-activity';
 import type { WorkPrepareInput, ConfirmationInteraction } from '../../src/contracts';
 import { openDatabase } from '../../src/access/database';
@@ -169,12 +170,12 @@ test('retains per-chat results across conversations, pages and models without pe
     await state.choose('B'); await expect(detail(page, 'B 独立事项的本轮分析内容')).toBeVisible(); await expect(panel(page).getByText('未匹配工作记录')).toHaveCount(0);
     await state.choose('A'); await expect(detail(page, '采购建议的本轮分析内容')).toBeVisible();
     await page.getByRole('button', { name: '能力中心', exact: true }).click(); await state.choose('A'); await expect(detail(page, '采购建议的本轮分析内容')).toBeVisible();
-    await page.getByRole('combobox', { name: '选择模型', exact: true }).selectOption(state.alternativeModel!);
-    await expect(page.getByRole('combobox', { name: '选择模型', exact: true })).toBeEnabled(); await expect(detail(page, '采购建议的本轮分析内容')).toBeVisible();
+    await selectChatModel(page, state.alternativeModel!);
+    await expect(detail(page, '采购建议的本轮分析内容')).toBeVisible();
     expect(state.counts.analyses).toBe(2);
     const storage = await page.evaluate(() => JSON.stringify({ local: { ...localStorage }, session: { ...sessionStorage } }));
     expect(storage).not.toContain('本轮分析内容');
-    await page.getByRole('combobox', { name: '选择模型', exact: true }).selectOption('default'); await expect(page.getByRole('combobox', { name: '选择模型', exact: true })).toBeEnabled();
+    await selectChatModel(page, 'default');
     await page.reload(); await expect(box(page)).toBeEnabled(); await state.open(); await expect(detail(page, '采购建议的本轮分析内容')).toBeVisible(); expect(state.counts.analyses).toBe(3);
   } finally { await state.close(); }
 });

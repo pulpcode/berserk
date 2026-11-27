@@ -23,3 +23,18 @@ it('retains the action ID for explicit retries when browser storage is unavailab
   first.complete();
   expect(sessionAction('storage-unavailable', { workspaceId: 'space-a' }).id).not.toBe(first.id);
 });
+
+it('restores the model captured for an uncertain creation across reload', async () => {
+  const values = new Map<string, string>();
+  vi.stubGlobal('sessionStorage', { getItem: (key: string) => values.get(key) || null, setItem: (key: string, value: string) => values.set(key, value) });
+  const input = { input: { workspaceId: 'space-a' }, entry: 'workspace:space-a' };
+  const first = sessionAction('captured-model', input);
+  first.captureModelId('default');
+  vi.resetModules();
+  const { sessionAction: reloaded } = await import('../../src/web/session-action');
+  const retry = reloaded('captured-model', input);
+  expect(retry).toMatchObject({ id: first.id, modelId: 'default' });
+  retry.complete();
+  expect(reloaded('captured-model', input)).toMatchObject({ modelId: undefined });
+  expect(reloaded('captured-model', input).id).not.toBe(first.id);
+});

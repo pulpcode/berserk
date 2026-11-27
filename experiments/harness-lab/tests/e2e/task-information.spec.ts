@@ -11,6 +11,7 @@ import { parseBackgroundConfig } from '../../src/background/config';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
+import { selectChatModel } from './model-picker-fixtures';
 
 async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1], extraSources = false) {
   const dir = await mkdtemp(join(tmpdir(), 'axon-information-web-'));
@@ -512,7 +513,7 @@ test('repeated task home model choices belong to new sessions and cannot alter t
     await login(page, 'a'); await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
     const home = page.locator('.task-home'); const ids: string[] = [];
     for (const profile of profiles) {
-      await home.getByRole('combobox', { name: '选择模型' }).selectOption(profile.id);
+      await selectChatModel(page, profile.id, home);
       await home.getByLabel('问题或工作要求').fill(`使用 ${profile.model} 开始讨论`);
       await home.getByRole('button', { name: '发送并开始对话' }).click();
       await expect(page).toHaveURL(/\?session=/);

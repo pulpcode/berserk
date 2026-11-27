@@ -38,7 +38,7 @@ it('saves an unconfigured Kimi entry without inventing account capacities or ena
   vi.stubEnv('KIMI_API_KEY', ''); const { store, config, dir } = await setup(); const { platformId, modelId } = await addKimi(store);
   expect(store.platform(platformId)).toMatchObject({ configured: false, enabled: false, api: 'anthropic-messages' });
   expect(store.info(modelId)).toMatchObject({ configured: false, available: false, contextReady: false, contextWindow: null, maxOutputTokens: null, enabled: false, usageConfirmed: false });
-  const raw = await readFile(join(dir, 'model-settings.json'), 'utf8'); expect(JSON.parse(raw).schemaVersion).toBe(7);
+  const raw = await readFile(join(dir, 'model-settings.json'), 'utf8'); expect(JSON.parse(raw).schemaVersion).toBe(8);
   expect(raw).not.toContain('KIMI_API_KEY'); expect(raw).not.toContain('k3.1-pro-capacity');
   const restored = await ModelSettingsStore.open(config); expect(restored.info(modelId)).toEqual(store.info(modelId));
 });
@@ -88,7 +88,7 @@ it('migrates schema 6 local keys on save and ignores every old environment refer
   expect(store.info(modelId).configured).toBe(false);
   await store.savePlatform(store.preparePlatform(platformInput(store), 'kimi'));
   const saved = JSON.parse(await readFile(file, 'utf8'));
-  expect(saved).toMatchObject({ schemaVersion: 7, credentials: { 'platform:default': 'kept-local-key' }, platforms: [
+  expect(saved).toMatchObject({ schemaVersion: 8, defaultModelId: 'default', credentials: { 'platform:default': 'kept-local-key' }, platforms: [
     { id: 'default', credentialRef: 'platform:default' }, { id: 'kimi', credentialRef: 'platform:kimi' },
   ] });
   expect(JSON.stringify(saved)).not.toMatch(/apiKey|credentialEnv|ignored-/);
