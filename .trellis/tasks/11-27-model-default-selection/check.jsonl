@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/model-thinking.md", "reason": "核查模型目录 schema 8 兼容、CAS 并发、权限复检与后台隔离"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "核查管理员与个人偏好 API 的鉴权、CSRF/Origin 与账号隔离"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "核查新建会话 MODEL_SELECTION 固化与历史会话不漂移"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "核查仅面向桌面浏览器约定，避免移动端多余改动"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "核查多入口草稿隔离、Popover 键盘无障碍与 E2E 回归覆盖"}
+{"file": ".trellis/tasks/11-27-model-default-selection/research/mainstream-agent-model-ux.md", "reason": "对照需求背景与现状锚点检查遗漏边界"}

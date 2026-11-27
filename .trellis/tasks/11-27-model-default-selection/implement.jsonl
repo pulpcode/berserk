@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "后端开发约定与前置检查索引"}
+{"file": ".trellis/spec/backend/model-thinking.md", "reason": "多平台模型配置、schema 兼容、CAS/写锁、鉴权与运行时契约"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "会话持久化、工作区隔离与 Pi 原生历史契约"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "正式登录模式、账号/席位鉴权、CSRF/Origin 与个人路径守卫"}
+{"file": ".trellis/spec/backend/capabilities-r2.md", "reason": "参考既有个人默认偏好（/api/me/preferences/expert）实现规范"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "仅面向桌面浏览器的前端平台约定与检查索引"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "前端会话状态、草稿隔离、交互无障碍与 E2E 验证契约"}
+{"file": ".trellis/tasks/11-27-model-default-selection/research/mainstream-agent-model-ux.md", "reason": "主流 Agent 模型选择交互调研与本仓库现状代码锚点"}
