@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { ModelSettings, ModelSettingsUpdate, ModelCatalog, ModelChoices, ModelPlatform, ModelPlatformUpdate, ModelCapabilities, ModelCompatibility } from '../contracts/index.js';
+import { modelProfileIdPattern } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 import { builtinModel, modelPlatformPreset } from '../contracts/model-presets.js';
 import { atomicWrite, checkDirectory, parseJsonStrict, readControlled } from '../resources/files.js';
@@ -14,8 +15,10 @@ export type ModelConfig = ModelIdentity & Pick<LabConfig, 'apiKey' | 'thinkingMo
 };
 interface StoredPlatform extends Omit<ModelPlatform, 'configured' | 'version'> { apiKey: string }
 export interface PreparedPlatform extends StoredPlatform { version: string }
-interface StoredSettings extends ModelConfig { schemaVersion: 4; version: string; platformId: string }
-export interface PreparedSettings extends StoredSettings { id: string; platform?: StoredPlatform }
+interface StoredSettings extends ModelConfig { platformId: string }
+export interface PreparedSettings extends StoredSettings { id: string; version: string; platform?: StoredPlatform }
+interface StoredCatalog { version: string; defaultModelId: string; profiles: Map<string, StoredSettings>; platforms: Map<string, StoredPlatform> }
+interface PreparedDefaultModel { modelId: string; expectedVersion: string; config: ModelConfig }
 const maxSettingsBytes = 1024 * 1024;
 const versionPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const platformPattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,100}$/;
@@ -93,42 +96,51 @@ function readLegacyPlatform(raw: unknown): StoredPlatform {
   if (credentialEnv && platform.apiKey) throw invalid();
   return { ...platform, modelsPath: platform.modelsPath ?? knownModelsPath(platform) };
 }
-function decodeLegacy(text: string, environment?: LabConfig, allowUnconfigured = false): StoredSettings {
+function decodeLegacy(text: string, environment?: LabConfig, allowUnconfigured = false): { model: StoredSettings; version: string } {
   const value = object(parseJsonStrict(text), ['schemaVersion', 'version', 'provider', 'model', 'baseUrl', 'apiKey', 'thinkingMode', ...modelParameterKeys]);
   if (![1, 2, 4].includes(value.schemaVersion as number) || typeof value.version !== 'string' || !versionPattern.test(value.version)) throw invalid();
   if (value.schemaVersion !== 4 && value.thinkingMode !== undefined || value.schemaVersion === 1 && modelParameterKeys.some(field => value[field] !== undefined)) throw invalid();
   const apiKey = key(value.apiKey); if (!apiKey && !allowUnconfigured) throw invalid();
   const identity = modelFields(value);
   const parameters = value.schemaVersion === 1 && environment && sameIdentity(identity, environment) ? explicitParameters(environment) : overrides(value);
-  return { schemaVersion: 4, version: value.version, platformId: 'default', ...identity, apiKey, ...checked(() => resolveModelParameters(identity, parameters)), ...thinking(identity, value.thinkingMode) };
+  return { version: value.version, model: { platformId: 'default', ...identity, apiKey, ...checked(() => resolveModelParameters(identity, parameters)), ...thinking(identity, value.thinkingMode) } };
 }
-function readModel(raw: unknown, version: string, platforms: Map<string, StoredPlatform>): StoredSettings {
+function readModel(raw: unknown, platforms: Map<string, StoredPlatform>): StoredSettings {
   const value = object(raw, ['id', ...modelKeys.filter(name => !['provider', 'baseUrl', 'apiKey', 'api'].includes(name))]);
   if (typeof value.platformId !== 'string' || !platforms.has(value.platformId)) throw invalid();
   const platform = platforms.get(value.platformId)!;
   const identity = modelFields({ provider: platform.provider, baseUrl: platform.baseUrl, model: value.model });
   const capabilities = checked(() => resolveModelCapabilities({ ...value, api: platform.api } as ModelCapabilities));
   const enabled = bool(value.enabled, true); const usageConfirmed = bool(value.usageConfirmed, true);
-  return { schemaVersion: 4, version, platformId: platform.id, ...identity, apiKey: '', ...capabilities,
+  return { platformId: platform.id, ...identity, apiKey: '', ...capabilities,
     displayName: label(value.displayName, identity.model), enabled, usageConfirmed,
     ...checked(() => resolveModelParameters(identity, overrides(value))), ...thinking({ ...identity, ...capabilities }, value.thinkingMode) };
 }
-function decodeCatalog(text: string, environment?: LabConfig): { current: StoredSettings; profiles: Map<string, StoredSettings>; platforms: Map<string, StoredPlatform> } {
+function decodeCatalog(text: string, environment?: LabConfig): StoredCatalog {
   const value = parseJsonStrict(text) as Record<string, unknown>;
-  const platforms = new Map<string, StoredPlatform>(); const profiles = new Map<string, StoredSettings>();
-  if (value?.schemaVersion === 6 || value?.schemaVersion === 7) {
-    const currentSchema = value.schemaVersion === 7;
-    object(value, ['schemaVersion', 'version', 'models', 'platforms', ...(currentSchema ? ['credentials'] : [])]);
+  const platforms = new Map<string, StoredPlatform>();
+  const profiles = new Map<string, StoredSettings>();
+  let defaultModelId = 'default';
+  let version: string;
+  if (value?.schemaVersion === 6 || value?.schemaVersion === 7 || value?.schemaVersion === 8) {
+    const hasCredentials = value.schemaVersion >= 7;
+    const hasDefaultPointer = value.schemaVersion === 8;
+    object(value, ['schemaVersion', 'version', 'models', 'platforms', ...(hasCredentials ? ['credentials'] : []), ...(hasDefaultPointer ? ['defaultModelId'] : [])]);
     if (typeof value.version !== 'string' || !versionPattern.test(value.version) || !Array.isArray(value.models) || !value.models.length || !Array.isArray(value.platforms) || !value.platforms.length) throw invalid();
-    const references = currentSchema ? value.platforms.map(raw => {
+    version = value.version;
+    if (hasDefaultPointer) {
+      if (typeof value.defaultModelId !== 'string' || !modelProfileIdPattern.test(value.defaultModelId)) throw invalid();
+      defaultModelId = value.defaultModelId;
+    }
+    const references = hasCredentials ? value.platforms.map(raw => {
       const row = object(raw, [...platformKeys, 'credentialRef']);
       if (typeof row.id !== 'string' || row.credentialRef !== credentialRef(row.id)) throw invalid();
       return row.credentialRef as string;
     }) : [];
-    const credentials = currentSchema ? object(value.credentials, references) : {};
+    const credentials = hasCredentials ? object(value.credentials, references) : {};
     for (const raw of value.platforms) {
       let platform: StoredPlatform;
-      if (currentSchema) {
+      if (hasCredentials) {
         const { credentialRef: ref, ...fields } = raw as Record<string, unknown>;
         platform = readPlatform({ ...fields, apiKey: credentials[ref as string] });
       } else platform = readLegacyPlatform(raw);
@@ -137,32 +149,36 @@ function decodeCatalog(text: string, environment?: LabConfig): { current: Stored
     }
     for (const raw of value.models) {
       const id = (raw as Record<string, unknown>)?.id;
-      if (typeof id !== 'string' || id !== 'default' && !versionPattern.test(id) || profiles.has(id)) throw invalid();
-      profiles.set(id, readModel(raw, value.version, platforms));
+      if (typeof id !== 'string' || !modelProfileIdPattern.test(id) || profiles.has(id)) throw invalid();
+      profiles.set(id, readModel(raw, platforms));
     }
   } else if (value && (value.schemaVersion === 3 || value.schemaVersion === 5)) {
     object(value, ['schemaVersion', 'version', 'models']);
     if (typeof value.version !== 'string' || !versionPattern.test(value.version) || !Array.isArray(value.models) || !value.models.length) throw invalid();
+    version = value.version;
     for (const raw of value.models) {
       const item = object(raw, ['id', 'provider', 'model', 'baseUrl', 'apiKey', 'thinkingMode', ...modelParameterKeys]); const { id, ...fields } = item;
-      if (typeof id !== 'string' || id !== 'default' && !versionPattern.test(id) || profiles.has(id)) throw invalid();
-      const model = decodeLegacy(JSON.stringify({ ...fields, schemaVersion: value.schemaVersion === 3 ? 2 : 4, version: value.version }), undefined, id === 'default');
+      if (typeof id !== 'string' || !modelProfileIdPattern.test(id) || profiles.has(id)) throw invalid();
+      const { model } = decodeLegacy(JSON.stringify({ ...fields, schemaVersion: value.schemaVersion === 3 ? 2 : 4, version }), undefined, id === 'default');
       model.platformId = id === 'default' ? 'default' : `legacy-${id}`; profiles.set(id, model); platforms.set(model.platformId, platformFromLegacy(model.platformId, model));
     }
   } else {
-    const current = decodeLegacy(text, environment); platforms.set('default', platformFromLegacy('default', current)); return { current, profiles, platforms };
+    const legacy = decodeLegacy(text, environment);
+    version = legacy.version;
+    profiles.set(defaultModelId, legacy.model);
+    platforms.set(legacy.model.platformId, platformFromLegacy(legacy.model.platformId, legacy.model));
   }
-  const current = profiles.get('default'); if (!current) throw invalid(); profiles.delete('default'); return { current, profiles, platforms };
+  if (!profiles.has(defaultModelId)) throw invalid();
+  return { version, defaultModelId, profiles, platforms };
 }
-function encodeCatalog(current: StoredSettings, profiles: Map<string, StoredSettings>, platforms: Map<string, StoredPlatform>): string {
-  const models = [['default', current], ...profiles] as Array<[string, StoredSettings]>;
+function encodeCatalog({ version, defaultModelId, profiles, platforms }: StoredCatalog): string {
   const credentials: Record<string, string> = {};
   const storedPlatforms = [...platforms.values()].map(({ apiKey, ...platform }) => {
     const ref = credentialRef(platform.id);
     if (apiKey) credentials[ref] = apiKey;
     return { ...platform, credentialRef: ref };
   });
-  return `${JSON.stringify({ schemaVersion: 7, version: current.version, platforms: storedPlatforms, credentials, models: models.map(([id, model]) => ({
+  return `${JSON.stringify({ schemaVersion: 8, version, defaultModelId, platforms: storedPlatforms, credentials, models: [...profiles].map(([id, model]) => ({
     id, platformId: model.platformId, model: model.model, displayName: model.displayName, enabled: model.enabled ?? true, usageConfirmed: model.usageConfirmed ?? true,
     input: model.input, thinkingLevels: model.thinkingLevels, defaultThinkingLevel: model.defaultThinkingLevel, thinkingLevelMap: model.thinkingLevelMap,
     compat: model.compat, thinkingMode: model.thinkingMode, ...explicitParameters(model),
@@ -171,46 +187,54 @@ function encodeCatalog(current: StoredSettings, profiles: Map<string, StoredSett
 
 /** One process owns the directory. PiLab serializes updates against request starts. */
 export class ModelSettingsStore {
-  private constructor(private readonly path: string, private current: StoredSettings, private raw: string | null, private profiles: Map<string, StoredSettings>, private platforms: Map<string, StoredPlatform>) {}
+  private constructor(private readonly path: string, private raw: string | null, private stored: StoredCatalog) {}
   static async open(config: LabConfig): Promise<ModelSettingsStore> {
     try {
       await mkdir(config.dataDir, { recursive: true, mode: 0o700 }); await checkDirectory(config.dataDir);
       const path = join(config.dataDir, 'model-settings.json'); const raw = await readControlled(path, maxSettingsBytes, true);
-      if (raw !== null) { const stored = decodeCatalog(raw, config); return new ModelSettingsStore(path, stored.current, raw, stored.profiles, stored.platforms); }
+      if (raw !== null) return new ModelSettingsStore(path, raw, decodeCatalog(raw, config));
       const identity = modelFields({ ...config }); const capabilities = checked(() => resolveModelCapabilities(config));
-      const current: StoredSettings = { schemaVersion: 4, version: randomUUID(), platformId: 'default', ...identity, ...capabilities,
+      const current: StoredSettings = { platformId: 'default', ...identity, ...capabilities,
         apiKey: key(config.apiKey), displayName: config.displayName, enabled: config.enabled, usageConfirmed: config.usageConfirmed, ...checked(() => resolveModelParameters(identity, explicitParameters(config))), ...thinking({ ...identity, ...capabilities }, config.thinkingMode) };
-      return new ModelSettingsStore(path, current, null, new Map(), new Map([['default', platformFromLegacy('default', current)]]));
+      return new ModelSettingsStore(path, null, { defaultModelId: 'default', version: randomUUID(),
+        profiles: new Map([['default', current]]), platforms: new Map([['default', platformFromLegacy('default', current)]]) });
     } catch { throw stateError(); }
   }
-  private profile(id: string): StoredSettings { const value = id === 'default' ? this.current : this.profiles.get(id); if (!value) throw new RequestError('MODEL_NOT_FOUND', '所选模型已不存在，请重新选择。', 404); return value; }
-  private platformRecord(id: string): StoredPlatform { const value = this.platforms.get(id); if (!value) throw new RequestError('MODEL_PLATFORM_NOT_FOUND', '模型平台不存在，请重新选择。', 404); return value; }
+  defaultModelId(): string { return this.stored.defaultModelId; }
+  private profile(id: string): StoredSettings { const value = this.stored.profiles.get(id); if (!value) throw new RequestError('MODEL_NOT_FOUND', '所选模型已不存在，请重新选择。', 404); return value; }
+  private platformRecord(id: string): StoredPlatform { const value = this.stored.platforms.get(id); if (!value) throw new RequestError('MODEL_PLATFORM_NOT_FOUND', '模型平台不存在，请重新选择。', 404); return value; }
   platform(id: string): ModelPlatform {
     const { apiKey, ...platform } = this.platformRecord(id);
-    return { ...platform, configured: Boolean(apiKey), version: this.current.version };
+    return { ...platform, configured: Boolean(apiKey), version: this.stored.version };
   }
   discover(id: string) {
     const platform = this.platformRecord(id);
     return discoverPlatformModels(platform, platform.apiKey);
   }
-  modelIdsForPlatform(id: string): string[] { this.platformRecord(id); return ['default', ...this.profiles.keys()].filter(modelId => this.profile(modelId).platformId === id); }
-  catalog(): ModelCatalog { return { version: this.current.version, platforms: [...this.platforms.keys()].map(id => this.platform(id)), models: ['default', ...this.profiles.keys()].map(id => ({ id, ...this.info(id) })) }; }
-  choices(): ModelChoices { return { defaultModelId: 'default', models: this.catalog().models.map(({ id, provider, model, platformId, platformName, displayName, available, configured, contextReady, contextWindow, maxOutputTokens }) => ({ id, provider, model, platformId, platformName, displayName, available, configured, contextReady, contextWindow, maxOutputTokens })) }; }
-  info(id = 'default'): ModelSettings {
+  modelIdsForPlatform(id: string): string[] { this.platformRecord(id); return [...this.stored.profiles.keys()].filter(modelId => this.profile(modelId).platformId === id); }
+  catalog(): ModelCatalog { return { defaultModelId: this.defaultModelId(), version: this.stored.version, platforms: [...this.stored.platforms.keys()].map(id => this.platform(id)), models: [...this.stored.profiles.keys()].map(id => ({ id, ...this.info(id) })) }; }
+  choices(): ModelChoices { return { defaultModelId: this.defaultModelId(), models: this.catalog().models.map(({ id, provider, model, platformId, platformName, displayName, available, configured, contextReady, contextWindow, maxOutputTokens }) => ({ id, provider, model, platformId, platformName, displayName, available, configured, contextReady, contextWindow, maxOutputTokens })) }; }
+  info(id = this.defaultModelId()): ModelSettings {
     const config = this.config(id); const { apiKey: _apiKey, platformCompat: _platformCompat, ...safe } = config; void _apiKey; void _platformCompat;
     return defined({ ...safe, displayName: config.displayName ?? config.model, enabled: this.profile(id).enabled ?? true, ...resolveModelThinking(config, config.thinkingMode), thinkingExplicit: config.thinkingMode !== undefined,
-      platformName: this.platformRecord(config.platformId!).name, configured: Boolean(config.apiKey), version: this.current.version, source: this.raw === null ? 'environment' as const : 'local' as const });
+      platformName: this.platformRecord(config.platformId!).name, configured: Boolean(config.apiKey), version: this.stored.version, source: this.raw === null ? 'environment' as const : 'local' as const });
   }
-  config(id = 'default', platformOverride?: PreparedPlatform): ModelConfig {
+  config(id = this.defaultModelId(), platformOverride?: PreparedPlatform): ModelConfig {
     const model = this.profile(id); const platform = platformOverride?.id === model.platformId ? platformOverride : this.platformRecord(model.platformId);
-    const { schemaVersion: _schemaVersion, version: _version, ...fields } = model; void _schemaVersion; void _version;
     const identity = { provider: platform.provider, baseUrl: platform.baseUrl, model: model.model };
     const parameters = checked(() => resolveModelParameters(identity, explicitParameters(model)));
     const apiKey = platform.apiKey; const enabled = (model.enabled ?? true) && platform.enabled; const usageConfirmed = model.usageConfirmed ?? true;
-    return { ...fields, ...resolveModelCapabilities({ ...model, api: platform.api }), ...identity, ...parameters, api: platform.api, apiKey, platformCompat: platform.compat, displayName: model.displayName,
+    return { ...model, ...resolveModelCapabilities({ ...model, api: platform.api }), ...identity, ...parameters, api: platform.api, apiKey, platformCompat: platform.compat, displayName: model.displayName,
       enabled, usageConfirmed, available: enabled && usageConfirmed && Boolean(apiKey) && parameters.contextReady };
   }
-  prepare(input: ModelSettingsUpdate, id = 'default', create = false): PreparedSettings {
+  requestConfig(id: string): ModelConfig {
+    const config = this.config(id);
+    if (!config.enabled || !config.usageConfirmed) throw new RequestError('MODEL_UNAVAILABLE', '所选模型尚未开放使用，请选择其他模型或联系管理员。', 503);
+    if (!config.apiKey) throw new RequestError('MODEL_NOT_CONFIGURED', '所选模型尚未配置，请选择其他模型或联系管理员。', 503);
+    if (!config.contextReady) throw new RequestError('MODEL_CONTEXT_REQUIRED', '所选模型的上下文容量和最大输出量尚未配置完整。', 400);
+    return config;
+  }
+  prepare(input: ModelSettingsUpdate, id = this.defaultModelId(), create = false): PreparedSettings {
     const value = object(input, ['expectedVersion', ...modelKeys]); this.checkVersion(value.expectedVersion);
     const current = create ? undefined : this.profile(id); const nextId = create ? randomUUID() : id;
     const linked = value.platformId !== undefined;
@@ -236,7 +260,7 @@ export class ModelSettingsStore {
     const parameters = checked(() => resolveModelParameters(fields, { ...(same ? explicitParameters(current) : {}), ...overrides(value) }));
     const mode = value.thinkingMode === null ? undefined : value.thinkingMode !== undefined ? value.thinkingMode : same ? current.thinkingMode : undefined;
     const enabled = bool(value.enabled, current?.enabled ?? true); const usageConfirmed = bool(value.usageConfirmed, current ? same ? current.usageConfirmed ?? true : false : !linked);
-    return { schemaVersion: 4, version: randomUUID(), id: nextId, platformId: platform!.id, ...fields, ...capabilities,
+    return { version: randomUUID(), id: nextId, platformId: platform!.id, ...fields, ...capabilities,
       displayName: label(value.displayName, current?.displayName ?? fields.model), enabled, usageConfirmed,
       apiKey: platform!.apiKey, platformCompat: platform!.compat, available: enabled && platform!.enabled && usageConfirmed && Boolean(platform!.apiKey) && parameters.contextReady,
       ...parameters, ...thinking({ ...fields, ...capabilities }, mode), ...(newPlatform ? { platform: newPlatform } : {}) };
@@ -262,42 +286,56 @@ export class ModelSettingsStore {
     const preset = builtinModel(platform);
     return [...new Set(modelIds)].filter(model => !existing.has(model)).map(model => this.prepare({
       ...(preset?.model === model ? preset : {}), model, platformId, expectedVersion, enabled: false, usageConfirmed: false,
-    }, 'default', true));
+    }, undefined, true));
   }
-  private checkVersion(version: unknown) { if (typeof version !== 'string' || !versionPattern.test(version)) throw invalid(); if (version !== this.current.version) throw conflict(); }
-  private async write(current: StoredSettings, profiles: Map<string, StoredSettings>, platforms: Map<string, StoredPlatform>, authorize?: () => void): Promise<void> {
+  prepareDefaultModel(modelId: string, expectedVersion: string): PreparedDefaultModel {
+    this.checkVersion(expectedVersion);
+    return { modelId, expectedVersion, config: this.requestConfig(modelId) };
+  }
+  async saveDefaultModel(next: PreparedDefaultModel, authorize?: () => void): Promise<void> {
+    this.checkVersion(next.expectedVersion);
+    await this.write({ ...this.stored, defaultModelId: next.modelId, version: randomUUID() }, authorize);
+  }
+  private checkVersion(version: unknown) { if (typeof version !== 'string' || !versionPattern.test(version)) throw invalid(); if (version !== this.stored.version) throw conflict(); }
+  private async write(next: StoredCatalog, authorize?: () => void): Promise<void> {
     const checkCurrent = async () => { const disk = await readControlled(this.path, maxSettingsBytes, true); if (disk !== null) decodeCatalog(disk); if (disk !== this.raw) throw conflict(); authorize?.(); };
     try {
-      authorize?.(); await checkCurrent(); const raw = encodeCatalog(current, profiles, platforms); if (Buffer.byteLength(raw) > maxSettingsBytes) throw invalid();
-      await atomicWrite(this.path, raw, undefined, { beforeRename: checkCurrent }); this.current = current; this.profiles = profiles; this.platforms = platforms; this.raw = raw;
+      authorize?.(); await checkCurrent(); const raw = encodeCatalog(next); if (Buffer.byteLength(raw) > maxSettingsBytes) throw invalid();
+      await atomicWrite(this.path, raw, undefined, { beforeRename: checkCurrent }); this.stored = next; this.raw = raw;
     } catch (error) { if (error instanceof RequestError && ['MODEL_SETTINGS_CONFLICT', 'FORBIDDEN', 'AUTH_REQUIRED', 'IDENTITY_CHANGED'].includes(error.code)) throw error; throw new RequestError('MODEL_SETTINGS_SAVE_FAILED', '模型配置未保存，请检查本地配置文件和目录权限后重试。', 503); }
   }
   async save(next: PreparedSettings, authorize?: () => void): Promise<void> {
-    const profiles = new Map(this.profiles); const platforms = new Map(this.platforms); if (next.platform) platforms.set(next.platform.id, next.platform);
-    const { id, platform: _platform, ...model } = next; void _platform;
-    const current = id === 'default' ? model : { ...this.current, version: next.version }; if (id !== 'default') profiles.set(id, model);
-    await this.write(current, profiles, platforms, authorize);
+    const profiles = new Map(this.stored.profiles);
+    const platforms = new Map(this.stored.platforms);
+    const { id, platform, version, ...model } = next;
+    if (platform) platforms.set(platform.id, platform);
+    profiles.set(id, model);
+    await this.write({ ...this.stored, version, profiles, platforms }, authorize);
   }
   async savePlatform(next: PreparedPlatform, authorize?: () => void): Promise<void> {
-    const { version, ...platform } = next; const platforms = new Map(this.platforms); platforms.set(platform.id, platform);
-    await this.write({ ...this.current, version }, new Map(this.profiles), platforms, authorize);
+    const { version, ...platform } = next;
+    const platforms = new Map(this.stored.platforms).set(platform.id, platform);
+    await this.write({ ...this.stored, version, platforms }, authorize);
   }
   async deletePlatform(id: string, expectedVersion: string, authorize?: () => void): Promise<string[]> {
     this.checkVersion(expectedVersion);
     const modelIds = this.modelIdsForPlatform(id);
-    if (modelIds.includes('default')) throw new RequestError('DEFAULT_MODEL_PLATFORM', '此平台包含系统默认模型，请迁移默认模型后再删除。', 409);
-    const profiles = new Map(this.profiles);
-    const platforms = new Map(this.platforms);
+    if (modelIds.includes(this.defaultModelId())) throw new RequestError('DEFAULT_MODEL_PLATFORM', '此平台包含系统默认模型，请迁移默认模型后再删除。', 409);
+    const profiles = new Map(this.stored.profiles);
+    const platforms = new Map(this.stored.platforms);
     for (const modelId of modelIds) profiles.delete(modelId);
     platforms.delete(id);
-    await this.write({ ...this.current, version: randomUUID() }, profiles, platforms, authorize);
+    await this.write({ ...this.stored, version: randomUUID(), profiles, platforms }, authorize);
     return modelIds;
   }
   async saveImport(models: PreparedSettings[], authorize?: () => void): Promise<void> {
     const last = models.at(-1);
     if (!last) return;
-    const profiles = new Map(this.profiles);
-    for (const { id, ...model } of models) profiles.set(id, { ...model, version: last.version });
-    await this.write({ ...this.current, version: last.version }, profiles, this.platforms, authorize);
+    const profiles = new Map(this.stored.profiles);
+    for (const { id, version: _version, ...model } of models) {
+      void _version;
+      profiles.set(id, model);
+    }
+    await this.write({ ...this.stored, version: last.version, profiles }, authorize);
   }
 }

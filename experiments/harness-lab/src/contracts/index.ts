@@ -235,7 +235,11 @@ export interface ModelChoice {
 }
 export interface ModelChoices { defaultModelId: string; models: ModelChoice[] }
 export interface ModelProfile extends ModelSettings { id: string }
-export interface ModelCatalog { version: string; models: ModelProfile[]; platforms?: ModelPlatform[] }
+export interface ModelCatalog { version: string; defaultModelId: string; models: ModelProfile[]; platforms?: ModelPlatform[] }
+export const modelProfileIdPattern = /^(default|[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/;
+export type UserModelPreferenceChoice = { mode: 'system' } | { mode: 'model'; modelId: string };
+export interface UserModelPreference { revision: number; choice: UserModelPreferenceChoice }
+export interface UserModelPreferenceUpdate { expectedRevision: number; choice: UserModelPreferenceChoice }
 export interface ModelSettingsUpdate extends Omit<ModelCapabilities, 'defaultThinkingLevel'> {
   thinkingMode?: ModelThinkingMode | null;
   defaultThinkingLevel?: ModelThinkingMode | null;
