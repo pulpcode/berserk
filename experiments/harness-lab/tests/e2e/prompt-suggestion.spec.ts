@@ -9,6 +9,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
+import { selectChatModel } from './model-picker-fixtures';
 
 const suggestion = '请把两份文件的修改点整理成清单。';
 const box = (page: Page) => page.getByRole('textbox', { name: '发送消息', exact: true });
@@ -193,8 +194,7 @@ test('keeps separate candidates across conversations, business views and model s
     await page.getByRole('button', { name: '能力中心', exact: true }).click();
     await page.getByRole('button', { name: '历史对话 A', exact: true }).click();
     await expect(candidate(page)).toHaveAttribute('placeholder', suggestion);
-    await page.getByRole('combobox', { name: '选择模型', exact: true }).selectOption(state.alternativeModel!);
-    await expect(page.getByRole('combobox', { name: '选择模型', exact: true })).toBeEnabled();
+    await selectChatModel(page, state.alternativeModel!);
     await expect(candidate(page)).toHaveAttribute('placeholder', suggestion);
     await box(page).press('Tab'); await expect(box(page)).toHaveValue(suggestion); await box(page).fill('');
     await page.getByRole('button', { name: '历史对话 B', exact: true }).click();

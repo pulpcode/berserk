@@ -1,26 +1,47 @@
 import { randomUUID } from './random-uuid';
 
-const pendingActions = new Map<string, Record<string, string>>();
+type PendingAction = string | { id: string; modelId: string };
+const pendingActions = new Map<string, Record<string, PendingAction>>();
+
+function validAction(value: unknown): value is PendingAction {
+  return typeof value === 'string' || Boolean(value && typeof value === 'object'
+    && 'id' in value && typeof value.id === 'string' && 'modelId' in value && typeof value.modelId === 'string');
+}
+
+function pending(key: string) {
+  try {
+    const value: unknown = JSON.parse(sessionStorage.getItem(key) || '{}');
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return { ...Object.fromEntries(Object.entries(value).filter((entry): entry is [string, PendingAction] => validAction(entry[1]))), ...pendingActions.get(key) };
+    }
+  } catch { /* A blocked storage leaves the current creation usable. */ }
+  return { ...pendingActions.get(key) };
+}
+
+function persist(key: string, actions: Record<string, PendingAction>) {
+  pendingActions.set(key, actions);
+  try { sessionStorage.setItem(key, JSON.stringify(actions)); } catch { /* Keep actions in memory. */ }
+}
+
+const idOf = (action?: PendingAction) => typeof action === 'string' ? action : action?.id;
 
 /** Retain an uncertain creation across explicit retries and page refreshes. */
-export function sessionAction(storageKey: string, input: object): { id: string; complete: () => void } {
+export function sessionAction(storageKey: string, input: object) {
   const fingerprint = JSON.stringify(input);
-  let actions: Record<string, string> = pendingActions.get(storageKey) || {};
-  try {
-    const value: unknown = JSON.parse(sessionStorage.getItem(storageKey) || '{}');
-    if (value && typeof value === 'object' && !Array.isArray(value)) actions = Object.fromEntries(Object.entries(value).filter((entry): entry is [string, string] => typeof entry[1] === 'string'));
-  } catch { /* A blocked storage leaves the current creation usable. */ }
-  const id = actions[fingerprint] || randomUUID();
-  actions[fingerprint] = id;
-  pendingActions.set(storageKey, actions);
-  try { sessionStorage.setItem(storageKey, JSON.stringify(actions)); } catch { /* Keep this action ID for the current attempt. */ }
-  return { id, complete: () => {
-    const pending = pendingActions.get(storageKey);
-    if (pending?.[fingerprint] === id) delete pending[fingerprint];
-    // Merge with other creations completed while this response was pending.
-    try {
-      const value = JSON.parse(sessionStorage.getItem(storageKey) || '{}') as Record<string, string>;
-      if (value[fingerprint] === id) { delete value[fingerprint]; sessionStorage.setItem(storageKey, JSON.stringify(value)); }
-    } catch { /* Successful server receipt remains authoritative. */ }
-  } };
+  const actions = pending(storageKey);
+  const captured = actions[fingerprint];
+  const id = idOf(captured) ?? randomUUID();
+  if (!captured) persist(storageKey, { ...actions, [fingerprint]: id });
+  return {
+    id,
+    modelId: typeof captured === 'object' ? captured.modelId : undefined,
+    captureModelId: (modelId: string) => {
+      const latest = pending(storageKey);
+      if (latest[fingerprint] === id) persist(storageKey, { ...latest, [fingerprint]: { id, modelId } });
+    },
+    complete: () => {
+      const latest = pending(storageKey);
+      if (idOf(latest[fingerprint]) === id) { delete latest[fingerprint]; persist(storageKey, latest); }
+    },
+  };
 }

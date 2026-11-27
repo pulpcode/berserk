@@ -4,10 +4,13 @@ import { isBusinessIdentity, type AccountIdentity } from '../contracts/access';
 import { ModelCatalogSettings } from './ModelCatalogSettings';
 import { Panel } from './Resources';
 import { ExpertDefaultPreferences } from './ExpertDefaults';
+import { ModelDefaultPreferences } from './ModelDefaultPreferences';
 import { LoadingIndicator } from './LoadingIndicator';
 import { useApi } from './api';
 import { informationError, useInformationQuery } from './information-ui';
 import type { BackgroundQueueStatus } from '../contracts/background';
+import type { ModelChoices } from '../contracts/index';
+import type { ModelPreferenceControl } from './useModelPreference';
 
 const queuePath = '/api/information/queue';
 
@@ -42,9 +45,10 @@ function BackgroundQueueSettings() {
   </section>;
 }
 
-export function SettingsPanel({ identity, logout, logoutError, close, saved, suggestions, workActivity }: {
+export function SettingsPanel({ identity, logout, logoutError, close, saved, suggestions, workActivity, models, modelPreference }: {
   workActivity?: { enabled: boolean; change: (enabled: boolean) => void };
   suggestions?: { enabled: boolean; change: (enabled: boolean) => void };
+  models?: ModelChoices; modelPreference?: ModelPreferenceControl;
   identity?: AccountIdentity; logout?: () => void; logoutError?: string; close: () => void; saved: () => Promise<void>;
 }) {
   const administrator = identity?.role === 'administrator';
@@ -54,13 +58,14 @@ export function SettingsPanel({ identity, logout, logoutError, close, saved, sug
     <div className="settings-layout">
       <nav className="settings-nav" aria-label="设置分类">
         {identity && <button type="button" aria-current={section === 'account' ? 'page' : undefined} onClick={() => setSection('account')}><UserRound size={17} aria-hidden="true" />账户</button>}
-        {(suggestions || workActivity || identity?.canCollaborate !== false && identity) && <button type="button" aria-current={section === 'preferences' ? 'page' : undefined} onClick={() => setSection('preferences')}><SlidersHorizontal size={17} aria-hidden="true" />个人偏好</button>}
+        {(modelPreference || suggestions || workActivity || identity?.canCollaborate !== false && identity) && <button type="button" aria-current={section === 'preferences' ? 'page' : undefined} onClick={() => setSection('preferences')}><SlidersHorizontal size={17} aria-hidden="true" />个人偏好</button>}
         {modelAllowed && <button type="button" aria-current={section === 'model' ? 'page' : undefined} onClick={() => setSection('model')}><Cpu size={17} aria-hidden="true" />模型管理</button>}
         {administrator && <button type="button" aria-current={section === 'background' ? 'page' : undefined} onClick={() => setSection('background')}><ListChecks size={17} aria-hidden="true" />后台作业</button>}
       </nav>
       {modelAllowed && <div className="settings-model-section" hidden={section !== 'model'}><ModelCatalogSettings saved={saved} /></div>}
       {administrator && section === 'background' && <BackgroundQueueSettings />}
       {section === 'preferences' && <section className="settings-content">
+        {modelPreference && <ModelDefaultPreferences models={models} control={modelPreference} />}
         {suggestions && <div className="prompt-suggestion-preference"><h3>输入建议</h3>
           <label><input type="checkbox" checked={suggestions.enabled} onChange={event => suggestions.change(event.target.checked)} />显示下一步输入建议</label>
           <p>回复结束后，在空输入框中提供建议，按 Tab 采纳后自行发送。会产生额外模型用量；开关仅保留在本次登录的当前标签页。</p>

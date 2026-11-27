@@ -10,9 +10,16 @@ import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 import type { SessionSnapshot } from '../../src/contracts/index';
+import type { WorkPrepareInput } from '../../src/contracts/collaboration';
 
 const password = 'test-password-123';
-const selector = (page: Page) => page.getByRole('combobox', { name: '选择模型', exact: true });
+const selector = (page: Page) => page.getByRole('button', { name: '选择模型', exact: true });
+const picker = (page: Page) => page.getByRole('dialog', { name: '选择模型', exact: true });
+const option = (page: Page, id: string) => picker(page).locator(`[data-model-choice="${id}"]`);
+async function chooseModel(page: Page, id: string) {
+  if (!await picker(page).isVisible()) await selector(page).click();
+  await option(page, id).click();
+}
 const composer = (page: Page) => page.getByRole('textbox', { name: '发送消息', exact: true });
 
 // Real local API, Pi and persistence; only the provider and explicit failure/latency cases are simulated.
@@ -199,7 +206,10 @@ test('administrators maintain the model catalog while ordinary seats select mode
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: '退出登录', exact: true }).click();
     await login(page, 'coordinator');
-    await expect(selector(page).locator(`option[value="${modelId}"]`)).toContainText('deterministic-reviewed');
+    await selector(page).click();
+    await expect(option(page, modelId)).toContainText('deterministic-reviewed');
+    await page.keyboard.press('Escape');
+    await expect(selector(page)).toBeFocused();
     await page.getByRole('button', { name: '设置', exact: true }).click();
     await expect(page.getByRole('button', { name: '模型管理', exact: true })).toHaveCount(0);
     await page.keyboard.press('Escape');
@@ -217,28 +227,41 @@ test('administrators maintain the model catalog while ordinary seats select mode
     await member.keyboard.press('Escape');
     await enter(member, 'A');
     await composer(member).fill('A 独立草稿');
-    await selector(member).selectOption(modelId);
-    await expect(selector(member)).toHaveValue(modelId);
+    await chooseModel(member, modelId);
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
     await expect(composer(member)).toHaveValue('A 独立草稿');
     await enter(member, 'B');
-    await expect(selector(member)).toHaveValue('default');
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
     await composer(member).fill('B 独立草稿');
     await enter(member, 'A');
-    await expect(selector(member)).toHaveValue(modelId);
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
     await expect(composer(member)).toHaveValue('A 独立草稿');
     await member.reload();
-    await expect(selector(member)).toHaveValue(modelId);
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
     await expect(composer(member)).toHaveValue('A 独立草稿');
     await enter(member, 'B');
-    await expect(selector(member)).toHaveValue('default');
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
     await expect(composer(member)).toHaveValue('B 独立草稿');
     await member.route('**/api/models', route => route.fulfill({ json: { ...choices, models: [...choices.models,
       { id: 'unconfigured', provider: 'test', model: '未配置密钥', configured: false, contextReady: true, contextWindow: 32768, maxOutputTokens: 2048 },
       { id: 'incomplete', provider: 'test', model: '参数未填写', configured: true, contextReady: false, contextWindow: null, maxOutputTokens: null },
+      { id: 'disabled-a', provider: 'test', model: '停用模型一', configured: true, contextReady: true, available: false, contextWindow: 32768, maxOutputTokens: 2048 },
+      { id: 'disabled-b', provider: 'test', model: '停用模型二', configured: true, contextReady: true, available: false, contextWindow: 32768, maxOutputTokens: 2048 },
     ] } }));
     await member.reload();
-    await expect(selector(member).locator('option[value="unconfigured"]')).toBeDisabled();
-    await expect(selector(member).locator('option[value="incomplete"]')).toBeDisabled();
+    await member.setViewportSize({ width: 1060, height: 800 });
+    await selector(member).click();
+    await expect(option(member, 'unconfigured')).toBeDisabled();
+    await expect(option(member, 'incomplete')).toBeDisabled();
+    await expect(picker(member)).toBeInViewport();
+    const search = picker(member).getByRole('searchbox', { name: '搜索模型', exact: true });
+    await expect(search).toBeFocused();
+    await search.fill('DETERMINISTIC-REVIEWED');
+    await expect(picker(member).locator('[data-model-choice]')).toHaveCount(1);
+    await search.press('ArrowDown');
+    await expect(option(member, modelId)).toBeFocused();
+    await member.keyboard.press('Escape');
+    await expect(selector(member)).toBeFocused();
     expect(forbiddenSettingsReads).toHaveLength(0);
     expect(env.lab.get(env.sessions.member[0]!.id, 'member').modelId).toBe(modelId);
     expect(env.lab.get(env.sessions.member[1]!.id, 'member').modelId).toBe('default');
@@ -262,29 +285,29 @@ test('failed and delayed model selection stays with its conversation; busy and q
     await composer(member).fill('模型变更保留草稿');
     const modelUrl = `**/api/sessions/${env.sessions.member[0]!.id}/model`;
     await member.route(modelUrl, route => route.fulfill({ status: 503, json: { error: { code: 'TEMPORARILY_UNAVAILABLE', message: '模型选择暂时失败，请重试' } } }), { times: 1 });
-    await selector(member).selectOption(modelId);
+    await chooseModel(member, modelId);
     await expect(member.getByRole('alert')).toContainText('模型选择暂时失败，请重试');
-    await expect(selector(member)).toHaveValue('default');
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
     await expect(composer(member)).toHaveValue('模型变更保留草稿');
 
     await member.route(modelUrl, async route => { release = await env.prepareReply(route); }, { times: 1 });
-    await selector(member).selectOption(modelId);
+    await chooseModel(member, modelId);
     await expect.poll(() => Boolean(release)).toBe(true);
     await enter(member, 'B');
     await composer(member).fill('等待其他会话时的 B 草稿');
     await release!(); release = undefined;
-    await expect(selector(member)).toHaveValue('default');
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
     await expect(composer(member)).toHaveValue('等待其他会话时的 B 草稿');
     await enter(member, 'A');
-    await expect(selector(member)).toHaveValue(modelId);
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
     await expect(composer(member)).toHaveValue('模型变更保留草稿');
 
     await member.route(modelUrl, route => { release = () => route.fulfill({ status: 503, json: { error: { code: 'TEMPORARILY_UNAVAILABLE', message: '来自 A 的迟到模型错误' } } }); }, { times: 1 });
-    await selector(member).selectOption('default');
+    await chooseModel(member, 'default');
     await expect.poll(() => Boolean(release)).toBe(true);
     await enter(member, 'B');
     await release!(); release = undefined;
-    await expect(selector(member)).toHaveValue('default');
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
     await expect(member.getByText(/来自 A 的迟到模型错误/)).toHaveCount(0);
     await expect(composer(member)).toHaveValue('等待其他会话时的 B 草稿');
 
@@ -423,19 +446,21 @@ test('a previously selected model becoming unavailable disables sending and pres
     await loginAdministrator(page, env.administratorId); const modelId = await addModel(page, env.lab);
     await page.keyboard.press('Escape');
     await login(member,'member');
-    await selector(member).selectOption(modelId); await expect(selector(member)).toHaveValue(modelId);
+    await chooseModel(member, modelId); await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
     await composer(member).fill('停用期间仍保留的草稿');
     const current = env.lab.modelCatalog().models.find(model=>model.id===modelId)!;
     await env.lab.updateModelProfile({platformId:current.platformId,model:current.model,enabled:false,expectedVersion:current.version},modelId);
     const refreshed = member.waitForResponse(response=>new URL(response.url()).pathname==='/api/models');
     await member.evaluate(()=>window.dispatchEvent(new Event('focus'))); await refreshed;
     await expect(member.getByText('当前模型已停用或尚未开放，请在下方改选其他可用模型。草稿会保留。',{exact:true})).toBeVisible();
-    await expect(selector(member)).toHaveValue(modelId);
-    await expect(selector(member).locator(`option[value="${modelId}"]`)).toBeDisabled();
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
+    await selector(member).click();
+    await expect(option(member, modelId)).toBeDisabled();
+    await member.keyboard.press('Escape');
     await expect(member.getByRole('button',{name:'发送消息',exact:true})).toBeDisabled();
     await expect(composer(member)).toHaveValue('停用期间仍保留的草稿');
-    await selector(member).selectOption('default');
-    await expect(selector(member)).toHaveValue('default');
+    await member.getByRole('button', { name: '改用默认模型', exact: true }).click();
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
     await expect(member.getByRole('button',{name:'发送消息',exact:true})).toBeEnabled();
     await expect(composer(member)).toHaveValue('停用期间仍保留的草稿');
     expect(env.fake.calls).toHaveLength(0);
@@ -452,8 +477,8 @@ test('deleting a platform removes its choices and preserves affected conversatio
     await composer(member).fill('这段会话历史需要保留');
     await member.getByRole('button', { name: '发送消息', exact: true }).click();
     await expect(member.getByText('默认模型测试完成', { exact: true })).toBeVisible();
-    await selector(member).selectOption(modelId);
-    await expect(selector(member)).toHaveValue(modelId);
+    await chooseModel(member, modelId);
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
     await composer(member).fill('删除配置后保留草稿');
     const remove = page.getByRole('button', { name: '删除平台', exact: true });
     page.once('dialog', async dialog => {
@@ -476,9 +501,133 @@ test('deleting a platform removes its choices and preserves affected conversatio
     await expect(member.getByText('默认模型测试完成', { exact: true })).toBeVisible();
     await expect(composer(member)).toHaveValue('删除配置后保留草稿');
     await expect(member.getByRole('button', { name: '发送消息', exact: true })).toBeDisabled();
-    await expect(selector(member).locator(`option[value="${modelId}"]`)).toHaveCount(0);
-    await selector(member).selectOption('default');
+    await selector(member).click();
+    await expect(option(member, modelId)).toHaveCount(0);
+    await member.keyboard.press('Escape');
+    await member.getByRole('button', { name: '改用默认模型', exact: true }).click();
     await expect(member.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled();
     await expect(composer(member)).toHaveValue('删除配置后保留草稿');
+  } finally { await env.close(); await context.close(); }
+});
+
+test('personal defaults synchronize across settings and tabs while system changes apply to new conversations', async ({ page, browser }) => {
+  const env = await setup(), context = await browser.newContext();
+  const member = await context.newPage(), otherTab = await context.newPage();
+  await env.attach(page); await env.attach(member); await env.attach(otherTab);
+  try {
+    await loginAdministrator(page, env.administratorId);
+    const modelId = await addModel(page, env.lab);
+    await login(member, 'member');
+    await selector(member).click();
+    const setPersonal = picker(member).getByRole('button', { name: /设为默认.*deterministic-alternative/ });
+    await setPersonal.click();
+    await expect(picker(member).getByText('我的默认', { exact: true })).toBeVisible();
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
+    await member.keyboard.press('Escape');
+    await expect(selector(member)).toBeFocused();
+    await member.getByRole('button', { name: '设置', exact: true }).click();
+    await member.getByRole('button', { name: '个人偏好', exact: true }).click();
+    const preferences = member.getByRole('region', { name: '个人默认模型', exact: true });
+    await expect(preferences.getByRole('combobox', { name: '默认模型', exact: true })).toHaveValue(modelId);
+    await member.keyboard.press('Escape');
+
+    await otherTab.goto(member.url());
+    await otherTab.getByRole('button', { name: '新建对话', exact: true }).click();
+    await expect(selector(otherTab)).toHaveAttribute('data-model-id', modelId);
+    await member.getByRole('button', { name: '新建对话', exact: true }).click();
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
+    await member.getByRole('button', { name: '设置', exact: true }).click();
+    await member.getByRole('button', { name: '个人偏好', exact: true }).click();
+    await preferences.getByRole('combobox', { name: '默认模型', exact: true }).selectOption('');
+    await preferences.getByRole('button', { name: '保存默认模型', exact: true }).click();
+    await expect(preferences.getByText(/个人默认模型已保存/)).toBeVisible();
+    await member.keyboard.press('Escape');
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
+    await otherTab.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(selector(otherTab)).toHaveAttribute('data-model-id', 'default');
+
+    await page.getByRole('button', { name: '设为系统默认', exact: true }).click();
+    await expect(page.getByText('系统默认模型已更新。', { exact: true })).toBeVisible();
+    expect(env.lab.modelChoices().defaultModelId).toBe(modelId);
+    await otherTab.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(selector(otherTab)).toHaveAttribute('data-model-id', modelId);
+    await enter(otherTab, 'A');
+    await expect(selector(otherTab)).toHaveAttribute('data-model-id', 'default');
+    const oldPlatformId = env.lab.modelCatalog().models.find(model => model.id === 'default')!.platformId;
+    await page.getByRole('button', { name: '平台列表', exact: true }).click();
+    const oldPlatform = env.lab.modelCatalog().platforms!.find(platform => platform.id === oldPlatformId)!;
+    await page.getByRole('list', { name: '平台列表', exact: true }).getByRole('button').filter({ hasText: oldPlatform.name }).click();
+    await expect(page.getByRole('button', { name: '删除平台', exact: true })).toBeEnabled();
+  } finally { await env.close(); await context.close(); }
+});
+
+test('work conversations resolve their own default and leave the workspace model and text draft intact', async ({ page, browser }) => {
+  const env = await setup(), context = await browser.newContext(), member = await context.newPage();
+  await env.attach(page); await env.attach(member);
+  try {
+    await loginAdministrator(page, env.administratorId);
+    const modelId = await addModel(page, env.lab);
+    const owner = env.lab.workspaces.get(env.sessions.coordinator[0].workspaceId, 'coordinator');
+    const service = env.lab.collaboration!;
+    async function act(seatId: string, input: WorkPrepareInput) {
+      const action = await service.prepare({ seatId }, input, { source: 'page', clientActionId: randomUUID() });
+      return service.commitPage({ seatId }, action.operationId);
+    }
+    const assigned = await act('coordinator', { kind: 'assign', taskSpaceId: owner.taskSpaceId, payload: {
+      workspaceId: owner.id, assigneeSeatId: 'member', title: '验证独立办理模型', goal: '保留原对话草稿。', inputPaths: [],
+    } });
+    await act('member', { kind: 'claim', workItemId: assigned.workItemId, expectedRevision: assigned.revision, payload: {} });
+    await login(member, 'member');
+    const workspaceId = env.sessions.member[0].workspaceId;
+    await member.goto(`/?new&workspace=${workspaceId}`);
+    await chooseModel(member, modelId);
+    await composer(member).fill('无关的聊天草稿');
+    await member.getByRole('button', { name: '工作待办', exact: true }).click();
+    await member.getByRole('button', { name: /验证独立办理模型/ }).click();
+    await member.getByRole('button', { name: '新建对话办理', exact: true }).click();
+    await expect(member.getByRole('button', { name: '查看关联工作' })).toBeVisible();
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
+    await expect(composer(member)).toHaveValue('');
+    const [workSession] = service.read({ seatId: 'member' }, assigned.workItemId).sessionIds;
+    expect(env.lab.get(workSession, 'member').modelId).toBe('default');
+    await member.goto(`/?new&workspace=${workspaceId}`);
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
+    await expect(composer(member)).toHaveValue('无关的聊天草稿');
+  } finally { await env.close(); await context.close(); }
+});
+
+test('a fresh draft explains personal and system default fallback before sending', async ({ page, browser }) => {
+  const env = await setup(), context = await browser.newContext(), member = await context.newPage();
+  await env.attach(page); await env.attach(member);
+  try {
+    await loginAdministrator(page, env.administratorId);
+    const modelId = await addModel(page, env.lab);
+    await login(member, 'member');
+    await selector(member).click();
+    await picker(member).getByRole('button', { name: /设为默认.*deterministic-alternative/ }).click();
+    await expect(picker(member).getByText('我的默认', { exact: true })).toBeVisible();
+    await member.keyboard.press('Escape');
+    await member.goto(`/?new&workspace=${env.sessions.member[0].workspaceId}`);
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
+
+    let unavailableModel = modelId;
+    await member.route('**/api/models', async route => {
+      const choices = env.lab.modelChoices();
+      return route.fulfill({ json: { ...choices, models: choices.models.map(model => model.id === unavailableModel ? { ...model, available: false } : model) } });
+    });
+    await member.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(member.getByRole('status').filter({ hasText: '你的默认模型暂不可用' })).toBeVisible();
+    await expect(selector(member)).toHaveAttribute('data-model-id', 'default');
+
+    await selector(member).click();
+    await picker(member).getByRole('button', { name: '恢复跟随系统默认', exact: true }).click();
+    await expect(picker(member).getByRole('button', { name: '恢复跟随系统默认', exact: true })).toHaveCount(0);
+    await expect(picker(member).getByText('我的默认', { exact: true })).toHaveCount(0);
+    await member.mouse.click(20, 20);
+    await expect(picker(member)).toBeHidden();
+    unavailableModel = 'default';
+    await member.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(member.getByRole('status').filter({ hasText: '已预选' })).toContainText('deterministic-alternative');
+    await expect(selector(member)).toHaveAttribute('data-model-id', modelId);
   } finally { await env.close(); await context.close(); }
 });

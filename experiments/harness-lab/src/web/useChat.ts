@@ -7,6 +7,8 @@ import { sessionAction } from './session-action';
 import { useInputQueue } from './useInputQueue';
 import { useAttachments } from './useAttachments';
 import { useComposerSelections, selectionInput } from './useComposerSelections';
+import { isUsableModel, resolveBaseDefaultModel, resolveNewSessionModel } from './model-default';
+import { useModelPreference } from './useModelPreference';
 
 function stored(key: string): Record<string, string> {
   try {
@@ -59,8 +61,10 @@ function mergeInteraction(previous: Interaction | undefined, incoming: Interacti
   return incoming;
 }
 
-export function useChat(enabled = true) {
+export function useChat(enabled = true, authenticated = false) {
   const { api, sendMessage, storageKey } = useApi();
+  const modelPreference = useModelPreference(enabled, authenticated);
+  const { preference, readLatest: readLatestModelPreference } = modelPreference;
   const DRAFT_KEY = storageKey('berserk.drafts');
   const DRAFT_VERSION_KEY = storageKey('berserk.draft-versions');
   const draftVersions = useRef(stored(DRAFT_VERSION_KEY));
@@ -76,8 +80,9 @@ export function useChat(enabled = true) {
   const { recover: recoverAttachments, clearSubmitted: clearSubmittedAttachments, move: moveAttachments, consume: consumeAttachments } = attachments;
   const [info, setInfo] = useState<AppInfo | null>(null);
   const [models, setModels] = useState<ModelChoices>();
+  const modelsRef = useRef<ModelChoices>(undefined);
   const [modelsError, setModelsError] = useState('');
-  const modelListRequest = useRef<Promise<void> | null>(null);
+  const modelListRequest = useRef<Promise<ModelChoices> | null>(null);
   const [modelErrors, setModelErrors] = useState<Record<string, string>>({});
   const [modelSaving, setModelSaving] = useState<Record<string, boolean>>({});
   const modelLocks = useRef(new Set<string>());
@@ -120,7 +125,10 @@ export function useChat(enabled = true) {
   const selectionsRef = useRef(selections);
   const selected = selections[workspaceId] || '';
   const draftKey = selected || `workspace:${workspaceId}`;
-  const selectedModelId = (selected ? snapshots[selected]?.modelId : draftModels[draftKey]) || models?.defaultModelId || 'default';
+  const baseDefaultModel = resolveBaseDefaultModel(models, preference?.choice);
+  const resolveDraftModel = (key: string) => resolveNewSessionModel(models, preference?.choice, draftModels[key]);
+  const defaultModelResolution = selected ? undefined : resolveDraftModel(draftKey);
+  const selectedModelId = defaultModelResolution?.modelId || snapshots[selected]?.modelId || 'default';
   const selectedModel = models?.models.find(model => model.id === selectedModelId);
   const [instructionChanges, setInstructionChanges] = useState<Record<string, InstructionUpdate[]>>({});
   const selectForWorkspace = useCallback((workspace: string, id: string) => {
@@ -354,10 +362,14 @@ export function useChat(enabled = true) {
     void request.finally(() => { if (activityRequest.current === request) activityRequest.current = null; }).catch(() => {});
     return request;
   }, [api, enabled, selectForWorkspace, selectWorkspace]);
-  const refreshModels = useCallback((): Promise<void> => {
-    if (!enabled) return Promise.resolve();
+  const refreshModels = useCallback(async () => {
+    if (!enabled) return;
     if (modelListRequest.current) return modelListRequest.current;
-    const request = api<ModelChoices>('/api/models').then(result => { setModels(result); setModelsError(''); })
+    const request = api<ModelChoices>('/api/models').then(result => {
+      modelsRef.current = result;
+      setModels(result); setModelsError('');
+      return result;
+    })
       .catch((error: unknown) => { setModelsError(`可用模型读取失败。${reason(error)}`); throw error; });
     modelListRequest.current = request;
     void request.finally(() => { if (modelListRequest.current === request) modelListRequest.current = null; }).catch(() => {});
@@ -366,8 +378,15 @@ export function useChat(enabled = true) {
   const chooseModel = useCallback(async (modelId: string, owner = draftKey) => {
     const target = movedDrafts.current.get(owner) || owner;
     const model = models?.models.find(item => item.id === modelId);
-    if (!model?.configured || !model.contextReady || model.available === false || creatingRef.current || modelLocks.current.has(target)) return;
+    if (!isUsableModel(model) || creatingRef.current || modelLocks.current.has(target)) return;
     if (target.startsWith('workspace:') || target.startsWith('task-home:')) {
+      if (isUsableModel(baseDefaultModel.model) && modelId === baseDefaultModel.modelId && draftModelsRef.current[target]) {
+        const next = { ...draftModelsRef.current };
+        delete next[target];
+        draftModelsRef.current = next;
+        setDraftModels(next); persist(MODEL_DRAFT_KEY, next);
+        return;
+      }
       draftModelsRef.current = { ...draftModelsRef.current, [target]: modelId };
       setDraftModels(draftModelsRef.current); persist(MODEL_DRAFT_KEY, draftModelsRef.current);
       return;
@@ -390,7 +409,7 @@ export function useChat(enabled = true) {
       modelLocks.current.delete(target);
       setModelSaving(previous => ({ ...previous, [target]: false }));
     }
-  }, [MODEL_DRAFT_KEY, api, draftKey, models, put, refreshModels]);
+  }, [MODEL_DRAFT_KEY, api, baseDefaultModel.model, baseDefaultModel.modelId, draftKey, models, put, refreshModels]);
   const bootstrap = useCallback(async () => {
     if (!enabled) return;
     setLoading(true);
@@ -432,45 +451,75 @@ export function useChat(enabled = true) {
     return workspace;
   }, [api, selectWorkspace]);
 
-  const create = useCallback(async (targetWorkspaceId = workspaceId, workItemId?: string, options?: { draftKey: string; navigate: false }): Promise<string | null> => {
-    if (creatingRef.current || !targetWorkspaceId) return null;
-    const navigation = navigationRevision.current;
-    creatingRef.current = targetWorkspaceId; setCreating(true);
+  const resolveDefaultModelId = useCallback(async (draftModelId?: string) => {
+    const [latestModels, latestPreference] = await Promise.all([
+      refreshModels(), authenticated && !draftModelId ? readLatestModelPreference() : preference,
+    ]);
+    if (!latestModels) throw new Error('可用模型暂时无法读取，请稍后重试。');
+    if (!latestPreference && !draftModelId) throw new Error('个人默认模型尚未读取，请稍后重试。');
+    const resolved = resolveNewSessionModel(latestModels, latestPreference?.choice, draftModelId);
+    if (!isUsableModel(resolved.model)) throw new Error(draftModelId ? '选中的模型暂不可用，请改选其他模型。草稿会保留。' : '当前没有可用模型，请完成模型配置或联系管理员席。');
+    return resolved.modelId;
+  }, [authenticated, preference, readLatestModelPreference, refreshModels]);
+
+  const submitSession = useCallback(async (input: object, entry: string, draftModelId?: string) => {
+    const action = sessionAction(CREATION_ACTION_KEY, { input, entry });
     try {
-      const key = options?.draftKey || `workspace:${targetWorkspaceId}`;
-      const modelId = draftModelsRef.current[key];
-      const input = { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}), ...(modelId ? { modelId } : {}) };
-      const action = sessionAction(CREATION_ACTION_KEY, input);
-      const snapshot = await api<SessionSnapshot>('/api/sessions', { ...input, clientActionId: action.id });
+      const modelId = action.modelId ?? await resolveDefaultModelId(draftModelId);
+      action.captureModelId(modelId);
+      const snapshot = await api<SessionSnapshot>('/api/sessions', { ...input, modelId, clientActionId: action.id });
       action.complete();
       put(snapshot);
+      return snapshot;
+    } catch (error) {
+      if (error instanceof ApiFailure && ['MODEL_NOT_FOUND', 'MODEL_UNAVAILABLE', 'MODEL_NOT_CONFIGURED', 'MODEL_CONTEXT_REQUIRED'].includes(error.code)) action.complete();
+      throw error;
+    }
+  }, [CREATION_ACTION_KEY, resolveDefaultModelId, api, put]);
+
+  const create = useCallback(async (targetWorkspaceId = workspaceId, workItemId?: string, options?: { draftKey?: string; navigate?: boolean; useDraft?: boolean; entry?: string }): Promise<string | null> => {
+    if (creatingRef.current || !targetWorkspaceId) return null;
+    const navigation = navigationRevision.current;
+    const useDraft = options?.useDraft !== false;
+    const navigate = options?.navigate !== false;
+    const key = options?.draftKey ?? `workspace:${targetWorkspaceId}`;
+    creatingRef.current = targetWorkspaceId; setCreating(true);
+    try {
+      const input = { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}) };
+      const snapshot = await submitSession(input, useDraft ? key : options?.entry ?? 'direct', useDraft ? draftModelsRef.current[key] : undefined);
       // A delayed creation may populate its project, but must not undo later navigation.
-      if (!options && navigationRevision.current === navigation) {
+      if (navigate && navigationRevision.current === navigation) {
         selectForWorkspace(targetWorkspaceId, snapshot.id);
         selectWorkspace(targetWorkspaceId);
-      } else if (!options && !Object.hasOwn(selectionsRef.current, targetWorkspaceId)) selectForWorkspace(targetWorkspaceId, snapshot.id);
-      if (!options) movedDrafts.current.set(key, snapshot.id);
-      if (draftModelsRef.current[key]) {
-        const next = { ...draftModelsRef.current }; delete next[key];
-        draftModelsRef.current = next; setDraftModels(next); persist(MODEL_DRAFT_KEY, next);
+      } else if (navigate && !Object.hasOwn(selectionsRef.current, targetWorkspaceId)) selectForWorkspace(targetWorkspaceId, snapshot.id);
+      if (useDraft) {
+        if (navigate) movedDrafts.current.set(key, snapshot.id);
+        if (draftModelsRef.current[key]) {
+          const next = { ...draftModelsRef.current }; delete next[key];
+          draftModelsRef.current = next; setDraftModels(next); persist(MODEL_DRAFT_KEY, next);
+        }
+        moveAttachments(key, snapshot.id); moveSelections(key, snapshot.id);
+        if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
+        setErrors(previous => ({ ...previous, [key]: '' }));
       }
-      moveAttachments(key, snapshot.id); moveSelections(key, snapshot.id);
-      if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
-      setErrors(previous => ({ ...previous, [key]: '' }));
       return snapshot.id;
-    } catch (error) { setErrors(previous => ({ ...previous, [options?.draftKey || `workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
+    } catch (error) {
+      if (!useDraft || !navigate) throw error;
+      setErrors(previous => ({ ...previous, [key]: reason(error) }));
+      return null;
+    }
     finally { creatingRef.current = null; setCreating(false); }
-  }, [CREATION_ACTION_KEY, MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
+  }, [MODEL_DRAFT_KEY, workspaceId, submitSession, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
 
   const send = useCallback(async (targetSessionId?: string) => {
     // Continuation may send before navigation renders; every input belongs to its explicit target.
     const key = targetSessionId || draftKey;
-    const modelId = (targetSessionId ? snapshotsRef.current[targetSessionId]?.modelId : selectedModelId) || models?.defaultModelId;
-    const model = models?.models.find(item => item.id === modelId);
+    const modelId = targetSessionId ? snapshotsRef.current[targetSessionId]?.modelId : selectedModelId;
+    const model = modelsRef.current?.models.find(item => item.id === modelId);
     const text = (draftsRef.current[key] || '').trim();
     const files = attachments.current(key);
     const picks = composerSelections.current(key);
-    if (!text || files.some(file => file.status !== 'ready') || !model?.configured || !model.contextReady || model.available === false || modelsError || modelErrors[key] || modelLocks.current.has(key)) return;
+    if (!text || files.some(file => file.status !== 'ready') || !isUsableModel(model) || modelsError || modelErrors[key] || modelLocks.current.has(key)) return;
     const id = targetSessionId || selected || await create();
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.expert?.availability.available === false) return;
     const before = snapshotsRef.current[id];
@@ -570,7 +619,7 @@ export function useChat(enabled = true) {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModelId, models, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInputQueue, applyInteraction, sendMessage, recover, refresh, markConnectorSend]);
+  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModelId, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInputQueue, applyInteraction, sendMessage, recover, refresh, markConnectorSend]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -595,7 +644,7 @@ export function useChat(enabled = true) {
 
   return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
     activities, activityError, activityConnectionError, refreshActivity, markRead, noteNavigation, adopt: put, hasDraft,
-    drafts, draftModels, setScopedDraft: draft,
+    drafts, resolveDraftModel, submitSession, defaultModelResolution, baseDefaultModel, modelPreference, setScopedDraft: draft,
     prepareDraft: (id: string, text: string) => { if (hasDraft(id)) return false; draft(id, text); return true; },
     prepareSelection: (id: string, kind: 'skill' | 'agent', value: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(id, kind, value),
     unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && !item.backgroundJob && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),

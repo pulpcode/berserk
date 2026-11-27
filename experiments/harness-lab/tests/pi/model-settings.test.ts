@@ -99,7 +99,7 @@ it('uses the new endpoint, key and model on the next real adapter call and resto
   expect(calls[1].body).not.toHaveProperty('thinking');
   const path = join(dir, 'model-settings.json');
   expect((await stat(path)).mode & 0o777).toBe(0o600);
-  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 7, version: next.version, credentials: { 'platform:default': 'new-secret-only' }, models: [expect.objectContaining({ contextWindow: 131072, maxOutputTokens: 8192 })] });
+  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 8, defaultModelId: 'default', version: next.version, credentials: { 'platform:default': 'new-secret-only' }, models: [expect.objectContaining({ contextWindow: 131072, maxOutputTokens: 8192 })] });
   await app.close();
   const restarted = await PiLab.create({ ...config, apiKey: 'different-env-key' }); cleanup.push(() => restarted.close());
   expect(restarted.modelSettings()).toEqual(next);

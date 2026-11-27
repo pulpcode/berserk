@@ -72,7 +72,7 @@ async function mockApi(page: Page) {
       { id: 'plan', title: '协作方案参考', description: '方案结构与编制要点' },
     ], limits: { agentRunTimeoutMs: null, httpIdleTimeoutMs: 300000, llmRequestTimeoutMs: null, maxOutputTokens: modelSettings.maxOutputTokens } });
     if (path === '/api/models') return json({ defaultModelId: 'default', models: [{ id: 'default', provider: modelSettings.provider, model: modelSettings.model, configured: modelSettings.configured, contextReady: modelSettings.contextReady, contextWindow: modelSettings.contextWindow, maxOutputTokens: modelSettings.maxOutputTokens }] });
-    if (path === '/api/settings/models' && request.method === 'GET') return json({ version: modelSettings.version, models: [{ ...modelSettings, id: 'default' }], platforms: [{ id: 'default', name: 'DeepSeek', provider: modelSettings.provider, baseUrl: modelSettings.baseUrl, api: 'openai-completions', configured: modelSettings.configured, enabled: true, version: modelSettings.version }] });
+    if (path === '/api/settings/models' && request.method === 'GET') return json({ version: modelSettings.version, defaultModelId: 'default', models: [{ ...modelSettings, id: 'default' }], platforms: [{ id: 'default', name: 'DeepSeek', provider: modelSettings.provider, baseUrl: modelSettings.baseUrl, api: 'openai-completions', configured: modelSettings.configured, enabled: true, version: modelSettings.version }] });
     let body = '';
     if (request.method !== 'GET') for await (const chunk of request) body += chunk;
     if (path === '/api/settings/model' || path === '/api/settings/models/default') {
@@ -1039,9 +1039,9 @@ test('模型设置只修改所属平台和模型，保存后更新对话模型�
     expect(mock.modelWrites).toHaveLength(1);
     expect(mock.modelWrites[0].platformId).toBe('default');
     expect(mock.modelWrites[0].apiKey).toBeUndefined();
-    await expect(page.locator('select[aria-label="选择模型"]')).toContainText('deepseek-test');
     await page.keyboard.press('Escape');
     await expect(trigger).toBeFocused();
+    await expect(page.getByRole('button', { name: '选择模型', exact: true })).toContainText('deepseek-test');
     await trigger.click();
     await openDefaultModelSettings(page);
     await expect(page.getByLabel('模型 ID')).toHaveValue('deepseek-test');

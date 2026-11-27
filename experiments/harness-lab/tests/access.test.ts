@@ -163,6 +163,62 @@ describe('authenticated task scopes',()=>{
     expect((await a.call('/api/settings/models')).statusCode).toBe(403);
   });
 
+  it('guards system default changes and persists personal model choices for the signed-in account', async () => {
+    const { app, lab, config } = await setup(['a'], undefined, true);
+    const admin = await login(app, 'system-admin');
+    const a = await login(app, 'a'), b = await login(app, 'b');
+    const catalog = lab.modelCatalog();
+    const created = await admin.call('/api/settings/models', { provider: config.provider, model: 'personal-test-model', baseUrl: config.baseUrl,
+      apiKey: 'personal-test-key', expectedVersion: catalog.version, contextWindow: 65536, maxOutputTokens: 512 });
+    expect(created.statusCode, created.body).toBe(201);
+    const { id: modelId, version: expectedVersion, model, platformId } = created.json();
+    const defaultPath = '/api/settings/default-model';
+    const preferencePath = '/api/me/preferences/model';
+    const system = { revision: 0, choice: { mode: 'system' } };
+    const choice = { mode: 'model', modelId };
+    const update = { expectedRevision: 0, choice };
+    expect((await app.inject(preferencePath)).statusCode).toBe(401);
+    expect((await a.call(defaultPath, { modelId, expectedVersion }, 'PUT')).statusCode).toBe(403);
+    expect((await admin.call(preferencePath)).json()).toEqual(system);
+    expect((await a.call(preferencePath)).json()).toEqual(system);
+    expect((await a.call(preferencePath, { ...update, userId: b.auth.identity!.userId }, 'PUT')).statusCode).toBe(400);
+    for (const [headers, error] of [
+      [{ ...a.headers, 'x-csrf-token': '' }, 'CSRF_REJECTED'],
+      [{ ...a.headers, origin: 'https://untrusted.invalid' }, 'ORIGIN_REJECTED'],
+      [{ ...a.headers, 'x-axon-view': 'stale-page' }, 'IDENTITY_CHANGED'],
+    ] as const) {
+      const rejected = await app.inject({ method: 'PUT', url: preferencePath, headers, payload: update });
+      expect(rejected.json().error.code).toBe(error);
+    }
+    const saved = await a.call(preferencePath, update, 'PUT');
+    expect(saved.statusCode, saved.body).toBe(200);
+    expect(saved.json()).toEqual({ revision: 1, choice });
+    expect((await a.call(preferencePath, update, 'PUT')).json().error.code).toBe('PREFERENCE_CONFLICT');
+    expect((await b.call(preferencePath)).json()).toEqual(system);
+    expect((await admin.call(preferencePath)).json()).toEqual(system);
+
+    const movedDefault = await admin.call(defaultPath, { modelId, expectedVersion }, 'PUT');
+    expect(movedDefault.statusCode, movedDefault.body).toBe(200);
+    expect(movedDefault.json().defaultModelId).toBe(modelId);
+    expect((await b.call('/api/models')).json().defaultModelId).toBe(modelId);
+    const reopenedTab = await login(app, 'a');
+    expect((await reopenedTab.call(preferencePath)).json()).toEqual({ revision: 1, choice });
+    const reset = await reopenedTab.call(preferencePath, { expectedRevision: 1, choice: { mode: 'system' } }, 'PUT');
+    expect(reset.json()).toEqual({ revision: 2, choice: { mode: 'system' } });
+    expect((await a.call(preferencePath)).json()).toEqual(reset.json());
+    expect((await admin.call(preferencePath, { expectedRevision: 0, choice }, 'PUT')).json()).toEqual({ revision: 1, choice });
+    expect((await b.call(preferencePath)).json()).toEqual(system);
+    const disabled = await admin.call(`/api/settings/models/${modelId}`, { model, platformId, enabled: false, expectedVersion: movedDefault.json().version }, 'PUT');
+    expect(disabled.statusCode, disabled.body).toBe(200);
+    expect((await b.call(preferencePath, update, 'PUT')).json().error.code).toBe('MODEL_UNAVAILABLE');
+    await app.close();
+
+    const restarted = await createApp(await PiLab.create(config));
+    cleanups.push(() => restarted.close());
+    expect((await restarted.inject({ url: preferencePath, headers: admin.headers })).json()).toEqual({ revision: 1, choice });
+    expect((await restarted.inject({ url: preferencePath, headers: b.headers })).json()).toEqual(system);
+  });
+
   it('exposes platform management only to administrators and keeps an unconfigured Kimi profile unavailable', async () => {
     const { app, lab } = await setup(['a'], undefined, true);
     const admin = await login(app, 'system-admin'), legacy = await login(app, 'a'), member = await login(app, 'b');

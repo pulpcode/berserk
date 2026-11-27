@@ -68,7 +68,7 @@ async function connectors(page: Page) { await page.getByRole('button', { name: '
 const input = (page: Page) => page.getByRole('textbox', { name: '发送消息', exact: true });
 async function expectModelOnRight(page: Page) {
   const toolbar = page.locator('.composer-toolbar:visible');
-  const model = toolbar.getByRole('combobox', { name: '选择模型', exact: true });
+  const model = toolbar.getByRole('button', { name: '选择模型', exact: true });
   await expect(model).toBeEnabled();
   const tools = (await toolbar.boundingBox())!;
   const picker = (await model.boundingBox())!;

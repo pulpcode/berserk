@@ -28,6 +28,7 @@ export function ModelCatalogSettings({ saved }: { saved: () => Promise<void> }) 
   const [busy, setBusy] = useState(false);
   const [loadError, setLoadError] = useState('');
   const [deleteError, setDeleteError] = useState('');
+  const [defaultError, setDefaultError] = useState('');
   const [notice, setNotice] = useState('');
   const [reload, setReload] = useState(0);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -57,6 +58,7 @@ export function ModelCatalogSettings({ saved }: { saved: () => Promise<void> }) 
     setDirty(false);
     setNotice('');
     setDeleteError('');
+    setDefaultError('');
     setPlatformId(target);
     setEditor(nextEditor);
   }
@@ -109,7 +111,28 @@ export function ModelCatalogSettings({ saved }: { saved: () => Promise<void> }) 
   const platforms = catalog?.platforms ?? [];
   const platform = platforms.find(item => item.id === platformId);
   const models = catalog?.models.filter(item => item.platformId === platformId) ?? [];
-  const includesDefault = models.some(model => model.id === 'default');
+  const includesDefault = models.some(model => model.id === catalog?.defaultModelId);
+  async function setSystemDefault(model: ModelProfile) {
+    if (!catalog || busy || editor || !model.available || model.id === catalog.defaultModelId) return;
+    setBusy(true);
+    setDefaultError('');
+    setNotice('');
+    try {
+      setCatalog(await api<ModelCatalog>('/api/settings/default-model', { expectedVersion: catalog.version, modelId: model.id }, 'PUT'));
+      heading.current?.focus();
+      try {
+        await saved();
+        setNotice('系统默认模型已更新。');
+      } catch {
+        setNotice('系统默认模型已更新。对话模型列表暂未刷新。');
+      }
+    } catch (error) {
+      setDefaultError(error instanceof Error ? error.message : '系统默认模型更新结果未确认，请重新打开设置核对。');
+      if (!(error instanceof ApiFailure) || error.code === 'MODEL_SETTINGS_CONFLICT' || error.code === 'MODEL_SETTINGS_SAVE_FAILED') {
+        await Promise.allSettled([refresh(), saved()]);
+      }
+    } finally { setBusy(false); }
+  }
   function finishDeletion(result: ModelCatalog) {
     setCatalog(result);
     nextFocus.current = 'view';
@@ -164,6 +187,7 @@ export function ModelCatalogSettings({ saved }: { saved: () => Promise<void> }) 
     </div>
     {notice && <p className="settings-success model-pane-notice" role="status">{notice}</p>}
     {deleteError && <p className="resource-error" role="alert">{deleteError}</p>}
+    {defaultError && <p className="resource-error" role="alert">{defaultError}</p>}
     {!catalog ? loadError ? <div className="model-pane-heading">
       <p className="resource-error" role="alert">{loadError}</p>
       <button type="button" className="text-action" onClick={() => { setLoadError(''); setReload(value => value + 1); }}>重试</button>
@@ -173,7 +197,7 @@ export function ModelCatalogSettings({ saved }: { saved: () => Promise<void> }) 
         {platforms.length ? <ul className="model-platform-list" aria-label="平台列表">
           {platforms.map(item => {
             const related = catalog.models.filter(model => model.platformId === item.id);
-            const defaultModel = related.find(model => model.id === 'default');
+            const defaultModel = related.find(model => model.id === catalog.defaultModelId);
             return <li key={item.id}><button type="button" className="model-platform-row" onClick={() => navigate(item.id)}>
               <span className="model-platform-row-label"><strong>{item.name}</strong><span className="model-detail-muted">
                 {related.length} 个模型{defaultModel ? ' · 含系统默认' : ''}
@@ -194,7 +218,7 @@ export function ModelCatalogSettings({ saved }: { saved: () => Promise<void> }) 
             </div>}
           </div>
           {connectionEditor || <>
-            {includesDefault && <p id="model-platform-delete-help" className="resource-help">此平台包含系统默认模型，迁移默认模型后可删除。</p>}
+            {includesDefault && <p id="model-platform-delete-help" className="resource-help">此平台包含系统默认模型，将其他平台的模型设为系统默认后可删除。</p>}
             <dl className="model-connection-facts">
               <div><dt>API 地址</dt><dd><code>{platform.baseUrl}</code></dd></div>
               <div><dt>API Key</dt><dd>{platform.configured ? '已保存' : '未配置'}</dd></div>
@@ -217,11 +241,15 @@ export function ModelCatalogSettings({ saved }: { saved: () => Promise<void> }) 
                 <strong>{model.displayName || model.model || '未配置模型'}</strong><code>{model.model}</code>
               </span>
               <span className="model-profile-status">
-                {model.id === 'default' && <span className="model-default-label">系统默认</span>}
+                {model.id === catalog.defaultModelId && <span className="model-default-label">系统默认</span>}
                 <span className={model.available ? 'model-status model-status-ready' : 'model-status'}>{modelStatus(model, platform)}</span>
               </span>
-              <button type="button" className="text-action" aria-label={'编辑模型 ' + (model.displayName || model.model || '系统默认')}
-                disabled={busy || editor?.kind === 'model' && editor.id === model.id} onClick={() => navigate(platform.id, { kind: 'model', id: model.id })}>编辑</button>
+              <span className="model-pane-actions">
+                {model.id !== catalog.defaultModelId && model.available && <button type="button" className="text-action"
+                  disabled={busy || editor !== null} onClick={() => void setSystemDefault(model)}>设为系统默认</button>}
+                <button type="button" className="text-action" aria-label={'编辑模型 ' + (model.displayName || model.model || '系统默认')}
+                  disabled={busy || editor?.kind === 'model' && editor.id === model.id} onClick={() => navigate(platform.id, { kind: 'model', id: model.id })}>编辑</button>
+              </span>
             </li>)}
           </ul> : <p className="resource-help">此平台还没有模型。</p>}
           {editor?.kind === 'model' && <section className="model-profile-editor" aria-labelledby="model-editor-title">

@@ -150,7 +150,7 @@ test('renders five chart types from a real CSV calculation during streaming and 
     await page.getByRole('button', { name: '登录', exact: true }).click();
     await expect(page.getByRole('button', { name: '进入项目：计算展示验证' })).toBeVisible();
     await page.goto(`${origin}/?session=${session.id}`);
-    await expect(page.getByRole('combobox', { name: '选择模型', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: '选择模型', exact: true })).toBeEnabled();
     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('计算 orders.csv，每班工单数画柱状图并显示表格。');
     await page.getByLabel('选择附件', { exact: true }).setInputFiles({ name: 'orders.csv', mimeType: 'text/csv', buffer: csv });
     await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();

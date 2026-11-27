@@ -117,7 +117,7 @@ test('streams concise resource views with one fixed result, rechecks details and
     await page.getByRole('button', { name: '登录', exact: true }).click();
     await expect(page.getByRole('button', { name: '进入项目：资源详情验收' })).toBeVisible();
     await page.goto(`${origin}/?session=${session.id}`);
-    await expect(page.getByRole('combobox', { name: '选择模型', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: '选择模型', exact: true })).toBeEnabled();
     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('统计资源并给我查看明细的入口。');
     await page.getByRole('button', { name: '发送消息', exact: true }).click();
 
