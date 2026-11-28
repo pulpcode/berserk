@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/backend/model-thinking.md", "reason": "多平台模型配置、thinking 映射、isVerifiedDeepSeekModel 范围与 Issue #4 上下文约定"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "Pi 0.85.1 原生会话、资源快照、压缩与前景消息接续契约"}
+{"file": "docs/mvp/model-provider-integration.md", "reason": "多平台接入方案与 Issue #4 背景设计依据"}
+{"file": ".trellis/tasks/11-27-context-assembly-eval/research/local-env-audit.md", "reason": "本机环境、CLI 状态与 main 基线代码定位"}

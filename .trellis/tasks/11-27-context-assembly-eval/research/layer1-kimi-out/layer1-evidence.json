@@ -1,0 +1,4411 @@
+{
+  "generatedAt": "2026-11-28T08:48:39.553Z",
+  "totals": {
+    "requests": 78,
+    "input": 128663,
+    "output": 25063,
+    "cacheRead": 218880,
+    "cacheWrite": 0,
+    "totalTokens": 372606,
+    "unknownUsageRequests": 0
+  },
+  "results": [
+    {
+      "scenario": "S1-S2-S3",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "A",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S1-T1(初始R1)",
+          "prompt": "用两句话介绍太阳系中最大的行星。",
+          "answer": "【赤松】太阳系中最大的行星是木星，它的质量约为其他七大行星总和的2.5倍，体积约为地球的1300多倍。木星是一颗气态巨行星，以大红斑风暴、众多卫星和明亮的条纹云带著称。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:40:42.337Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S1-T2(续聊R1)",
+          "prompt": "它有几颗最著名的伽利略卫星？简短回答。",
+          "answer": "【赤松】4颗，分别是木卫一伊奥、木卫二欧罗巴、木卫三盖尼米德和木卫四卡利斯托。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:40:44.766Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T1(替换R2首轮)",
+          "prompt": "用两句话介绍火星为什么呈现红色。",
+          "answer": "【赤松】火星表面广泛分布含氧化铁的细尘和岩石，像铁锈一样反射阳光，因此整体呈红橙色。风和尘暴把这些红色尘埃带到各处并长期覆盖地表，使火星在天空中看起来格外偏红。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【青竹】 开头",
+              "回答包含已失效的旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:40:46.872Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T2(替换R2次轮)",
+          "prompt": "火星目前有几颗天然卫星？简短回答。",
+          "answer": "【赤松】火星有2颗天然卫星：火卫一和火卫二。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【青竹】 开头",
+              "回答包含已失效的旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:40:50.232Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T1(清空后问答)",
+          "prompt": "用两句话说明地球自转和公转分别带来什么现象。",
+          "answer": "【赤松】地球自转使地表各地依次朝向或背向太阳，形成昼夜交替、天体东升西落和地方时差异。地球绕太阳公转使太阳直射点南北移动，从而形成四季更替、昼夜长短变化和正午太阳高度变化。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "清空规则后仍出现旧前缀 【赤松】",
+              "清空规则后开头仍存在装饰性前缀标记: 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:40:52.239Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 9,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T2(清空后追问约定)",
+          "prompt": "请问当前工作区还有没有要求回答必须带特定格式前缀的约定？直接如实回答。",
+          "answer": "【赤松】有。当前工作区指令仍约定：所有中文正式回答的第一行必须严格以【赤松】开头。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "清空规则后仍出现旧前缀 【赤松】",
+              "清空规则后开头仍存在装饰性前缀标记: 【赤松】",
+              "追问当前约定状态时，未明确说明当前没有工作区格式前缀约定"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:41:00.173Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 11,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2948,
+        "output": 1189,
+        "cacheRead": 11008,
+        "cacheWrite": 0,
+        "totalTokens": 15145,
+        "modelAttempts": 6
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S1-S2-S3",
+      "runIndex": 2,
+      "modelKey": "kimi",
+      "strategy": "A",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S1-T1(初始R1)",
+          "prompt": "用两句话介绍太阳系中最大的行星。",
+          "answer": "【赤松】木星是太阳系中最大的行星，质量约为其他七大行星总和的2.5倍，直径约14万公里。它是一颗气态巨行星，拥有大红斑风暴和众多卫星，其中最著名的是伽利略卫星。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:41:06.693Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S1-T2(续聊R1)",
+          "prompt": "它有几颗最著名的伽利略卫星？简短回答。",
+          "answer": "【赤松】四颗。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:41:09.964Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T1(替换R2首轮)",
+          "prompt": "用两句话介绍火星为什么呈现红色。",
+          "answer": "【赤松】火星表面覆盖着大量含氧化铁的尘埃，俗称铁锈，能更强地反射太阳光中的红橙色光。加上远古水和火山作用促进铁氧化，风又把红色尘土搬运到全球甚至悬浮在大气中，因此火星整体呈红色。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【青竹】 开头",
+              "回答包含已失效的旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:41:11.394Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T2(替换R2次轮)",
+          "prompt": "火星目前有几颗天然卫星？简短回答。",
+          "answer": "【赤松】两颗。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【青竹】 开头",
+              "回答包含已失效的旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:41:15.054Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T1(清空后问答)",
+          "prompt": "用两句话说明地球自转和公转分别带来什么现象。",
+          "answer": "【赤松】地球自转使各地依次朝向或背向太阳，从而产生昼夜交替、太阳东升西落和不同经度的时间差异。地球绕太阳公转使太阳直射点在南北回归线之间移动，从而产生四季变化、昼夜长短变化和五带分布。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "清空规则后仍出现旧前缀 【赤松】",
+              "清空规则后开头仍存在装饰性前缀标记: 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:41:17.006Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 9,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T2(清空后追问约定)",
+          "prompt": "请问当前工作区还有没有要求回答必须带特定格式前缀的约定？直接如实回答。",
+          "answer": "没有。当前工作区指令为空，没有要求回答必须带“【赤松】”或任何其他特定格式前缀。若你希望后续都带前缀，请明确让我记住这个约定。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "清空规则后仍出现旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:41:21.413Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 11,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2203,
+        "output": 1290,
+        "cacheRead": 11520,
+        "cacheWrite": 0,
+        "totalTokens": 15013,
+        "modelAttempts": 6
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S4",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "A",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S4-T1(同轮写入并遵守旧R1)",
+          "prompt": "更新工作区指令为 R4",
+          "answer": "【赤松】已更新工作区指令：中文正式回答首行改为以【雪松】开头。仅修改了工作区约定，未复制通用指令；自下次请求起生效。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答包含已失效的旧前缀 【雪松】"
+            ]
+          },
+          "wireCount": 3,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:41:34.091Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:41:37.677Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:41:44.482Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S4-T2(下轮生效R4)",
+          "prompt": "用一句话介绍海王星。",
+          "answer": "【雪松】海王星是太阳系最外侧的行星，也是一颗呈深蓝色、以强烈风暴和最快风速著称的冰巨星。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:41:51.121Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【雪松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2297,
+        "output": 959,
+        "cacheRead": 7168,
+        "cacheWrite": 0,
+        "totalTokens": 10424,
+        "modelAttempts": 4
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S5",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "A",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S5-T1(多步工具+followUp锁定R2)",
+          "prompt": "多步工具读取 + 中途改盘为 R1 + followUp",
+          "answer": "【青竹】meeting-notes（项目讨论纪要）的核心是：团队须在周五下午前提交一份面向 12 名新成员的 90 分钟线上首次培训方案，让参与者掌握\"资料收集、问题澄清、方案评审\"三步，已确认先收集成员问题再由两位讲师组织讨论，但演练主题、主持人和结果记录模板仍待确认，交付物为一页议程、准备清单与待确认事项。resource-brief（资源与约束说明）则框定了执行边界：两位讲师（各 3 小时准备）加一位协调员，复用现有视频会议与共享文档且不采购新软件，800 元预算仅限资料准备，首次活动 90 分钟建议含 10 分钟休息，并由协调员在提交前核查时长、分工与待确认事项。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 2,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:41:54.655Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:42:01.865Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S5-T2(下轮独立请求切到R1)",
+          "prompt": "用一句话介绍土星光环。",
+          "answer": "【青竹】土星光环是环绕土星、由大量冰粒与岩石碎屑组成的明亮同心环系，主要分 A、B、C 等环并以卡西尼缝等缝隙相隔，物质可能来自被潮汐撕裂的卫星或未能聚成卫星的原始物质。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【赤松】 开头",
+              "回答包含已失效的旧前缀 【青竹】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:42:10.163Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2345,
+        "output": 1236,
+        "cacheRead": 5376,
+        "cacheWrite": 0,
+        "totalTokens": 8957,
+        "modelAttempts": 3
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S6",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "A",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S6-预热1(R1)",
+          "prompt": "长文本预热-1",
+          "answer": "【赤松】该段没有实质内容，全由“合成背景材料片段：”重复堆叠而成，无法提取有效要点。唯一可记录的信息是末尾标注“编号-1”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:42:17.347Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热2(R1)",
+          "prompt": "长文本预热-2",
+          "answer": "【赤松】该段同样只有“合成背景材料片段：”的机械重复，不含可归纳的事实、观点或数据。除末尾标识“编号-2”外，没有可整理的有效背景信息。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:42:21.755Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热3(R1)",
+          "prompt": "长文本预热-3",
+          "answer": "【赤松】该段依旧由“合成背景材料片段：”重复堆叠组成，没有可提取的事实、数据或观点。有效信息仅为末尾标识“编号-3”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:42:24.585Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-切换R2与压缩",
+          "prompt": "触发原生压缩并切R2",
+          "answer": "【赤松】该材料仍由“合成背景材料片段：”重复堆叠而成，不含任何可归纳的实质内容。唯一有效信息是末尾标识“触发压缩-4”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【青竹】 开头",
+              "回答包含已失效的旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 3,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:42:26.765Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 2294
+              }
+            },
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:42:29.920Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:42:40.377Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-压缩后续聊(compaction=true)",
+          "prompt": "压缩后续聊",
+          "answer": "【青竹】金星被以二氧化碳为主的稠密大气包裹，二氧化碳强烈吸收并再辐射地表红外辐射，引发失控温室效应。结果是金星表面温度高达约465℃，甚至超过离太阳更近的水星。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 6,
+              "timestamp": "2026-11-28T08:42:47.230Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 6,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 19722,
+        "output": 1709,
+        "cacheRead": 13824,
+        "cacheWrite": 0,
+        "totalTokens": 35255,
+        "modelAttempts": 7
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S6",
+      "runIndex": 2,
+      "modelKey": "kimi",
+      "strategy": "A",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S6-预热1(R1)",
+          "prompt": "长文本预热-1",
+          "answer": "【赤松】该段为高度重复的“合成背景材料片段”占位文本，未提供可归纳的事实或论点。可提取的有效信息仅有结尾编号“编号-1”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:42:56.321Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热2(R1)",
+          "prompt": "长文本预热-2",
+          "answer": "【赤松】该段仍是重复的“合成背景材料片段”占位文本，没有新增事实或论点。可提取的有效信息仅为结尾编号“编号-2”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:42:59.333Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热3(R1)",
+          "prompt": "长文本预热-3",
+          "answer": "【赤松】该段与前面相同，仍是重复“合成背景材料片段”的占位文本，未呈现实质事实、观点或约束。可提取的有效信息仅为结尾编号“编号-3”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:43:02.100Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-切换R2与压缩",
+          "prompt": "触发原生压缩并切R2",
+          "answer": "【赤松】该新材料与前文一致，仍由重复“合成背景材料片段”构成，没有可归纳的事实、观点或约束。可提取的有效标记仅为结尾“触发压缩-4”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【青竹】 开头",
+              "回答包含已失效的旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 3,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:43:06.166Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 2286
+              }
+            },
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:43:08.483Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:43:14.163Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-压缩后续聊(compaction=true)",
+          "prompt": "压缩后续聊",
+          "answer": "【赤松】金星拥有约96.5%的二氧化碳浓密大气和高压（约92倍地球气压），温室效应极强，使表面温度高达约465℃。尽管硫酸云反射很多阳光，但大气对红外的强吸收和温室气体循环仍让金星表面比水星更热。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "回答未以要求的前缀 【青竹】 开头",
+              "回答包含已失效的旧前缀 【赤松】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 6,
+              "timestamp": "2026-11-28T08:43:22.440Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 13799,
+        "output": 1694,
+        "cacheRead": 19712,
+        "cacheWrite": 0,
+        "totalTokens": 35205,
+        "modelAttempts": 7
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S1-S2-S3",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "C",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S1-T1(初始R1)",
+          "prompt": "用两句话介绍太阳系中最大的行星。",
+          "answer": "【赤松】木星是太阳系中最大的行星，质量约为其他行星总和的2.5倍。它是一颗气态巨行星，以大红斑、强大磁场和众多卫星而闻名。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:43:29.545Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S1-T2(续聊R1)",
+          "prompt": "它有几颗最著名的伽利略卫星？简短回答。",
+          "answer": "【赤松】4颗。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:43:34.107Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[2]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T1(替换R2首轮)",
+          "prompt": "用两句话介绍火星为什么呈现红色。",
+          "answer": "【青竹】火星呈红色，主要是因为其表面覆盖着富含氧化铁的尘土和岩石。阳光被这些“铁锈”颗粒反射后，火星整体便呈现典型的橙红色调。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:43:36.282Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T2(替换R2次轮)",
+          "prompt": "火星目前有几颗天然卫星？简短回答。",
+          "answer": "【青竹】2颗。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:43:41.527Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T1(清空后问答)",
+          "prompt": "用两句话说明地球自转和公转分别带来什么现象。",
+          "answer": "地球自转产生昼夜交替，并造成不同经度地区的地方时差异。地球公转使太阳直射点在南北回归线之间移动，从而形成四季更替和昼夜长短变化。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:43:43.239Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[8]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 9,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T2(清空后追问约定)",
+          "prompt": "请问当前工作区还有没有要求回答必须带特定格式前缀的约定？直接如实回答。",
+          "answer": "没有。当前工作区指令为空，没有要求回答必须带特定格式前缀；此前出现过的前缀不代表当前约定。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:43:46.917Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[10]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 11,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 4363,
+        "output": 1063,
+        "cacheRead": 11776,
+        "cacheWrite": 0,
+        "totalTokens": 17202,
+        "modelAttempts": 6
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S1-S2-S3",
+      "runIndex": 2,
+      "modelKey": "kimi",
+      "strategy": "C",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S1-T1(初始R1)",
+          "prompt": "用两句话介绍太阳系中最大的行星。",
+          "answer": "【赤松】木星是太阳系中最大的行星，质量约为其他七颗行星总和的2.5倍。它以大红斑风暴、众多卫星和强大磁场著称，主要由氢和氦组成。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:43:51.346Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S1-T2(续聊R1)",
+          "prompt": "它有几颗最著名的伽利略卫星？简短回答。",
+          "answer": "【赤松】4颗。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:43:56.899Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[2]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T1(替换R2首轮)",
+          "prompt": "用两句话介绍火星为什么呈现红色。",
+          "answer": "【青竹】火星呈红色主要因为地表广泛分布氧化铁，岩石和尘埃风化后像“铁锈”一样吸收蓝光、反射红黄光。大气中细小尘埃进一步散射蓝光，使天空和远处地平线常带淡红或黄褐色调。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:43:58.438Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T2(替换R2次轮)",
+          "prompt": "火星目前有几颗天然卫星？简短回答。",
+          "answer": "【青竹】2颗：火卫一（Phobos）和火卫二（Deimos）。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:44:02.726Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T1(清空后问答)",
+          "prompt": "用两句话说明地球自转和公转分别带来什么现象。",
+          "answer": "地球自转让太阳相对东升西落，造成昼夜交替、时间经度差和一天约24小时。地球绕日公转带来一年周期和太阳在恒星背景中的周年视运动，并与地轴倾斜共同造成四季、昼夜长短和正午太阳高度变化。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:44:04.912Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[8]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 9,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T2(清空后追问约定)",
+          "prompt": "请问当前工作区还有没有要求回答必须带特定格式前缀的约定？直接如实回答。",
+          "answer": "没有。当前工作区指令为空，没有要求回答必须带特定格式前缀；我不会继承历史回答里的前缀格式。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:44:10.507Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[10]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 11,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 4159,
+        "output": 960,
+        "cacheRead": 11776,
+        "cacheWrite": 0,
+        "totalTokens": 16895,
+        "modelAttempts": 6
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S4",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "C",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S4-T1(同轮写入并遵守旧R1)",
+          "prompt": "更新工作区指令为 R4",
+          "answer": "【赤松】已更新当前工作区指令，仅修改工作区约定，未复制通用指令；新内容将在下一次请求生效。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 3,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:44:13.047Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:44:20.055Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:44:27.488Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S4-T2(下轮生效R4)",
+          "prompt": "用一句话介绍海王星。",
+          "answer": "【雪松】海王星是太阳系中距离太阳最远的行星，呈深蓝色，以强烈风暴和稀薄环系统闻名。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:44:32.895Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【雪松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 3128,
+        "output": 951,
+        "cacheRead": 7936,
+        "cacheWrite": 0,
+        "totalTokens": 12015,
+        "modelAttempts": 4
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S5",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "C",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S5-T1(多步工具+followUp锁定R2)",
+          "prompt": "多步工具读取 + 中途改盘为 R1 + followUp",
+          "answer": "【青竹】已读取两份资料，核心主题总结如下：\n\n1. **meeting-notes（项目讨论纪要）**：团队计划在周五下午前提交一份面向 12 名新成员的内部培训方案，首次活动为 90 分钟线上进行，聚焦资料收集、问题澄清和方案评审三个步骤，议程框架已定但演练主题、主持人和记录模板等待确认。\n2. **resource-brief（资源与约束说明）**：该方案需在明确约束内执行——两位讲师（各 3 小时准备）、一位协调员、800 元资料预算、不采购新软件，且方案提交前须由协调员检查时长、分工和待确认事项。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 2,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:44:37.066Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:44:38.908Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S5-T2(下轮独立请求切到R1)",
+          "prompt": "用一句话介绍土星光环。",
+          "answer": "【赤松】土星光环是围绕土星的一系列由冰粒、岩石碎块和尘埃组成的巨大环带系统，主要由无数小颗粒在土星赤道平面附近沿轨道运行所构成，直径达数十万公里却薄得惊人。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:44:41.594Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2214,
+        "output": 419,
+        "cacheRead": 5632,
+        "cacheWrite": 0,
+        "totalTokens": 8265,
+        "modelAttempts": 3
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S6",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "C",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S6-预热1(R1)",
+          "prompt": "长文本预热-1",
+          "answer": "【赤松】你提供的片段仅重复“合成背景材料片段：”并以“编号-1”结尾，未包含可提炼的事实、结论或行动要求。若必须概括，只能说明它是编号为 1 的背景材料占位/填充文本，没有实质信息可整理。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:44:44.997Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热2(R1)",
+          "prompt": "长文本预热-2",
+          "answer": "【赤松】你提供的第2段仍只重复“合成背景材料片段：”并以“编号-2”结尾，未包含可提炼的事实、结论或行动要求。若必须概括，只能说明它是编号为 2 的背景材料占位/填充文本，没有实质信息可整理。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:44:50.860Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[2]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热3(R1)",
+          "prompt": "长文本预热-3",
+          "answer": "【赤松】你提供的第3段仍只重复“合成背景材料片段：”并以“编号-3”结尾，未包含可提炼的事实、结论或行动要求。若必须概括，只能说明它是编号为 3 的背景材料占位/填充文本，没有实质信息可整理。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 2,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:44:55.054Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:44:58.404Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-切换R2与压缩",
+          "prompt": "触发原生压缩并切R2",
+          "answer": "【青竹】新材料仍只是重复“合成背景材料片段：”，并以“触发压缩-4”结尾，没有可提炼的事实、结论或行动要求。可概括为：这是一段带“触发压缩-4”标记的合成背景占位/填充文本，未提供有效信息。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 2,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:45:03.094Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[5]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 6,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:45:09.729Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-压缩后续聊(compaction=true)",
+          "prompt": "压缩后续聊",
+          "answer": "【青竹】金星被富含二氧化碳的浓厚大气包裹，强烈的温室效应把入射阳光截留为难以散失的热量。其表面温度可约达465℃，形成“失控温室”状态，使金星比离太阳更近的水星表面还热。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 6,
+              "timestamp": "2026-11-28T08:45:17.275Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "user",
+                "assistant",
+                "user",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 16337,
+        "output": 2266,
+        "cacheRead": 18176,
+        "cacheWrite": 0,
+        "totalTokens": 36779,
+        "modelAttempts": 7
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S6",
+      "runIndex": 2,
+      "modelKey": "kimi",
+      "strategy": "C",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S6-预热1(R1)",
+          "prompt": "长文本预热-1",
+          "answer": "【赤松】该段几乎全是重复的“合成背景材料片段”占位文字，未提供可辨识主题、数据或结论。仅末尾标有“编号-1”，整体更像待填内容/编号标记，而非有效背景材料。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:45:23.095Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[0]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热2(R1)",
+          "prompt": "长文本预热-2",
+          "answer": "【赤松】该段仍由大量重复的“合成背景材料片段”占位文字组成，没有可提炼的主题、事实或结论。末尾仅标“编号-2”，可理解为第2段/待补内容的顺序标记。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:45:27.144Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[2]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热3(R1)",
+          "prompt": "长文本预热-3",
+          "answer": "【赤松】第3段仍是“合成背景材料片段”的重复占位文本，未包含可概括的主题、数据或结论。仅末尾标注“编号-3”，更像顺序编号或待补内容提示。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 2,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:45:31.754Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:45:37.708Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-切换R2与压缩",
+          "prompt": "触发原生压缩并切R2",
+          "answer": "【青竹】新材料仍由大量重复的“合成背景材料片段”占位文字构成，未提供主题、事实或结论。末尾出现“触发压缩-4”，更像流程/压缩触发标记而非可归纳的内容要点。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 2,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:45:49.775Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[5]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 6,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:45:53.942Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-压缩后续聊(compaction=true)",
+          "prompt": "压缩后续聊",
+          "answer": "【青竹】金星被以二氧化碳为主的浓密大气包裹，强温室效应把表面加热到约465–470℃。这种接近失控的温室效应使热量难以散逸，即使金星反射大量阳光，仍比水星更热。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 6,
+              "timestamp": "2026-11-28T08:46:00.317Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "user",
+                "assistant",
+                "user",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 16409,
+        "output": 2582,
+        "cacheRead": 18688,
+        "cacheWrite": 0,
+        "totalTokens": 37679,
+        "modelAttempts": 7
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S1-S2-S3",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "D1",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S1-T1(初始R1)",
+          "prompt": "用两句话介绍太阳系中最大的行星。",
+          "answer": "【赤松】木星是太阳系中最大的行星，也是一颗主要由氢和氦组成的气态巨行星，赤道直径约14万公里，质量约为其余行星总和的2.5倍。它以持续数百年的大红斑风暴、强大磁场以及众多卫星（包括可能藏有冰下海洋的木卫二）而闻名。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:46:08.200Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S1-T2(续聊R1)",
+          "prompt": "它有几颗最著名的伽利略卫星？简短回答。",
+          "answer": "【赤松】4颗：木卫一、木卫二、木卫三、木卫四。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:46:12.003Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T1(替换R2首轮)",
+          "prompt": "用两句话介绍火星为什么呈现红色。",
+          "answer": "【青竹】火星表面覆盖着富含氧化铁（类似铁锈）的尘埃和岩石，这些物质容易随风扩散到全球。氧化铁更倾向反射红光、吸收蓝绿光，加上火星大气稀薄、散射较弱，所以从远处看火星呈现橙红色。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:46:13.577Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T2(替换R2次轮)",
+          "prompt": "火星目前有几颗天然卫星？简短回答。",
+          "answer": "【青竹】2颗：火卫一和火卫二。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:46:17.190Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T1(清空后问答)",
+          "prompt": "用两句话说明地球自转和公转分别带来什么现象。",
+          "answer": "地球自转使我们经历昼夜交替，并产生太阳东升西落和不同经度的时间差异。地球绕太阳公转则带来四季更替，以及昼夜长短和正午太阳高度的周年变化。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:46:20.205Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[8]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 9,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T2(清空后追问约定)",
+          "prompt": "请问当前工作区还有没有要求回答必须带特定格式前缀的约定？直接如实回答。",
+          "answer": "没有。当前工作区约定已清空，不再有“必须带特定格式前缀”的要求；之前的【赤松】/【青竹】前缀都不应再沿用。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "清空规则后仍出现旧前缀 【赤松】",
+              "清空规则后仍出现旧前缀 【青竹】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:46:24.291Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 11,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2783,
+        "output": 1172,
+        "cacheRead": 12032,
+        "cacheWrite": 0,
+        "totalTokens": 15987,
+        "modelAttempts": 6
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S1-S2-S3",
+      "runIndex": 2,
+      "modelKey": "kimi",
+      "strategy": "D1",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S1-T1(初始R1)",
+          "prompt": "用两句话介绍太阳系中最大的行星。",
+          "answer": "【赤松】木星是太阳系中最大的行星，质量约为其他七颗行星总和的2.5倍。它主要由氢和氦组成，以大红斑和众多卫星闻名，是一颗典型的气态巨行星。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:46:29.697Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S1-T2(续聊R1)",
+          "prompt": "它有几颗最著名的伽利略卫星？简短回答。",
+          "answer": "【赤松】4颗：木卫一伊奥、木卫二欧罗巴、木卫三盖尼米德、木卫四卡利斯托。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:46:33.161Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T1(替换R2首轮)",
+          "prompt": "用两句话介绍火星为什么呈现红色。",
+          "answer": "【青竹】火星呈现红色，是因为地表覆盖着富含氧化铁（类似铁锈）的细尘和沙粒，反射光线偏红。科学家认为，早期火星可能有液态水，促使岩石中的铁被氧化，再经长期风化把红色尘埃铺到全球。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:46:35.609Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S2-T2(替换R2次轮)",
+          "prompt": "火星目前有几颗天然卫星？简短回答。",
+          "answer": "【青竹】2颗：火卫一福博斯、火卫二德莫斯。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:46:38.744Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T1(清空后问答)",
+          "prompt": "用两句话说明地球自转和公转分别带来什么现象。",
+          "answer": "地球自转使地表各地依次朝向或背向太阳，产生昼夜交替，并让我们看到日月星辰东升西落。地球绕太阳公转使太阳直射点南北移动，带来四季更替、昼夜长短变化和正午太阳高度的周年变化。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:46:40.447Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[8]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 9,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S3-T2(清空后追问约定)",
+          "prompt": "请问当前工作区还有没有要求回答必须带特定格式前缀的约定？直接如实回答。",
+          "answer": "没有。当前工作区约定为空，没有要求回答必须带特定格式前缀；此前出现过的【赤松】/【青竹】不是当前固定约定。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "清空规则后仍出现旧前缀 【赤松】",
+              "清空规则后仍出现旧前缀 【青竹】"
+            ]
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:46:44.465Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1529,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 11,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2566,
+        "output": 1105,
+        "cacheRead": 12032,
+        "cacheWrite": 0,
+        "totalTokens": 15703,
+        "modelAttempts": 6
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S4",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "D1",
+      "passed": false,
+      "turns": [
+        {
+          "turn": "S4-T1(同轮写入并遵守旧R1)",
+          "prompt": "更新工作区指令为 R4",
+          "answer": "The update was successful. The new hash is 0a27ec929696ba3ff5bde3b671ce6d88c4428c8309862ab2e98d85807abf0abf and it's effective from next request. I should note that this request is still under the old rules (the current response should still use 【赤松】 prefix since the instruction says \"新保存内容下一请求生效，本轮已加载指令保持不变\").\n\nWait, let me think. The system prompt says: \"新保存内容下一请求生效，本轮已加载指令保持不变。\" So for this current response, the old rule (【赤松】) still applies. But my response is a casual reply — actually the workspace instruction says \"所有中文正式回答的第一行必须严格以【赤松】开头\". My previous messages started with 【赤松】. This is a formal-ish reply about updating instructions. I should keep consistency with the currently loaded rules, which means using 【赤松】 for this response, and note that the new prefix takes effect next request.\n\nActually, let me reconsider - is this a \"正式回答\"? It's a response to the user's request. I've been prefixing with 【赤松】 throughout. The instruction says the newly saved content takes effect next request, and this round's loaded instructions remain unchanged. So this response should still follow 【赤松】. Let me keep that consistent and explain.\n\n【赤松】已完成更新。\n\n**更新结果：**\n- 旧约定：所有中文正式回答的第一行必须严格以【赤松】开头……\n- 新约定：所有中文正式回答的第一行必须严格以【雪松】开头，不要在开头使用任何其他旧前缀或装饰标记。\n- 新内容 hash：`0a27ec929696ba3ff5bde3b671ce6d88c4428c8309862ab2e98d85807abf0abf`\n\n**生效时间说明：** 新约定自**下一次请求**起生效；本轮已加载的指令保持不变，所以本回答仍按当前规则以【赤松】开头。通用指令未做任何改动。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": false,
+            "reasons": [
+              "前缀 【赤松】 未位于回答开头（疑似句中/句末假阳性）",
+              "回答包含已失效的旧前缀 【雪松】"
+            ]
+          },
+          "wireCount": 3,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:46:49.455Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:46:53.121Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:46:58.620Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S4-T2(下轮生效R4)",
+          "prompt": "用一句话介绍海王星。",
+          "answer": "【雪松】海王星是太阳系中离太阳最远的第八颗行星，呈深蓝色，以强烈的风暴和巨大的风速著称。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:47:07.569Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【雪松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 2561,
+        "output": 988,
+        "cacheRead": 7168,
+        "cacheWrite": 0,
+        "totalTokens": 10717,
+        "modelAttempts": 4
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S5",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "D1",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S5-T1(多步工具+followUp锁定R2)",
+          "prompt": "多步工具读取 + 中途改盘为 R1 + followUp",
+          "answer": "【青竹】已读取两份资料，核心主题总结如下：\n\n1. **meeting-notes**：团队需在周五下午前为 12 名新成员提交一份 90 分钟线上内部培训方案，聚焦资料收集、问题澄清、方案评审三个步骤，并列出已确认事项（先收集问题、两位讲师组织讨论）、待确认事项（演练主题、主持人、记录模板）及交付物（一页议程、准备清单）。\n2. **resource-brief**：该培训可用的资源与约束包括两位讲师（每人 3 小时准备时间）、一位协调员、800 元且仅限资料准备的预算、复用现有视频会议和共享文档（不采购新软件），首次活动 90 分钟建议含 10 分钟休息，方案提交前由协调员核查时长、分工和待确认事项。\n\n两份资料共同构成\"培训方案的目标待办 + 资源约束\"信息对，可互相印证但仍有演练主题等待确认事项需要补充。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 2,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:47:09.577Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            },
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:47:12.272Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S5-T2(下轮独立请求切到R1)",
+          "prompt": "用一句话介绍土星光环。",
+          "answer": "【赤松】土星光环是围绕土星的一系列由冰粒、岩石碎块和尘埃组成的同心环带，主要由水冰构成，沿赤道平面延展数十万公里却薄至几十米，是太阳系中最壮观的行星环结构。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:47:17.553Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant(tool_call)",
+                "user(tool_result)",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[4]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 4096
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 1952,
+        "output": 791,
+        "cacheRead": 5376,
+        "cacheWrite": 0,
+        "totalTokens": 8119,
+        "modelAttempts": 3
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S6",
+      "runIndex": 1,
+      "modelKey": "kimi",
+      "strategy": "D1",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S6-预热1(R1)",
+          "prompt": "长文本预热-1",
+          "answer": "【赤松】该段有效信息极少，主体是“合成背景材料片段：”的占位重复，末尾标注“编号-1”。可概括为：这是编号-1的合成背景材料占位内容，未提供可提炼的具体事实、数据或结论。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:47:22.177Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热2(R1)",
+          "prompt": "长文本预热-2",
+          "answer": "【赤松】该段主体仍是“合成背景材料片段：”的占位重复，末尾标注“编号-2”，没有新增实质信息。可概括为：这是编号-2的合成背景材料占位内容，未提供可提炼的具体事实、数据或结论。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:47:27.520Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热3(R1)",
+          "prompt": "长文本预热-3",
+          "answer": "【赤松】该段仍是“合成背景材料片段：”的占位重复，末尾标注“编号-3”，无新增有效信息。要点可概括为：编号-3的合成背景材料占位内容，未包含可提炼的具体事实、数据或结论。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:47:31.065Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-切换R2与压缩",
+          "prompt": "触发原生压缩并切R2",
+          "answer": "【青竹】该新材料仍以“合成背景材料片段：”占位重复为主，末尾标注“触发压缩-4”，没有新增实质内容。要点可概括为：这是“触发压缩-4”的合成背景材料占位文本，未包含可提炼的具体事实、数据或结论。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 3,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:47:34.687Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 1867
+              }
+            },
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:47:37.984Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:47:42.979Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-压缩后续聊(compaction=true)",
+          "prompt": "压缩后续聊",
+          "answer": "【青竹】金星大气约96%为二氧化碳，并有浓厚硫酸云，强烈吸收和再辐射热量，使表面温度约460–470℃。这种“失控温室效应”让金星比离太阳更近的水星表面还热，也成为研究地球气候失控风险的重要参照。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 6,
+              "timestamp": "2026-11-28T08:47:55.646Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 6,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 14707,
+        "output": 2222,
+        "cacheRead": 19968,
+        "cacheWrite": 0,
+        "totalTokens": 36897,
+        "modelAttempts": 7
+      },
+      "nativeHistoryClean": true
+    },
+    {
+      "scenario": "S6",
+      "runIndex": 2,
+      "modelKey": "kimi",
+      "strategy": "D1",
+      "passed": true,
+      "turns": [
+        {
+          "turn": "S6-预热1(R1)",
+          "prompt": "长文本预热-1",
+          "answer": "【赤松】该片段为占位性“合成背景材料”，正文仅由同一句短语反复拼接而成，没有可提炼的具体事实、数据或事件。其唯一有效信息是末尾的片段标识“编号-1”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 0,
+              "timestamp": "2026-11-28T08:48:02.109Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热2(R1)",
+          "prompt": "长文本预热-2",
+          "answer": "【赤松】该段仍为占位式合成背景材料，正文仅重复同一短语，没有可归纳的事实、数据或结论。唯一新增有效信息是末尾标识为“编号-2”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 1,
+              "timestamp": "2026-11-28T08:48:05.112Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 3,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-预热3(R1)",
+          "prompt": "长文本预热-3",
+          "answer": "【赤松】该段仍是占位式合成背景材料，正文只有同一短语重复，无实质事实、数据或结论；末尾标识为“编号-3”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 2,
+              "timestamp": "2026-11-28T08:48:07.862Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1582,
+              "systemFingerprints": [
+                "【赤松】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 5,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-切换R2与压缩",
+          "prompt": "触发原生压缩并切R2",
+          "answer": "【青竹】该新材料仍是占位式合成背景材料，正文仅为同一短语反复拼接，未包含可概括的事实、数据或结论。唯一有效信息是末尾标识为“触发压缩-4”。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 3,
+          "wireSummary": [
+            {
+              "index": 3,
+              "timestamp": "2026-11-28T08:48:10.220Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 1,
+              "reminderLocations": [
+                "messages[6]:user"
+              ],
+              "tailUserContainsReminder": true,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 7,
+                "toolCount": 7,
+                "maxTokens": 2181
+              }
+            },
+            {
+              "index": 4,
+              "timestamp": "2026-11-28T08:48:14.312Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            },
+            {
+              "index": 5,
+              "timestamp": "2026-11-28T08:48:24.358Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 310,
+              "systemFingerprints": [],
+              "messageRoles": [
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 1,
+                "toolCount": 0,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        },
+        {
+          "turn": "S6-压缩后续聊(compaction=true)",
+          "prompt": "压缩后续聊",
+          "answer": "【青竹】金星大气约96.5%是二氧化碳，并有浓厚硫酸云，强温室效应使表面温度高达约465℃。尽管云层反照率很高，浓密二氧化碳仍牢牢拦住热量，让金星比离太阳更近的水星表面还热。",
+          "status": "succeeded",
+          "assertion": {
+            "passed": true,
+            "reasons": []
+          },
+          "wireCount": 1,
+          "wireSummary": [
+            {
+              "index": 6,
+              "timestamp": "2026-11-28T08:48:32.029Z",
+              "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+              "api": "anthropic-messages",
+              "model": "kimi-k2.8-preview",
+              "systemLength": 1581,
+              "systemFingerprints": [
+                "【青竹】",
+                "工作区格式约定"
+              ],
+              "messageRoles": [
+                "user",
+                "user",
+                "assistant",
+                "user",
+                "assistant",
+                "user"
+              ],
+              "systemMessageCount": 1,
+              "hostReminderCount": 0,
+              "systemReminderCount": 0,
+              "reminderLocations": [],
+              "tailUserContainsReminder": false,
+              "toolResultContainsReminder": false,
+              "containsSecret": false,
+              "rawBodySummary": {
+                "messageCount": 6,
+                "toolCount": 7,
+                "maxTokens": 2560
+              }
+            }
+          ]
+        }
+      ],
+      "usage": {
+        "input": 14170,
+        "output": 2467,
+        "cacheRead": 19712,
+        "cacheWrite": 0,
+        "totalTokens": 36349,
+        "modelAttempts": 7
+      },
+      "nativeHistoryClean": true
+    }
+  ]
+}

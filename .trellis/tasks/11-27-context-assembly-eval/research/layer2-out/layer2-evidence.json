@@ -1,0 +1,862 @@
+{
+  "opencode-deepseek": [
+    {
+      "step": "P0-初始R1",
+      "ruleFileWritten": "AGENTS.md=R1",
+      "prompt": "介绍太阳系中最大的行星",
+      "reply": "【赤松】太阳系中最大的行星是木星，直径约为地球的11倍，质量超过其他所有行星总和的两倍。它是一颗主要由氢和氦组成的气态巨行星，拥有著名的大红斑以及众多卫星。",
+      "wireRequestsCount": 2,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "PASS",
+      "assertion": {
+        "passed": true,
+        "reasons": []
+      },
+      "wireAudits": [
+        {
+          "index": 0,
+          "method": "POST",
+          "path": "/chat/completions",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+          "status": 200,
+          "durationMs": 1638,
+          "requestHeaders": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.23 runtime/bun/1.4.4",
+            "x-opencode-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-affinity": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57723",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "2499"
+          },
+          "audit": {
+            "index": 0,
+            "timestamp": "2026-11-28T08:32:07.157Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+            "api": "openai-completions",
+            "model": "deepseek-v4.1-flash",
+            "systemLength": 2096,
+            "systemFingerprints": [],
+            "messageRoles": [
+              "system",
+              "user",
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 0,
+            "reminderLocations": [],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 3,
+              "toolCount": 0,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [],
+          "usage": {
+            "input": 558,
+            "output": 101,
+            "cacheRead": 512,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "index": 1,
+          "method": "POST",
+          "path": "/chat/completions",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+          "status": 200,
+          "durationMs": 2739,
+          "requestHeaders": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.23 runtime/bun/1.4.4",
+            "x-opencode-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-affinity": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57723",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "31154"
+          },
+          "audit": {
+            "index": 1,
+            "timestamp": "2026-11-28T08:32:08.935Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+            "api": "openai-completions",
+            "model": "deepseek-v4.1-flash",
+            "systemLength": 9854,
+            "systemFingerprints": [
+              "【赤松】",
+              "工作区格式约定"
+            ],
+            "messageRoles": [
+              "system",
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 2,
+            "reminderLocations": [
+              "messages[0]:system"
+            ],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 2,
+              "toolCount": 10,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "工作区格式约定"
+          ],
+          "usage": {
+            "input": 7475,
+            "output": 224,
+            "cacheRead": 1792,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    {
+      "step": "P1-同会话替换R2",
+      "ruleFileWritten": "AGENTS.md=R2",
+      "prompt": "介绍火星为什么呈现红色",
+      "reply": "【赤松】火星表面覆盖着大量富含氧化铁的尘埃，这些“铁锈”颗粒吸收蓝绿光而反射红光，使地表呈现红褐色。这些细小尘埃还长期悬浮在大气中，进一步让整颗行星从远处看呈现橙红色。",
+      "wireRequestsCount": 1,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "MODEL_INERTIA_OR_CONTEXT_FAIL",
+      "assertion": {
+        "passed": false,
+        "reasons": [
+          "回答未以要求的前缀 【青竹】 开头",
+          "回答包含已失效的旧前缀 【赤松】"
+        ]
+      },
+      "wireAudits": [
+        {
+          "index": 2,
+          "method": "POST",
+          "path": "/chat/completions",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+          "status": 200,
+          "durationMs": 3227,
+          "requestHeaders": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.23 runtime/bun/1.4.4",
+            "x-opencode-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-affinity": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57723",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "32322"
+          },
+          "audit": {
+            "index": 2,
+            "timestamp": "2026-11-28T08:32:12.318Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+            "api": "openai-completions",
+            "model": "deepseek-v4.1-flash",
+            "systemLength": 9853,
+            "systemFingerprints": [
+              "【青竹】",
+              "工作区格式约定"
+            ],
+            "messageRoles": [
+              "system",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 2,
+            "reminderLocations": [
+              "messages[0]:system"
+            ],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 4,
+              "toolCount": 10,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "【青竹】",
+            "工作区格式约定"
+          ],
+          "usage": {
+            "input": 7711,
+            "output": 183,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    {
+      "step": "P2-同会话清空规则",
+      "ruleFileWritten": "AGENTS.md=\"\"",
+      "prompt": "说明地球自转和公转带来的现象",
+      "reply": "【赤松】地球自转带来昼夜交替、天体东升西落以及科里奥利效应等现象。地球公转则带来四季变化、昼夜长短和太阳直射点的回归运动等年度性现象。",
+      "wireRequestsCount": 1,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "MODEL_INERTIA_OR_CONTEXT_FAIL",
+      "assertion": {
+        "passed": false,
+        "reasons": [
+          "清空规则后仍出现旧前缀 【赤松】",
+          "清空规则后开头仍存在装饰性前缀标记: 【赤松】"
+        ]
+      },
+      "wireAudits": [
+        {
+          "index": 3,
+          "method": "POST",
+          "path": "/chat/completions",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+          "status": 200,
+          "durationMs": 2390,
+          "requestHeaders": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.23 runtime/bun/1.4.4",
+            "x-opencode-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-affinity": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "x-session-id": "ses_ddeb78906ffe8Bl6za5RQ6E1ql",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57723",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "33015"
+          },
+          "audit": {
+            "index": 3,
+            "timestamp": "2026-11-28T08:32:16.169Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+            "api": "openai-completions",
+            "model": "deepseek-v4.1-flash",
+            "systemLength": 9662,
+            "systemFingerprints": [],
+            "messageRoles": [
+              "system",
+              "user",
+              "assistant",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 2,
+            "reminderLocations": [
+              "messages[0]:system"
+            ],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 6,
+              "toolCount": 10,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】"
+          ],
+          "usage": {
+            "input": 7827,
+            "output": 103,
+            "cacheRead": 1792,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    }
+  ],
+  "opencode-kimi": [
+    {
+      "step": "P0-初始R1",
+      "ruleFileWritten": "AGENTS.md=R1",
+      "prompt": "介绍太阳系中最大的行星",
+      "reply": "【赤松】木星是太阳系中最大的行星，质量约为其余七颗行星总和的2.5倍，以大红斑和强大磁场著称。它主要由氢和氦组成，拥有众多卫星与微弱行星环，也是八大行星中自转最快的一颗。",
+      "wireRequestsCount": 2,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "PASS",
+      "assertion": {
+        "passed": true,
+        "reasons": []
+      },
+      "wireAudits": [
+        {
+          "index": 0,
+          "method": "POST",
+          "path": "/v1/messages",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+          "status": 200,
+          "durationMs": 1954,
+          "requestHeaders": {
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.46 runtime/bun/1.4.4",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": "[REDACTED]",
+            "x-opencode-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-affinity": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57768",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "2596"
+          },
+          "audit": {
+            "index": 0,
+            "timestamp": "2026-11-28T08:32:19.250Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+            "api": "anthropic-messages",
+            "model": "kimi-k2.8-preview",
+            "systemLength": 2096,
+            "systemFingerprints": [],
+            "messageRoles": [
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 0,
+            "reminderLocations": [],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 1,
+              "toolCount": 0,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [],
+          "usage": {
+            "input": 608,
+            "output": 125,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "index": 0,
+          "method": "POST",
+          "path": "/v1/messages",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+          "status": 200,
+          "durationMs": 4178,
+          "requestHeaders": {
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.46 runtime/bun/1.4.4",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": "[REDACTED]",
+            "x-opencode-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-affinity": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57768",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "31079"
+          },
+          "audit": {
+            "index": 0,
+            "timestamp": "2026-11-28T08:32:19.378Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+            "api": "anthropic-messages",
+            "model": "kimi-k2.8-preview",
+            "systemLength": 9997,
+            "systemFingerprints": [
+              "【赤松】",
+              "工作区格式约定"
+            ],
+            "messageRoles": [
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 0,
+            "reminderLocations": [],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 1,
+              "toolCount": 10,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "工作区格式约定"
+          ],
+          "usage": {
+            "input": 6909,
+            "output": 259,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    {
+      "step": "P1-同会话替换R2",
+      "ruleFileWritten": "AGENTS.md=R2",
+      "prompt": "介绍火星为什么呈现红色",
+      "reply": "【青竹】火星之所以呈红色，是因为其表土和风化壳中富含氧化铁（类似铁锈的赤铁矿），能强烈反射偏红的可见光。再加上火星大气稀薄、红色尘埃容易被风扬起并覆盖全球，使地表和天空都带上明显的橙红色调。",
+      "wireRequestsCount": 1,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "PASS",
+      "assertion": {
+        "passed": true,
+        "reasons": []
+      },
+      "wireAudits": [
+        {
+          "index": 2,
+          "method": "POST",
+          "path": "/v1/messages",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+          "status": 200,
+          "durationMs": 4664,
+          "requestHeaders": {
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.46 runtime/bun/1.4.4",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": "[REDACTED]",
+            "x-opencode-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-affinity": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57768",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "32516"
+          },
+          "audit": {
+            "index": 2,
+            "timestamp": "2026-11-28T08:32:24.165Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+            "api": "anthropic-messages",
+            "model": "kimi-k2.8-preview",
+            "systemLength": 9996,
+            "systemFingerprints": [
+              "【青竹】",
+              "工作区格式约定"
+            ],
+            "messageRoles": [
+              "user",
+              "assistant",
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 0,
+            "reminderLocations": [],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 3,
+              "toolCount": 10,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "【青竹】",
+            "工作区格式约定"
+          ],
+          "usage": {
+            "input": 537,
+            "output": 217,
+            "cacheRead": 6656,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    {
+      "step": "P2-同会话清空规则",
+      "ruleFileWritten": "AGENTS.md=\"\"",
+      "prompt": "说明地球自转和公转带来的现象",
+      "reply": "【赤松】地球自转产生昼夜交替，并造成日月星辰看似东升西落。地球公转结合地轴倾斜，引起四季更替、昼夜长短变化和太阳直射点的周年回归移动。",
+      "wireRequestsCount": 1,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "MODEL_INERTIA_OR_CONTEXT_FAIL",
+      "assertion": {
+        "passed": false,
+        "reasons": [
+          "清空规则后仍出现旧前缀 【赤松】",
+          "清空规则后开头仍存在装饰性前缀标记: 【赤松】"
+        ]
+      },
+      "wireAudits": [
+        {
+          "index": 3,
+          "method": "POST",
+          "path": "/v1/messages",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+          "status": 200,
+          "durationMs": 8029,
+          "requestHeaders": {
+            "content-type": "application/json",
+            "user-agent": "opencode/1.19.6 ai-sdk/provider-utils/4.0.46 runtime/bun/1.4.4",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": "[REDACTED]",
+            "x-opencode-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-affinity": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "x-session-id": "ses_ddeb759d2ffeqs17zzyzl0ylHq",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "host": "127.0.0.1:57768",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "33437"
+          },
+          "audit": {
+            "index": 3,
+            "timestamp": "2026-11-28T08:32:29.458Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+            "api": "anthropic-messages",
+            "model": "kimi-k2.8-preview",
+            "systemLength": 9809,
+            "systemFingerprints": [],
+            "messageRoles": [
+              "user",
+              "assistant",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "systemMessageCount": 1,
+            "hostReminderCount": 0,
+            "systemReminderCount": 0,
+            "reminderLocations": [],
+            "tailUserContainsReminder": false,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "rawBodySummary": {
+              "messageCount": 5,
+              "toolCount": 10,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "【青竹】"
+          ],
+          "usage": {
+            "input": 961,
+            "output": 286,
+            "cacheRead": 6400,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    }
+  ],
+  "claude-code-kimi": [
+    {
+      "step": "P0-初始R1",
+      "ruleFileWritten": "CLAUDE.md=R1",
+      "prompt": "介绍太阳系中最大的行星",
+      "reply": "【赤松】木星是太阳系中最大的行星，其质量约为其他七颗行星总和的2.5倍，直径约14万公里。它是一颗以氢和氦为主的气态巨行星，标志性的大红斑是持续数百年的巨型风暴。",
+      "wireRequestsCount": 1,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "PASS",
+      "assertion": {
+        "passed": true,
+        "reasons": []
+      },
+      "wireAudits": [
+        {
+          "index": 0,
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+          "status": 200,
+          "durationMs": 2506,
+          "requestHeaders": {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "user-agent": "claude-cli/2.1.332 (external, sdk-cli)",
+            "x-claude-code-session-id": "2856d198-1904-4f22-b0ff-2f2e21040789",
+            "x-stainless-arch": "arm64",
+            "x-stainless-lang": "js",
+            "x-stainless-os": "MacOS",
+            "x-stainless-package-version": "0.128.0",
+            "x-stainless-retry-count": "0",
+            "x-stainless-runtime": "node",
+            "x-stainless-runtime-version": "v26.12.1",
+            "x-stainless-timeout": "600",
+            "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,mid-conversation-tool-changes-2026-07-01,thinking-token-count-2026-05-13,advanced-tool-use-2025-11-20,effort-2025-11-24",
+            "anthropic-dangerous-direct-browser-access": "true",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": "[REDACTED]",
+            "x-app": "cli",
+            "connection": "keep-alive",
+            "host": "127.0.0.1:57787",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "49676"
+          },
+          "audit": {
+            "index": 0,
+            "timestamp": "2026-11-28T08:32:37.691Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+            "api": "anthropic-messages",
+            "model": "kimi-k2.8-preview",
+            "systemLength": 7044,
+            "systemFingerprints": [],
+            "messageRoles": [
+              "user",
+              "system"
+            ],
+            "systemMessageCount": 2,
+            "hostReminderCount": 0,
+            "systemReminderCount": 2,
+            "reminderLocations": [
+              "messages[0]:user"
+            ],
+            "tailUserContainsReminder": true,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "thinkingField": {
+              "type": "adaptive",
+              "display": "omitted"
+            },
+            "rawBodySummary": {
+              "messageCount": 2,
+              "toolCount": 12,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "工作区格式约定"
+          ],
+          "usage": {
+            "input": 11118,
+            "output": 115,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    {
+      "step": "P1-同会话替换R2",
+      "ruleFileWritten": "CLAUDE.md=R2",
+      "prompt": "介绍火星为什么呈现红色",
+      "reply": "【青竹】火星呈现红色是因为其地表富含氧化铁（即铁锈），这些含铁矿物在漫长的氧化作用下覆盖了星球表面。阳光照射时，氧化铁会反射偏红的光谱，使火星从远处看去呈现标志性的橘红色。",
+      "wireRequestsCount": 1,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "PASS",
+      "assertion": {
+        "passed": true,
+        "reasons": []
+      },
+      "wireAudits": [
+        {
+          "index": 1,
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+          "status": 200,
+          "durationMs": 1939,
+          "requestHeaders": {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "user-agent": "claude-cli/2.1.332 (external, sdk-cli)",
+            "x-claude-code-session-id": "2856d198-1904-4f22-b0ff-2f2e21040789",
+            "x-stainless-arch": "arm64",
+            "x-stainless-lang": "js",
+            "x-stainless-os": "MacOS",
+            "x-stainless-package-version": "0.128.0",
+            "x-stainless-retry-count": "0",
+            "x-stainless-runtime": "node",
+            "x-stainless-runtime-version": "v26.12.1",
+            "x-stainless-timeout": "600",
+            "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,mid-conversation-tool-changes-2026-07-01,thinking-token-count-2026-05-13,advanced-tool-use-2025-11-20,effort-2025-11-24",
+            "anthropic-dangerous-direct-browser-access": "true",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": "[REDACTED]",
+            "x-app": "cli",
+            "connection": "keep-alive",
+            "host": "127.0.0.1:57787",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "50629"
+          },
+          "audit": {
+            "index": 1,
+            "timestamp": "2026-11-28T08:32:40.383Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+            "api": "anthropic-messages",
+            "model": "kimi-k2.8-preview",
+            "systemLength": 7044,
+            "systemFingerprints": [],
+            "messageRoles": [
+              "user",
+              "system",
+              "assistant",
+              "user"
+            ],
+            "systemMessageCount": 2,
+            "hostReminderCount": 0,
+            "systemReminderCount": 3,
+            "reminderLocations": [
+              "messages[0]:user",
+              "messages[3]:user"
+            ],
+            "tailUserContainsReminder": true,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "thinkingField": {
+              "type": "adaptive",
+              "display": "omitted"
+            },
+            "rawBodySummary": {
+              "messageCount": 4,
+              "toolCount": 12,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "【青竹】",
+            "工作区格式约定"
+          ],
+          "usage": {
+            "input": 333,
+            "output": 83,
+            "cacheRead": 11008,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    {
+      "step": "P2-同会话清空规则",
+      "ruleFileWritten": "CLAUDE.md=\"\"",
+      "prompt": "说明地球自转和公转带来的现象",
+      "reply": "地球自转产生昼夜交替，让我们经历日出日落；地球公转则导致四季变化，因为地轴倾斜使不同季节接收到的太阳辐射量不同。",
+      "wireRequestsCount": 1,
+      "wireContainsNewRule": true,
+      "wireContainsOldRule": false,
+      "classification": "PASS",
+      "assertion": {
+        "passed": true,
+        "reasons": []
+      },
+      "wireAudits": [
+        {
+          "index": 2,
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "upstreamUrl": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+          "status": 200,
+          "durationMs": 1650,
+          "requestHeaders": {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "user-agent": "claude-cli/2.1.332 (external, sdk-cli)",
+            "x-claude-code-session-id": "2856d198-1904-4f22-b0ff-2f2e21040789",
+            "x-stainless-arch": "arm64",
+            "x-stainless-lang": "js",
+            "x-stainless-os": "MacOS",
+            "x-stainless-package-version": "0.128.0",
+            "x-stainless-retry-count": "0",
+            "x-stainless-runtime": "node",
+            "x-stainless-runtime-version": "v26.12.1",
+            "x-stainless-timeout": "600",
+            "anthropic-beta": "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,mid-conversation-tool-changes-2026-07-01,thinking-token-count-2026-05-13,advanced-tool-use-2025-11-20,effort-2025-11-24",
+            "anthropic-dangerous-direct-browser-access": "true",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": "[REDACTED]",
+            "x-app": "cli",
+            "connection": "keep-alive",
+            "host": "127.0.0.1:57787",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "content-length": "51333"
+          },
+          "audit": {
+            "index": 2,
+            "timestamp": "2026-11-28T08:32:42.529Z",
+            "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v1/messages",
+            "api": "anthropic-messages",
+            "model": "kimi-k2.8-preview",
+            "systemLength": 7044,
+            "systemFingerprints": [],
+            "messageRoles": [
+              "user",
+              "system",
+              "assistant",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "systemMessageCount": 2,
+            "hostReminderCount": 0,
+            "systemReminderCount": 4,
+            "reminderLocations": [
+              "messages[0]:user",
+              "messages[3]:user",
+              "messages[5]:user"
+            ],
+            "tailUserContainsReminder": true,
+            "toolResultContainsReminder": false,
+            "containsSecret": false,
+            "thinkingField": {
+              "type": "adaptive",
+              "display": "omitted"
+            },
+            "rawBodySummary": {
+              "messageCount": 6,
+              "toolCount": 12,
+              "maxTokens": 32000
+            }
+          },
+          "fingerprintsInEntirePayload": [
+            "【赤松】",
+            "【青竹】",
+            "工作区格式约定"
+          ],
+          "usage": {
+            "input": 247,
+            "output": 63,
+            "cacheRead": 11264,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    }
+  ]
+}
