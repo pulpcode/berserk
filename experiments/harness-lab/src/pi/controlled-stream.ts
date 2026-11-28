@@ -27,7 +27,8 @@ function failedMessage(model: Model<Api>, text: string, aborted = false): Assist
 }
 export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConfig>, selected: Model<Api>, context: Context,
   options: SimpleStreamOptions | undefined, purpose: 'reply' | 'compaction', reminder: string, signal: AbortSignal, usage: UsageSummary,
-  admission?: { permits: ModelPermits; waiting: () => void; started: () => void }) {
+  admission?: { permits: ModelPermits; waiting: () => void; started: () => void },
+  wireReminderMode: 'default' | 'force' | 'disable' = 'default') {
   const safe = createAssistantMessageEventStream();
   void (async () => {
     let final: AssistantMessage | undefined;
@@ -69,7 +70,12 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
         ...(config.llmRequestTimeoutMs ? { timeoutMs: config.llmRequestTimeoutMs } : {}),
         onPayload: payload => {
           const compatible = providerPayload(config, payload);
-          if (purpose === 'compaction' || !isVerifiedDeepSeekModel(config)) return compatible;
+          const injectReminder = purpose !== 'compaction' && Boolean(reminder) && (
+            wireReminderMode === 'force'
+              ? (config.api === undefined || config.api === 'openai-completions')
+              : wireReminderMode === 'default' && isVerifiedDeepSeekModel(config)
+          );
+          if (!injectReminder) return compatible;
           if (!Array.isArray(compatible.messages)) throw new Error('Provider message payload unavailable');
           const messages: unknown[] = compatible.messages;
           const index = messages.findLastIndex(message => typeof message === 'object' && message !== null && 'role' in message && message.role === 'user');
